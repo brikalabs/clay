@@ -52,7 +52,7 @@
   "scripts": {
     "build": "tsup && tsc --emitDeclarationOnly --noEmit false",
     "dev": "tsup --watch",
-    "typecheck": "tsgo --noEmit",
+    "typecheck": "tsc --noEmit",
     "test": "bun test",
     "prepublishOnly": "bun run build"
   },
