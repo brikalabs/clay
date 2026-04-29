@@ -1,0 +1,16 @@
+#!/bin/sh
+branch=$(git rev-parse --abbrev-ref HEAD)
+pattern='^(feat|fix|refactor|perf|docs|chore|ci|test|build)/.+'
+
+case "$branch" in
+  main|HEAD) exit 0 ;;
+esac
+
+if ! echo "$branch" | grep -qE "$pattern"; then
+  echo "error: branch name '$branch' does not match required format."
+  echo "       Use a prefix: feat/, fix/, docs/, chore/, ci/, refactor/, perf/, test/, build/"
+  echo "       Example: feat/tooltip-animation"
+  echo ""
+  echo "       Rename with: git branch -m $branch feat/<description>"
+  exit 1
+fi
