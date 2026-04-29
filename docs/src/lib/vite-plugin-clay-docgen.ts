@@ -144,7 +144,7 @@ function normalizeDocs(docs: readonly ComponentDoc[]): Record<string, ClayCompon
 
 export function clayDocgenPlugin(_options: ClayDocgenPluginOptions): ClayDocgenPlugin {
   const here = dirname(fileURLToPath(import.meta.url));
-  const claySrc = resolve(here, '../../../../packages/clay/src');
+  const claySrc = resolve(here, '../../../src');
   const componentsDir = resolve(claySrc, 'components');
   const tsconfigPath = resolve(claySrc, '..', 'tsconfig.json');
 

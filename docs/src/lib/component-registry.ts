@@ -19,7 +19,7 @@ interface MetaModule {
 }
 
 const metaModules = import.meta.glob<MetaModule>(
-  '../../../../packages/clay/src/components/*/meta.ts',
+  '../../../src/components/*/meta.ts',
   { eager: true }
 );
 
