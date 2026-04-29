@@ -8,6 +8,7 @@ import { PropsTable } from '~/components/docs/PropsTable.tsx';
 import { TokenTable } from '~/components/docs/TokenTable.tsx';
 import MdxDocLayout from '~/layouts/MdxDocLayout.astro';
 import { adjacentComponents, COMPONENTS, type ComponentEntry } from '~/lib/component-registry';
+import { componentSourceUrl } from '~/lib/github';
 
 interface Props {
   readonly component: ComponentEntry;
@@ -36,7 +37,7 @@ function pad(n: number): string {
   return n.toString().padStart(2, '0');
 }
 
-const githubBase = `https://github.com/brikalabs/clay/tree/main/src/components/${component.slug}`;
+const githubBase = componentSourceUrl(component.slug);
 
 // Build the section ribbon as we walk the page so the numbering matches
 // what's actually rendered (Accessibility / Tokens are conditional).
