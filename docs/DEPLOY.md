@@ -46,6 +46,6 @@ preview URL without affecting production.
 
 ## CI
 
-A future CI step can run `clay:deploy` on each merge to `main`, scoped
+A future CI step can run `bun run --cwd docs deploy` on each merge to `main`, scoped
 via `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets. See
 [wrangler.jsonc](./wrangler.jsonc) for the project configuration.
