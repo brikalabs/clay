@@ -38,7 +38,8 @@ jobs:
           SITE: https://clay.brika.dev
 
       - name: Deploy
-        run: bunx --cwd docs wrangler deploy
+        working-directory: docs
+        run: bunx wrangler deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
