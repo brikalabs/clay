@@ -24,7 +24,7 @@ const pageUrl = new URL(pathname, Astro.site).href;
 const markdownUrl = `${pathname}.md`;
 
 const componentSourceUrl = frontmatter.sourceFile
-  ? repoTreeUrl(`packages/clay/src/${frontmatter.sourceFile}`)
+  ? repoTreeUrl(`src/${frontmatter.sourceFile}`)
   : undefined;
 ---
 

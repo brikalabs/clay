@@ -1,10 +1,13 @@
-export const GITHUB_REPO = 'https://github.com/brikalabs/clay';
-export const GITHUB_BRANCH = 'main';
+import { SITE } from '~/config';
 
 export function componentSourceUrl(slug: string): string {
-  return `${GITHUB_REPO}/tree/${GITHUB_BRANCH}/src/components/${slug}`;
+  return `${SITE.github.repo}/tree/${SITE.github.branch}/src/components/${slug}`;
 }
 
 export function repoTreeUrl(path: string): string {
-  return `${GITHUB_REPO}/tree/${GITHUB_BRANCH}/${path}`;
+  return `${SITE.github.repo}/tree/${SITE.github.branch}/${path}`;
+}
+
+export function repoUrl(path?: string): string {
+  return path ? `${SITE.github.repo}/${path}` : SITE.github.repo;
 }

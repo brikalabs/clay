@@ -6,7 +6,7 @@ server-side script required.
 
 ## One-time setup
 
-Run from `apps/clay-docs/` (or via `bun run --cwd apps/clay-docs <cmd>`).
+Run from `docs/` (or via `bun run --cwd docs <cmd>`).
 
 1. **Authenticate Wrangler against the Cloudflare account that owns
    `brika.dev`:**
@@ -36,8 +36,8 @@ Run from `apps/clay-docs/` (or via `bun run --cwd apps/clay-docs <cmd>`).
 From the repo root:
 
 ```bash
-bun run clay:deploy           # production push to clay.brika.dev
-bun run clay:deploy:preview   # uploads a preview version (not promoted)
+bun run --cwd docs deploy           # production push to clay.brika.dev
+bun run --cwd docs deploy:preview   # uploads a preview version (not promoted)
 ```
 
 `deploy` runs `astro build` then `wrangler deploy` (promotes immediately).
@@ -46,6 +46,6 @@ preview URL without affecting production.
 
 ## CI
 
-A future CI step can run `clay:deploy` on each merge to `main`, scoped
+A future CI step can run `bun run --cwd docs deploy` on each merge to `main`, scoped
 via `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets. See
 [wrangler.jsonc](./wrangler.jsonc) for the project configuration.
