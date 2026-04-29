@@ -21,18 +21,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile --cwd docs
+        run: bun install --frozen-lockfile && bun install --frozen-lockfile --cwd docs
 
       - name: Build
         run: bun run --cwd docs build
+        env:
+          SITE: https://clay.brika.dev
 
       - name: Deploy
-        run: bun run --cwd docs deploy
+        run: bunx --cwd docs wrangler deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
