@@ -15,6 +15,7 @@ Clay is Brika Labs' React component library. This guide covers everything you ne
 git clone https://github.com/brikalabs/clay.git
 cd clay
 bun install
+git config core.hooksPath .githooks
 ```
 
 ### Development
