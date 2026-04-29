@@ -1,6 +1,6 @@
 {
   "name": "@brika/clay",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "Clay — Brika Labs' React component library, token system, and first-party themes",
   "type": "module",
   "license": "MIT",
@@ -76,9 +76,11 @@
     "@happy-dom/global-registrator": "^20.9.0",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
+    "bun-types": "latest",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "tailwindcss": "^4.0.0",
-    "tsup": "^8.3.5"
+    "tsup": "^8.3.5",
+    "typescript": "^6.0.2"
   }
 }

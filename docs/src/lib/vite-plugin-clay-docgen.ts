@@ -9,7 +9,7 @@ import {
 } from 'react-docgen-typescript';
 
 /**
- * Runs react-docgen-typescript over `packages/clay/src/components/<slug>/<slug>.tsx`
+ * Runs react-docgen-typescript over `src/components/<slug>/<slug>.tsx`
  * at build start (and on file change in dev), then exposes the result as a
  * virtual module so the docs site can render a per-component props table without
  * a separate generation step.
