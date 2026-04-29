@@ -52,7 +52,7 @@
   "scripts": {
     "build": "tsup && tsc --emitDeclarationOnly --noEmit false",
     "dev": "tsup --watch",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsgo --noEmit",
     "test": "bun test",
     "prepublishOnly": "bun run build"
   },
@@ -76,6 +76,7 @@
     "@happy-dom/global-registrator": "^20.9.0",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
+    "@typescript/native-preview": "latest",
     "bun-types": "latest",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
