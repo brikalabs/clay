@@ -1,0 +1,21 @@
+name: Branch Name
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+jobs:
+  lint-branch-name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check branch name format
+        env:
+          BRANCH: ${{ github.head_ref }}
+        run: |
+          pattern='^(feat|fix|refactor|perf|docs|chore|ci|test|build)/.+'
+          if ! echo "$BRANCH" | grep -qE "$pattern"; then
+            echo "Branch name '$BRANCH' does not match required pattern."
+            echo "Use a prefix like: feat/, fix/, docs/, chore/, ci/, refactor/, perf/, test/, build/"
+            echo "Example: feat/tooltip-animation"
+            exit 1
+          fi
