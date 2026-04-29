@@ -28,7 +28,7 @@ const CLAY_COMPONENT_PREFIX = '@brika/clay/components/';
 
 export function clayHmrPlugin(options: ClayHmrPluginOptions): ClayHmrPlugin {
   const here = dirname(fileURLToPath(import.meta.url));
-  const claySrc = resolve(here, '../../../../packages/clay/src');
+  const claySrc = resolve(here, '../../../src');
 
   return {
     name: 'clay-hmr',

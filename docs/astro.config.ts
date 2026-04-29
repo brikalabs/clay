@@ -6,7 +6,7 @@ import mdx from '@astrojs/mdx';
 import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'astro/config';
-import clayPackageJson from '../../packages/clay/package.json' with { type: 'json' };
+import clayPackageJson from '../package.json' with { type: 'json' };
 import { clayDocgenPlugin } from './src/lib/vite-plugin-clay-docgen.ts';
 import { clayHmrPlugin } from './src/lib/vite-plugin-clay-hmr.ts';
 

@@ -1,13 +1,13 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/brikalabs/brika/main/packages/clay/src/assets/clay-ui-depth.svg">
-    <img src="https://raw.githubusercontent.com/brikalabs/brika/main/packages/clay/src/assets/clay-ui-depth-dark.svg" alt="Clay" width="120" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/brikalabs/clay/main/src/assets/clay-ui-depth.svg">
+    <img src="https://raw.githubusercontent.com/brikalabs/clay/main/src/assets/clay-ui-depth-dark.svg" alt="Clay" width="120" />
   </picture>
 </p>
 
 # @brika/clay
 
-Brika's React component library, token system, and first-party themes.
+Brika Labs' React component library, token system, and first-party themes.
 
 Clay provides the pressable raw material for every Brika surface:
 primitives, components, tokens, and a curated set of built-in themes.
@@ -222,4 +222,4 @@ src/
 
 ## License
 
-MIT © Brika. See [LICENSE](LICENSE).
+MIT © Brika Labs. See [LICENSE](LICENSE).
