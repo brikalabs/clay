@@ -4,10 +4,10 @@ import { fileURLToPath } from 'node:url';
 
 /**
  * In dev mode, rewrite `@brika/clay` and `@brika/clay/components/<name>` imports
- * to the raw source files in the sibling `packages/clay/src/` tree.
+ * to the raw source files in the sibling `src/` tree.
  *
  * This gives us instant HMR against live library source. The production build
- * uses the real `exports` map in `packages/clay/package.json`.
+ * uses the real `exports` map in the root `package.json`.
  *
  * Typed as a structural Vite plugin shape to avoid pinning to a specific Vite
  * major — Astro 5 bundles Vite 6 but the monorepo hoists Vite 7, and importing
