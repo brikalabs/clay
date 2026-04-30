@@ -8,7 +8,7 @@ import type { ComponentMeta } from '../_registry';
 
 export const meta: ComponentMeta = {
   name: 'dropdown-menu',
-  displayName: 'DropdownMenu',
+  displayName: 'Dropdown Menu',
   group: 'Overlays',
   description: `Floating menu attached to a button trigger.`,
 };

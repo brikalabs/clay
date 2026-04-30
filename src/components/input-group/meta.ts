@@ -8,7 +8,7 @@ import type { ComponentMeta } from '../_registry';
 
 export const meta: ComponentMeta = {
   name: 'input-group',
-  displayName: 'InputGroup',
+  displayName: 'Input Group',
   group: 'Forms',
   description: `Compose an Input with adornments — addon icons, trailing buttons, prefix labels.`,
 };

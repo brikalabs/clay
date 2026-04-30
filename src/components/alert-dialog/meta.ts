@@ -8,7 +8,7 @@ import type { ComponentMeta } from '../_registry';
 
 export const meta: ComponentMeta = {
   name: 'alert-dialog',
-  displayName: 'AlertDialog',
+  displayName: 'Alert Dialog',
   group: 'Overlays',
   description: `Confirmation dialog with destructive intent. Blocks interaction until resolved.`,
 };

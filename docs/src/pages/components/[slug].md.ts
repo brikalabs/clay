@@ -35,7 +35,7 @@ export function GET({ props }: APIContext<RouteProps>): Response {
   return markdownResponse(
     renderComponentMarkdown({
       component,
-      docgen: docgen[component.name],
+      docgen: docgen[component.slug] ?? [],
       tokens: TOKENS_BY_SLUG.get(component.slug) ?? [],
     })
   );

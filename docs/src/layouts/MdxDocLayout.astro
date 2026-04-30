@@ -5,12 +5,18 @@ import { OnThisPage } from '~/components/OnThisPage.tsx';
 import { repoTreeUrl } from '~/lib/github';
 import DocLayout from './DocLayout.astro';
 
+interface ExternalDoc {
+  readonly label: string;
+  readonly url: string;
+}
+
 interface Props {
   readonly frontmatter: {
     readonly title: string;
     readonly description?: string;
     readonly sourceFile?: string;
     readonly group?: string;
+    readonly externalDocs?: readonly ExternalDoc[];
   };
 }
 
@@ -26,6 +32,42 @@ const markdownUrl = `${pathname}.md`;
 const componentSourceUrl = frontmatter.sourceFile
   ? repoTreeUrl(`src/${frontmatter.sourceFile}`)
   : undefined;
+
+// Fetch favicons at build time and embed as base64 data URLs so the browser
+// never needs to hit an external image service.
+const FAVICON_API = 'https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://DOMAIN&size=32';
+
+// Module-level cache so dev-server hot reloads don't re-fetch every request.
+const _faviconCache: Map<string, string | null> = (globalThis as unknown as Record<string, unknown>)['_clayFaviconCache'] as Map<string, string | null> ?? new Map();
+(globalThis as unknown as Record<string, unknown>)['_clayFaviconCache'] = _faviconCache;
+
+async function fetchFavicon(siteUrl: string): Promise<string | null> {
+  const domain = new URL(siteUrl).hostname;
+  if (_faviconCache.has(domain)) return _faviconCache.get(domain) ?? null;
+  try {
+    const apiUrl = FAVICON_API.replace('DOMAIN', domain);
+    const res = await fetch(apiUrl);
+    if (!res.ok) { _faviconCache.set(domain, null); return null; }
+    const buf = await res.arrayBuffer();
+    const b64 = Buffer.from(buf).toString('base64');
+    const mime = res.headers.get('content-type') ?? 'image/png';
+    const dataUrl = `data:${mime};base64,${b64}`;
+    _faviconCache.set(domain, dataUrl);
+    return dataUrl;
+  } catch {
+    _faviconCache.set(domain, null);
+    return null;
+  }
+}
+
+const externalDocsWithFavicons = frontmatter.externalDocs
+  ? await Promise.all(
+      frontmatter.externalDocs.map(async (doc) => ({
+        ...doc,
+        favicon: await fetchFavicon(doc.url),
+      }))
+    )
+  : [];
 ---
 
 <DocLayout title={frontmatter.title} description={frontmatter.description} hasRail>
@@ -49,25 +91,46 @@ const componentSourceUrl = frontmatter.sourceFile
           )
         }
         {
-          componentSourceUrl && (
-            <div class="mt-6 flex flex-wrap items-center gap-3">
-              <a
-                href={componentSourceUrl}
-                rel="noopener noreferrer"
-                class="inline-flex h-8 items-center gap-2 rounded-md border border-clay-hairline bg-clay-elevated px-3 font-medium text-clay-default text-xs transition-colors hover:border-clay-strong hover:bg-clay-control"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  width="13"
-                  height="13"
-                  fill="currentColor"
-                  aria-hidden="true"
+          (componentSourceUrl || externalDocsWithFavicons.length > 0) && (
+            <div class="mt-6 flex flex-wrap items-center gap-2">
+              {componentSourceUrl && (
+                <a
+                  href={componentSourceUrl}
+                  rel="noopener noreferrer"
+                  class="inline-flex h-8 items-center gap-2 rounded-md border border-clay-hairline bg-clay-elevated px-3 font-medium text-clay-default text-xs transition-colors hover:border-clay-strong hover:bg-clay-control"
                 >
-                  <path d="M12 2C6.475 2 2 6.475 2 12c0 4.425 2.863 8.166 6.839 9.489.5.092.683-.217.683-.483 0-.237-.008-.867-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.004.071 1.532 1.031 1.532 1.031.892 1.529 2.341 1.087 2.911.832.091-.647.35-1.087.636-1.337-2.22-.252-4.555-1.11-4.555-4.942 0-1.091.39-1.984 1.03-2.683-.103-.253-.447-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.837c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .269.18.58.688.481C19.138 20.163 22 16.423 22 12c0-5.525-4.475-10-10-10z" />
-                </svg>
-                <span>Source</span>
-              </a>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="13"
+                    height="13"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 2C6.475 2 2 6.475 2 12c0 4.425 2.863 8.166 6.839 9.489.5.092.683-.217.683-.483 0-.237-.008-.867-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.004.071 1.532 1.031 1.532 1.031.892 1.529 2.341 1.087 2.911.832.091-.647.35-1.087.636-1.337-2.22-.252-4.555-1.11-4.555-4.942 0-1.091.39-1.984 1.03-2.683-.103-.253-.447-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.837c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .269.18.58.688.481C19.138 20.163 22 16.423 22 12c0-5.525-4.475-10-10-10z" />
+                  </svg>
+                  <span>Source</span>
+                </a>
+              )}
+              {externalDocsWithFavicons.map((doc) => (
+                <a
+                  href={doc.url}
+                  rel="noopener noreferrer"
+                  class="inline-flex h-8 items-center gap-1.5 rounded-md border border-clay-hairline bg-clay-elevated px-3 font-medium text-clay-default text-xs transition-colors hover:border-clay-strong hover:bg-clay-control"
+                >
+                  {doc.favicon && (
+                    <img
+                      src={doc.favicon}
+                      width="14"
+                      height="14"
+                      alt=""
+                      aria-hidden="true"
+                      class="size-3.5 rounded-[2px] object-contain"
+                    />
+                  )}
+                  <span>{doc.label}</span>
+                </a>
+              ))}
             </div>
           )
         }
