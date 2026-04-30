@@ -10,11 +10,12 @@ import type { ClayComponentDoc, ClayPropDoc } from './vite-plugin-clay-docgen';
 
 interface RenderInput {
   readonly component: ComponentEntry;
-  readonly docgen: ClayComponentDoc | undefined;
+  readonly docgen: readonly ClayComponentDoc[];
   readonly tokens: readonly ResolvedTokenSpec[];
 }
 
 export function renderComponentMarkdown({ component, docgen, tokens }: RenderInput): string {
+  const codeId = component.displayName.replace(/\s+/g, '');
   const [heroDemo, ...moreDemos] = component.demos;
   const sections = [
     headerSection(component),
@@ -22,8 +23,8 @@ export function renderComponentMarkdown({ component, docgen, tokens }: RenderInp
     usageSection(heroDemo),
     examplesSection(moreDemos),
     accessibilitySection(component.accessibility ?? []),
-    tokensSection(component.name, tokens),
-    apiSection(component.name, docgen),
+    tokensSection(component.displayName, tokens),
+    apiSection(codeId, docgen),
   ];
   return `${sections.filter(Boolean).join('\n').trimEnd()}\n`;
 }
@@ -39,17 +40,18 @@ function headerSection(component: ComponentEntry): string {
 }
 
 function installSection(component: ComponentEntry): string {
+  const id = component.displayName.replace(/\s+/g, '');
   return [
     '## Install',
     '',
     '```ts',
-    `import { ${component.name} } from "@brika/clay";`,
+    `import { ${id} } from "@brika/clay";`,
     '```',
     '',
     'Granular import:',
     '',
     '```ts',
-    `import { ${component.name} } from "@brika/clay/components/${component.slug}";`,
+    `import { ${id} } from "@brika/clay/components/${component.slug}";`,
     '```',
     '',
   ].join('\n');
@@ -102,17 +104,26 @@ function tokensSection(name: string, tokens: readonly ResolvedTokenSpec[]): stri
   ].join('\n');
 }
 
-function apiSection(name: string, docgen: ClayComponentDoc | undefined): string {
-  if (!docgen || docgen.props.length === 0) {
+function apiSection(name: string, docs: readonly ClayComponentDoc[]): string {
+  if (docs.length === 0) {
     return `## API reference\n\n\`${name}\` exposes no wrapper-specific props — all attributes pass through to the underlying primitive.\n`;
   }
-  const blocks = docgen.props.map(propBlock);
-  return ['## API reference', '', ...blocks].join('\n');
+  const showHeadings = docs.length > 1;
+  const sections = docs.flatMap((doc) => {
+    const heading = showHeadings ? [`### ${doc.displayName}`, ''] : [];
+    const propLevel = showHeadings ? 4 : 3;
+    if (doc.props.length === 0) {
+      return [...heading, `No wrapper-specific props — passes through to the underlying primitive.\n`];
+    }
+    return [...heading, ...doc.props.map((p) => propBlock(p, propLevel))];
+  });
+  return ['## API reference', '', ...sections].join('\n');
 }
 
-function propBlock(prop: ClayPropDoc): string {
+function propBlock(prop: ClayPropDoc, headingLevel = 3): string {
   const required = prop.required ? ' (required)' : '';
-  const lines = [`### \`${prop.name}\`${required}`, '', `- Type: \`${prop.type}\``];
+  const h = '#'.repeat(headingLevel);
+  const lines = [`${h} \`${prop.name}\`${required}`, '', `- Type: \`${prop.type}\``];
   if (prop.defaultValue !== null) {
     lines.push(`- Default: \`${prop.defaultValue}\``);
   }

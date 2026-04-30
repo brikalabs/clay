@@ -114,6 +114,39 @@
 }
 
 /* ─────────────────────────────────────────────────────────────
+   ACCORDION ANIMATIONS
+   Uses --radix-accordion-content-height set by the Radix primitive.
+   ───────────────────────────────────────────────────────────── */
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+@utility animate-accordion-down {
+  animation: accordion-down var(--motion-standard-duration, 200ms)
+    var(--motion-standard-easing, ease-out);
+}
+
+@utility animate-accordion-up {
+  animation: accordion-up var(--motion-standard-duration, 200ms)
+    var(--motion-standard-easing, ease-out);
+}
+
+/* ─────────────────────────────────────────────────────────────
    THEMED SCROLLBARS
    Native scrollbars track the active theme via the standardized
    `scrollbar-color` / `scrollbar-width` properties (Firefox, Chrome

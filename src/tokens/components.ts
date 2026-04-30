@@ -11,7 +11,11 @@
  * and add one named import + spread below.
  */
 
+import { tokens as accordion } from '../components/accordion/tokens';
 import { tokens as alert } from '../components/alert/tokens';
+import { tokens as calendar } from '../components/calendar/tokens';
+import { tokens as command } from '../components/command/tokens';
+import { tokens as drawer } from '../components/drawer/tokens';
 import { tokens as avatar } from '../components/avatar/tokens';
 import { tokens as badge } from '../components/badge/tokens';
 import { tokens as button } from '../components/button/tokens';
@@ -20,11 +24,17 @@ import { tokens as checkbox } from '../components/checkbox/tokens';
 import { tokens as codeBlock } from '../components/code-block/tokens';
 import { tokens as dialog } from '../components/dialog/tokens';
 import { tokens as dropdownMenu } from '../components/dropdown-menu/tokens';
+import { tokens as hoverCard } from '../components/hover-card/tokens';
 import { tokens as icon } from '../components/icon/tokens';
 import { tokens as input } from '../components/input/tokens';
+import { tokens as inputOtp } from '../components/input-otp/tokens';
+import { tokens as menubar } from '../components/menubar/tokens';
+import { tokens as navigationMenu } from '../components/navigation-menu/tokens';
 import { tokens as passwordInput } from '../components/password-input/tokens';
 import { tokens as popover } from '../components/popover/tokens';
 import { tokens as progress } from '../components/progress/tokens';
+import { tokens as radioGroup } from '../components/radio-group/tokens';
+import { tokens as resizable } from '../components/resizable/tokens';
 import { tokens as select } from '../components/select/tokens';
 import { tokens as separator } from '../components/separator/tokens';
 import { tokens as sheet } from '../components/sheet/tokens';
@@ -35,25 +45,36 @@ import { tokens as table } from '../components/table/tokens';
 import { tokens as tabs } from '../components/tabs/tokens';
 import { tokens as textarea } from '../components/textarea/tokens';
 import { tokens as toast } from '../components/toast/tokens';
+import { tokens as toggle } from '../components/toggle/tokens';
 import { tokens as tooltip } from '../components/tooltip/tokens';
 
 import type { TokenSpec } from './types';
 
 export const COMPONENT_TOKENS: readonly TokenSpec[] = [
+  ...accordion,
   ...alert,
   ...avatar,
+  ...calendar,
+  ...command,
   ...badge,
   ...button,
   ...card,
   ...checkbox,
   ...codeBlock,
   ...dialog,
+  ...drawer,
   ...dropdownMenu,
+  ...hoverCard,
   ...icon,
   ...input,
+  ...inputOtp,
+  ...menubar,
+  ...navigationMenu,
   ...passwordInput,
   ...popover,
   ...progress,
+  ...radioGroup,
+  ...resizable,
   ...select,
   ...separator,
   ...sheet,
@@ -64,5 +85,6 @@ export const COMPONENT_TOKENS: readonly TokenSpec[] = [
   ...tabs,
   ...textarea,
   ...toast,
+  ...toggle,
   ...tooltip,
 ];

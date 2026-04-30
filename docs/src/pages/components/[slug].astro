@@ -24,8 +24,13 @@ export function getStaticPaths() {
 const { component } = Astro.props;
 const { previous, next } = adjacentComponents(component.slug);
 
-const barrelImport = `import { ${component.name} } from "@brika/clay";`;
-const granularImport = `import { ${component.name} } from "@brika/clay/components/${component.slug}";`;
+// Derive a valid identifier from displayName by removing spaces.
+// Using displayName preserves acronym casing: "Input OTP" → "InputOTP",
+// "Dropdown Menu" → "DropdownMenu", etc.
+const codeIdentifier = component.displayName.replace(/\s+/g, '');
+
+const barrelImport = `import { ${codeIdentifier} } from "@brika/clay";`;
+const granularImport = `import { ${codeIdentifier} } from "@brika/clay/components/${component.slug}";`;
 
 const [heroDemo, ...moreDemos] = component.demos;
 
@@ -76,10 +81,11 @@ const apiNum = nextSection();
 
 <MdxDocLayout
   frontmatter={{
-    title: component.name,
+    title: component.displayName,
     description: component.description,
     sourceFile: `components/${component.slug}`,
     group: component.group,
+    externalDocs: component.externalDocs.length > 0 ? component.externalDocs : undefined,
   }}
 >
   {
@@ -141,33 +147,23 @@ const apiNum = nextSection();
         </div>
         <h2
           id="examples"
-          class="mb-8 scroll-mt-24 font-display text-3xl text-clay-strong leading-[1.1]"
+          class="mb-6 scroll-mt-24 font-display text-3xl text-clay-strong leading-[1.1]"
         >
-          {component.name}, every way
+          {component.displayName}, every way
         </h2>
-        {moreDemos.map((demo, index) => (
-          <section class="mb-12">
-            <div class="mb-3 flex items-baseline gap-3 mono-tag-tight">
-              <span class="text-clay-strong">{pad(index + 1)}</span>
-              <span class="hairline w-8" />
-              <span>{demo.title}</span>
-            </div>
-            <h3
-              id={slugifyTitle(demo.title)}
-              class="mb-3 scroll-mt-24 font-display text-clay-strong text-xl leading-[1.15]"
+        <div class="flex flex-col gap-4">
+          {moreDemos.map((demo, index) => (
+            <ComponentExample
+              code={demo.code}
+              title={demo.title}
+              description={demo.description}
+              index={index + 1}
+              anchorId={slugifyTitle(demo.title)}
             >
-              {demo.title}
-            </h3>
-            {demo.description && (
-              <p class="mb-4 max-w-2xl text-clay-default text-sm leading-relaxed">
-                {demo.description}
-              </p>
-            )}
-            <ComponentExample code={demo.code}>
               <DemoRenderer slug={component.slug} demoName={demo.name} client:only="react" />
             </ComponentExample>
-          </section>
-        ))}
+          ))}
+        </div>
       </section>
     )
   }
@@ -284,7 +280,7 @@ const apiNum = nextSection();
       </a>{' '}
       for the full type signature.
     </p>
-    <PropsTable displayName={component.name} client:load />
+    <PropsTable slug={component.slug} client:load />
   </section>
 
   <nav class="not-prose mt-20 grid grid-cols-1 gap-3 border-clay-hairline border-t pt-10 sm:grid-cols-2">

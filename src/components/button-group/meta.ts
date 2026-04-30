@@ -8,7 +8,7 @@ import type { ComponentMeta } from '../_registry';
 
 export const meta: ComponentMeta = {
   name: 'button-group',
-  displayName: 'ButtonGroup',
+  displayName: 'Button Group',
   group: 'Primitives',
   description: `Visually-joined cluster of buttons sharing borders.`,
 };

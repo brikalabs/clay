@@ -11,4 +11,5 @@ export const meta: ComponentMeta = {
   displayName: 'Chart',
   group: 'Data',
   description: `Recharts wrapper that consumes the theme \`--data-*\` palette.`,
+  externalDocs: [{ label: "Recharts", url: "https://recharts.org/en-US/" }],
 };

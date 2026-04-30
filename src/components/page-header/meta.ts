@@ -8,7 +8,7 @@ import type { ComponentMeta } from '../_registry';
 
 export const meta: ComponentMeta = {
   name: 'page-header',
-  displayName: 'PageHeader',
+  displayName: 'Page Header',
   group: 'Layout',
   description: `Standard page title block with optional description, count, and action slots.`,
 };

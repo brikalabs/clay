@@ -2,43 +2,111 @@
 import CodeSource from './CodeSource.astro';
 
 /**
- * Renders a live demo above a syntax-highlighted code block.
+ * Live demo + collapsible code block.
  *
- *   ┌── 01 ────────────────────────────── PREVIEW ┐
- *   │  ⌐                                       ¬ │
- *   │  preview (preview-grid surface)            │
- *   │  └                                       ┘ │
- *   │ ────────────────────────────────────────── │ ← hairline separator
- *   │                                            │
- *   │   ┌──────────────────────────────────────┐ │
- *   │   │ code block (own rounded edge)        │ │
- *   │   └──────────────────────────────────────┘ │
- *   └────────────────────────────────────────────┘
- *
- * The "01 — PREVIEW" tag in the top-left mirrors the drafting-studio
- * label vocabulary used elsewhere on the site (numbered sections, mono
- * metadata, hairline rules).
+ * Layout:
+ *   ┌── header (title + code toggle) ──────────────────────────┐
+ *   │  01 ─── Title                              [<> Code]      │
+ *   │  Optional description                                     │
+ *   ├───────────────────────────────────────────────────────────┤
+ *   │                                                           │
+ *   │   [preview]                                               │
+ *   │                                                           │
+ *   ├─── only when expanded ────────────────────────────────────┤
+ *   │  [syntax-highlighted code]                                │
+ *   └───────────────────────────────────────────────────────────┘
  */
 
 interface Props {
   readonly code: string;
   readonly lang?: 'tsx' | 'ts' | 'jsx' | 'js' | 'bash' | 'css' | 'html';
+  readonly title?: string;
+  readonly description?: string;
+  readonly index?: number;
+  readonly anchorId?: string;
 }
 
-const { code, lang = 'tsx' } = Astro.props;
+const { code, lang = 'tsx', title, description, index, anchorId } = Astro.props;
+
+function pad(n: number) {
+  return n.toString().padStart(2, '0');
+}
 ---
 
-<div class="component-example not-prose my-6 overflow-hidden rounded-lg border border-clay-hairline bg-clay-elevated">
-  <div class="flex items-center gap-3 border-clay-hairline border-b bg-clay-canvas/40 px-4 py-2 mono-tag-tight">
-    <span class="text-clay-default">Preview</span>
-    <span class="hairline flex-1"></span>
-  </div>
-  <div class="preview-grid relative flex min-h-50 items-center justify-center px-6 py-10">
+<div
+  id={anchorId}
+  class="component-example not-prose scroll-mt-24 overflow-hidden rounded-lg border border-clay-hairline bg-clay-elevated"
+  data-component-example
+>
+  {title ? (
+    <div class="flex items-start justify-between gap-4 border-clay-hairline border-b px-4 py-3">
+      <div class="min-w-0 flex-1">
+        <p class="mb-0.5 flex items-baseline gap-2 font-mono text-xs text-clay-subtle">
+          {index !== undefined && (
+            <>
+              <span class="tabular-nums text-clay-inactive">{pad(index)}</span>
+              <span class="hairline w-4 shrink-0" />
+            </>
+          )}
+          <span class="font-medium text-clay-strong">{title}</span>
+        </p>
+        {description && (
+          <p class="mt-1 max-w-2xl text-clay-default text-sm leading-relaxed">{description}</p>
+        )}
+      </div>
+      <button
+        type="button"
+        class="code-toggle-btn shrink-0 inline-flex h-7 items-center gap-1.5 rounded-md border border-clay-hairline bg-clay-base px-2.5 font-mono text-xs text-clay-subtle transition-all hover:border-clay-strong hover:bg-clay-elevated hover:text-clay-default"
+        aria-expanded="false"
+        aria-label="Show code"
+      >
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="shrink-0">
+          <polyline points="16 18 22 12 16 6"/>
+          <polyline points="8 6 2 12 8 18"/>
+        </svg>
+        <span class="code-toggle-label">Code</span>
+      </button>
+    </div>
+  ) : (
+    <div class="flex items-center justify-between gap-3 border-clay-hairline border-b px-4 py-2">
+      <span class="font-mono text-[0.6875rem] text-clay-inactive tracking-wide uppercase">Preview</span>
+      <button
+        type="button"
+        class="code-toggle-btn inline-flex h-6 items-center gap-1.5 rounded border border-clay-hairline bg-clay-base px-2 font-mono text-[0.6875rem] text-clay-subtle transition-all hover:border-clay-strong hover:text-clay-default"
+        aria-expanded="false"
+        aria-label="Show code"
+      >
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="16 18 22 12 16 6"/>
+          <polyline points="8 6 2 12 8 18"/>
+        </svg>
+        Code
+      </button>
+    </div>
+  )}
+
+  <div class="preview-grid relative flex min-h-[11rem] items-center justify-center px-6 py-10">
     <slot />
   </div>
-  <div class="border-clay-hairline border-t p-3">
-    <div class="overflow-hidden rounded-md border border-clay-hairline">
-      <CodeSource code={code} lang={lang} variant="compact" />
-    </div>
+
+  <div class="code-section hidden border-clay-hairline border-t">
+    <CodeSource code={code} lang={lang} variant="compact" />
   </div>
 </div>
+
+<script>
+  for (const example of document.querySelectorAll<HTMLElement>('[data-component-example]')) {
+    const btn = example.querySelector<HTMLButtonElement>('.code-toggle-btn');
+    const codeSection = example.querySelector<HTMLElement>('.code-section');
+    const label = btn?.querySelector<HTMLElement>('.code-toggle-label');
+    if (!btn || !codeSection) continue;
+
+    btn.addEventListener('click', () => {
+      const isOpen = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!isOpen));
+      codeSection.classList.toggle('hidden', isOpen);
+      btn.setAttribute('aria-label', isOpen ? 'Show code' : 'Hide code');
+      if (label) label.textContent = isOpen ? 'Code' : 'Hide';
+    });
+  }
+</script>

@@ -8,7 +8,7 @@ import type { ComponentMeta } from '../_registry';
 
 export const meta: ComponentMeta = {
   name: 'progress-display',
-  displayName: 'ProgressDisplay',
+  displayName: 'Progress Display',
   group: 'Feedback',
   description: `Composite progress affordance with label, percentage, and bar.`,
 };

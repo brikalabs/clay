@@ -8,7 +8,7 @@ import type { ComponentMeta } from '../_registry';
 
 export const meta: ComponentMeta = {
   name: 'section-label',
-  displayName: 'SectionLabel',
+  displayName: 'Section Label',
   group: 'Layout',
   description: `Small uppercase label that introduces a content block.`,
 };

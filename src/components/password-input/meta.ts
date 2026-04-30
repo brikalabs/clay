@@ -8,7 +8,7 @@ import type { ComponentMeta } from '../_registry';
 
 export const meta: ComponentMeta = {
   name: 'password-input',
-  displayName: 'PasswordInput',
+  displayName: 'Password Input',
   group: 'Forms',
   description: `Input variant for password entry with an eye toggle to reveal characters.`,
 };
