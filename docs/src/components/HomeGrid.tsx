@@ -1,5 +1,5 @@
 import { COMPONENTS } from '~/lib/component-registry';
-import { DemoRenderer } from '../DemoRenderer';
+import { DemoRenderer } from './DemoRenderer';
 
 const FEATURED: ReadonlyArray<{ slug: string; demoName: string }> = [
   { slug: 'button', demoName: 'ButtonVariantsDemo' },

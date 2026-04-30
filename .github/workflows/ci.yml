@@ -10,6 +10,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
@@ -25,3 +29,11 @@ jobs:
 
       - name: Build
         run: bun run build
+
+      - name: Install docs dependencies
+        run: bun install --frozen-lockfile --cwd docs
+
+      - name: Build docs
+        run: bun run --cwd docs build
+        env:
+          SITE: https://clay.brika.dev
