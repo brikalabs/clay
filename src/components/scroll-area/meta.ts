@@ -8,7 +8,7 @@ import type { ComponentMeta } from '../_registry';
 
 export const meta: ComponentMeta = {
   name: 'scroll-area',
-  displayName: 'ScrollArea',
+  displayName: 'Scroll Area',
   group: 'Layout',
   description: `Container with custom scrollbars. Use to constrain a tall list inside a card.`,
 };

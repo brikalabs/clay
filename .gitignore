@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+docs/node_modules/
+
+# Build output
+dist/
+docs/dist/
+docs/.astro/
+
+# Environment
+.env
+.env.*
+docs/.env
+docs/.env.*
+
+# Bun
+docs/bun.lock
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# TypeScript
+*.tsbuildinfo

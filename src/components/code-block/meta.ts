@@ -8,7 +8,8 @@ import type { ComponentMeta } from '../_registry';
 
 export const meta: ComponentMeta = {
   name: 'code-block',
-  displayName: 'CodeBlock',
+  displayName: 'Code Block',
   group: 'Data',
   description: `Syntax-highlighted code with copy button. Powered by Shiki.`,
+  externalDocs: [{ label: "Shiki", url: "https://shiki.style" }],
 };

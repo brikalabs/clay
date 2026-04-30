@@ -1,15 +1,8 @@
 import docgen from 'virtual:clay-docgen';
 import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import type { ClayComponentDoc, ClayPropDoc } from '~/lib/vite-plugin-clay-docgen';
 
-/**
- * Markdown overrides for prop descriptions. Keeps Clay's typography by
- * routing each tag through the same Tailwind classes the rest of the
- * docs site uses (mono code spans, link styles, list spacing).
- *
- * Headings are intentionally downgraded — a prop blurb shouldn't outrank
- * the page's section headings, so any `#` becomes a bold span.
- */
 const propMarkdownComponents: Components = {
   p: ({ children }) => <span>{children}</span>,
   code: ({ children }) => (
@@ -32,22 +25,17 @@ const propMarkdownComponents: Components = {
 };
 
 interface PropsTableProps {
-  /** displayName as exported by the component (e.g. "Button", "ProgressDisplay"). */
-  readonly displayName: string;
+  /** Kebab-case component slug matching the folder name (e.g. "dropdown-menu"). */
+  readonly slug: string;
 }
 
-const LITERAL_LIMIT = 12;
+const LITERAL_LIMIT = 24;
 
 interface ParsedType {
   readonly raw: string;
   readonly literals: readonly string[] | null;
 }
 
-/**
- * If the type is a union of string / number / boolean literals, return the
- * literals so the row can render them as a real TS-style union. Returns
- * null for everything else — those render as the raw type signature.
- */
 function parseType(raw: string): ParsedType {
   const parts = raw.split('|').map((p) => p.trim());
   if (parts.length < 2 || parts.length > LITERAL_LIMIT) {
@@ -82,23 +70,106 @@ function TypeSignature({ raw, literals }: ParsedType) {
   );
 }
 
-/**
- * Render the prop reference as a vertical block list — name + default on
- * the first line, the TypeScript-style type on its own line (full width),
- * and the description below. Long literal unions wrap naturally without
- * being squeezed into a narrow table column.
- *
- * Props come from `react-docgen-typescript` via the `virtual:clay-docgen`
- * Vite plugin. Required props are listed first, then alphabetical.
- */
-export function PropsTable({ displayName }: PropsTableProps) {
-  const entry = docgen[displayName];
+function PropRow({ prop }: { prop: ClayPropDoc }) {
+  const parsed = parseType(prop.type);
+  const id = `prop-${prop.name}`;
+  return (
+    <li id={id} className="scroll-mt-24 px-4 py-4">
+      {/* Name + default */}
+      <div className="mb-1.5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+        <a
+          href={`#${id}`}
+          className="font-mono font-semibold text-[0.9375rem] text-clay-strong underline-offset-4 hover:underline"
+        >
+          {prop.name}
+          {prop.required && (
+            <span aria-label="required" className="ml-0.5 text-clay-brand">
+              *
+            </span>
+          )}
+        </a>
+        {prop.defaultValue !== null && (
+          <span className="font-mono text-[0.75rem] text-clay-inactive">
+            default{' '}
+            <code className="rounded bg-clay-base px-1 py-px text-clay-default">
+              {prop.defaultValue}
+            </code>
+          </span>
+        )}
+      </div>
+      {/* Type */}
+      <div className="wrap-break-word mb-2 font-mono text-[0.8125rem] leading-5">
+        <TypeSignature {...parsed} />
+      </div>
+      {/* Description */}
+      {prop.description ? (
+        <p className="text-clay-default text-sm leading-relaxed">
+          <ReactMarkdown remarkPlugins={[remarkGfm]} components={propMarkdownComponents}>
+            {prop.description}
+          </ReactMarkdown>
+        </p>
+      ) : (
+        <p className="text-clay-inactive text-sm italic leading-relaxed">No description.</p>
+      )}
+    </li>
+  );
+}
 
-  if (!entry || entry.props.length === 0) {
+function ComponentSection({
+  doc,
+  showHeading,
+}: {
+  doc: ClayComponentDoc;
+  showHeading: boolean;
+}) {
+  const propCount = doc.props.length;
+
+  return (
+    <section>
+      {showHeading && (
+        <div className="mb-3 flex items-center gap-3">
+          <h3
+            id={`sub-${doc.displayName.toLowerCase()}`}
+            className="scroll-mt-24 font-mono text-[0.9375rem] font-bold text-clay-strong"
+          >
+            <span className="text-clay-inactive">&lt;</span>
+            {doc.displayName}
+            <span className="text-clay-inactive"> /&gt;</span>
+          </h3>
+          <span className="h-px flex-1 bg-clay-hairline" />
+          <span className="rounded-full bg-clay-elevated px-2 py-0.5 font-mono text-[0.6875rem] text-clay-inactive">
+            {propCount === 0 ? 'passthrough' : `${propCount} prop${propCount !== 1 ? 's' : ''}`}
+          </span>
+        </div>
+      )}
+
+      {propCount > 0 ? (
+        <ul className="divide-y divide-clay-hairline overflow-hidden rounded-md border border-clay-hairline">
+          {doc.props.map((prop) => (
+            <PropRow key={prop.name} prop={prop} />
+          ))}
+        </ul>
+      ) : (
+        <p className="rounded-md border border-clay-hairline border-dashed px-4 py-3 text-clay-inactive text-sm italic">
+          No wrapper-specific props — all attributes pass through to the underlying primitive.
+        </p>
+      )}
+    </section>
+  );
+}
+
+export function PropsTable({ slug }: PropsTableProps) {
+  const allDocs = docgen[slug] ?? [];
+
+  if (allDocs.length === 0) {
+    const name = slug
+      .split('-')
+      .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+      .join('');
     return (
       <div className="not-prose rounded-md border border-clay-hairline border-dashed bg-clay-canvas/30 px-4 py-6 text-center">
         <p className="font-mono text-clay-subtle text-sm">
-          <span className="font-semibold text-clay-default">{displayName}</span> exposes no
+          <span className="font-semibold text-clay-default">{name}</span> exposes no
           wrapper-specific props.
         </p>
         <p className="mx-auto mt-1 max-w-xl text-[0.75rem] text-clay-inactive leading-relaxed">
@@ -109,50 +180,13 @@ export function PropsTable({ displayName }: PropsTableProps) {
     );
   }
 
+  const showHeadings = allDocs.length > 1;
+
   return (
-    <section className="not-prose">
-      <ul className="divide-y divide-clay-hairline border-clay-hairline border-y">
-        {entry.props.map((prop) => {
-          const parsed = parseType(prop.type);
-          const slug = `prop-${prop.name}`;
-          return (
-            <li key={prop.name} id={slug} className="scroll-mt-24 py-4">
-              <div className="mb-1 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                <a
-                  href={`#${slug}`}
-                  className="font-mono font-semibold text-[0.9375rem] text-clay-strong underline-offset-4 hover:underline"
-                >
-                  {prop.name}
-                  {prop.required && (
-                    <span aria-label="required" className="ml-0.5 text-clay-brand">
-                      *
-                    </span>
-                  )}
-                </a>
-                {prop.defaultValue !== null && (
-                  <span className="font-mono text-[0.75rem] text-clay-inactive">
-                    default <span className="text-clay-default">{prop.defaultValue}</span>
-                  </span>
-                )}
-              </div>
-              <div className="wrap-break-word mb-2 font-mono text-[0.8125rem] leading-6">
-                <TypeSignature {...parsed} />
-              </div>
-              {prop.description ? (
-                <p className="max-w-[68ch] text-clay-default text-sm leading-relaxed">
-                  <ReactMarkdown remarkPlugins={[remarkGfm]} components={propMarkdownComponents}>
-                    {prop.description}
-                  </ReactMarkdown>
-                </p>
-              ) : (
-                <p className="max-w-[68ch] text-clay-inactive text-sm italic leading-relaxed">
-                  No description yet.
-                </p>
-              )}
-            </li>
-          );
-        })}
-      </ul>
-    </section>
+    <div className="not-prose flex flex-col gap-8">
+      {allDocs.map((doc) => (
+        <ComponentSection key={doc.displayName} doc={doc} showHeading={showHeadings} />
+      ))}
+    </div>
   );
 }

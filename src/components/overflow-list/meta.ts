@@ -8,7 +8,7 @@ import type { ComponentMeta } from '../_registry';
 
 export const meta: ComponentMeta = {
   name: 'overflow-list',
-  displayName: 'OverflowList',
+  displayName: 'Overflow List',
   group: 'Data',
   description: `List that adapts to available width by collapsing overflow into a "+N more" indicator.`,
 };

@@ -1,7 +1,7 @@
 ---
 import { ClayLogo } from '@brika/clay/components/clay-logo';
-import { HomeGrid } from '~/components/demos/HomeGrid.tsx';
-import CodeSource from '~/components/docs/CodeSource.astro';
+import { HomeGrid } from '~/components/HomeGrid.tsx';
+import { PackageManager } from '~/components/docs/PackageManager.tsx';
 import MainLayout from '~/layouts/MainLayout.astro';
 import { COMPONENTS } from '~/lib/component-registry';
 
@@ -96,7 +96,7 @@ const componentCount = COMPONENTS.length;
           <span>Install</span>
           <span class="hairline flex-1"></span>
         </div>
-        <CodeSource code="bun add @brika/clay" lang="bash" filename="terminal" />
+        <PackageManager package="@brika/clay" client:load />
       </div>
     </div>
   </section>

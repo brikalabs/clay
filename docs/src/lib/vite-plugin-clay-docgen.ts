@@ -57,6 +57,11 @@ export interface ClayComponentDoc {
 
 const SKIPPED_PROPS = new Set(['key', 'ref']);
 
+/** Radix injects `__scope*` context props internally — never surface them. */
+function isInternalProp(name: string): boolean {
+  return name.startsWith('__');
+}
+
 /**
  * Generic description fallback for props that recur across many Radix-based
  * primitives. Lets us document them once globally instead of asking every
@@ -94,7 +99,7 @@ function buildParser(tsconfigPath: string | null): (files: string[]) => Componen
     shouldExtractLiteralValuesFromEnum: true,
     shouldRemoveUndefinedFromOptional: true,
     propFilter: (prop) => {
-      if (SKIPPED_PROPS.has(prop.name)) {
+      if (SKIPPED_PROPS.has(prop.name) || isInternalProp(prop.name)) {
         return false;
       }
       if (prop.parent) {
@@ -110,18 +115,54 @@ function buildParser(tsconfigPath: string | null): (files: string[]) => Componen
   return (files) => parser.parse(files);
 }
 
-function normalizeDocs(docs: readonly ComponentDoc[]): Record<string, ClayComponentDoc> {
-  const out: Record<string, ClayComponentDoc> = {};
+/** Extract the component slug from an absolute file path. */
+function slugFromPath(filePath: string): string | null {
+  const match = filePath.match(/[/\\]components[/\\]([^/\\]+)[/\\][^/\\]+\.tsx$/);
+  return match?.[1] ?? null;
+}
+
+/** "dropdown-menu" → "DropdownMenu" */
+function slugToPascalCase(slug: string): string {
+  return slug
+    .split('-')
+    .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+    .join('');
+}
+
+function normalizeDocs(docs: readonly ComponentDoc[]): Record<string, ClayComponentDoc[]> {
+  const bySlug: Record<string, ClayComponentDoc[]> = {};
+
   for (const doc of docs) {
     if (!doc.displayName || isHookName(doc.displayName)) {
       continue;
     }
+    const slug = slugFromPath(doc.filePath);
+    if (!slug) {
+      continue;
+    }
+
     const props = Object.values(doc.props).map<ClayPropDoc>((prop) => {
       const tsdoc = prop.description?.trim() ?? '';
       const fallback = COMMON_PROP_DESCRIPTIONS[prop.name] ?? '';
+
+      // When react-docgen-typescript resolves a string/number enum or union type,
+      // it returns `type.name === "enum"` with the actual values in `type.value`
+      // (an array of `{ value: string, description: string }`). We join them into
+      // a pipe-separated union so the PropsTable can render them as literals.
+      let typeName = prop.type?.name ?? 'unknown';
+      if (
+        typeName === 'enum' &&
+        Array.isArray((prop.type as Record<string, unknown>)?.value)
+      ) {
+        const values = (prop.type as { value: Array<{ value: string }> }).value;
+        // Drop `undefined` — it's implied by the prop being optional.
+        const filtered = values.filter((v) => v.value !== 'undefined');
+        typeName = filtered.map((v) => v.value).join(' | ');
+      }
+
       return {
         name: prop.name,
-        type: prop.type?.name ?? 'unknown',
+        type: typeName,
         required: prop.required,
         defaultValue: prop.defaultValue?.value ?? null,
         description: tsdoc || fallback,
@@ -133,13 +174,27 @@ function normalizeDocs(docs: readonly ComponentDoc[]): Record<string, ClayCompon
       }
       return a.name.localeCompare(b.name);
     });
-    out[doc.displayName] = {
+
+    const componentDoc: ClayComponentDoc = {
       displayName: doc.displayName,
       description: doc.description ?? '',
       props,
     };
+
+    (bySlug[slug] ??= []).push(componentDoc);
   }
-  return out;
+
+  // Within each slug, sort: primary component first, then alphabetical.
+  for (const slug of Object.keys(bySlug)) {
+    const primary = slugToPascalCase(slug);
+    bySlug[slug]!.sort((a, b) => {
+      if (a.displayName === primary) return -1;
+      if (b.displayName === primary) return 1;
+      return a.displayName.localeCompare(b.displayName);
+    });
+  }
+
+  return bySlug;
 }
 
 export function clayDocgenPlugin(_options: ClayDocgenPluginOptions): ClayDocgenPlugin {
@@ -149,9 +204,9 @@ export function clayDocgenPlugin(_options: ClayDocgenPluginOptions): ClayDocgenP
   const tsconfigPath = resolve(claySrc, '..', 'tsconfig.json');
 
   const watchedFiles = new Set<string>();
-  let cache: Record<string, ClayComponentDoc> | null = null;
+  let cache: Record<string, ClayComponentDoc[]> | null = null;
 
-  function generate(): Record<string, ClayComponentDoc> {
+  function generate(): Record<string, ClayComponentDoc[]> {
     const slugs = listComponentSlugs(componentsDir);
     const files = slugs
       .map((slug) => componentEntryFile(componentsDir, slug))
@@ -164,7 +219,7 @@ export function clayDocgenPlugin(_options: ClayDocgenPluginOptions): ClayDocgenP
     return normalizeDocs(docs);
   }
 
-  function getDocs(): Record<string, ClayComponentDoc> {
+  function getDocs(): Record<string, ClayComponentDoc[]> {
     cache ??= generate();
     return cache;
   }

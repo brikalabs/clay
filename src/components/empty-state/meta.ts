@@ -8,7 +8,7 @@ import type { ComponentMeta } from '../_registry';
 
 export const meta: ComponentMeta = {
   name: 'empty-state',
-  displayName: 'EmptyState',
+  displayName: 'Empty State',
   group: 'Feedback',
   description: `Friendly placeholder for empty lists or zero-results states.`,
 };

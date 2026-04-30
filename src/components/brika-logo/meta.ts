@@ -8,7 +8,7 @@ import type { ComponentMeta } from '../_registry';
 
 export const meta: ComponentMeta = {
   name: 'brika-logo',
-  displayName: 'BrikaLogo',
+  displayName: 'Brika Logo',
   group: 'Primitives',
   description: `Brika brand mark — three stacked bricks. Uses currentColor.`,
 };
