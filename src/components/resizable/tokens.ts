@@ -3,8 +3,11 @@ import { meta } from './meta';
 
 export const tokens = defineComponent(meta.name, {
   slots: {
-    'handle-size': { default: '0.25rem', description: 'Resize handle thickness.' },
-    'handle-color': { default: 'var(--border)', description: 'Resize handle color.' },
-    'handle-hover': { default: 'var(--primary)', description: 'Resize handle hover color.' },
+    'handle-size': { default: '1px', description: 'Resize handle thickness along the resize axis.' },
+    'handle-color': { default: 'var(--border)', description: 'Resting handle color.' },
+    'handle-hover': {
+      default: 'var(--primary)',
+      description: 'Hover-state handle color; applied at 40% opacity.',
+    },
   },
 });

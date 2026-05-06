@@ -29,7 +29,7 @@ function Calendar({
       showOutsideDays={showOutsideDays}
       captionLayout={captionLayout}
       className={cn(
-        'corner-themed border-(length:--card-border-width) w-fit rounded-card border-border bg-card-container p-4 text-card-label shadow-card [border-style:var(--card-border-style)]',
+        'card corner-themed w-fit rounded-card border-border bg-card-container p-4 text-card-label shadow-card',
         className
       )}
       formatters={{

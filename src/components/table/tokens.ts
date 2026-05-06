@@ -7,8 +7,14 @@ import { meta } from './meta';
 
 export const tokens = defineComponent(meta.name, {
   slots: {
-    'header-bg': { default: 'var(--muted)', description: 'Background for table header rows.' },
-    'row-bg': { default: 'var(--background)', description: 'Background for table body rows.' },
-    'row-hover-bg': { default: 'var(--accent)', description: 'Background for hovered table rows.' },
+    'header-bg': {
+      default: 'var(--muted)',
+      description: 'Background for the table footer (and any consumer-defined header rows).',
+    },
+    'row-hover-bg': {
+      default: 'var(--muted)',
+      description:
+        'Background for hovered and selected rows; the hover state applies it at 50% opacity.',
+    },
   },
 });

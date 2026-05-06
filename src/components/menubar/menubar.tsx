@@ -12,7 +12,7 @@ function Menubar({ className, ...props }: React.ComponentProps<typeof MenubarPri
     <MenubarPrimitive.Root
       data-slot="menubar"
       className={cn(
-        'corner-themed flex h-(--menubar-height) items-center gap-1 rounded-menubar border-(length:--menubar-border-width) border-input bg-background px-(--menubar-padding-x) [border-style:var(--menubar-border-style)]',
+        'menubar corner-themed flex items-center gap-1 rounded-menubar border-input bg-background',
         className
       )}
       {...props}
@@ -34,7 +34,7 @@ function MenubarTrigger({
     <MenubarPrimitive.Trigger
       data-slot="menubar-trigger"
       className={cn(
-        'corner-themed flex cursor-default select-none items-center rounded-menubar-item px-(--menubar-item-padding-x) py-(--menubar-item-padding-y) text-sm font-medium outline-none focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground',
+        'menubar-item corner-themed flex cursor-default select-none items-center rounded-menubar-item text-sm font-medium outline-none focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground',
         className
       )}
       {...props}
@@ -57,7 +57,7 @@ function MenubarContent({
         alignOffset={alignOffset}
         sideOffset={sideOffset}
         className={cn(
-          'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 corner-themed z-50 min-w-[12rem] origin-(--radix-menubar-content-transform-origin) overflow-hidden rounded-menubar-content border-(length:--menubar-content-border-width) border-input bg-popover p-safe-sm text-popover-foreground shadow-menubar-content [border-style:var(--menubar-content-border-style)] data-[state=closed]:animate-out data-[state=open]:animate-in',
+          'menubar-content data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 corner-themed z-50 min-w-[12rem] origin-(--radix-menubar-content-transform-origin) overflow-hidden rounded-menubar-content border-input bg-popover p-safe-sm text-popover-foreground shadow-menubar-content data-[state=closed]:animate-out data-[state=open]:animate-in',
           className
         )}
         {...props}
@@ -83,7 +83,7 @@ function MenubarItem({
       data-inset={inset}
       data-variant={variant}
       className={cn(
-        "corner-themed relative flex cursor-default select-none items-center gap-[var(--menubar-item-gap)] rounded-menubar-item px-[var(--menubar-item-padding-x)] py-[var(--menubar-item-padding-y)] text-sm outline-hidden focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[inset]:pl-8 data-[variant=destructive]:text-destructive data-[disabled]:opacity-50 data-[variant=destructive]:focus:bg-destructive/10 data-[variant=destructive]:focus:text-destructive dark:data-[variant=destructive]:focus:bg-destructive/20 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "menubar-item corner-themed relative flex cursor-default select-none items-center rounded-menubar-item text-sm outline-hidden focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[inset]:pl-8 data-[variant=destructive]:text-destructive data-[disabled]:opacity-50 data-[variant=destructive]:focus:bg-destructive/10 data-[variant=destructive]:focus:text-destructive dark:data-[variant=destructive]:focus:bg-destructive/20 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0",
         className
       )}
       {...props}
@@ -209,7 +209,7 @@ function MenubarSubContent({
     <MenubarPrimitive.SubContent
       data-slot="menubar-sub-content"
       className={cn(
-        'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 corner-themed z-50 min-w-[8rem] origin-(--radix-menubar-content-transform-origin) overflow-hidden rounded-menubar-content border-(length:--menubar-content-border-width) border-input bg-popover p-safe-sm text-popover-foreground shadow-menubar-content [border-style:var(--menubar-content-border-style)] data-[state=closed]:animate-out data-[state=open]:animate-in',
+        'menubar-content data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 corner-themed z-50 min-w-[8rem] origin-(--radix-menubar-content-transform-origin) overflow-hidden rounded-menubar-content border-input bg-popover p-safe-sm text-popover-foreground shadow-menubar-content data-[state=closed]:animate-out data-[state=open]:animate-in',
         className
       )}
       {...props}

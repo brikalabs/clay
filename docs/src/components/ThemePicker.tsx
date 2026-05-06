@@ -10,7 +10,7 @@ const THEME_EVENT = 'clay:theme-change';
 
 function readInitialThemeId(): string {
   if (globalThis.window === undefined) {
-    return 'default';
+    return 'clay';
   }
   const stored = localStorage.getItem(STORAGE_KEY);
   if (stored && builtInThemesById[stored]) {
@@ -55,7 +55,7 @@ function SwatchStrip({ theme, count = 4, height = 14 }: SwatchStripProps) {
  * a mono description, hairline-left active rail.
  */
 export function ThemePicker() {
-  const [themeId, setThemeId] = useState<string>('default');
+  const [themeId, setThemeId] = useState<string>('clay');
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
@@ -70,7 +70,7 @@ export function ThemePicker() {
     if (!mounted) {
       return;
     }
-    // Every theme — including `default` — is a real preset that injects
+    // Every theme — including `clay` — is a real preset that injects
     // its own CSS var overrides via `applyTheme`. The boot script in
     // `BaseLayout.astro` paints the same `<style id="clay-theme">` tag
     // before first paint to avoid a flash on hydration.

@@ -35,11 +35,11 @@ const ResizableHandle = ({
   <Separator
     data-slot="resizable-handle"
     className={cn(
-      'relative shrink-0 bg-border outline-none transition-colors hover:bg-primary/40 focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1',
+      'relative shrink-0 bg-resizable-handle-color outline-none transition-colors hover:bg-resizable-handle-hover/40 focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1',
       // Vertical bar (horizontal group)
-      '[&[aria-orientation=vertical]]:flex [&[aria-orientation=vertical]]:w-px [&[aria-orientation=vertical]]:cursor-col-resize [&[aria-orientation=vertical]]:items-center [&[aria-orientation=vertical]]:justify-center',
+      '[&[aria-orientation=vertical]]:flex [&[aria-orientation=vertical]]:w-(--resizable-handle-size) [&[aria-orientation=vertical]]:cursor-col-resize [&[aria-orientation=vertical]]:items-center [&[aria-orientation=vertical]]:justify-center',
       // Horizontal bar (vertical group)
-      '[&[aria-orientation=horizontal]]:flex [&[aria-orientation=horizontal]]:h-px [&[aria-orientation=horizontal]]:w-full [&[aria-orientation=horizontal]]:cursor-row-resize [&[aria-orientation=horizontal]]:items-center [&[aria-orientation=horizontal]]:justify-center',
+      '[&[aria-orientation=horizontal]]:flex [&[aria-orientation=horizontal]]:h-(--resizable-handle-size) [&[aria-orientation=horizontal]]:w-full [&[aria-orientation=horizontal]]:cursor-row-resize [&[aria-orientation=horizontal]]:items-center [&[aria-orientation=horizontal]]:justify-center',
       className
     )}
     {...props}

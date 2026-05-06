@@ -36,23 +36,23 @@ The docs site's own surfaces — canvas, elevated surfaces, borders, and text.
 
 ## Component tokens
 
-The shadcn-style scale Clay's components (Button, Input, Card) are tokenised against. These live in the docs site today and move into `@brika/clay/styles` in a follow-up PR.
+The semantic scale every Clay component is tokenised against. Each variable is defined by the active theme and adapts to light/dark mode automatically — override one in your own CSS and every component using it follows.
 
 <ColorsPalette
   tokens={[
-    { name: 'background', cssVar: '--color-background', description: 'Default app background.' },
-    { name: 'foreground', cssVar: '--color-foreground', description: 'Default app text.' },
-    { name: 'primary', cssVar: '--color-primary', description: 'Primary action fill.' },
-    { name: 'primary-foreground', cssVar: '--color-primary-foreground', description: 'Text on primary fill.' },
-    { name: 'secondary', cssVar: '--color-secondary', description: 'Secondary action fill.' },
-    { name: 'destructive', cssVar: '--color-destructive', description: 'Destructive action.' },
-    { name: 'muted', cssVar: '--color-muted', description: 'De-emphasised surfaces.' },
-    { name: 'muted-foreground', cssVar: '--color-muted-foreground', description: 'Text on muted surfaces.' },
-    { name: 'accent', cssVar: '--color-accent', description: 'Hover / active surfaces.' },
-    { name: 'border', cssVar: '--color-border', description: 'Default component border.' },
-    { name: 'input', cssVar: '--color-input', description: 'Input border.' },
-    { name: 'ring', cssVar: '--color-ring', description: 'Focus ring.' },
-    { name: 'card', cssVar: '--color-card', description: 'Card surface.' },
+    { name: 'background', cssVar: '--background', description: 'Default app background.' },
+    { name: 'foreground', cssVar: '--foreground', description: 'Default app text.' },
+    { name: 'primary', cssVar: '--primary', description: 'Primary action fill.' },
+    { name: 'primary-foreground', cssVar: '--primary-foreground', description: 'Text on primary fill.' },
+    { name: 'secondary', cssVar: '--secondary', description: 'Secondary action fill.' },
+    { name: 'destructive', cssVar: '--destructive', description: 'Destructive action.' },
+    { name: 'muted', cssVar: '--muted', description: 'De-emphasised surfaces.' },
+    { name: 'muted-foreground', cssVar: '--muted-foreground', description: 'Text on muted surfaces.' },
+    { name: 'accent', cssVar: '--accent', description: 'Hover / active surfaces.' },
+    { name: 'border', cssVar: '--border', description: 'Default component border.' },
+    { name: 'input', cssVar: '--input', description: 'Input border.' },
+    { name: 'ring', cssVar: '--ring', description: 'Focus ring.' },
+    { name: 'card', cssVar: '--card', description: 'Card surface.' },
   ]}
 />
 

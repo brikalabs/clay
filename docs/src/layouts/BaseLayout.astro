@@ -38,7 +38,7 @@ const structuredData = {
 // inlined in `<head>` so the synchronous boot script below can pick the
 // saved theme out of localStorage and emit the matching `<style>` tag
 // (and `data-effects` attribute) BEFORE first paint — no flash, no
-// extra fetch. The `default` theme is included so first-time visitors
+// extra fetch. The `clay` theme is included so first-time visitors
 // (no localStorage) get Clay's branded palette instead of the package's
 // neutral registry fallback.
 const THEME_DATA = Object.fromEntries(
@@ -125,7 +125,7 @@ const THEME_DATA_JSON = JSON.stringify(THEME_DATA);
           const THEME_KEY = 'clay-theme';
           const themeMap = JSON.parse(THEME_DATA_JSON);
           const storedTheme = localStorage.getItem(THEME_KEY);
-          const themeId = storedTheme && themeMap[storedTheme] ? storedTheme : 'default';
+          const themeId = storedTheme && themeMap[storedTheme] ? storedTheme : 'clay';
           const entry = themeMap[themeId];
           if (!entry) {
             return;

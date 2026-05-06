@@ -102,13 +102,17 @@ function InputGroupAddon({
   );
 }
 
-const inputGroupButtonVariants = cva('flex items-center gap-2 text-sm shadow-none', {
+// Addon buttons sit inside the InputGroup's fixed-height row; they need
+// to defeat the `button` shorthand bundle's `height`/`padding-*` (which
+// target a full-size 36px Button). `size-N` loses to the bundle in v4's
+// utilities-layer source order — use `h-N w-N` and explicit `px-/py-`.
+const inputGroupButtonVariants = cva('flex items-center text-sm shadow-none', {
   variants: {
     size: {
-      xs: "h-6 gap-1 rounded-[calc(var(--radius)-5px)] px-2 has-[>svg]:px-2 [&>svg:not([class*='size-'])]:size-3.5",
-      sm: 'h-8 gap-1.5 rounded-md px-2.5 has-[>svg]:px-2.5',
-      'icon-xs': 'size-6 rounded-[calc(var(--radius)-5px)] p-0 has-[>svg]:p-0',
-      'icon-sm': 'size-8 p-0 has-[>svg]:p-0',
+      xs: "h-6 gap-1 rounded-[calc(var(--radius)-5px)] px-2 py-0 has-[>svg]:px-2 [&>svg:not([class*='size-'])]:size-3.5",
+      sm: 'h-8 gap-1.5 rounded-md px-2.5 py-0 has-[>svg]:px-2.5',
+      'icon-xs': 'h-6 w-6 rounded-[calc(var(--radius)-5px)] px-0 py-0',
+      'icon-sm': 'h-8 w-8 px-0 py-0',
     },
   },
   defaultVariants: {

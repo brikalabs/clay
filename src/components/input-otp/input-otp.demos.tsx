@@ -59,6 +59,25 @@ export function InputOTPNumericDemo() {
   );
 }
 
+/** Six-digit OTP with a muted dot placeholder in each empty, inactive slot — visual cue that vanishes on focus or fill. */
+export function InputOTPPlaceholderDemo() {
+  return (
+    <InputOTP maxLength={6}>
+      <InputOTPGroup>
+        <InputOTPSlot index={0} placeholder />
+        <InputOTPSlot index={1} placeholder />
+        <InputOTPSlot index={2} placeholder />
+      </InputOTPGroup>
+      <InputOTPSeparator />
+      <InputOTPGroup>
+        <InputOTPSlot index={3} placeholder />
+        <InputOTPSlot index={4} placeholder />
+        <InputOTPSlot index={5} placeholder />
+      </InputOTPGroup>
+    </InputOTP>
+  );
+}
+
 /** Controlled OTP that shows a Verify button only once all six slots are filled. */
 export function InputOTPControlledDemo() {
   const [value, setValue] = useState('');
@@ -92,10 +111,11 @@ export function InputOTPControlledDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [InputOTPDefaultDemo, 'Input O T P Default', { description: `Six-digit OTP split into two groups of three with a dash separator.` }],
-  [InputOTPPatternDemo, 'Input O T P Pattern', { description: `Four-slot PIN entry without a separator — suitable for numeric PINs.` }],
-  [InputOTPNumericDemo, 'Input O T P Numeric', { description: `Digits-only input using the REGEXP_ONLY_DIGITS pattern — rejects letters and symbols.` }],
-  [InputOTPControlledDemo, 'Input O T P Controlled', { description: `Controlled OTP that shows a Verify button only once all six slots are filled.` }],
+  [InputOTPDefaultDemo, 'Default', { description: `Six-digit OTP split into two groups of three with a dash separator.` }],
+  [InputOTPPatternDemo, 'Pattern', { description: `Four-slot PIN entry without a separator — suitable for numeric PINs.` }],
+  [InputOTPNumericDemo, 'Numeric', { description: `Digits-only input using the REGEXP_ONLY_DIGITS pattern — rejects letters and symbols.` }],
+  [InputOTPPlaceholderDemo, 'Placeholder', { description: `Muted dot placeholder in each empty slot — fades out on focus or fill.` }],
+  [InputOTPControlledDemo, 'Controlled', { description: `Controlled OTP that shows a Verify button only once all six slots are filled.` }],
 ]);
 export const accessibility: readonly string[] = [
   `Paste works out-of-the-box — pasting a code fills all slots.`,

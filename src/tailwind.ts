@@ -30,6 +30,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import plugin from 'tailwindcss/plugin';
 import { TOKEN_REGISTRY } from './tokens/registry';
+import { SHORTHAND_INDEX } from './tokens/shorthands';
 import type { ResolvedTokenSpec, TailwindNamespace, TokenType } from './tokens/types';
 
 /**
@@ -100,10 +101,19 @@ function readDirectVarReferences(): ReadonlySet<string> {
   }
 }
 
-const COMPONENTS_CSS_REFS = readDirectVarReferences();
+/**
+ * Every Layer-2 token name reachable through either hand-authored
+ * `var(--…)` references in `.css`/`.tsx` or auto-generated shorthand
+ * utilities. A token in this set needs a `:root` default even when its
+ * `defaultLight` is a `var()` chain — otherwise the reference dangles.
+ */
+const REFERENCED_COMPONENT_TOKENS: ReadonlySet<string> = new Set([
+  ...readDirectVarReferences(),
+  ...SHORTHAND_INDEX.tokenRefs,
+]);
 
 const DARK_SELECTOR =
-  ':is(.dark, [data-mode="dark"]):root, :is(.dark, [data-mode="dark"])[data-theme="default"]';
+  ':is(.dark, [data-mode="dark"]):root, :is(.dark, [data-mode="dark"])[data-theme="clay"]';
 
 function utilityName(token: ResolvedTokenSpec): string {
   return token.utilityAlias ?? token.name;
@@ -142,7 +152,7 @@ function rootDefaults(): Record<string, string> {
       continue;
     }
     const isVarChain = token.defaultLight.startsWith('var(');
-    if (!isVarChain || COMPONENTS_CSS_REFS.has(token.name)) {
+    if (!isVarChain || REFERENCED_COMPONENT_TOKENS.has(token.name)) {
       out[`--${token.name}`] = token.defaultLight;
     }
   }
@@ -296,26 +306,26 @@ function buildThemeExtend(): ThemeExtend {
 }
 
 const clayTailwindPlugin: ReturnType<typeof plugin> = plugin(
-  ({ addBase }) => {
-    // 1. `@property` registrations — typed tokens (literal defaults only)
-    //    so the browser type-checks custom-theme overrides and animations
-    //    interpolate correctly. Tokens with `var()` defaults stay
-    //    unregistered (CSS forbids `var()` in `initial-value`).
+  ({ addBase, matchUtilities }) => {
     addBase(buildPropertyBlocks());
-
-    // 2. :root defaults — every registry token gets a value so consumers
-    //    can write raw `var(--token)` references and they always resolve.
-    addBase({ ':root, [data-theme="default"]': rootDefaults() });
-
-    // 3. Dark-mode overrides — tokens with a distinct `defaultDark`.
+    addBase({ ':root, [data-theme="clay"]': rootDefaults() });
     const darkVars = darkOverrides();
     if (Object.keys(darkVars).length > 0) {
       addBase({ [DARK_SELECTOR]: darkVars });
     }
-    // Non-default built-in themes (dracula, brutalist, …) live as plain
-    // `ThemeConfig` JSON and activate at runtime through `applyTheme()`
-    // — same path as user-authored custom themes. Skipping them here is
-    // what keeps this bundle from inflating by ~370 KB.
+    // Per-component shorthand utilities (`.button`, `.badge`, …). The
+    // JS plugin API has two ways to emit utilities: `addUtilities`
+    // (always-emit, no JIT) and `matchUtilities` (JIT-aware, emits
+    // only when the class name is found in scanned source). We use the
+    // latter with a `DEFAULT`-only value map so each entry behaves like
+    // a static utility but still participates in v4's tree-shaking.
+    const shorthandUtilities = Object.fromEntries(
+      Object.entries(SHORTHAND_INDEX.rules).map(([name, declarations]) => [
+        name,
+        () => declarations,
+      ])
+    );
+    matchUtilities(shorthandUtilities, { values: { DEFAULT: '' } });
   },
   {
     theme: {

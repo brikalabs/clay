@@ -37,21 +37,31 @@ function InputOTPGroup({ className, ...props }: React.ComponentProps<'div'>) {
 function InputOTPSlot({
   index,
   className,
+  placeholder = false,
   ...props
-}: React.ComponentProps<'div'> & { index: number }) {
+}: React.ComponentProps<'div'> & {
+  index: number;
+  /**
+   * Render a muted dot in the centre of the slot while it's empty and
+   * not focused. Disappears as soon as the slot has a value or becomes
+   * the active slot (where the caret takes over).
+   */
+  placeholder?: boolean;
+}) {
   const inputOTPContext = React.use(OTPInputContext);
   const { char, hasFakeCaret, isActive } = inputOTPContext.slots[index] ?? {
     char: null,
     hasFakeCaret: false,
     isActive: false,
   };
+  const showPlaceholder = placeholder && !char && !isActive && !hasFakeCaret;
 
   return (
     <div
       data-slot="input-otp-slot"
       data-active={isActive}
       className={cn(
-        'corner-themed relative flex size-(--input-otp-size) items-center justify-center border-input-border bg-input-container font-(--input-otp-font-weight) text-sm shadow-surface outline-none transition-all duration-(--input-otp-duration) ease-(--input-otp-easing)',
+        'input-otp corner-themed relative flex size-(--input-otp-size) items-center justify-center border-input-border bg-input-container text-sm shadow-surface outline-none transition-all',
         '[border-top-width:var(--input-otp-border-width)] [border-bottom-width:var(--input-otp-border-width)] [border-right-width:var(--input-otp-border-width)] first:rounded-l-input-otp first:[border-left-width:var(--input-otp-border-width)] last:rounded-r-input-otp',
         'data-[active=true]:z-10 data-[active=true]:ring-[3px] data-[active=true]:ring-ring/50 data-[active=true]:border-ring',
         'aria-invalid:border-destructive aria-invalid:ring-destructive/20',
@@ -60,6 +70,12 @@ function InputOTPSlot({
       {...props}
     >
       {char}
+      {showPlaceholder && (
+        <span
+          aria-hidden="true"
+          className="size-1.5 rounded-full bg-muted-foreground/40"
+        />
+      )}
       {hasFakeCaret && (
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
           <div className="animate-caret-blink h-4 w-px bg-foreground duration-1000" />

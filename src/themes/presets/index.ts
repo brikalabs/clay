@@ -2,7 +2,7 @@
  * Named re-exports of every first-party Clay theme preset.
  *
  * Export order is the narrative order:
- *   1. default        — Clay's warm-paper / terracotta lockup
+ *   1. clay           — Clay's warm-paper / terracotta lockup (the house theme)
  *   2. brika          — original blue-grey classic, opt-in for Brika apps
  *   3. ocean…candy    — colour-only palette walk, warm to cool
  *   4. dracula, synthwave, mono — editorial / hacker-aesthetic colour themes
@@ -18,7 +18,7 @@
  */
 
 // biome-ignore assist/source/organizeImports: export order drives builtInThemes (in ../registry.ts) via Object.values — narrative order matters more than alphabetical
-export { default as default_ } from './default.json' with { type: 'json' };
+export { default as clay } from './clay.json' with { type: 'json' };
 export { default as brika } from './brika.json' with { type: 'json' };
 export { default as ocean } from './ocean.json' with { type: 'json' };
 export { default as forest } from './forest.json' with { type: 'json' };

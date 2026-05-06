@@ -72,6 +72,10 @@ export function Example() {
 | `@brika/clay/tailwind` | Tailwind v4 plugin |
 | `@brika/clay/styles` | `clay.css` — utilities + components.css bridges |
 
+> **Working on Clay itself?** [`ARCHITECTURE.md`](ARCHITECTURE.md) is the
+> engineering reference — token registry shape, Tailwind v4 plugin
+> contract, JIT-pruning mechanism, theming runtime, build flow.
+
 ## Token system
 
 Clay's CSS tokens are organised in three layers, all driven by a single

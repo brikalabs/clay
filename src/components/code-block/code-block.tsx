@@ -8,7 +8,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '../tooltip';
 // --- Variants ---
 
 const codeBlockVariants = cva(
-  'font-(family-name:--code-block-font-family) overflow-hidden rounded-code-block border border-border bg-code-block-bg tracking-(--code-block-letter-spacing)',
+  'code-block overflow-hidden rounded-code-block border border-border bg-code-block-bg',
   {
     variants: {
       variant: {

@@ -11,6 +11,10 @@ export const tokens = defineComponent(meta.name, {
     description: 'Code block corner radius.',
     alias: 'code-block',
   },
+  typography: {
+    fontFamily: 'var(--font-mono)',
+    letterSpacing: '0',
+  },
   slots: {
     bg: { default: 'var(--muted)', description: 'Code block background.' },
   },
