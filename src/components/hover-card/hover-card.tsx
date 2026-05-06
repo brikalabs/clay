@@ -20,7 +20,7 @@ function HoverCardContent({
         align={align}
         sideOffset={sideOffset}
         className={cn(
-          'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 corner-themed border-(length:--hover-card-border-width) z-50 w-64 origin-(--radix-hover-card-content-transform-origin) rounded-hover-card bg-popover px-(--hover-card-padding-x) py-(--hover-card-padding-y) text-popover-foreground shadow-hover-card outline-hidden duration-(--hover-card-duration) ease-(--hover-card-easing) [border-style:var(--hover-card-border-style)] data-[state=closed]:animate-out data-[state=open]:animate-in',
+          'hover-card data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 corner-themed z-50 w-64 origin-(--radix-hover-card-content-transform-origin) rounded-hover-card bg-popover text-popover-foreground shadow-hover-card outline-hidden data-[state=closed]:animate-out data-[state=open]:animate-in',
           className
         )}
         {...props}

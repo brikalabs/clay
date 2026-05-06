@@ -3,7 +3,7 @@ import * as React from 'react';
 import { cn } from '../../primitives/cn';
 
 const cardVariants = cva(
-  'corner-themed border-(length:--card-border-width) relative rounded-card bg-card-container text-card-label shadow-card transition-color duration-(--card-duration) ease-(--card-easing) [backdrop-filter:blur(var(--card-backdrop-blur,0px))] [border-style:var(--card-border-style)]',
+  'card corner-themed relative rounded-card bg-card-container text-card-label shadow-card transition-color',
   {
     variants: {
       accent: {
