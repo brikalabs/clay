@@ -7,16 +7,16 @@ import * as React from 'react';
 import { cn } from '../../primitives/cn';
 
 const toggleVariants = cva(
-  "corner-themed inline-flex shrink-0 items-center justify-center gap-(--toggle-gap) rounded-toggle font-(--toggle-font-weight) text-sm outline-none transition-all duration-(--toggle-duration) ease-(--toggle-easing) hover:bg-muted hover:text-muted-foreground focus-visible:ring-themed disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  "toggle corner-themed inline-flex shrink-0 items-center justify-center rounded-toggle text-sm outline-none transition-all hover:bg-muted hover:text-muted-foreground focus-visible:ring-themed disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default: 'bg-transparent',
         outline:
-          'border-(length:--toggle-border-width) border-input bg-transparent shadow-surface [border-style:var(--toggle-border-style)] hover:bg-accent hover:text-accent-foreground',
+          'border-input bg-transparent shadow-surface hover:bg-accent hover:text-accent-foreground',
       },
       size: {
-        default: 'h-(--toggle-height) px-(--toggle-padding-x) py-(--toggle-padding-y)',
+        default: '',
         sm: 'h-8 px-2 text-xs',
         lg: 'h-10 px-4',
         icon: 'size-(--toggle-height)',

@@ -46,7 +46,7 @@ function NavigationMenuList({
 const NavigationMenuItem = withSlot(NavigationMenuPrimitive.Item, 'navigation-menu-item');
 
 const navigationMenuTriggerStyle = cva(
-  "corner-themed group inline-flex h-(--navigation-menu-height) w-max items-center justify-center gap-1 rounded-navigation-menu bg-background px-(--navigation-menu-padding-x) py-(--navigation-menu-padding-y) font-(--navigation-menu-font-weight) text-sm outline-none transition-[color,background-color] duration-(--navigation-menu-duration) ease-(--navigation-menu-easing) hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 focus-visible:ring-themed"
+  "navigation-menu corner-themed group inline-flex w-max items-center justify-center gap-1 rounded-navigation-menu bg-background text-sm outline-none transition-[color,background-color] hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 focus-visible:ring-themed"
 );
 
 function NavigationMenuTrigger({
@@ -62,7 +62,7 @@ function NavigationMenuTrigger({
     >
       {children}
       <ChevronDownIcon
-        className="relative top-px ml-1 size-3 transition-transform duration-(--navigation-menu-duration) group-data-[state=open]:rotate-180"
+        className="navigation-menu relative top-px ml-1 size-3 transition-transform group-data-[state=open]:rotate-180"
         aria-hidden="true"
       />
     </NavigationMenuPrimitive.Trigger>
@@ -96,7 +96,7 @@ function NavigationMenuViewport({
       <NavigationMenuPrimitive.Viewport
         data-slot="navigation-menu-viewport"
         className={cn(
-          'data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90 corner-themed relative mt-1.5 h-(--radix-navigation-menu-viewport-height) w-full overflow-hidden rounded-navigation-menu-viewport border-(length:--navigation-menu-viewport-border-width) bg-popover text-popover-foreground shadow-navigation-menu-viewport [border-style:var(--navigation-menu-viewport-border-style)] data-[state=closed]:animate-out data-[state=open]:animate-in md:w-(--radix-navigation-menu-viewport-width)',
+          'navigation-menu-viewport data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90 corner-themed relative mt-1.5 h-(--radix-navigation-menu-viewport-height) w-full overflow-hidden rounded-navigation-menu-viewport bg-popover text-popover-foreground shadow-navigation-menu-viewport data-[state=closed]:animate-out data-[state=open]:animate-in md:w-(--radix-navigation-menu-viewport-width)',
           className
         )}
         {...props}

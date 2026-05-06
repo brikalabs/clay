@@ -15,7 +15,7 @@ function Command({
     <CommandPrimitive
       data-slot="command"
       className={cn(
-        'corner-themed flex h-full w-full flex-col overflow-hidden rounded-command border-(length:--command-border-width) bg-popover text-popover-foreground shadow-command [border-style:var(--command-border-style)]',
+        'command corner-themed flex h-full w-full flex-col overflow-hidden rounded-command bg-popover text-popover-foreground shadow-command',
         className
       )}
       {...props}
@@ -120,7 +120,7 @@ function CommandItem({
     <CommandPrimitive.Item
       data-slot="command-item"
       className={cn(
-        "corner-themed relative flex cursor-default select-none items-center gap-[var(--command-item-gap)] rounded-command-item px-[var(--command-item-padding-x)] py-[var(--command-item-padding-y)] text-sm outline-hidden data-[disabled=true]:pointer-events-none data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground data-[disabled=true]:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "command-item corner-themed relative flex cursor-default select-none items-center rounded-command-item text-sm outline-hidden data-[disabled=true]:pointer-events-none data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground data-[disabled=true]:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0",
         className
       )}
       {...props}

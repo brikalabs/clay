@@ -36,7 +36,7 @@ function Checkbox({
       data-slot="checkbox"
       data-size={size}
       className={cn(
-        'peer corner-themed border-(length:--checkbox-border-width) inline-flex shrink-0 items-center justify-center rounded-checkbox border-input-border bg-input-container shadow-surface outline-none transition-[color,background-color,border-color,box-shadow] focus-visible:ring-themed disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-[size=default]:size-4 data-[size=lg]:size-5 data-[size=sm]:size-3.5 data-[state=checked]:border-primary data-[state=indeterminate]:border-primary data-[state=checked]:bg-primary data-[state=indeterminate]:bg-primary data-[state=checked]:text-primary-foreground data-[state=indeterminate]:text-primary-foreground dark:aria-invalid:ring-destructive/40',
+        'checkbox peer corner-themed inline-flex shrink-0 items-center justify-center rounded-checkbox border-input-border bg-input-container shadow-surface outline-none transition-[color,background-color,border-color,box-shadow] focus-visible:ring-themed disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-[size=default]:size-(--checkbox-size) data-[size=lg]:size-5 data-[size=sm]:size-3.5 data-[state=checked]:border-primary data-[state=indeterminate]:border-primary data-[state=checked]:bg-primary data-[state=indeterminate]:bg-primary data-[state=checked]:text-primary-foreground data-[state=indeterminate]:text-primary-foreground dark:aria-invalid:ring-destructive/40',
         className
       )}
       {...props}

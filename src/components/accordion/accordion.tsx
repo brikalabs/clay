@@ -20,13 +20,13 @@ function AccordionTrigger({
       <AccordionPrimitive.Trigger
         data-slot="accordion-trigger"
         className={cn(
-          "group/accordion-trigger corner-themed flex flex-1 items-center justify-between gap-4 rounded-accordion px-(--accordion-padding-x) py-(--accordion-padding-y) font-medium text-sm outline-none transition-all hover:underline focus-visible:ring-themed disabled:pointer-events-none disabled:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+          "accordion group/accordion-trigger corner-themed flex flex-1 items-center justify-between gap-4 rounded-accordion font-medium text-sm outline-none transition-all hover:underline focus-visible:ring-themed disabled:pointer-events-none disabled:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
           className
         )}
         {...props}
       >
         {children}
-        <ChevronDownIcon className="text-muted-foreground transition-transform duration-(--accordion-duration) ease-(--accordion-easing) group-data-[state=open]/accordion-trigger:rotate-180" />
+        <ChevronDownIcon className="accordion text-muted-foreground transition-transform group-data-[state=open]/accordion-trigger:rotate-180" />
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
   );
@@ -43,7 +43,7 @@ function AccordionContent({
       className="overflow-hidden text-sm data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
       {...props}
     >
-      <div className={cn('px-(--accordion-padding-x) pb-(--accordion-padding-y) pt-0', className)}>
+      <div className={cn('accordion pt-0', className)}>
         {children}
       </div>
     </AccordionPrimitive.Content>
