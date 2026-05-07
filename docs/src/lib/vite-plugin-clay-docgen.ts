@@ -116,13 +116,13 @@ function buildParser(tsconfigPath: string | null): (files: string[]) => Componen
 }
 
 /** Extract the component slug from an absolute file path. */
-function slugFromPath(filePath: string): string | null {
+export function slugFromPath(filePath: string): string | null {
   const match = /[/\\]components[/\\]([^/\\]+)[/\\][^/\\]+\.tsx$/.exec(filePath);
   return match?.[1] ?? null;
 }
 
 /** "dropdown-menu" → "DropdownMenu" */
-function slugToPascalCase(slug: string): string {
+export function slugToPascalCase(slug: string): string {
   return slug
     .split('-')
     .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
