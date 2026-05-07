@@ -20,7 +20,7 @@ export function NavigationMenuDefaultDemo() {
             <ul className="grid gap-2 p-4 w-64">
               <li>
                 <NavigationMenuLink asChild>
-                  <a href="#" className="flex flex-col gap-1 rounded-md p-3 text-sm hover:bg-accent">
+                  <a href="https://example.com" className="flex flex-col gap-1 rounded-md p-3 text-sm hover:bg-accent">
                     <span className="font-medium">Introduction</span>
                     <span className="text-muted-foreground text-xs">Install and configure Clay.</span>
                   </a>
@@ -28,7 +28,7 @@ export function NavigationMenuDefaultDemo() {
               </li>
               <li>
                 <NavigationMenuLink asChild>
-                  <a href="#" className="flex flex-col gap-1 rounded-md p-3 text-sm hover:bg-accent">
+                  <a href="https://example.com" className="flex flex-col gap-1 rounded-md p-3 text-sm hover:bg-accent">
                     <span className="font-medium">Theming</span>
                     <span className="text-muted-foreground text-xs">Customize your design tokens.</span>
                   </a>
@@ -43,7 +43,7 @@ export function NavigationMenuDefaultDemo() {
             <ul className="grid gap-2 p-4 w-64">
               <li>
                 <NavigationMenuLink asChild>
-                  <a href="#" className="flex flex-col gap-1 rounded-md p-3 text-sm hover:bg-accent">
+                  <a href="https://example.com" className="flex flex-col gap-1 rounded-md p-3 text-sm hover:bg-accent">
                     <span className="font-medium">Button</span>
                     <span className="text-muted-foreground text-xs">Interactive action surfaces.</span>
                   </a>
@@ -51,7 +51,7 @@ export function NavigationMenuDefaultDemo() {
               </li>
               <li>
                 <NavigationMenuLink asChild>
-                  <a href="#" className="flex flex-col gap-1 rounded-md p-3 text-sm hover:bg-accent">
+                  <a href="https://example.com" className="flex flex-col gap-1 rounded-md p-3 text-sm hover:bg-accent">
                     <span className="font-medium">Dialog</span>
                     <span className="text-muted-foreground text-xs">Modal overlays for focused tasks.</span>
                   </a>
@@ -62,7 +62,7 @@ export function NavigationMenuDefaultDemo() {
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
-            <a href="#" className={navigationMenuTriggerStyle()}>Changelog</a>
+            <a href="https://example.com" className={navigationMenuTriggerStyle()}>Changelog</a>
           </NavigationMenuLink>
         </NavigationMenuItem>
       </NavigationMenuList>
@@ -81,7 +81,7 @@ export function NavigationMenuRichDemo() {
             <div className="grid grid-cols-[180px_1fr] gap-3 p-4 w-[480px]">
               <NavigationMenuLink asChild>
                 <a
-                  href="#"
+                  href="https://example.com"
                   className="flex h-full flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-4 no-underline outline-none hover:shadow-md focus:shadow-md"
                 >
                   <div className="mt-4 mb-2 text-lg font-medium">Clay</div>
@@ -99,7 +99,7 @@ export function NavigationMenuRichDemo() {
                 ].map((item) => (
                   <li key={item.title}>
                     <NavigationMenuLink asChild>
-                      <a href="#" className="flex flex-col gap-0.5 rounded-md p-3 text-sm hover:bg-accent">
+                      <a href="https://example.com" className="flex flex-col gap-0.5 rounded-md p-3 text-sm hover:bg-accent">
                         <span className="font-medium">{item.title}</span>
                         <span className="text-muted-foreground text-xs">{item.desc}</span>
                       </a>
@@ -123,7 +123,7 @@ export function NavigationMenuSimpleLinksDemo() {
         {['Docs', 'Components', 'Blog', 'Changelog'].map((label) => (
           <NavigationMenuItem key={label}>
             <NavigationMenuLink asChild>
-              <a href="#" className={navigationMenuTriggerStyle()}>{label}</a>
+              <a href="https://example.com" className={navigationMenuTriggerStyle()}>{label}</a>
             </NavigationMenuLink>
           </NavigationMenuItem>
         ))}

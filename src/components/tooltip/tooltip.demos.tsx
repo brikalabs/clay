@@ -55,6 +55,9 @@ export function TooltipDisabledElementDemo() {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
+          {/* NOSONAR: disabled buttons don't fire pointer/focus events in any browser, so the
+              W3C-recommended tooltip workaround wraps them in a focusable span. S6845 doesn't
+              recognize this pattern; switching to a real button or role=button breaks it. */}
           <span tabIndex={0} className="inline-block">
             <Button disabled>Publish</Button>
           </span>

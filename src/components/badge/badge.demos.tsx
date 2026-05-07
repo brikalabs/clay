@@ -44,10 +44,10 @@ export function BadgeAsLinkDemo() {
   return (
     <div className="flex flex-wrap gap-2">
       <Badge asChild variant="outline">
-        <a href="#">v2.0.0</a>
+        <a href="https://example.com">v2.0.0</a>
       </Badge>
       <Badge asChild variant="secondary">
-        <a href="#">MIT</a>
+        <a href="https://example.com">MIT</a>
       </Badge>
     </div>
   );

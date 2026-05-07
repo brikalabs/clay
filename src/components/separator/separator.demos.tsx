@@ -29,11 +29,11 @@ export function SeparatorVerticalDemo() {
 export function SeparatorNavDemo() {
   return (
     <div className="flex h-5 items-center gap-3">
-      <a href="#" className="text-sm hover:underline">Docs</a>
+      <a href="https://example.com" className="text-sm hover:underline">Docs</a>
       <Separator orientation="vertical" />
-      <a href="#" className="text-sm hover:underline">API</a>
+      <a href="https://example.com" className="text-sm hover:underline">API</a>
       <Separator orientation="vertical" />
-      <a href="#" className="text-sm hover:underline">GitHub</a>
+      <a href="https://example.com" className="text-sm hover:underline">GitHub</a>
     </div>
   );
 }

@@ -18,6 +18,19 @@ jobs:
           # history, not the default shallow clone.
           fetch-depth: 0
 
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Test with coverage
+        # bunfig.toml configures lcov + text reporters into ./coverage.
+        # `sonar.javascript.lcov.reportPaths` in sonar-project.properties
+        # points the scanner at the same path.
+        run: bun test --coverage
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v3
         env:
