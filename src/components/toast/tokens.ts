@@ -15,4 +15,8 @@ export const tokens = defineComponent('toast', {
     description: 'Toast elevation.',
     alias: 'toast',
   },
+  backdropBlur: {
+    default: '0px',
+    description: 'Backdrop blur on the toast surface. Set non-zero for a frosted-glass toast.',
+  },
 });

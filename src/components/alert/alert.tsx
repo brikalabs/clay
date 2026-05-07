@@ -1,20 +1,22 @@
 import { cva, type VariantProps } from 'class-variance-authority';
+import { X } from 'lucide-react';
 import * as React from 'react';
 
 import { cn } from '../../primitives/cn';
 
 const alertVariants = cva(
-  'corner-themed relative flex w-full items-start gap-3 rounded-alert border px-4 py-3 text-sm',
+  'corner-themed relative grid w-full grid-cols-[0_1fr] items-start gap-y-0.5 rounded-alert border px-4 py-3 text-sm backdrop-blur-[var(--alert-backdrop-blur)] has-[>[data-slot=alert-icon]]:grid-cols-[1rem_1fr] has-[>[data-slot=alert-icon],>[data-slot=alert-close]]:gap-x-3',
   {
     variants: {
       variant: {
         default: 'border-border bg-background text-foreground',
-        destructive: 'border-destructive/30 bg-destructive/10 text-foreground',
-        info: 'border-[color-mix(in_oklch,var(--data-1),transparent_70%)] bg-[color-mix(in_oklch,var(--data-1),transparent_92%)] text-foreground [--alert-accent:var(--data-1)]',
+        destructive:
+          'bg-[color-mix(in_oklch,var(--destructive)_var(--alert-tint-bg-amount),var(--alert-tint-base))] border-[color-mix(in_oklch,var(--destructive)_var(--alert-tint-border-amount),var(--alert-tint-base))] text-foreground [--alert-accent:var(--destructive)]',
+        info: 'bg-[color-mix(in_oklch,var(--data-1)_var(--alert-tint-bg-amount),var(--alert-tint-base))] border-[color-mix(in_oklch,var(--data-1)_var(--alert-tint-border-amount),var(--alert-tint-base))] text-foreground [--alert-accent:var(--data-1)]',
         warning:
-          'border-[color-mix(in_oklch,var(--data-2),transparent_70%)] bg-[color-mix(in_oklch,var(--data-2),transparent_92%)] text-foreground [--alert-accent:var(--data-2)]',
+          'bg-[color-mix(in_oklch,var(--data-2)_var(--alert-tint-bg-amount),var(--alert-tint-base))] border-[color-mix(in_oklch,var(--data-2)_var(--alert-tint-border-amount),var(--alert-tint-base))] text-foreground [--alert-accent:var(--data-2)]',
         success:
-          'border-[color-mix(in_oklch,var(--data-3),transparent_70%)] bg-[color-mix(in_oklch,var(--data-3),transparent_92%)] text-foreground [--alert-accent:var(--data-3)]',
+          'bg-[color-mix(in_oklch,var(--data-3)_var(--alert-tint-bg-amount),var(--alert-tint-base))] border-[color-mix(in_oklch,var(--data-3)_var(--alert-tint-border-amount),var(--alert-tint-base))] text-foreground [--alert-accent:var(--data-3)]',
       },
     },
     defaultVariants: {
@@ -99,7 +101,10 @@ interface AlertIconProps extends React.ComponentProps<'div'> {
 
 /**
  * Optional icon slot, laid out at the start of the alert row. Pass any
- * SVG or lucide icon as the child; size defaults to 1rem square.
+ * SVG or lucide icon as the child; size defaults to 1rem square. The
+ * glyph picks up the variant's `--alert-accent` color so it reads as a
+ * semantic flag — falling back to the inherited text color on the
+ * default (untinted) variant.
  */
 function AlertIcon({ className, ...props }: Readonly<AlertIconProps>) {
   return (
@@ -107,7 +112,7 @@ function AlertIcon({ className, ...props }: Readonly<AlertIconProps>) {
       data-slot="alert-icon"
       aria-hidden="true"
       className={cn(
-        'flex size-4 shrink-0 items-center justify-center [&>svg]:size-4 [&>svg]:shrink-0',
+        'col-start-1 row-start-1 flex size-4 shrink-0 items-center justify-center self-start text-[var(--alert-accent,currentColor)] [&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:translate-y-px',
         className
       )}
       {...props}
@@ -115,4 +120,33 @@ function AlertIcon({ className, ...props }: Readonly<AlertIconProps>) {
   );
 }
 
-export { Alert, AlertDescription, AlertIcon, AlertTitle, alertVariants };
+interface AlertCloseProps extends React.ComponentProps<'button'> {
+  /** Additional classes merged onto the close button. */
+  className?: string;
+}
+
+/**
+ * Trailing dismiss button for an `Alert`. Lives in the third grid column
+ * so it sits at the top-right without the parent needing extra padding
+ * or `relative` positioning. Defaults to a lucide `X` icon; pass a child
+ * to override. The caller owns visibility — wire `onClick` to whatever
+ * state controls whether the alert renders.
+ */
+function AlertClose({ children, className, ...props }: Readonly<AlertCloseProps>) {
+  return (
+    <button
+      type="button"
+      data-slot="alert-close"
+      aria-label="Dismiss"
+      className={cn(
+        'col-start-3 row-start-1 flex size-5 shrink-0 items-center justify-center self-start rounded text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2',
+        className
+      )}
+      {...props}
+    >
+      {children ?? <X aria-hidden className="size-4" />}
+    </button>
+  );
+}
+
+export { Alert, AlertClose, AlertDescription, AlertIcon, AlertTitle, alertVariants };

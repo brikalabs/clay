@@ -15,6 +15,11 @@ export const tokens = defineComponent(meta.name, {
     fontFamily: 'var(--font-mono)',
     letterSpacing: '0',
   },
+  backdropBlur: {
+    default: '0px',
+    description:
+      'Backdrop blur applied to the code-block surface. Set non-zero for a frosted-glass treatment.',
+  },
   slots: {
     bg: { default: 'var(--muted)', description: 'Code block background.' },
   },
