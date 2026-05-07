@@ -1,10 +1,10 @@
+import type { ComponentGroup } from '@brika/clay';
 import { ChevronDown, ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import {
   COMPONENT_GROUPS,
   COMPONENTS,
   type ComponentEntry,
-  type ComponentGroup,
 } from '~/lib/component-registry';
 import { sitePages } from '~/lib/site-pages';
 import { ClayMenuIcon } from './ClayMenuIcon';
