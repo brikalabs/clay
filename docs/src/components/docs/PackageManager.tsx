@@ -57,7 +57,7 @@ function buildCommand(manager: Manager, pkg: string, dev: boolean, isGlobal: boo
 }
 
 interface PackageManagerProps {
-  /** Package specifier — e.g. `@brika/clay` or `react react-dom tailwindcss`. */
+  /** Package specifier, e.g. `@brika/clay` or `react react-dom tailwindcss`. */
   readonly package: string;
   /** Install as a devDependency (`-D` / `-d`). */
   readonly dev?: boolean;
@@ -68,7 +68,7 @@ interface PackageManagerProps {
 /**
  * Renders a tabbed install command block. The active manager is shared
  * across every `<PackageManager />` on the page via `localStorage` and a
- * custom `clay-pkg-manager-change` event — picking `pnpm` in one block
+ * custom `clay-pkg-manager-change` event, picking `pnpm` in one block
  * flips every other block simultaneously.
  */
 export function PackageManager(props: PackageManagerProps) {
@@ -98,7 +98,7 @@ export function PackageManager(props: PackageManagerProps) {
     try {
       localStorage.setItem(STORAGE_KEY, next);
     } catch {
-      // Storage unavailable — keep the in-memory selection.
+      // Storage unavailable, keep the in-memory selection.
     }
     globalThis.dispatchEvent(new CustomEvent(SYNC_EVENT, { detail: next }));
   };
@@ -111,7 +111,7 @@ export function PackageManager(props: PackageManagerProps) {
       setCopied(true);
       setTimeout(() => setCopied(false), 1200);
     } catch {
-      // Clipboard blocked — keep the visible command intact.
+      // Clipboard blocked, keep the visible command intact.
     }
   };
 

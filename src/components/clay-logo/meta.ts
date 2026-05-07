@@ -4,5 +4,5 @@ export const meta: ComponentMeta = {
   name: 'clay-logo',
   displayName: 'Clay Logo',
   group: 'Primitives',
-  description: `Clay brand mark — three rounded tiles in an optional badge. Tiles use currentColor; badge bg overridable via --clay-logo-bg.`,
+  description: `Clay brand mark, three rounded tiles in an optional badge. Tiles use currentColor; badge bg overridable via --clay-logo-bg.`,
 };

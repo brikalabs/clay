@@ -42,7 +42,7 @@ export function CardAccentDemo() {
   );
 }
 
-/** Interactive card with hover lift — wrap in an anchor for full link behaviour. */
+/** Interactive card with hover lift, wrap in an anchor for full link behaviour. */
 export function CardInteractiveDemo() {
   return (
     <Card interactive className="w-72 cursor-pointer">
@@ -54,7 +54,7 @@ export function CardInteractiveDemo() {
   );
 }
 
-/** Form card pattern — title, inputs, and a footer action. */
+/** Form card pattern, title, inputs, and a footer action. */
 export function CardFormDemo() {
   return (
     <Card className="w-80">
@@ -101,12 +101,12 @@ export function CardStatsDemo() {
 export const demoMeta = defineDemos([
   [CardDefaultDemo, 'Default', { description: `Plain card with header and body content.` }],
   [CardAccentDemo, 'Accent', { description: `Six accent variants mapped to the theme data-* palette.` }],
-  [CardInteractiveDemo, 'Interactive', { description: `Interactive card with hover lift — wrap in an anchor for full link behaviour.` }],
-  [CardFormDemo, 'Form', { description: `Form card pattern — title, inputs, and a footer action.` }],
+  [CardInteractiveDemo, 'Interactive', { description: `Interactive card with hover lift, wrap in an anchor for full link behaviour.` }],
+  [CardFormDemo, 'Form', { description: `Form card pattern, title, inputs, and a footer action.` }],
   [CardStatsDemo, 'Stats', { description: `Stats card showing a key metric with a trend indicator.` }],
 ]);
 export const accessibility: readonly string[] = [
-  `Card is a layout container with no implicit role — add \`role="article"\` for standalone content.`,
+  `Card is a layout container with no implicit role, add \`role="article"\` for standalone content.`,
   `Interactive cards (with the \`interactive\` prop) should also carry \`tabIndex={0}\` and \`onKeyDown\` for keyboard activation.`,
-  `Accent color is visual only — convey variant meaning through text or \`aria-label\` as well.`,
+  `Accent color is visual only, convey variant meaning through text or \`aria-label\` as well.`,
 ];

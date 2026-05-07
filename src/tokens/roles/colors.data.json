@@ -144,25 +144,25 @@
     "status-idle",
     "oklch(0.7 0.02 260)",
     "oklch(0.5 0.02 260)",
-    "Workflow status — idle / pending nodes."
+    "Workflow status, idle / pending nodes."
   ],
   [
     "status-running",
     "oklch(0.55 0.18 265)",
     "oklch(0.7 0.16 265)",
-    "Workflow status — currently executing."
+    "Workflow status, currently executing."
   ],
   [
     "status-completed",
     "oklch(0.55 0.16 145)",
     "oklch(0.72 0.15 145)",
-    "Workflow status — finished successfully."
+    "Workflow status, finished successfully."
   ],
   [
     "status-error",
     "oklch(0.55 0.22 25)",
     "oklch(0.65 0.2 25)",
-    "Workflow status — failed / errored."
+    "Workflow status, failed / errored."
   ],
 
   ["data-1", "oklch(0.55 0.18 265)", "oklch(0.7 0.16 265)", "Data-viz sequential color 1."],
@@ -174,7 +174,7 @@
   ["data-7", "oklch(0.55 0.15 200)", "oklch(0.72 0.14 200)", "Data-viz sequential color 7."],
   ["data-8", "oklch(0.6 0.18 340)", "oklch(0.72 0.16 340)", "Data-viz sequential color 8."],
 
-  ["sidebar", "var(--card)", "var(--card)", "Sidebar surface — defaults to the card role."],
+  ["sidebar", "var(--card)", "var(--card)", "Sidebar surface, defaults to the card role."],
   [
     "sidebar-foreground",
     "var(--card-foreground)",
@@ -322,30 +322,30 @@
     "surface-container-lowest",
     "color-mix(in oklch, var(--background) 96%, var(--surface-tint, var(--primary)))",
     "color-mix(in oklch, var(--background) 96%, var(--surface-tint, var(--primary)))",
-    "Surface container — lowest elevation."
+    "Surface container, lowest elevation."
   ],
   [
     "surface-container-low",
     "color-mix(in oklch, var(--background) 93%, var(--surface-tint, var(--primary)))",
     "color-mix(in oklch, var(--background) 93%, var(--surface-tint, var(--primary)))",
-    "Surface container — low elevation."
+    "Surface container, low elevation."
   ],
   [
     "surface-container",
     "color-mix(in oklch, var(--background) 90%, var(--surface-tint, var(--primary)))",
     "color-mix(in oklch, var(--background) 90%, var(--surface-tint, var(--primary)))",
-    "Surface container — default elevation."
+    "Surface container, default elevation."
   ],
   [
     "surface-container-high",
     "color-mix(in oklch, var(--background) 86%, var(--surface-tint, var(--primary)))",
     "color-mix(in oklch, var(--background) 86%, var(--surface-tint, var(--primary)))",
-    "Surface container — high elevation."
+    "Surface container, high elevation."
   ],
   [
     "surface-container-highest",
     "color-mix(in oklch, var(--background) 82%, var(--surface-tint, var(--primary)))",
     "color-mix(in oklch, var(--background) 82%, var(--surface-tint, var(--primary)))",
-    "Surface container — highest elevation."
+    "Surface container, highest elevation."
   ]
 ]

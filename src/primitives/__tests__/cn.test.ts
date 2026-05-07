@@ -18,7 +18,7 @@ describe('cn', () => {
     expect(cn(['a', ['b', 'c']], 'd')).toBe('a b c d');
   });
 
-  test('resolves Tailwind conflicts — last wins', () => {
+  test('resolves Tailwind conflicts, last wins', () => {
     expect(cn('px-2 py-1', 'px-4')).toBe('py-1 px-4');
   });
 

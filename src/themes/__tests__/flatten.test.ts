@@ -172,7 +172,7 @@ describe('getRegistryDefaults', () => {
     expect(defaults.dark['--primary']).toBeDefined();
   });
 
-  test('is memoized — repeated calls return the same object reference', () => {
+  test('is memoized, repeated calls return the same object reference', () => {
     expect(getRegistryDefaults()).toBe(getRegistryDefaults());
   });
 });

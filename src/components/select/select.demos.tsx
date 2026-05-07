@@ -61,7 +61,7 @@ export function SelectGroupedDemo() {
   );
 }
 
-/** A single option marked disabled — users can see it but not select it. */
+/** A single option marked disabled, users can see it but not select it. */
 export function SelectDisabledOptionDemo() {
   return (
     <Select>
@@ -79,7 +79,7 @@ export function SelectDisabledOptionDemo() {
   );
 }
 
-/** The entire select is disabled — no interaction possible. */
+/** The entire select is disabled, no interaction possible. */
 export function SelectDisabledDemo() {
   return (
     <Select disabled>
@@ -120,12 +120,12 @@ export function SelectControlledDemo() {
 export const demoMeta = defineDemos([
   [SelectDefaultDemo, 'Default', { description: `Basic single-value select for picking a timezone.` }],
   [SelectGroupedDemo, 'Grouped', { description: `Options grouped by region using SelectGroup and SelectLabel.` }],
-  [SelectDisabledOptionDemo, 'Disabled Option', { description: `A single option marked disabled — users can see it but not select it.` }],
-  [SelectDisabledDemo, 'Disabled', { description: `The entire select is disabled — no interaction possible.` }],
+  [SelectDisabledOptionDemo, 'Disabled Option', { description: `A single option marked disabled, users can see it but not select it.` }],
+  [SelectDisabledDemo, 'Disabled', { description: `The entire select is disabled, no interaction possible.` }],
   [SelectControlledDemo, 'Controlled', { description: `Controlled select with an external state readout.` }],
 ]);
 export const accessibility: readonly string[] = [
-  `Trigger carries \`role="combobox"\` and \`aria-expanded\` — no extra markup needed.`,
+  `Trigger carries \`role="combobox"\` and \`aria-expanded\`, no extra markup needed.`,
   `Arrow keys navigate options; Home/End jump to first/last; typing ahead filters.`,
   `Selected item receives \`aria-selected="true"\` and a visible check mark.`,
   `Disabled items carry \`aria-disabled="true"\` and are skipped by arrow navigation.`,

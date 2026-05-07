@@ -5,7 +5,7 @@ import CodeSource from './CodeSource.astro';
  * CSS-only tab strip for the three scoping idioms on `/themes`.
  *
  * Radio inputs hidden off-screen, labels styled as tab triggers.
- * `:checked ~` sibling combinators reveal the matching panel — no
+ * `:checked ~` sibling combinators reveal the matching panel, no
  * JavaScript, no React hydration, works inside any Astro / MDX page.
  */
 
@@ -20,7 +20,7 @@ const ASCHILD_CODE = `import { ocean, ThemeScope } from "@brika/clay/themes";
 
 <ThemeScope theme={ocean} asChild>
   <article className="prose">
-    Theme variables merge onto this article — no extra wrapper at all.
+    Theme variables merge onto this article, no extra wrapper at all.
   </article>
 </ThemeScope>`;
 

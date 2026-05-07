@@ -1,23 +1,23 @@
 ---
 layout: ~/layouts/MdxDocLayout.astro
 title: "Colors"
-description: "Clay's colour tokens. Each swatch resolves through CSS light-dark() — the same variable adapts to the active mode."
+description: "Clay's colour tokens. Each swatch resolves through CSS light-dark(), the same variable adapts to the active mode."
 ---
 
 import ColorsPalette from "~/components/docs/ColorsPalette.astro";
 
 ## Chrome tokens
 
-The docs site's own surfaces — canvas, elevated surfaces, borders, and text.
+The docs site's own surfaces, canvas, elevated surfaces, borders, and text.
 
 <ColorsPalette
   tokens={[
     { name: 'clay-canvas', cssVar: '--color-clay-canvas', description: 'Page background. The lowest surface.' },
-    { name: 'clay-elevated', cssVar: '--color-clay-elevated', description: 'Cards, dialogs, preview panes — one level above canvas.' },
+    { name: 'clay-elevated', cssVar: '--color-clay-elevated', description: 'Cards, dialogs, preview panes, one level above canvas.' },
     { name: 'clay-base', cssVar: '--color-clay-base', description: 'Code blocks, inline chips, subtly-raised UI.' },
     { name: 'clay-control', cssVar: '--color-clay-control', description: 'Button backgrounds, hover states.' },
     { name: 'clay-hairline', cssVar: '--color-clay-hairline', description: 'Border between every structural block.' },
-    { name: 'clay-brand', cssVar: '--color-clay-brand', description: 'The terracotta accent — use sparingly.' },
+    { name: 'clay-brand', cssVar: '--color-clay-brand', description: 'The terracotta accent, use sparingly.' },
   ]}
 />
 
@@ -36,7 +36,7 @@ The docs site's own surfaces — canvas, elevated surfaces, borders, and text.
 
 ## Component tokens
 
-The semantic scale every Clay component is tokenised against. Each variable is defined by the active theme and adapts to light/dark mode automatically — override one in your own CSS and every component using it follows.
+The semantic scale every Clay component is tokenised against. Each variable is defined by the active theme and adapts to light/dark mode automatically, override one in your own CSS and every component using it follows.
 
 <ColorsPalette
   tokens={[

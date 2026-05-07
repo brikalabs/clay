@@ -12,5 +12,5 @@ export default defineConfig([
   files('src/**/*.{ts,tsx,astro}')
     .should()
     .notImportFrom(FORBIDDEN_BRIKA_IMPORTS, 'Brika runtime or feature packages')
-    .because('clay-docs must only depend on @brika/clay — no hub, auth, or runtime packages'),
+    .because('clay-docs must only depend on @brika/clay, no hub, auth, or runtime packages'),
 ]);

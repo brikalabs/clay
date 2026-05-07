@@ -90,7 +90,7 @@ function tokensSection(name: string, tokens: readonly ResolvedTokenSpec[]): stri
   }
   const intro = `Every CSS variable ${name} reads, with its default and the dotted path you'd write in a \`ThemeConfig\` to override it.`;
   const rows = tokens.map((token) => {
-    const path = token.themePath ? `\`${token.themePath}\`` : '—';
+    const path = token.themePath ? `\`${token.themePath}\`` : '-';
     return `| \`--${token.name}\` | \`${token.defaultLight}\` | ${path} |`;
   });
   return [
@@ -107,14 +107,14 @@ function tokensSection(name: string, tokens: readonly ResolvedTokenSpec[]): stri
 
 function apiSection(name: string, docs: readonly ClayComponentDoc[]): string {
   if (docs.length === 0) {
-    return `## API reference\n\n\`${name}\` exposes no wrapper-specific props — all attributes pass through to the underlying primitive.\n`;
+    return `## API reference\n\n\`${name}\` exposes no wrapper-specific props, all attributes pass through to the underlying primitive.\n`;
   }
   const showHeadings = docs.length > 1;
   const sections = docs.flatMap((doc) => {
     const heading = showHeadings ? [`### ${doc.displayName}`, ''] : [];
     const propLevel = showHeadings ? 4 : 3;
     if (doc.props.length === 0) {
-      return [...heading, `No wrapper-specific props — passes through to the underlying primitive.\n`];
+      return [...heading, `No wrapper-specific props, passes through to the underlying primitive.\n`];
     }
     return [...heading, ...doc.props.map((p) => propBlock(p, propLevel))];
   });

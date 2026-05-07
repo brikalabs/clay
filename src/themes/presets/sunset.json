@@ -1,7 +1,7 @@
 {
   "id": "sunset",
   "name": "Sunset",
-  "description": "Amber paper at dusk — ember oranges, coral data palette.",
+  "description": "Amber paper at dusk, ember oranges, coral data palette.",
   "accentSwatches": ["#d87327", "#db9149", "#c44f3a", "#c78a2b"],
   "colors": {
     "light": {

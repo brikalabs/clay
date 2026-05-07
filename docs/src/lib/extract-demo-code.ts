@@ -3,7 +3,7 @@
  *
  * Lives in its own module (rather than inline in `component-registry.ts`)
  * because the registry pulls in Vite-only `import.meta.glob` at module
- * load — extracting these means the helpers are testable under Bun
+ * load, extracting these means the helpers are testable under Bun
  * without spinning up a Vite environment.
  */
 

@@ -70,7 +70,7 @@ export function ThemePicker() {
     if (!mounted) {
       return;
     }
-    // Every theme — including `clay` — is a real preset that injects
+    // Every theme, including `clay`, is a real preset that injects
     // its own CSS var overrides via `applyTheme`. The boot script in
     // `BaseLayout.astro` paints the same `<style id="clay-theme">` tag
     // before first paint to avoid a flash on hydration.
@@ -108,7 +108,7 @@ export function ThemePicker() {
     try {
       localStorage.setItem(STORAGE_KEY, theme.id);
     } catch {
-      // Storage unavailable — in-memory only.
+      // Storage unavailable, in-memory only.
     }
     globalThis.dispatchEvent(new CustomEvent(THEME_EVENT, { detail: theme.id }));
   };

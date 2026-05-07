@@ -36,7 +36,7 @@ export function PageHeaderDefaultDemo() {
   );
 }
 
-/** PageHeaderCount adds a muted count next to the description — useful for record totals. */
+/** PageHeaderCount adds a muted count next to the description, useful for record totals. */
 export function PageHeaderWithCountDemo() {
   return (
     <PageHeader className="w-full max-w-2xl">
@@ -92,11 +92,11 @@ export function PageHeaderBreadcrumbDemo() {
 
 export const demoMeta = defineDemos([
   [PageHeaderDefaultDemo, 'Default', { description: `Standard page header with title, description, and a primary action.` }],
-  [PageHeaderWithCountDemo, 'With Count', { description: `PageHeaderCount adds a muted count next to the description — useful for record totals.` }],
+  [PageHeaderWithCountDemo, 'With Count', { description: `PageHeaderCount adds a muted count next to the description, useful for record totals.` }],
   [PageHeaderBreadcrumbDemo, 'Breadcrumb', { description: `Pair the page header with a Breadcrumb above it to show hierarchical location.` }],
 ]);
 export const accessibility: readonly string[] = [
-  `\`PageHeaderTitle\` renders as \`<h1>\` by default — ensure only one \`<h1>\` per page.`,
+  `\`PageHeaderTitle\` renders as \`<h1>\` by default, ensure only one \`<h1>\` per page.`,
   `Action buttons should be descriptive: "New dashboard" not just "New".`,
   `When used with a \`Breadcrumb\`, the breadcrumb provides location context the heading cannot.`,
 ];

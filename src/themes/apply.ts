@@ -17,12 +17,12 @@ type CssVarMap = Record<`--${string}`, string>;
  * The returned object includes:
  *   1. Every registry-default token (so the scope is *complete* and resists
  *      a globally-applied theme leaking through the cascade).
- *   2. The theme's `colors.light` overrides — and, when `mode === 'dark'`,
+ *   2. The theme's `colors.light` overrides, and, when `mode === 'dark'`,
  *      its `colors.dark` overrides on top.
  *   3. The theme's `geometry`, `borders`, `motion`, `focus`, and per-component
  *      sections.
  *
- * This is the right tool for scoped previews — gallery cards, side-by-side
+ * This is the right tool for scoped previews, gallery cards, side-by-side
  * theme comparisons. The wider document still inherits whatever
  * `applyTheme` last injected at `:root`; the scoped subtree pins every
  * Clay token explicitly so it can't drift.
@@ -47,7 +47,7 @@ export function themeToCssVars(theme: ThemeConfig, mode: ThemeMode): CSSProperti
  * Apply a theme document-wide by injecting a `<style id="clay-theme">` tag
  * containing both the `:root` block and the dark-mode block.
  *
- * Toggling between light and dark afterwards costs nothing — the dark block
+ * Toggling between light and dark afterwards costs nothing, the dark block
  * activates via the `:is(.dark, [data-mode="dark"])` selector at CSS level,
  * no JS re-run needed. Set `data-mode="dark"` on `<html>` (or add the
  * `dark` class) to switch.

@@ -4,7 +4,7 @@ A Clay component is a folder under `src/components/<name>/` that owns its
 React code, design tokens, and metadata. Tokens land in the registry
 (where the Tailwind plugin reads them at compile time) and the docs
 site indexes the component automatically via `meta.ts`. Components no
-longer ship per-file CSS — every token-driven property is composed
+longer ship per-file CSS, every token-driven property is composed
 inline in the `.tsx` via Tailwind v4 arbitrary-class syntax.
 
 ## Checklist
@@ -30,15 +30,15 @@ matching `:root` defaults.
 There are three syntactic forms, picked by what Tailwind exposes for
 the property:
 
-1. **Ergonomic shorthand** — `gap-(--button-gap)`, `px-(--button-padding-x)`,
+1. **Ergonomic shorthand**, `gap-(--button-gap)`, `px-(--button-padding-x)`,
    `tracking-(--button-letter-spacing)`, `duration-(--button-duration)`,
    `ease-(--button-easing)`, `font-(--button-font-weight)`. Use this when
    the Tailwind utility unambiguously maps to one CSS property.
-2. **Type-hinted shorthand** — `border-(length:--button-border-width)`,
+2. **Type-hinted shorthand**, `border-(length:--button-border-width)`,
    `font-(family-name:--code-block-font-family)`. Use this when the
    utility is overloaded (`border-` could be width or color, `font-`
    could be family or weight) so Tailwind needs the data-type hint.
-3. **Arbitrary property** — `[corner-shape:var(--button-corner-shape,var(--corner-shape,round))]`,
+3. **Arbitrary property**, `[corner-shape:var(--button-corner-shape,var(--corner-shape,round))]`,
    `[backdrop-filter:blur(var(--card-backdrop-blur,0px))]`,
    `[border-style:var(--input-border-style)]`,
    `[text-transform:var(--button-text-transform)]`. Use this when there
@@ -89,7 +89,7 @@ export { MyComponent };
 
 Layer-2 component tokens, built via the single
 [`defineComponent`](../tokens/define.ts) entry point and exported as a
-`tokens` array. Every option is a named key — TypeScript autocompletes
+`tokens` array. Every option is a named key, TypeScript autocompletes
 everything you can pass.
 
 ```ts
@@ -118,14 +118,14 @@ export const tokens = defineComponent(meta.name, {
 | `radius`, `shadow`, `backdropBlur` | Single conventional tokens (`--<name>-radius`, etc.). The `alias` field controls the Tailwind utility name (`rounded-<alias>`). |
 | `surface: true` | Bundle for interactive surfaces: `border + motion`. Pass `{ borderWidth: '1px' }` to set the resting border width. |
 | `border`, `motion` | Granular opt-in when only one is needed (e.g. Card uses `border: '1px'` + `motion: true`). |
-| `geometry: {...}` | Sizing tokens (`height`, `paddingX`, `paddingY`, `gap`) — only the keys you pass become tokens. |
+| `geometry: {...}` | Sizing tokens (`height`, `paddingX`, `paddingY`, `gap`), only the keys you pass become tokens. |
 | `typography: {...}` | Text tokens (`fontFamily`, `fontSize`, `fontWeight`, `lineHeight`, `letterSpacing`, `textTransform`). Omit entirely to skip every typography token (e.g. Switch). |
-| `slots: {...}` | Arbitrary named tokens — semantic colors (`filled-container`), custom sizes (`track-width`), anything component-specific. |
+| `slots: {...}` | Arbitrary named tokens, semantic colors (`filled-container`), custom sizes (`track-width`), anything component-specific. |
 | `themeKey?` | Override the camelCase theme key when it differs from the kebab-case name (e.g. `'switchThumb'` for `'switch-thumb'`). |
 
 **Multi-namespace components** (e.g. Switch + SwitchThumb,
 DropdownMenu + DropdownMenuItem) export a `tokens` array that spreads
-two `defineComponent` results — see
+two `defineComponent` results, see
 [`switch/tokens.ts`](./switch/tokens.ts) and
 [`dropdown-menu/tokens.ts`](./dropdown-menu/tokens.ts).
 
@@ -186,10 +186,10 @@ export * from './my-component';
 - **Multi-slot components.** Dialog has a `dialog-content`, dropdown-menu
   has `dropdown-menu-content` and `dropdown-menu-item`, etc. Each slot
   sets its own `data-slot` and composes its own classes inline in the
-  `.tsx` — no CSS bridge selector ties them together.
+  `.tsx`, no CSS bridge selector ties them together.
 - **Bare tokens.** Tokens that don't follow the `<name>-<slot>`
   convention (e.g. `--icon` with no slot suffix) can be appended to the
-  exported `tokens` array as plain `TokenSpec` literals — see
+  exported `tokens` array as plain `TokenSpec` literals, see
   [`icon/tokens.ts`](./icon/tokens.ts).
 
 ## Verifying

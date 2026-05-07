@@ -38,7 +38,7 @@ Branch names are enforced by CI. Use one of these prefixes:
 | `fix/` | Bug fix |
 | `refactor/` | Code restructure without behaviour change |
 | `perf/` | Performance improvement |
-| `docs/` | Docs site changes only — will not trigger a release |
+| `docs/` | Docs site changes only, will not trigger a release |
 | `chore/` | Dependency bumps, config, tooling |
 | `ci/` | CI workflow changes |
 | `test/` | Test additions or fixes |
@@ -78,10 +78,10 @@ Clay uses [release-please](https://github.com/googleapis/release-please) for ful
 merge a feat/fix PR to main
     ↓
 release-please opens (or updates) a Release PR
-    — bumps version in package.json
-    — prepends a section to CHANGELOG.md
+   , bumps version in package.json
+   , prepends a section to CHANGELOG.md
 
-merge more PRs freely — the Release PR keeps updating
+merge more PRs freely, the Release PR keeps updating
     ↓
 when ready to ship, merge the Release PR
     ↓
@@ -91,27 +91,27 @@ release-please creates a git tag (e.g. v0.2.0)
 CI builds the library and publishes to npm
 ```
 
-There is always **one** pending Release PR. Merging 10 feature PRs does not create 10 releases — they all batch into the next Release PR until you decide to ship.
+There is always **one** pending Release PR. Merging 10 feature PRs does not create 10 releases, they all batch into the next Release PR until you decide to ship.
 
 ### Version bump rules
 
 | Commit type | Version bump |
 |---|---|
-| `feat:` | minor — `0.1.0 → 0.2.0` |
-| `fix:` | patch — `0.1.0 → 0.1.1` |
-| `feat!:` or `fix!:` (breaking) | major — `0.1.0 → 1.0.0` |
+| `feat:` | minor, `0.1.0 → 0.2.0` |
+| `fix:` | patch, `0.1.0 → 0.1.1` |
+| `feat!:` or `fix!:` (breaking) | major, `0.1.0 → 1.0.0` |
 | `chore:`, `docs:`, `ci:`, `test:` | no release |
 
 ### Docs-only changes
 
-PRs that only touch `docs/` skip the release pipeline entirely — they deploy the docs site without publishing a new npm version.
+PRs that only touch `docs/` skip the release pipeline entirely, they deploy the docs site without publishing a new npm version.
 
 ## Code style
 
-- [Biome](https://biomejs.dev/) for linting and formatting — run `bunx biome check .` before pushing
-- TypeScript strict mode — no `as` casts, no `any`
+- [Biome](https://biomejs.dev/) for linting and formatting, run `bunx biome check .` before pushing
+- TypeScript strict mode, no `as` casts, no `any`
 - Component props must be `Readonly<>`
-- No Tailwind class strings extracted into shared constants — keep them inline per component
+- No Tailwind class strings extracted into shared constants, keep them inline per component
 
 ## Scripts
 

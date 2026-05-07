@@ -5,7 +5,7 @@
  *   import { ocean } from '@brika/clay/themes';
  *
  * For the full ordered list (picker UIs, galleries, build-time pre-render),
- * import from the registry sub-entry instead — it's opt-in so consumers
+ * import from the registry sub-entry instead, it's opt-in so consumers
  * who only need a single theme don't pay for every preset:
  *
  *   import { builtInThemes } from '@brika/clay/themes/registry';

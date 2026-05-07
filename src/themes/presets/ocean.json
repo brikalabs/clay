@@ -1,7 +1,7 @@
 {
   "id": "ocean",
   "name": "Ocean",
-  "description": "Cool harbour blues — tide-pale paper, deep teal data palette.",
+  "description": "Cool harbour blues, tide-pale paper, deep teal data palette.",
   "accentSwatches": ["#1f6fd6", "#2f8fa8", "#2b9d8e", "#3ea0b3"],
   "colors": {
     "light": {

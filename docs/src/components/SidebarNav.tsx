@@ -93,7 +93,7 @@ export function SidebarNav({ currentPath }: { readonly currentPath: string }) {
     try {
       localStorage.setItem(COLLAPSED_GROUPS_KEY, JSON.stringify([...next]));
     } catch {
-      // Storage unavailable — keep in-memory only.
+      // Storage unavailable, keep in-memory only.
     }
   };
 
@@ -137,7 +137,7 @@ export function SidebarNav({ currentPath }: { readonly currentPath: string }) {
           data-sidebar-scroll
           className="flex w-64 flex-col border-clay-hairline border-r bg-clay-canvas"
         >
-          {/* Wordmark + version — drafting title block at the top */}
+          {/* Wordmark + version, drafting title block at the top */}
           <div className="border-clay-hairline border-b px-4 py-4">
             <a href="/" className="block">
               <p
@@ -157,7 +157,7 @@ export function SidebarNav({ currentPath }: { readonly currentPath: string }) {
             </a>
           </div>
 
-          {/* Search button — kbd-styled, not a fake input */}
+          {/* Search button, kbd-styled, not a fake input */}
           <div className="border-clay-hairline border-b px-3 py-3">
             <button
               type="button"
@@ -174,7 +174,7 @@ export function SidebarNav({ currentPath }: { readonly currentPath: string }) {
           </div>
 
           <nav className="flex-1 overflow-y-auto py-3">
-            {/* Top-level pages — no group label, just the items */}
+            {/* Top-level pages, no group label, just the items */}
             <ul className="space-y-0.5 px-3">
               {pages.map((item) => (
                 <li key={item.href}>

@@ -1,17 +1,17 @@
 /**
- * Tailwind v4 plugin — replaces every generated CSS file.
+ * Tailwind v4 plugin, replaces every generated CSS file.
  *
  * Reads the TypeScript token registry at compile time and contributes:
  *
- *   1. `:root { --token: default; ... }` — every registry default
- *   2. dark-mode override block — tokens with a distinct `defaultDark`
- *   3. Tailwind theme entries — utilities like `bg-slider-fill`,
+ *   1. `:root { --token: default; ... }`, every registry default
+ *   2. dark-mode override block, tokens with a distinct `defaultDark`
+ *   3. Tailwind theme entries, utilities like `bg-slider-fill`,
  *      `rounded-slider`, `shadow-slider-thumb` resolve through
  *      `theme.extend.{colors,borderRadius,boxShadow,…}`
  *
  * Non-default built-in themes (`dracula`, `brutalist`, …) are NOT
  * baked into CSS. They live as plain `ThemeConfig` JSON exports and
- * activate through the same runtime path as user-authored themes —
+ * activate through the same runtime path as user-authored themes,
  * `applyTheme(theme)` injects a `<style>` tag, or `<ThemeScope theme>`
  * scopes via inline-style. This is what keeps the bundle small AND
  * makes user-built custom themes a first-class peer of the built-ins.
@@ -35,15 +35,15 @@ import type { ResolvedTokenSpec, TailwindNamespace, TokenType } from './tokens/t
 
 /**
  * Tokens whose `defaultLight` is a literal (not `var(...)`) get a
- * concrete `:root` value — that's their whole job. Tokens whose default
+ * concrete `:root` value, that's their whole job. Tokens whose default
  * is a `var()` chain only need to be in `:root` if some hand-authored
  * code reads them directly; otherwise the same fallback chain is
  * reachable through the Tailwind utility (`theme.extend.transitionDuration`),
  * and emitting them in `:root` is dead weight.
  *
  * Hand-authored references live in two places now:
- *   - `styles/*.css` — cross-cutting utilities + theme-scope reset
- *   - `components/<name>/<name>.tsx` — Tailwind v4 arbitrary classes
+ *   - `styles/*.css`, cross-cutting utilities + theme-scope reset
+ *   - `components/<name>/<name>.tsx`, Tailwind v4 arbitrary classes
  *     using the `(--name)` shorthand or `var(--name)` directly
  *
  * The scanner walks both and unions `var(--…)`, the `(--…)` shorthand,
@@ -60,7 +60,7 @@ function readSourceCode(here: string): string {
       parts.push(readFileSync(join(stylesDir, entry), 'utf8'));
     }
   } catch {
-    // styles/ missing — leave `parts` empty and fall through to the
+    // styles/ missing, leave `parts` empty and fall through to the
     // outer catch in `readDirectVarReferences`.
   }
   const componentsDir = join(here, 'components');
@@ -73,11 +73,11 @@ function readSourceCode(here: string): string {
       try {
         parts.push(readFileSync(join(folder, `${name}.tsx`), 'utf8'));
       } catch {
-        // No `<name>.tsx` in this component folder — skip silently.
+        // No `<name>.tsx` in this component folder, skip silently.
       }
     }
   } catch {
-    // components/ missing — same fallback semantics as above.
+    // components/ missing, same fallback semantics as above.
   }
   return parts.join('\n');
 }
@@ -87,7 +87,7 @@ function readDirectVarReferences(): ReadonlySet<string> {
     const here = dirname(fileURLToPath(import.meta.url));
     const src = readSourceCode(here);
     const found = new Set<string>();
-    // Match `var(--name)`, `(--name)`, and `(<hint>:--name)` — covers
+    // Match `var(--name)`, `(--name)`, and `(<hint>:--name)`, covers
     // hand-authored CSS plus Tailwind v4 arbitrary-value shorthand
     // (`gap-(--button-gap)`, `border-(length:--button-border-width)`).
     for (const match of src.matchAll(/\((?:[a-z][\w-]*\s*:\s*)?--([a-z][a-z0-9-]*)/g)) {
@@ -96,7 +96,7 @@ function readDirectVarReferences(): ReadonlySet<string> {
     return found;
   } catch {
     // Fail-safe: if files can't be read, behave as if every token is
-    // referenced — bigger CSS but never a missing-var bug.
+    // referenced, bigger CSS but never a missing-var bug.
     return new Set(TOKEN_REGISTRY.map((t) => t.name));
   }
 }
@@ -105,7 +105,7 @@ function readDirectVarReferences(): ReadonlySet<string> {
  * Every Layer-2 token name reachable through either hand-authored
  * `var(--…)` references in `.css`/`.tsx` or auto-generated shorthand
  * utilities. A token in this set needs a `:root` default even when its
- * `defaultLight` is a `var()` chain — otherwise the reference dangles.
+ * `defaultLight` is a `var()` chain, otherwise the reference dangles.
  */
 const REFERENCED_COMPONENT_TOKENS: ReadonlySet<string> = new Set([
   ...readDirectVarReferences(),
@@ -138,7 +138,7 @@ function utilityValue(token: ResolvedTokenSpec): string {
 function rootDefaults(): Record<string, string> {
   const out: Record<string, string> = {};
   for (const token of TOKEN_REGISTRY) {
-    // Layer 0/1 always get a `:root` value — they're concrete and Layer 2
+    // Layer 0/1 always get a `:root` value, they're concrete and Layer 2
     // chains fall back through them. Layer 2 tokens with a literal default
     // also need `:root` for components that read raw `var(--X)`. Tokens
     // whose default is just a `var()` chain only land here when some
@@ -172,7 +172,7 @@ function darkOverrides(): Record<string, string> {
 /**
  * CSS `@property` syntax descriptors for the token types we can register.
  *
- * Skipped types: `border-style`, `text-transform` (keyword unions —
+ * Skipped types: `border-style`, `text-transform` (keyword unions,
  * `<custom-ident>` works but adds no value over the plain `:root`
  * declaration), `shadow` (no descriptor in the spec), `easing` (no
  * descriptor for cubic-bezier), `font-family` (`<custom-ident>` rejects
@@ -194,7 +194,7 @@ const TYPE_TO_SYNTAX: Partial<Record<TokenType, string>> = {
 };
 
 /**
- * Per CSS spec, `initial-value` must be a *computed* value — `var()`
+ * Per CSS spec, `initial-value` must be a *computed* value, `var()`
  * references and other un-resolved relative values are rejected. Any
  * default that contains `var(` is therefore not registrable; the token
  * still lands in `:root` via `rootDefaults()`, just without the typed
@@ -288,7 +288,7 @@ function themeExtendBucket(
 /**
  * Map every namespaced registry token into the v3-style `theme.extend`
  * config Tailwind v4 still consumes through its compat layer. The result
- * is identical to what the old `@theme inline { ... }` block produced —
+ * is identical to what the old `@theme inline { ... }` block produced,
  * `bg-slider-fill`, `rounded-slider`, `shadow-slider-thumb`, etc. all
  * become real utilities.
  */

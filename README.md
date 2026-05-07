@@ -11,7 +11,7 @@ Brika Labs' React component library, token system, and first-party themes.
 
 Clay provides the pressable raw material for every Brika surface:
 primitives, components, tokens, and a curated set of built-in themes.
-The package depends only on React 19 and Tailwind v4 — no other Brika
+The package depends only on React 19 and Tailwind v4, no other Brika
 packages, no monorepo glue.
 
 ## Installation
@@ -40,7 +40,7 @@ all of Clay's tokens, dark-mode overrides, and per-component utilities:
 ```
 
 Then import components from their granular paths for best
-tree-shaking — or from the barrel for convenience:
+tree-shaking, or from the barrel for convenience:
 
 ```tsx
 import { Button } from "@brika/clay/components/button";
@@ -64,16 +64,16 @@ export function Example() {
 
 | Import path | Contents |
 |---|---|
-| `@brika/clay` | Barrel — every component + primitive |
+| `@brika/clay` | Barrel, every component + primitive |
 | `@brika/clay/components/<name>` | Single component (e.g. `button`, `dialog`, `tabs`) |
 | `@brika/clay/primitives` | `cn`, `cssVars`, `useIsMobile` |
 | `@brika/clay/themes` | `applyTheme`, `ThemeScope`, all 17 preset themes |
 | `@brika/clay/tokens` | `TOKEN_REGISTRY`, `TokenSpec`, type helpers |
 | `@brika/clay/tailwind` | Tailwind v4 plugin |
-| `@brika/clay/styles` | `clay.css` — utilities + components.css bridges |
+| `@brika/clay/styles` | `clay.css`, utilities + components.css bridges |
 
 > **Working on Clay itself?** [`ARCHITECTURE.md`](ARCHITECTURE.md) is the
-> engineering reference — token registry shape, Tailwind v4 plugin
+> engineering reference, token registry shape, Tailwind v4 plugin
 > contract, JIT-pruning mechanism, theming runtime, build flow.
 
 ## Token system
@@ -83,17 +83,17 @@ hand-authored TypeScript registry at
 [`src/tokens/registry.ts`](src/tokens/registry.ts). The Tailwind plugin
 ([`src/tailwind.ts`](src/tailwind.ts)) reads the registry at compile time
 and emits `:root` defaults, dark-mode overrides, and `theme.extend`
-entries — there are no generated CSS files; the TypeScript registry is
+entries, there are no generated CSS files; the TypeScript registry is
 the single source of truth.
 
-- **Layer 0 — Scalars.** A handful of knobs (`--radius`, `--spacing`,
+- **Layer 0, Scalars.** A handful of knobs (`--radius`, `--spacing`,
   `--font-sans`, `--motion-duration`, `--ring-width`, …). Themes set
   these to retune the whole library at once.
-- **Layer 1 — Roles.** Semantic colors (`--primary`, `--background`,
+- **Layer 1, Roles.** Semantic colors (`--primary`, `--background`,
   `--border`), semantic radii (`--radius-control`, `--radius-surface`),
   semantic shadows (`--shadow-overlay`, `--shadow-modal`), motion
   channels, state-layer opacities.
-- **Layer 2 — Per-component.** Every component reads its own variables
+- **Layer 2, Per-component.** Every component reads its own variables
   (`--button-padding-x`, `--card-shadow`, `--switch-thumb-size`) that
   fall back to a Layer 1 role. Themes override one component without
   touching the rest by writing to these.
@@ -128,7 +128,7 @@ The full reference is exported as TypeScript at `@brika/clay/tokens`
 Seventeen first-party themes ship today: the eleven colour-only palette
 themes (default, ocean, forest, sunset, lavender, ruby, nord, solarized,
 candy, dracula, mono) plus six showcase themes that exercise the full
-token surface — **Brutalist** (geometry + borders + typography),
+token surface, **Brutalist** (geometry + borders + typography),
 **Editorial** (typography + radii + motion), **Terminal** (monospace,
 zero radius, dashed dividers), **Skeuomorph** (heavy shadows + slow
 motion), **Glass** (translucency + blur), and **Comic** (playful
@@ -152,13 +152,13 @@ cleanup();
 `applyTheme` injects a single `<style id="clay-theme">` containing both
 the `:root` light defaults and a `:is(.dark, [data-mode="dark"]):root`
 block for dark overrides. Toggling the attribute afterwards costs
-nothing — the dark block activates via CSS, no JS re-run.
+nothing, the dark block activates via CSS, no JS re-run.
 
 For SSR, embed `renderThemeStyleSheet(theme)` in the document `<head>`
 to avoid FOUC; `applyTheme` reuses the existing tag idempotently when
 the client mounts.
 
-### Scoped themes — `ThemeScope`
+### Scoped themes, `ThemeScope`
 
 Apply a theme to a subtree without inflating the rendered HTML. The
 default mode renders a `<div>` with `display: contents` so the wrapper
@@ -182,11 +182,11 @@ theme attributes are merged onto the child via Radix Slot:
 ```
 
 `ThemeScope` deduplicates the underlying `<style>` tag via React 19's
-`href`-keyed stylesheet hoisting — fifty `ThemeScope`s of `dracula`
+`href`-keyed stylesheet hoisting, fifty `ThemeScope`s of `dracula`
 share one tag in `<head>`.
 
 For inline preview vars (gallery cards, side-by-side comparisons) use
-`themeToCssVars(theme, mode)` — it returns a React `style`-prop object
+`themeToCssVars(theme, mode)`, it returns a React `style`-prop object
 with every registry token pinned, which resists leaks from a globally
 applied theme.
 
@@ -195,7 +195,7 @@ applied theme.
 ```
 src/
   components/<name>/           # one folder per component
-  primitives/                  # cn, cssVars, useIsMobile — cross-cutting helpers
+  primitives/                  # cn, cssVars, useIsMobile, cross-cutting helpers
   styles/
     clay.css                   # entry: @plugin + utilities + safe-area + corner shapes
     components.css             # hand-authored token → CSS bridges
@@ -206,7 +206,7 @@ src/
     types.ts                   # ThemeConfig and friends
     presets/*.json             # 17 first-party themes
   tokens/
-    registry.ts                # SOURCE OF TRUTH — every CSS variable
+    registry.ts                # SOURCE OF TRUTH, every CSS variable
     types.ts                   # TokenSpec, TokenLayer, TokenCategory
     expand.ts                  # helpers that generate per-component token sets
   tailwind.ts                  # Tailwind v4 plugin (reads registry at compile time)
@@ -216,7 +216,7 @@ src/
 
 - The `code-block` component pulls in `shiki` (~3 MB unminified) for
   syntax highlighting. If you don't import `code-block`, modern bundlers
-  will tree-shake it out — the package is marked `"sideEffects": false`
+  will tree-shake it out, the package is marked `"sideEffects": false`
   for JS files (CSS is preserved).
 - Themes are JSON imports inlined into the build. The full theme surface
   adds ~25 KB minified across all 17 presets.

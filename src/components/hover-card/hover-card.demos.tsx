@@ -18,7 +18,7 @@ export function HoverCardDefaultDemo() {
         <div className="flex flex-col gap-1">
           <p className="font-semibold text-sm">Brika Labs</p>
           <p className="text-muted-foreground text-sm">
-            Building Clay — the React component library and design system for Brika products.
+            Building Clay, the React component library and design system for Brika products.
           </p>
           <p className="text-muted-foreground text-xs">Joined January 2024</p>
         </div>
@@ -82,7 +82,7 @@ export const demoMeta = defineDemos([
   [HoverCardDelayDemo, 'Delay', { description: `Open delay can be customised via the openDelay prop on HoverCard.` }],
 ]);
 export const accessibility: readonly string[] = [
-  `Content opens on hover AND focus — keyboard users can trigger it via Tab.`,
-  `Not suitable for content that must be permanently reachable — use \`Popover\` for interactive content.`,
+  `Content opens on hover AND focus, keyboard users can trigger it via Tab.`,
+  `Not suitable for content that must be permanently reachable, use \`Popover\` for interactive content.`,
   `Ensure the trigger is keyboard-focusable; an \`asChild\` link or button works well.`,
 ];

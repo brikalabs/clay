@@ -1,5 +1,5 @@
 /**
- * EmptyState — unified empty / no-results placeholder.
+ * EmptyState, unified empty / no-results placeholder.
  *
  * Icon sits inside a soft rounded pill, centered. Consistent padding
  * across all pages so "no plugins" and "no logs" feel like siblings.

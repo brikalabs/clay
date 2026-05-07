@@ -1,5 +1,5 @@
 /**
- * Layer 1 — Motion roles
+ * Layer 1, Motion roles
  * Three duration channels (instant, standard, considered) plus matching
  * easing channels. All derived from the `--motion-duration` /
  * `--motion-easing` scalars.
@@ -37,7 +37,7 @@ const DURATION_DEFS: readonly DurationEntry[] = [
   [
     'instant',
     'max(80ms, calc(var(--motion-duration, 220ms) * 0.45))',
-    'Fastest channel — hover, focus, instant feedback.',
+    'Fastest channel, hover, focus, instant feedback.',
   ],
   [
     'standard',
@@ -47,7 +47,7 @@ const DURATION_DEFS: readonly DurationEntry[] = [
   [
     'considered',
     'calc(var(--motion-duration, 220ms) * 1.8)',
-    'Emphasized reveals — sheets, accordions, accordions.',
+    'Emphasized reveals, sheets, accordions, accordions.',
   ],
 ];
 

@@ -1,10 +1,10 @@
 /**
- * Component metadata shape — co-located with the components themselves.
+ * Component metadata shape, co-located with the components themselves.
  *
  * Each component folder ships a `meta.ts` exporting `meta: ComponentMeta`.
  * Discovery happens in user code (the docs site uses `import.meta.glob`
  * to assemble the runtime list), so adding a new component is zero
- * edits in this package — drop a folder with `meta.ts` and you're done.
+ * edits in this package, drop a folder with `meta.ts` and you're done.
  *
  * This file is the package-level shape contract. It exports types only;
  * no runtime list lives here, which is what keeps Clay free of
@@ -35,7 +35,7 @@ export interface ComponentDemo {
   readonly title: string;
   /** One-sentence explanation rendered between the heading and the demo. */
   readonly description?: string;
-  /** Minimal JSX snippet shown in the code panel — auto-extracted if omitted. */
+  /** Minimal JSX snippet shown in the code panel, auto-extracted if omitted. */
   readonly code: string;
 }
 
@@ -54,7 +54,7 @@ export interface DemoInput {
 /**
  * Type-safe, concise way to declare demos inside a `.demos.tsx` file.
  *
- * Pass the actual function references (not strings!) — TypeScript catches
+ * Pass the actual function references (not strings!), TypeScript catches
  * undefined names at compile time, and the docs registry recovers the
  * export-name string at build time by identity-matching against the
  * module namespace. This avoids `Function.prototype.name`, which the

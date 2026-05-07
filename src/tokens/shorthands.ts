@@ -3,8 +3,8 @@
  *
  * Every component that registers Layer-2 tokens gets ONE Tailwind-ish
  * utility named after itself (`button`, `badge`, `card`, …). The class
- * fans out into every per-component-token CSS property — height,
- * padding, gap, font-*, transition-*, border-*, backdrop-filter — so
+ * fans out into every per-component-token CSS property, height,
+ * padding, gap, font-*, transition-*, border-*, backdrop-filter, so
  * the consumer side is just `<button class="button">`, no inline
  * `h-(--button-height)` / `gap-(--button-gap)` plumbing.
  *

@@ -36,7 +36,7 @@ const TYPE_TO_CATEGORY: Readonly<Record<TokenType, TokenCategory>> = {
  * because the categorization reflects PURPOSE, not value type. Focus-ring
  * tokens are border-widths and colors and styles by VALUE, but by purpose
  * they group under `focus`. Same story for `state`. Keep this list short
- * — every entry is a documented exception.
+ *, every entry is a documented exception.
  */
 const CATEGORY_PURPOSE_OVERRIDES: ReadonlySet<string> = new Set([
   // Focus ring: type-by-value, but grouped under `focus` for docs.
@@ -156,7 +156,7 @@ describe('token registry', () => {
 
   test('explicit `type` matches the strict inference (when both exist)', () => {
     // If a token name unambiguously implies a type via suffix/prefix/exact
-    // rule, the resolved type must agree — otherwise the spec contradicts
+    // rule, the resolved type must agree, otherwise the spec contradicts
     // its own name. Tokens whose name is ambiguous (no strict match) can
     // override freely; sidebar-width is a `size`, separator-width is a
     // `border-width`, and both have to set `type` explicitly.

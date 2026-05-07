@@ -14,7 +14,7 @@ import {
 import { Textarea } from '@brika/clay/components/textarea';
 import { defineDemos } from '../_registry';
 
-/** Right-side sheet (default) — suited for filters, detail views, and settings panels. */
+/** Right-side sheet (default), suited for filters, detail views, and settings panels. */
 export function SheetDefaultDemo() {
   return (
     <Sheet>
@@ -42,7 +42,7 @@ export function SheetDefaultDemo() {
   );
 }
 
-/** Left-side sheet — commonly used as an off-canvas navigation panel. */
+/** Left-side sheet, commonly used as an off-canvas navigation panel. */
 export function SheetLeftDemo() {
   return (
     <Sheet>
@@ -65,7 +65,7 @@ export function SheetLeftDemo() {
   );
 }
 
-/** Sheet with a form — useful for quick data entry without navigating away. */
+/** Sheet with a form, useful for quick data entry without navigating away. */
 export function SheetFormDemo() {
   return (
     <Sheet>
@@ -101,13 +101,13 @@ export function SheetFormDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [SheetDefaultDemo, 'Default', { description: `Right-side sheet (default) — suited for filters, detail views, and settings panels.` }],
-  [SheetLeftDemo, 'Left', { description: `Left-side sheet — commonly used as an off-canvas navigation panel.` }],
-  [SheetFormDemo, 'Form', { description: `Sheet with a form — useful for quick data entry without navigating away.` }],
+  [SheetDefaultDemo, 'Default', { description: `Right-side sheet (default), suited for filters, detail views, and settings panels.` }],
+  [SheetLeftDemo, 'Left', { description: `Left-side sheet, commonly used as an off-canvas navigation panel.` }],
+  [SheetFormDemo, 'Form', { description: `Sheet with a form, useful for quick data entry without navigating away.` }],
 ]);
 export const accessibility: readonly string[] = [
   `Focus is trapped inside the sheet while open.`,
   `Escape dismisses the sheet and returns focus to the trigger.`,
-  `\`SheetTitle\` is required for an accessible name — use \`sr-only\` to visually hide it if the design omits a heading.`,
+  `\`SheetTitle\` is required for an accessible name, use \`sr-only\` to visually hide it if the design omits a heading.`,
   `The \`side\` prop ("top", "right", "bottom", "left") does not affect AT semantics.`,
 ];

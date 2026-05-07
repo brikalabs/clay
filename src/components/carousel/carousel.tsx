@@ -18,7 +18,7 @@ interface CarouselProps {
   opts?: CarouselOptions;
   /** Embla plugins (e.g. Autoplay). */
   plugins?: CarouselPlugin;
-  /** Scroll axis — `"horizontal"` (default) or `"vertical"`. */
+  /** Scroll axis, `"horizontal"` (default) or `"vertical"`. */
   orientation?: 'horizontal' | 'vertical';
   /** Callback that receives the Embla API instance once initialized. */
   setApi?: (api: CarouselApi) => void;

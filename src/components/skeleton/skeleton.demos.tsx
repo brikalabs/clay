@@ -1,7 +1,7 @@
 import { Skeleton } from '@brika/clay/components/skeleton';
 import { defineDemos } from '../_registry';
 
-/** Single line skeleton — match width to expected text content. */
+/** Single line skeleton, match width to expected text content. */
 export function SkeletonDefaultDemo() {
   return <Skeleton className="h-4 w-48" />;
 }
@@ -35,7 +35,7 @@ export function SkeletonTableDemo() {
   );
 }
 
-/** Article or blog post skeleton — heading plus body lines. */
+/** Article or blog post skeleton, heading plus body lines. */
 export function SkeletonArticleDemo() {
   return (
     <div className="flex flex-col gap-3 w-full max-w-sm">
@@ -50,10 +50,10 @@ export function SkeletonArticleDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [SkeletonDefaultDemo, 'Default', { description: `Single line skeleton — match width to expected text content.` }],
+  [SkeletonDefaultDemo, 'Default', { description: `Single line skeleton, match width to expected text content.` }],
   [SkeletonCardDemo, 'Card', { description: `Avatar + text skeleton for a user row or comment thread.` }],
   [SkeletonTableDemo, 'Table', { description: `Table row skeleton with columns of varying widths.` }],
-  [SkeletonArticleDemo, 'Article', { description: `Article or blog post skeleton — heading plus body lines.` }],
+  [SkeletonArticleDemo, 'Article', { description: `Article or blog post skeleton, heading plus body lines.` }],
 ]);
 export const accessibility: readonly string[] = [
   `Mark skeleton containers with \`aria-hidden="true"\` and \`aria-busy="true"\` on the parent.`,

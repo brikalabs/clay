@@ -11,7 +11,7 @@ export function PasswordInputDefaultDemo() {
   );
 }
 
-/** Invalid state surfaced via aria-invalid — shows destructive ring and border. */
+/** Invalid state surfaced via aria-invalid, shows destructive ring and border. */
 export function PasswordInputInvalidDemo() {
   return (
     <div className="w-full max-w-xs space-y-1.5">
@@ -27,7 +27,7 @@ export function PasswordInputInvalidDemo() {
   );
 }
 
-/** Disabled password input — preserves layout, all interactions blocked. */
+/** Disabled password input, preserves layout, all interactions blocked. */
 export function PasswordInputDisabledDemo() {
   return (
     <div className="w-full max-w-xs">
@@ -36,7 +36,7 @@ export function PasswordInputDisabledDemo() {
   );
 }
 
-/** Full sign-in form context — password input paired with an email input and submit button. */
+/** Full sign-in form context, password input paired with an email input and submit button. */
 export function PasswordInputFormDemo() {
   return (
     <form className="w-full max-w-xs space-y-4" onSubmit={(e) => e.preventDefault()}>
@@ -59,13 +59,13 @@ export function PasswordInputFormDemo() {
 
 export const demoMeta = defineDemos([
   [PasswordInputDefaultDemo, 'Default', { description: `Password field with lock icon and eye toggle to reveal characters.` }],
-  [PasswordInputInvalidDemo, 'Invalid', { description: `Invalid state surfaced via aria-invalid — shows destructive ring and border.` }],
-  [PasswordInputDisabledDemo, 'Disabled', { description: `Disabled password input — preserves layout, all interactions blocked.` }],
-  [PasswordInputFormDemo, 'Form', { description: `Full sign-in form context — password input paired with an email input and submit button.` }],
+  [PasswordInputInvalidDemo, 'Invalid', { description: `Invalid state surfaced via aria-invalid, shows destructive ring and border.` }],
+  [PasswordInputDisabledDemo, 'Disabled', { description: `Disabled password input, preserves layout, all interactions blocked.` }],
+  [PasswordInputFormDemo, 'Form', { description: `Full sign-in form context, password input paired with an email input and submit button.` }],
 ]);
 export const accessibility: readonly string[] = [
   `The reveal toggle carries \`aria-label\` that updates between "Show password" and "Hide password".`,
-  `The underlying input switches between \`type="password"\` and \`type="text"\` — AT announces the mode change.`,
+  `The underlying input switches between \`type="password"\` and \`type="text"\`, AT announces the mode change.`,
   `\`aria-invalid="true"\` triggers the destructive ring; pair with a visible error message.`,
   `Autocomplete attributes (\`autocomplete="current-password"\`) improve password-manager integration.`,
 ];
