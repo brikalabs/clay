@@ -1,6 +1,6 @@
 {
   "name": "@brika/clay",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Clay — Brika Labs' React component library, token system, and first-party themes",
   "type": "module",
   "license": "MIT",
@@ -48,7 +48,12 @@
     "./themes/registry": "./src/themes/registry.ts",
     "./tokens": "./src/tokens/index.ts"
   },
-  "files": ["dist", "README.md", "LICENSE", "CHANGELOG.md"],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
   "scripts": {
     "build": "tsup && tsc --emitDeclarationOnly --noEmit false",
     "dev": "tsup --watch",
