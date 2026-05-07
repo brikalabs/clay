@@ -1,5 +1,6 @@
 ---
 import { Toaster } from '@brika/clay/components/toast';
+import CodeBlockCopy from '~/components/docs/CodeBlockCopy.astro';
 import { CopyPageMenu } from '~/components/docs/CopyPageMenu.tsx';
 import { OnThisPage } from '~/components/OnThisPage.tsx';
 import { repoTreeUrl } from '~/lib/github';
@@ -145,4 +146,5 @@ const externalDocsWithFavicons = frontmatter.externalDocs
 
   <OnThisPage slot="rail" client:only="react" />
   <Toaster client:only="react" />
+  <CodeBlockCopy />
 </DocLayout>

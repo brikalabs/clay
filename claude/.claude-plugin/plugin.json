@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin.json",
+  "name": "clay",
+  "description": "Clay design system: token-driven React components, themes, and a primitive layer. Adds a usage skill, a /clay-docs command, and a clay-expert agent for theming and contribution work.",
+  "version": "0.0.1",
+  "author": {
+    "name": "Brika Labs",
+    "url": "https://brika.dev"
+  },
+  "homepage": "https://clay.brika.dev",
+  "repository": "https://github.com/brikalabs/clay",
+  "license": "MIT",
+  "keywords": ["design-system", "react", "tailwindcss", "tokens", "theming", "brika"]
+}

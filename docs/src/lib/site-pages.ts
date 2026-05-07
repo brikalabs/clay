@@ -54,6 +54,12 @@ const staticPages: readonly SitePage[] = [
     keywords: ['guide', 'apply theme', 'theme config', 'authoring'],
   },
   {
+    label: 'Claude Code plugin',
+    href: '/claude-plugin',
+    group: 'Pages',
+    keywords: ['claude', 'agent', 'plugin', 'skill', 'mcp', 'llm', 'ai'],
+  },
+  {
     label: 'All components',
     href: '/components',
     group: 'Components',
