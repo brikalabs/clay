@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-marketplace.json",
+  "name": "brika",
+  "description": "Brika Labs plugins for Claude Code.",
+  "owner": {
+    "name": "Brika Labs",
+    "url": "https://brika.dev"
+  },
+  "plugins": [
+    {
+      "name": "clay",
+      "source": "./",
+      "description": "Clay design system: components, tokens, themes, with a usage skill, /clay-docs command, and a clay-expert agent.",
+      "version": "0.0.1",
+      "homepage": "https://clay.brika.dev",
+      "tags": ["design-system", "react", "tokens", "theming"]
+    }
+  ]
+}
