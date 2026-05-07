@@ -94,16 +94,18 @@ function CardHeader({ className, ...props }: React.ComponentProps<'div'>) {
   );
 }
 
-function CardTitle({ className, ...props }: React.ComponentProps<'h3'>) {
+function CardTitle({ className, children, ...props }: React.ComponentProps<'h3'>) {
   return (
     <h3
       data-slot="card-title"
       aria-label={
-        props['aria-label'] ?? (typeof props.children === 'string' ? props.children : undefined)
+        props['aria-label'] ?? (typeof children === 'string' ? children : undefined)
       }
       className={cn('font-semibold text-lg leading-none tracking-tight', className)}
       {...props}
-    />
+    >
+      {children}
+    </h3>
   );
 }
 

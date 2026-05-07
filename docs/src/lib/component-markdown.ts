@@ -3,8 +3,9 @@
  * stays in sync with what humans see on the rendered page.
  */
 
+import type { ComponentDemo } from '@brika/clay';
 import type { ResolvedTokenSpec } from '@brika/clay/tokens';
-import type { ComponentDemo, ComponentEntry } from './component-registry';
+import type { ComponentEntry } from './component-registry';
 import { componentSourceUrl } from './github';
 import type { ClayComponentDoc, ClayPropDoc } from './vite-plugin-clay-docgen';
 
@@ -15,7 +16,7 @@ interface RenderInput {
 }
 
 export function renderComponentMarkdown({ component, docgen, tokens }: RenderInput): string {
-  const codeId = component.displayName.replace(/\s+/g, '');
+  const codeId = component.displayName.replaceAll(/\s+/g, '');
   const [heroDemo, ...moreDemos] = component.demos;
   const sections = [
     headerSection(component),
@@ -40,7 +41,7 @@ function headerSection(component: ComponentEntry): string {
 }
 
 function installSection(component: ComponentEntry): string {
-  const id = component.displayName.replace(/\s+/g, '');
+  const id = component.displayName.replaceAll(/\s+/g, '');
   return [
     '## Install',
     '',

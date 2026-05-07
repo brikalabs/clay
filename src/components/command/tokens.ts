@@ -1,5 +1,5 @@
 import { defineComponent } from '../../tokens/define';
-import { SPACING_1, SPACING_1_5, SPACING_2 } from '../../tokens/spacing';
+import { SPACING_1_5, SPACING_2 } from '../../tokens/spacing';
 import { meta } from './meta';
 
 export const tokens = [

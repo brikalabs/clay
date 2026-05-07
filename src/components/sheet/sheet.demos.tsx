@@ -55,10 +55,10 @@ export function SheetLeftDemo() {
           <SheetDescription>Browse sections of the application.</SheetDescription>
         </SheetHeader>
         <nav className="flex flex-col gap-2 px-4 py-6 text-sm">
-          <a href="#" className="font-medium text-foreground hover:underline">Dashboard</a>
-          <a href="#" className="text-muted-foreground hover:underline">Projects</a>
-          <a href="#" className="text-muted-foreground hover:underline">Team</a>
-          <a href="#" className="text-muted-foreground hover:underline">Settings</a>
+          <a href="https://example.com" className="font-medium text-foreground hover:underline">Dashboard</a>
+          <a href="https://example.com" className="text-muted-foreground hover:underline">Projects</a>
+          <a href="https://example.com" className="text-muted-foreground hover:underline">Team</a>
+          <a href="https://example.com" className="text-muted-foreground hover:underline">Settings</a>
         </nav>
       </SheetContent>
     </Sheet>

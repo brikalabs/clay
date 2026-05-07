@@ -161,7 +161,7 @@ function useOverflowList<T>({
   // ── Clean stale cache entries ──────────────────────────────────────────
   React.useEffect(() => {
     const key = getKeyRef.current;
-    const currentIds = new Set(items.map(key));
+    const currentIds = new Set(items.map((item) => key(item)));
     for (const id of widthCache.current.keys()) {
       if (!currentIds.has(id)) {
         widthCache.current.delete(id);
@@ -186,7 +186,7 @@ function useOverflowList<T>({
       const activeIdx = items.findIndex((item) => key(item) === activeKey);
       if (activeIdx >= 0 && activeIdx >= visibleCount) {
         const vis = [...items.slice(0, visibleCount - 1), items[activeIdx]];
-        const visKeys = new Set(vis.map(key));
+        const visKeys = new Set(vis.map((item) => key(item)));
         const ovf = items.filter((item) => !visKeys.has(key(item)));
         return {
           visible: vis,

@@ -12,6 +12,16 @@ export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
   buttonVariant?: 'ghost' | 'outline';
 };
 
+type ChevronComponentProps = React.ComponentProps<'svg'> & {
+  orientation?: 'up' | 'down' | 'left' | 'right';
+};
+
+function CalendarChevron({ className, orientation, ...rest }: ChevronComponentProps) {
+  if (orientation === 'left') return <ChevronLeftIcon className={cn('size-4', className)} {...rest} />;
+  if (orientation === 'right') return <ChevronRightIcon className={cn('size-4', className)} {...rest} />;
+  return <ChevronDownIcon className={cn('size-4', className)} {...rest} />;
+}
+
 function Calendar({
   className,
   classNames,
@@ -89,11 +99,7 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        Chevron: ({ className: cls, orientation, ...rest }) => {
-          if (orientation === 'left') return <ChevronLeftIcon className={cn('size-4', cls)} {...rest} />;
-          if (orientation === 'right') return <ChevronRightIcon className={cn('size-4', cls)} {...rest} />;
-          return <ChevronDownIcon className={cn('size-4', cls)} {...rest} />;
-        },
+        Chevron: CalendarChevron,
         DayButton: CalendarDayButton,
         ...components,
       }}

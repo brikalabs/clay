@@ -69,7 +69,7 @@ export function OverflowListActiveDemo() {
           <OverflowListItem key={env.id} itemId={env.id}>
             <Badge
               variant={env.id === 'nightly' ? 'default' : 'outline'}
-              className={visible.find((v) => v.id === env.id) ? '' : 'invisible'}
+              className={visible.some((v) => v.id === env.id) ? '' : 'invisible'}
             >
               {env.label}
             </Badge>

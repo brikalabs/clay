@@ -68,20 +68,20 @@ export function ToastVariantsDemo() {
   );
 }
 
+function fakeUpload(): Promise<{ filename: string }> {
+  return new Promise((resolve, reject) =>
+    setTimeout(() => {
+      if (Math.random() > 0.3) {
+        resolve({ filename: 'report-2026.pdf' });
+      } else {
+        reject(new Error('Network timeout'));
+      }
+    }, 2000)
+  );
+}
+
 /** toast.promise tracks an async operation through loading, success, and error states. */
 export function ToastPromiseDemo() {
-  function fakeUpload(): Promise<{ filename: string }> {
-    return new Promise((resolve, reject) =>
-      setTimeout(() => {
-        if (Math.random() > 0.3) {
-          resolve({ filename: 'report-2026.pdf' });
-        } else {
-          reject(new Error('Network timeout'));
-        }
-      }, 2000)
-    );
-  }
-
   return (
     <Button
       variant="outline"
