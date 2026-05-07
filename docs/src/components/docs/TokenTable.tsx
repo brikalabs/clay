@@ -433,29 +433,45 @@ function prefixesFor(token: ResolvedTokenSpec): readonly string[] {
 }
 
 /**
+ * Per-namespace suffix → preferred-prefix overrides. A `card-foreground`
+ * color token leads with `text-`, a `switch-track-width` size token with
+ * `w-`, etc. The first matching suffix wins, longest entries listed first
+ * so `-padding-x` resolves before `-padding`.
+ */
+const PRIMARY_PREFIX_OVERRIDES: Partial<
+  Record<NonNullable<ResolvedTokenSpec['tailwindNamespace']>, ReadonlyArray<readonly [suffix: string, prefix: string]>>
+> = {
+  color: [
+    ['-foreground', 'text'],
+    ['-label', 'text'],
+    ['-border', 'border'],
+    ['-hairline', 'border'],
+    ['-ring', 'ring'],
+    ['-outline', 'outline'],
+  ],
+  spacing: [
+    ['-padding-x', 'px'],
+    ['-padding-y', 'py'],
+    ['-width', 'w'],
+    ['-height', 'h'],
+    ['-gap', 'gap'],
+  ],
+};
+
+/**
  * Given a token, pick the most idiomatic Tailwind prefix to lead with.
- * `-foreground` color tokens read as `text-`, `-width` size tokens read as
- * `w-`, `-height` reads as `h-`, etc. Falls back to the first entry of
- * the namespace's prefix list.
+ * Falls back to the first entry of the namespace's prefix list.
  */
 function pickPrimaryPrefix(
   token: ResolvedTokenSpec,
   prefixes: readonly string[]
 ): string {
-  const name = token.utilityAlias ?? token.name;
   const ns = token.tailwindNamespace;
-  if (ns === 'color') {
-    if (name.endsWith('-foreground') || name.endsWith('-label')) return 'text';
-    if (name.endsWith('-border') || name.endsWith('-hairline')) return 'border';
-    if (name.endsWith('-ring')) return 'ring';
-    if (name.endsWith('-outline')) return 'outline';
-  }
-  if (ns === 'spacing') {
-    if (name.endsWith('-width')) return 'w';
-    if (name.endsWith('-height')) return 'h';
-    if (name.endsWith('-padding-x')) return 'px';
-    if (name.endsWith('-padding-y')) return 'py';
-    if (name.endsWith('-gap')) return 'gap';
+  const overrides = ns ? PRIMARY_PREFIX_OVERRIDES[ns] : undefined;
+  if (overrides) {
+    const name = token.utilityAlias ?? token.name;
+    const match = overrides.find(([suffix]) => name.endsWith(suffix));
+    if (match) return match[1];
   }
   return prefixes[0] ?? 'bg';
 }
