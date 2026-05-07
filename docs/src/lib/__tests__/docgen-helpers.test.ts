@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { slugFromPath, slugToPascalCase } from '../vite-plugin-clay-docgen';
+import { isHookName, isInternalProp, slugFromPath, slugToPascalCase } from '../docgen-helpers';
 
 describe('slugFromPath', () => {
   test('extracts slug from a unix component path', () => {
@@ -10,7 +10,7 @@ describe('slugFromPath', () => {
 
   test('extracts slug from a windows-style path', () => {
     expect(
-      slugFromPath('C:\\repo\\src\\components\\dropdown-menu\\dropdown-menu.tsx')
+      slugFromPath(String.raw`C:\repo\src\components\dropdown-menu\dropdown-menu.tsx`)
     ).toBe('dropdown-menu');
   });
 
@@ -42,5 +42,39 @@ describe('slugToPascalCase', () => {
 
   test('returns empty string for empty input', () => {
     expect(slugToPascalCase('')).toBe('');
+  });
+});
+
+describe('isHookName', () => {
+  test('matches camelCase hooks', () => {
+    expect(isHookName('useState')).toBe(true);
+    expect(isHookName('useDeferredValue')).toBe(true);
+  });
+
+  test('rejects names that just start with "use"', () => {
+    expect(isHookName('user')).toBe(false);
+    expect(isHookName('use')).toBe(false);
+    expect(isHookName('useless')).toBe(false);
+  });
+
+  test('rejects PascalCase component names', () => {
+    expect(isHookName('Button')).toBe(false);
+    expect(isHookName('UseProvider')).toBe(false);
+  });
+});
+
+describe('isInternalProp', () => {
+  test('matches Radix-injected scope props', () => {
+    expect(isInternalProp('__scopeDialog')).toBe(true);
+    expect(isInternalProp('__scope')).toBe(true);
+  });
+
+  test('rejects normal props', () => {
+    expect(isInternalProp('asChild')).toBe(false);
+    expect(isInternalProp('children')).toBe(false);
+  });
+
+  test('rejects single-underscore prefixes', () => {
+    expect(isInternalProp('_private')).toBe(false);
   });
 });

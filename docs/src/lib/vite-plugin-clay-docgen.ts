@@ -7,6 +7,7 @@ import {
   withCustomConfig,
   withDefaultConfig,
 } from 'react-docgen-typescript';
+import { isHookName, isInternalProp, slugFromPath, slugToPascalCase } from './docgen-helpers';
 
 /**
  * Runs react-docgen-typescript over `src/components/<slug>/<slug>.tsx`
@@ -57,11 +58,6 @@ export interface ClayComponentDoc {
 
 const SKIPPED_PROPS = new Set(['key', 'ref']);
 
-/** Radix injects `__scope*` context props internally — never surface them. */
-function isInternalProp(name: string): boolean {
-  return name.startsWith('__');
-}
-
 /**
  * Generic description fallback for props that recur across many Radix-based
  * primitives. Lets us document them once globally instead of asking every
@@ -71,15 +67,6 @@ const COMMON_PROP_DESCRIPTIONS: Readonly<Record<string, string>> = {
   asChild:
     'When true, render the child element instead of the default DOM node and merge props. Lets you compose with `<a>`, `<Link>`, or another primitive while keeping behavior and styling.',
 };
-
-/**
- * Looks like a hook (camelCase starting with "use"), not a component.
- * react-docgen-typescript picks these up when their argument type is shaped
- * like a React props object; we drop them from the output.
- */
-function isHookName(name: string): boolean {
-  return /^use[A-Z]/.test(name);
-}
 
 function listComponentSlugs(componentsDir: string): readonly string[] {
   return readdirSync(componentsDir).filter((entry) => {
@@ -113,20 +100,6 @@ function buildParser(tsconfigPath: string | null): (files: string[]) => Componen
       ? withCustomConfig(tsconfigPath, parserOptions)
       : withDefaultConfig(parserOptions);
   return (files) => parser.parse(files);
-}
-
-/** Extract the component slug from an absolute file path. */
-export function slugFromPath(filePath: string): string | null {
-  const match = /[/\\]components[/\\]([^/\\]+)[/\\][^/\\]+\.tsx$/.exec(filePath);
-  return match?.[1] ?? null;
-}
-
-/** "dropdown-menu" → "DropdownMenu" */
-export function slugToPascalCase(slug: string): string {
-  return slug
-    .split('-')
-    .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
-    .join('');
 }
 
 function normalizeDocs(docs: readonly ComponentDoc[]): Record<string, ClayComponentDoc[]> {
