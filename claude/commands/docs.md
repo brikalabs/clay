@@ -1,39 +1,71 @@
 ---
 allowed-tools:
   - Bash(curl:*)
-description: Fetch the LLM-friendly markdown docs for a Clay component (or the catalogue index when called bare).
-argument-hint: <component-slug> | (empty for catalogue)
+description: Load a Clay component's docs into context and help the user with whatever they need to know about it.
+argument-hint: <component-slug> | (empty for the catalogue)
 ---
 
-The user asked for Clay component docs. Argument: `$ARGUMENTS`
+The user wants help with a Clay component. Argument: `$ARGUMENTS`.
 
-Use `curl -fsSL <url>` (Bash tool) so the raw markdown lands in context
-verbatim. **Do not** use WebFetch: it passes content through a
-summarising LLM and the user invoked this command to read the docs
-unmodified.
+This command is a starting point for a conversation, not a docs dump.
+You load the docs into your own context, then orient the user and ask
+what they actually need. Drawing the wall of markdown into the chat is
+hostile UX; the user invoked you to be useful, not to paste a manual.
 
-## What to fetch
+## Step 1: load the docs into your context
 
-- If `$ARGUMENTS` is empty or whitespace, fetch the catalogue index at
-  `https://clay.brika.dev/llms.txt`. Show a concise list of available
-  components grouped by their category headings, then tell the user to
-  re-run `/clay:docs <slug>` for any specific component.
-- Otherwise, validate `$ARGUMENTS` as a kebab-case slug (lowercase
-  letters, digits, and hyphens only, e.g. `button`, `dropdown-menu`).
-  If it doesn't match, ask the user to retry with a valid slug instead
-  of running curl. With a valid slug, fetch
-  `https://clay.brika.dev/components/<slug>.md`.
+Validate `$ARGUMENTS` as a kebab-case slug (lowercase letters, digits,
+and hyphens only). If valid, fetch the page with the Bash tool:
 
-## What to do with the result
+```sh
+curl -fsSL https://clay.brika.dev/components/<slug>.md
+```
 
-Drop the entire response into the conversation as-is: headings, props
-table, code examples, accessibility notes, theme tokens. Do not
-summarize, abbreviate, reformat, or strip sections unless the user
-follows up with an explicit narrower question.
+If `$ARGUMENTS` is empty or whitespace, fetch the catalogue index
+instead:
 
-## On failure
+```sh
+curl -fsSL https://clay.brika.dev/llms.txt
+```
 
-- 404: the slug doesn't exist. Fetch the catalogue index instead and
-  suggest the closest matching slug from the list.
-- Network or other curl error: report the exit status and let the user
+The fetched content goes into your context, not into the user-visible
+response. Read it carefully so you can answer follow-ups directly.
+
+## Step 2: orient and ask
+
+In one short paragraph, do three things:
+
+1. Confirm which component (or catalogue) you just loaded.
+2. Tell the user what's in scope: the major sections you saw (e.g.
+   "5 variants, 3 sizes, 18 theme tokens, accessibility notes,
+   asChild support") so they know what's available without reading
+   the page themselves.
+3. Ask what they want help with. Offer a short menu of likely
+   intents: a usage snippet for a specific case, the prop signature,
+   theme overrides, accessibility, comparison with another Clay
+   component, or "just show me the full markdown" if they really do
+   want the dump.
+
+Then stop and wait for their answer. Do not pre-emptively summarize
+or paginate the docs.
+
+## Step 3: answer from the loaded context
+
+When they respond, draw from the docs you fetched. If the docs don't
+cover their question, fall back to:
+
+- The live component source under `src/components/<slug>/<slug>.tsx`
+  and `src/components/<slug>/tokens.ts` if the user has Clay's source
+  checked out.
+- A targeted re-fetch of the same docs URL if you need to re-read.
+- The catalogue index when the user clearly wants a different
+  component.
+
+## Failure modes
+
+- **Invalid slug**: don't run curl. Ask the user to retry with a
+  kebab-case slug, or offer to list the catalogue.
+- **404**: fetch the catalogue index and suggest the closest matching
+  slug from the list.
+- **Network error**: report the curl exit status and let the user
   decide whether to retry.

@@ -9,7 +9,7 @@ Clay ships a [Claude Code](https://claude.com/claude-code) plugin so that anyone
 ## What you get
 
 - **`/clay:usage` skill**, auto-loads when Claude detects `@brika/clay` in your project. Teaches the three-layer token model (scalars, semantic roles, component tokens), how to apply a theme, and the granular vs barrel import trade-off.
-- **`/clay:docs <component>` command**, fetches the LLM-friendly docs for a specific component (e.g. `/clay:docs button`) into the conversation. Bare `/clay:docs` returns the catalogue index.
+- **`/clay:docs <component>` command**, loads a component's docs into Claude's context and starts a conversation about it: `/clay:docs button` confirms what was loaded, lists the sections that are in scope (variants, theme tokens, accessibility, examples), then asks what you want help with. The full markdown is reachable on request, but it isn't dumped into the chat by default. Bare `/clay:docs` loads the catalogue index instead.
 - **`clay:expert` subagent**, a Sonnet-backed specialist for theme authoring, token diagnosis, and contributing components. Invoke it when the task is non-trivial: designing a theme overlay, debugging why a token isn't taking effect, or porting a UI to Clay.
 
 ## Install
@@ -38,7 +38,7 @@ After install, try the docs command:
 /clay:docs button
 ```
 
-You should see Button's full props table, examples, and accessibility notes drop into the conversation. If the command isn't recognized, run `/plugin list` to confirm `clay` shows up, and `/plugin reload` if it doesn't pick up immediately.
+Claude should confirm it loaded Button's docs, list the sections that came with it (variants, sizes, theme tokens, accessibility), and ask what you want to do. If the command isn't recognized, run `/plugin list` to confirm `clay` shows up, and `/plugin reload` if it doesn't pick up immediately.
 
 ## What it doesn't do
 
