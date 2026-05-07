@@ -7,7 +7,6 @@ export const tokens = [
     radius: {
       default: 'var(--radius-control)',
       description: 'Navigation menu trigger corner radius.',
-      alias: 'navigation-menu',
     },
     motion: true,
     geometry: { height: '2.25rem', paddingX: SPACING_4, paddingY: SPACING_2 },
@@ -18,12 +17,10 @@ export const tokens = [
     radius: {
       default: 'var(--radius-surface)',
       description: 'Navigation menu viewport corner radius.',
-      alias: 'navigation-menu-viewport',
     },
     shadow: {
       default: 'var(--shadow-overlay)',
       description: 'Navigation menu viewport elevation.',
-      alias: 'navigation-menu-viewport',
     },
     backdropBlur: {
       default: '0px',

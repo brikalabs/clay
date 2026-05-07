@@ -10,9 +10,8 @@ export const tokens = defineComponent(meta.name, {
   radius: {
     default: 'var(--radius-surface)',
     description: 'Sheet corner radius.',
-    alias: 'sheet',
   },
-  shadow: { default: 'var(--shadow-modal)', description: 'Sheet elevation.', alias: 'sheet' },
+  shadow: { default: 'var(--shadow-modal)', description: 'Sheet elevation.' },
   border: '1px',
   motion: true,
   backdropBlur: {

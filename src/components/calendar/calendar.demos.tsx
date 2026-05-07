@@ -31,9 +31,25 @@ export function CalendarRangeDemo() {
   );
 }
 
+export function CalendarRangeTwoMonthDemo() {
+  const [range, setRange] = useState<DateRange | undefined>();
+
+  return (
+    <Calendar
+      mode="range"
+      numberOfMonths={2}
+      pagedNavigation
+      selected={range}
+      onSelect={setRange}
+      className="rounded-lg border"
+    />
+  );
+}
+
 export const demoMeta = defineDemos([
   [CalendarDefaultDemo, 'Default'],
   [CalendarRangeDemo, 'Range'],
+  [CalendarRangeTwoMonthDemo, 'Range Two Month'],
 ]);
 export const accessibility: readonly string[] = [
   `Full keyboard navigation: arrow keys move between days, Enter/Space selects, Page Up/Down change months.`,

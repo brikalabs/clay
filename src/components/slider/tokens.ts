@@ -9,7 +9,6 @@ export const tokens = defineComponent(meta.name, {
   radius: {
     default: '9999px',
     description: 'Track corner radius. Set lower for square / brutalist looks.',
-    alias: 'slider',
   },
   slots: {
     'track-height': { default: '0.25rem', description: 'Slider track thickness.' },

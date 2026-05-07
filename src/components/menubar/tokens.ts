@@ -7,7 +7,6 @@ export const tokens = [
     radius: {
       default: 'var(--radius-control)',
       description: 'Menubar root border radius.',
-      alias: 'menubar',
     },
     border: '1px',
     motion: true,
@@ -18,12 +17,10 @@ export const tokens = [
     radius: {
       default: 'var(--radius-surface)',
       description: 'Menubar dropdown content corner radius.',
-      alias: 'menubar-content',
     },
     shadow: {
       default: 'var(--shadow-overlay)',
       description: 'Menubar dropdown elevation.',
-      alias: 'menubar-content',
     },
     backdropBlur: {
       default: '0px',
@@ -39,7 +36,6 @@ export const tokens = [
     radius: {
       default: 'var(--radius-control)',
       description: 'Menubar item corner radius.',
-      alias: 'menubar-item',
     },
     surface: true,
     geometry: { paddingX: SPACING_2, paddingY: SPACING_1_5, gap: SPACING_2 },

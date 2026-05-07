@@ -9,7 +9,6 @@ export const tokens = defineComponent(meta.name, {
   radius: {
     default: 'var(--radius-control)',
     description: 'Code block corner radius.',
-    alias: 'code-block',
   },
   typography: {
     fontFamily: 'var(--font-mono)',

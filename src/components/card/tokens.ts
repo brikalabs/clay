@@ -10,9 +10,8 @@ export const tokens = defineComponent(meta.name, {
   radius: {
     default: 'var(--radius-container)',
     description: 'Card corner radius.',
-    alias: 'card',
   },
-  shadow: { default: 'var(--shadow-raised)', description: 'Card elevation.', alias: 'card' },
+  shadow: { default: 'var(--shadow-raised)', description: 'Card elevation.' },
   border: '1px',
   motion: true,
   backdropBlur: {

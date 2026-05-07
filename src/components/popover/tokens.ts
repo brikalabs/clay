@@ -10,12 +10,10 @@ export const tokens = defineComponent(meta.name, {
   radius: {
     default: 'var(--radius-surface)',
     description: 'Popover corner radius.',
-    alias: 'popover',
   },
   shadow: {
     default: 'var(--shadow-overlay)',
     description: 'Popover elevation.',
-    alias: 'popover',
   },
   border: '1px',
   motion: true,

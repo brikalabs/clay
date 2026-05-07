@@ -8,7 +8,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '../tooltip';
 // --- Variants ---
 
 const codeBlockVariants = cva(
-  'code-block overflow-hidden rounded-code-block border border-border bg-code-block-bg backdrop-blur-[var(--code-block-backdrop-blur)]',
+  'code-block overflow-hidden rounded-code-block border border-border bg-code-block-bg backdrop-blur-code-block',
   {
     variants: {
       variant: {

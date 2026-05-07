@@ -129,7 +129,8 @@
       "shadow": "var(--shadow-overlay)"
     },
     "calendar": {
-      "backdropBlur": "20px"
+      "backdropBlur": "20px",
+      "rangeBackdropBlur": "12px"
     },
     "codeBlock": {
       "backdropBlur": "16px"

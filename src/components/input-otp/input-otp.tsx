@@ -61,8 +61,8 @@ function InputOTPSlot({
       data-slot="input-otp-slot"
       data-active={isActive}
       className={cn(
-        'input-otp corner-themed relative flex size-(--input-otp-size) items-center justify-center border-input-border bg-input-container text-sm shadow-surface outline-none transition-all backdrop-blur-[var(--input-otp-backdrop-blur)]',
-        '[border-top-width:var(--input-otp-border-width)] [border-bottom-width:var(--input-otp-border-width)] [border-right-width:var(--input-otp-border-width)] first:rounded-l-input-otp first:[border-left-width:var(--input-otp-border-width)] last:rounded-r-input-otp',
+        'input-otp corner-themed relative flex size-input-otp-size items-center justify-center border-input-border bg-input-container text-sm shadow-surface outline-none transition-all backdrop-blur-input-otp',
+        'border-t-(length:--input-otp-border-width) border-b-(length:--input-otp-border-width) border-r-(length:--input-otp-border-width) first:rounded-l-input-otp first:border-l-(length:--input-otp-border-width) last:rounded-r-input-otp',
         'data-[active=true]:z-10 data-[active=true]:ring-[3px] data-[active=true]:ring-ring/50 data-[active=true]:border-ring',
         'aria-invalid:border-destructive aria-invalid:ring-destructive/20',
         className

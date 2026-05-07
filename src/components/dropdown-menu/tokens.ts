@@ -14,12 +14,10 @@ export const tokens = [
     radius: {
       default: 'var(--radius-surface)',
       description: 'Menu surface corner radius.',
-      alias: 'menu',
     },
     shadow: {
       default: 'var(--shadow-overlay)',
       description: 'Menu surface elevation.',
-      alias: 'menu',
     },
     border: '1px',
     motion: true,
@@ -34,7 +32,6 @@ export const tokens = [
     radius: {
       default: 'var(--radius-control)',
       description: 'Menu-item corner radius.',
-      alias: 'menu-item',
     },
     surface: true,
     geometry: { paddingX: SPACING_2, paddingY: SPACING_1_5, gap: SPACING_2 },

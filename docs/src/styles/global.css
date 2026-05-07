@@ -182,18 +182,18 @@ kbd,
   font-size: 0.875rem;
 }
 
-.clay-prose :where(thead) {
+.clay-prose :where(thead):not(:where(.not-prose, .not-prose *)) {
   border-bottom: 1px solid var(--color-clay-hairline);
 }
 
-.clay-prose :where(thead th) {
+.clay-prose :where(thead th):not(:where(.not-prose, .not-prose *)) {
   color: var(--text-color-clay-strong);
   font-weight: 600;
   text-align: left;
   padding: 0.5rem 0.75rem;
 }
 
-.clay-prose :where(tbody td) {
+.clay-prose :where(tbody td):not(:where(.not-prose, .not-prose *)) {
   padding: 0.5rem 0.75rem;
   border-bottom: 1px solid var(--color-clay-hairline);
 }

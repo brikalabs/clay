@@ -13,7 +13,6 @@ export const tokens = [
     radius: {
       default: '9999px',
       description: 'Switch track corner radius. Default is fully rounded.',
-      alias: 'switch',
     },
     surface: true,
     slots: {
@@ -32,7 +31,6 @@ export const tokens = [
     radius: {
       default: '9999px',
       description: 'Switch thumb corner radius.',
-      alias: 'switch-thumb',
     },
     slots: {
       size: { default: '1rem', description: 'Switch thumb diameter at the default size.' },

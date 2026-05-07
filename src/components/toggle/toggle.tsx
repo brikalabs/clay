@@ -7,7 +7,7 @@ import * as React from 'react';
 import { cn } from '../../primitives/cn';
 
 const toggleVariants = cva(
-  "toggle corner-themed inline-flex shrink-0 items-center justify-center rounded-toggle border border-transparent text-sm outline-none transition-all hover:border-border hover:bg-muted hover:text-muted-foreground hover:backdrop-blur-[var(--toggle-backdrop-blur)] focus-visible:ring-themed disabled:pointer-events-none disabled:opacity-50 data-[state=on]:border-border data-[state=on]:bg-accent data-[state=on]:text-accent-foreground data-[state=on]:backdrop-blur-[var(--toggle-backdrop-blur)] [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  "toggle corner-themed inline-flex shrink-0 items-center justify-center rounded-toggle border border-transparent text-sm outline-none transition-all hover:border-border hover:bg-muted hover:text-muted-foreground hover:backdrop-blur-toggle focus-visible:ring-themed disabled:pointer-events-none disabled:opacity-50 data-[state=on]:border-border data-[state=on]:bg-accent data-[state=on]:text-accent-foreground data-[state=on]:backdrop-blur-toggle [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -19,7 +19,7 @@ const toggleVariants = cva(
         default: '',
         sm: 'h-8 px-2 text-xs',
         lg: 'h-10 px-4',
-        icon: 'size-(--toggle-height)',
+        icon: 'size-toggle-height',
       },
     },
     defaultVariants: {

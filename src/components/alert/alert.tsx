@@ -5,7 +5,7 @@ import * as React from 'react';
 import { cn } from '../../primitives/cn';
 
 const alertVariants = cva(
-  'corner-themed relative grid w-full grid-cols-[0_1fr] items-start gap-y-0.5 rounded-alert border px-4 py-3 text-sm backdrop-blur-[var(--alert-backdrop-blur)] has-[>[data-slot=alert-icon]]:grid-cols-[1rem_1fr] has-[>[data-slot=alert-icon],>[data-slot=alert-close]]:gap-x-3',
+  'corner-themed relative grid w-full grid-cols-[0_1fr] items-start gap-y-0.5 rounded-alert border px-4 py-3 text-sm backdrop-blur-alert has-[>[data-slot=alert-icon]]:grid-cols-[1rem_1fr] has-[>[data-slot=alert-icon],>[data-slot=alert-close]]:gap-x-3',
   {
     variants: {
       variant: {

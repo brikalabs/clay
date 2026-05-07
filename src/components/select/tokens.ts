@@ -10,7 +10,6 @@ export const tokens = defineComponent(meta.name, {
   radius: {
     default: 'var(--radius-control)',
     description: 'Select trigger corner radius.',
-    alias: 'select',
   },
   surface: { borderWidth: '1px' },
   geometry: { height: '2.25rem', paddingX: SPACING_3, paddingY: SPACING_2, gap: SPACING_2 },
