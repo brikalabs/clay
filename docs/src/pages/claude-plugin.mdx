@@ -1,16 +1,16 @@
 ---
 layout: ~/layouts/MdxDocLayout.astro
 title: "Claude Code plugin"
-description: "Install Clay's Claude Code plugin for an auto-loading skill, a /clay-docs command, and a clay-expert subagent."
+description: "Install Clay's Claude Code plugin for an auto-loading skill, a /clay:docs command, and a clay:expert subagent."
 ---
 
 Clay ships a [Claude Code](https://claude.com/claude-code) plugin so that anyone working on a project that uses `@brika/clay` can get Clay-aware assistance without copy-pasting docs into context.
 
 ## What you get
 
-- **`clay-usage` skill** — auto-loads when Claude detects `@brika/clay` in your project. Teaches the three-layer token model (scalars → semantic roles → component tokens), how to apply a theme, and the granular vs barrel import trade-off.
-- **`/clay-docs <component>` command** — fetches the LLM-friendly docs for a specific component (e.g. `/clay-docs button`) into the conversation. Bare `/clay-docs` returns the catalogue index.
-- **`clay-expert` subagent** — a Sonnet-backed specialist for theme authoring, token diagnosis, and contributing components. Invoke it when the task is non-trivial — designing a theme overlay, debugging why a token isn't taking effect, or porting a UI to Clay.
+- **`/clay:usage` skill**, auto-loads when Claude detects `@brika/clay` in your project. Teaches the three-layer token model (scalars, semantic roles, component tokens), how to apply a theme, and the granular vs barrel import trade-off.
+- **`/clay:docs <component>` command**, fetches the LLM-friendly docs for a specific component (e.g. `/clay:docs button`) into the conversation. Bare `/clay:docs` returns the catalogue index.
+- **`clay:expert` subagent**, a Sonnet-backed specialist for theme authoring, token diagnosis, and contributing components. Invoke it when the task is non-trivial: designing a theme overlay, debugging why a token isn't taking effect, or porting a UI to Clay.
 
 ## Install
 
@@ -26,7 +26,7 @@ Then install the plugin:
 /plugin install clay@brika
 ```
 
-Claude Code reads `.claude-plugin/marketplace.json` from the [Clay repo](https://github.com/brikalabs/clay), finds the `clay` plugin under `./claude/`, and registers the skill, command, and agent for your account. The plugin doesn't ship in the npm package — it lives only on the GitHub repo, and is independent of `npm install @brika/clay`.
+Claude Code reads `.claude-plugin/marketplace.json` from the [Clay repo](https://github.com/brikalabs/clay), finds the `clay` plugin under `./claude/`, and registers the skill, command, and agent for your account. The plugin doesn't ship in the npm package, it lives only on the GitHub repo, and is independent of `npm install @brika/clay`.
 
 After the marketplace is added, future Brika plugins (`brika-*`) install with the same `@brika` suffix without another `marketplace add`. To remove the plugin later: `/plugin uninstall clay`.
 
@@ -35,14 +35,14 @@ After the marketplace is added, future Brika plugins (`brika-*`) install with th
 After install, try the docs command:
 
 ```text
-/clay-docs button
+/clay:docs button
 ```
 
-You should see Button's full props table, examples, and accessibility notes drop into the conversation. If the command isn't recognized, run `/plugin list` to confirm `clay` shows up — and `/plugin reload` if it doesn't pick up immediately.
+You should see Button's full props table, examples, and accessibility notes drop into the conversation. If the command isn't recognized, run `/plugin list` to confirm `clay` shows up, and `/plugin reload` if it doesn't pick up immediately.
 
 ## What it doesn't do
 
-The plugin is a thin wrapper over the LLM-friendly docs surface that already lives on this site. Every page under `/components/<slug>` has a sibling `/components/<slug>.md` view, plus a catalogue index at [`/llms.txt`](/llms.txt) — those are reachable from any LLM tool that accepts URLs, with or without the plugin. The plugin's value is **default behavior**: it nudges Claude to consult those docs proactively, and it ships an agent tuned for the kind of token-and-theme questions that come up when you're actually building with Clay.
+The plugin is a thin wrapper over the LLM-friendly docs surface that already lives on this site. Every page under `/components/<slug>` has a sibling `/components/<slug>.md` view, plus a catalogue index at [`/llms.txt`](/llms.txt). Those are reachable from any LLM tool that accepts URLs, with or without the plugin. The plugin's value is **default behavior**: it nudges Claude to consult those docs proactively, and it ships an agent tuned for the kind of token-and-theme questions that come up when you're actually building with Clay.
 
 ## Source
 
