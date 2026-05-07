@@ -9,6 +9,11 @@ function componentEntries(): Record<string, string> {
   const out: Record<string, string> = {};
   const componentsDir = join(SRC, 'components');
   for (const name of readdirSync(componentsDir)) {
+    // Skip private folders (`_`, `__tests__`, etc.) and dotfiles — they
+    // hold internal helpers or tests, not shippable component entries.
+    if (name.startsWith('_') || name.startsWith('.')) {
+      continue;
+    }
     const full = join(componentsDir, name);
     if (!statSync(full).isDirectory()) {
       continue;

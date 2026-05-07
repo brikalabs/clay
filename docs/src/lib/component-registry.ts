@@ -71,13 +71,30 @@ const SOURCES_BY_SLUG = new Map<string, string>(
 // Lives in `./extract-demo-code.ts` so it's testable under Bun without
 // pulling in the Vite-only `import.meta.glob` calls that this module makes.
 
-/** Resolve a DemoInput to a full ComponentDemo, auto-filling code from source if absent. */
-function resolveDemo(input: DemoInput, source: string): ComponentDemo {
+/**
+ * Recover the export-name string for a demo function by identity scan.
+ *
+ * `Function.prototype.name` reflects the module-internal binding, which
+ * a minifier rewrites to a short alias (e.g. "eA"). Export-name strings
+ * on the module namespace are preserved by the ES module contract, so
+ * this scan is the source-of-truth for both runtime lookup and the
+ * source-text parser used by `extractDemoCode`.
+ */
+function exportNameOf(mod: DemosModule, fn: unknown): string {
+  for (const [key, value] of Object.entries(mod)) {
+    if (value === fn) return key;
+  }
+  return '';
+}
+
+/** Resolve a DemoInput to a full ComponentDemo, with code auto-extracted from source. */
+function resolveDemo(input: DemoInput, source: string, mod: DemosModule): ComponentDemo {
+  const name = exportNameOf(mod, input.fn);
   return {
-    name: input.name,
+    name,
     title: input.title,
     description: input.description,
-    code: input.code ?? extractDemoCode(source, input.name),
+    code: extractDemoCode(source, name),
   };
 }
 
@@ -107,7 +124,7 @@ const ENTRIES: readonly ComponentEntry[] = CLAY_COMPONENTS.map((meta) => {
     displayName: meta.displayName,
     description: meta.description,
     group: meta.group,
-    demos: (mod?.demoMeta ?? []).map((d) => resolveDemo(d, source)),
+    demos: mod ? (mod.demoMeta ?? []).map((d) => resolveDemo(d, source, mod)) : [],
     accessibility: mod?.accessibility,
     tokens: mod?.tokens,
     externalDocs: meta.externalDocs ?? [],

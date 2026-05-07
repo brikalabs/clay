@@ -39,24 +39,26 @@ export interface ComponentDemo {
   readonly code: string;
 }
 
+type DemoFn = (...args: never[]) => unknown;
+
 /**
- * What you write in a `.demos.tsx` file.
- * `code` is optional — the registry extracts it from the function source automatically.
+ * What you write in a `.demos.tsx` file. The docs registry resolves `fn`
+ * back to its export name via the module namespace at build time.
  */
 export interface DemoInput {
-  readonly name: string;
+  readonly fn: DemoFn;
   readonly title: string;
   readonly description?: string;
-  readonly code?: string;
 }
 
 /**
  * Type-safe, concise way to declare demos inside a `.demos.tsx` file.
  *
- * Pass the actual function references (not strings!) so TypeScript catches
- * undefined function names at compile time. The `name` string is derived
- * automatically from `fn.name`. The `code` snippet is extracted from the
- * function source by the docs registry — no need to maintain it manually.
+ * Pass the actual function references (not strings!) — TypeScript catches
+ * undefined names at compile time, and the docs registry recovers the
+ * export-name string at build time by identity-matching against the
+ * module namespace. This avoids `Function.prototype.name`, which the
+ * minifier mangles for module-internal bindings.
  *
  * @example
  * ```ts
@@ -68,12 +70,12 @@ export interface DemoInput {
  */
 export function defineDemos(
   entries: ReadonlyArray<
-    | readonly [fn: { name: string }, title: string]
-    | readonly [fn: { name: string }, title: string, extra: { description?: string }]
+    | readonly [fn: DemoFn, title: string]
+    | readonly [fn: DemoFn, title: string, extra: { description?: string }]
   >
 ): readonly DemoInput[] {
   return entries.map(([fn, title, extra]) => ({
-    name: fn.name,
+    fn,
     title,
     description: extra?.description,
   }));
