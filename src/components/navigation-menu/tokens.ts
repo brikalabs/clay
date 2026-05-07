@@ -25,6 +25,11 @@ export const tokens = [
       description: 'Navigation menu viewport elevation.',
       alias: 'navigation-menu-viewport',
     },
+    backdropBlur: {
+      default: '0px',
+      description:
+        'Backdrop blur on the navigation menu viewport. Set non-zero for a frosted-glass overlay.',
+    },
     border: '1px',
     geometry: { paddingX: SPACING_3, paddingY: SPACING_3, gap: SPACING_2 },
   }),

@@ -133,6 +133,22 @@ describe('flattenTheme - components', () => {
     });
     expect(flat.rootVars['--switch-thumb-radius']).toBe('8px');
   });
+
+  test('kebab-cases camelCase component names (matches `themePath` convention)', () => {
+    // `defineComponent('hover-card', ...)` registers `themePath:
+    // components.hoverCard.backdropBlur`, so theme JSON files use the
+    // camelCase key. The CSS var still has to come out as the original
+    // kebab-case `--hover-card-backdrop-blur` to match the registry.
+    const flat = flattenTheme({
+      ...baseTheme,
+      components: {
+        hoverCard: { backdropBlur: '12px' },
+        navigationMenuViewport: { backdropBlur: '20px' },
+      },
+    });
+    expect(flat.rootVars['--hover-card-backdrop-blur']).toBe('12px');
+    expect(flat.rootVars['--navigation-menu-viewport-backdrop-blur']).toBe('20px');
+  });
 });
 
 describe('getRegistryDefaults', () => {

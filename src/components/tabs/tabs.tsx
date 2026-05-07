@@ -27,7 +27,7 @@ const tabsListVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-muted',
+        default: 'bg-muted backdrop-blur-[var(--tabs-backdrop-blur)]',
         line: 'gap-1 bg-transparent',
       },
     },

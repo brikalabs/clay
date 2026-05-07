@@ -373,15 +373,133 @@ export function useClayTheme() {
   return ctx;
 }`} />
 
-  <div class="clay-prose mt-6 mb-6">
-    **Avoiding the flash on first paint.** The provider above runs after
-    hydration, so a returning visitor sees Clay's default for one frame
-    before their saved theme paints. To fix that, pre-render every
-    theme's CSS at SSR and emit a tiny synchronous boot script in
-    `<head>` that picks the right one before first paint:
+  <h3 id="persist-flash" class="mt-10 mb-3 scroll-mt-24 font-display text-2xl text-clay-strong leading-[1.15]">
+    Avoiding the flash on first paint
+  </h3>
+
+  <div class="clay-prose mb-6">
+    The provider above resolves the saved id inside `useEffect`, which
+    runs *after* hydration. A returning visitor whose saved theme is not
+    `default` therefore sees Clay's default for one frame before the
+    real theme paints. There's no single fix — the right strategy
+    depends on whether your host can read the request before responding.
+    Three options, in order of preference:
   </div>
 
-  <CodeSource lang="tsx" filename="boot-script.tsx" code={`// 1. SSR: serialise every theme's CSS and inline it in <head>.
+  <h4 id="persist-flash-ssr" class="mt-8 mb-2 font-display text-lg text-clay-strong">
+    Option A — read it on the server <span class="text-clay-inactive">(recommended)</span>
+  </h4>
+
+  <div class="clay-prose mb-6">
+    If the visitor's chosen theme is in a cookie (or a session, or a
+    user-prefs lookup), the server already knows the answer at HTML-gen
+    time. Render the matching stylesheet inline and the page paints
+    correctly on the *first* frame — no client script, no map of every
+    theme's CSS, no flash possible.
+
+    The trick that makes this clean with Clay is that `applyTheme`
+    reuses the existing `<style id="clay-theme">` tag instead of
+    appending a second one. So a server-rendered tag with the right
+    content is invisibly adopted on hydration: when the provider's
+    `applyTheme` call runs, it finds the tag, rewrites it with byte-
+    identical CSS, and the browser does no work.
+  </div>
+
+  <CodeSource lang="tsx" filename="app/layout.tsx" code={`// Next.js App Router — equivalents exist in Remix (loaders),
+// Astro (Astro.cookies), SvelteKit (load), Nuxt (useRequestEvent), etc.
+import { cookies } from 'next/headers';
+import { renderThemeStyleSheet } from '@brika/clay/themes';
+import { builtInThemesById } from '@brika/clay/themes/registry';
+import { ClayThemeProvider } from './theme-provider';
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const stored = (await cookies()).get('app-theme')?.value;
+  const theme = (stored && builtInThemesById[stored]) ?? builtInThemesById.default;
+  const css = renderThemeStyleSheet(theme);
+
+  return (
+    <html lang="en" data-mode="light">
+      <head>
+        <style id="clay-theme" dangerouslySetInnerHTML={{ __html: css }} />
+      </head>
+      <body>
+        <ClayThemeProvider initialThemeId={theme.id}>{children}</ClayThemeProvider>
+      </body>
+    </html>
+  );
+}`} />
+
+  <div class="clay-prose mt-6 mb-6">
+    For this to be flash-free, the provider must start with the same id
+    the server picked — pass `initialThemeId` through and seed
+    `useState(initialThemeId)` instead of reading storage in
+    `useEffect`. Switch the persistence write from `localStorage` to a
+    cookie so the next request is also server-correct:
+  </div>
+
+  <CodeSource lang="tsx" filename="theme-provider.tsx" code={`// Cookie-SSR variant of the provider above.
+export function ClayThemeProvider({
+  initialThemeId,
+  children,
+}: { initialThemeId: string; children: ReactNode }) {
+  const [themeId, setThemeIdState] = useState(initialThemeId);
+
+  useEffect(() => {
+    const theme = builtInThemesById[themeId];
+    if (theme) return applyTheme(theme);
+  }, [themeId]);
+
+  const setThemeId = useCallback((id: string) => {
+    setThemeIdState(id);
+    document.cookie = \`app-theme=\${id}; path=/; max-age=31536000; samesite=lax\`;
+  }, []);
+
+  return (
+    <ClayThemeContext.Provider value={{ themeId, setThemeId }}>
+      {children}
+    </ClayThemeContext.Provider>
+  );
+}`} />
+
+  <h4 id="persist-flash-default" class="mt-8 mb-2 font-display text-lg text-clay-strong">
+    Option B — accept it
+  </h4>
+
+  <div class="clay-prose mb-6">
+    The flash is one frame, on returning visitors only, and only when
+    they picked a non-default theme. For a lot of apps that's a fine
+    trade for *zero* extra machinery — no SSR coupling, no extra script,
+    no per-theme CSS shipped just to bridge a frame. Ship the canonical
+    provider above and stop.
+
+    Worth saying out loud: if your "theming" is really just light/dark
+    plus an accent, you don't need this section at all. A 6-line inline
+    script that sets `data-mode` from a cookie or
+    `prefers-color-scheme` is the standard pattern, and `applyTheme` is
+    untouched. Multi-theme persistence is the case that makes the boot
+    script tempting.
+  </div>
+
+  <h4 id="persist-flash-boot" class="mt-8 mb-2 font-display text-lg text-clay-strong">
+    Option C — inline boot script <span class="text-clay-inactive">(static hosting only)</span>
+  </h4>
+
+  <div class="clay-prose mb-6">
+    When you can't run code on the request — pure SPA on a CDN, no
+    edge worker, theme id only in `localStorage` — the only way to
+    avoid the flash is to inline a synchronous script in `<head>` that
+    picks the right CSS *before* paint. This is what
+    [`next-themes`](https://github.com/pacocoursey/next-themes) and
+    similar libraries do; it works, but it's a workaround for the lack
+    of server-side knowledge, not the destination.
+
+    Pre-render each theme's stylesheet at build time, ship them as a
+    JSON map, and have the script choose one and append a
+    `<style id="clay-theme">` tag. On hydration the provider's
+    `applyTheme` adopts that tag.
+  </div>
+
+  <CodeSource lang="tsx" filename="boot-script.tsx" code={`// 1. Build time: serialise every theme's CSS into a JSON map.
 import { renderThemeStyleSheet } from '@brika/clay/themes';
 import { builtInThemes } from '@brika/clay/themes/registry';
 
@@ -389,10 +507,7 @@ const THEME_CSS_JSON = JSON.stringify(
   Object.fromEntries(builtInThemes.map((t) => [t.id, renderThemeStyleSheet(t)]))
 );
 
-// 2. Browser: synchronous boot script — runs before paint.
-//    Pick the right CSS, append a <style id="clay-theme"> tag.
-//    On hydration, applyTheme finds the existing tag and updates it
-//    idempotently — no flash, no double <style>.
+// 2. Inline this in <head> before any stylesheet link.
 const boot = \`
   (() => {
     try {
@@ -410,11 +525,9 @@ const boot = \`
 \`;`} />
 
   <div class="clay-prose mt-6 mb-6">
-    The script is ~30 lines, runs synchronously, and only ships the
-    theme JSONs you choose to inline — skip the showcase themes if your
-    app only ships palette themes, or only inline the user's last two
-    choices, whatever fits. On hydration, the provider's `applyTheme`
-    call finds the existing `<style id="clay-theme">` and updates it
-    idempotently, so there's no double-tag and no flash.
+    The cost is the JSON payload — every theme's full CSS shipped in
+    the HTML. Shrink it by inlining only the themes the user actually
+    reaches: the default, plus their last selection (`localStorage`),
+    plus whatever a picker can lazy-load on demand.
   </div>
 </section>

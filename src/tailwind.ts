@@ -308,6 +308,11 @@ function buildThemeExtend(): ThemeExtend {
 const clayTailwindPlugin: ReturnType<typeof plugin> = plugin(
   ({ addBase, matchUtilities }) => {
     addBase(buildPropertyBlocks());
+    // Make Tailwind v4's bare `border` utility resolve to `var(--border)`
+    // instead of `currentColor`. Without this, components that use the
+    // bare `border` class render a border in the inherited text color
+    // (typically dark) rather than the themed border token.
+    addBase({ '*, ::before, ::after': { 'border-color': 'var(--border)' } });
     addBase({ ':root, [data-theme="clay"]': rootDefaults() });
     const darkVars = darkOverrides();
     if (Object.keys(darkVars).length > 0) {

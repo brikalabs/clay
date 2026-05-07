@@ -14,6 +14,11 @@ export const tokens = [
       description: 'Command palette elevation.',
       alias: 'command',
     },
+    backdropBlur: {
+      default: '0px',
+      description:
+        'Backdrop blur on the command palette container. Set non-zero for a frosted-glass overlay.',
+    },
     border: '1px',
     geometry: { paddingX: '0px', paddingY: '0px', gap: '0px' },
   }),

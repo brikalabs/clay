@@ -24,15 +24,18 @@ import { tokens as checkbox } from '../components/checkbox/tokens';
 import { tokens as codeBlock } from '../components/code-block/tokens';
 import { tokens as dialog } from '../components/dialog/tokens';
 import { tokens as dropdownMenu } from '../components/dropdown-menu/tokens';
+import { tokens as emptyState } from '../components/empty-state/tokens';
 import { tokens as hoverCard } from '../components/hover-card/tokens';
 import { tokens as icon } from '../components/icon/tokens';
 import { tokens as input } from '../components/input/tokens';
+import { tokens as inputGroup } from '../components/input-group/tokens';
 import { tokens as inputOtp } from '../components/input-otp/tokens';
 import { tokens as menubar } from '../components/menubar/tokens';
 import { tokens as navigationMenu } from '../components/navigation-menu/tokens';
 import { tokens as passwordInput } from '../components/password-input/tokens';
 import { tokens as popover } from '../components/popover/tokens';
 import { tokens as progress } from '../components/progress/tokens';
+import { tokens as progressDisplay } from '../components/progress-display/tokens';
 import { tokens as radioGroup } from '../components/radio-group/tokens';
 import { tokens as resizable } from '../components/resizable/tokens';
 import { tokens as select } from '../components/select/tokens';
@@ -64,15 +67,18 @@ export const COMPONENT_TOKENS: readonly TokenSpec[] = [
   ...dialog,
   ...drawer,
   ...dropdownMenu,
+  ...emptyState,
   ...hoverCard,
   ...icon,
   ...input,
+  ...inputGroup,
   ...inputOtp,
   ...menubar,
   ...navigationMenu,
   ...passwordInput,
   ...popover,
   ...progress,
+  ...progressDisplay,
   ...radioGroup,
   ...resizable,
   ...select,

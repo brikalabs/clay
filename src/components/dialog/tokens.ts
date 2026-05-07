@@ -23,5 +23,16 @@ export const tokens = defineComponent(meta.name, {
   slots: {
     container: { default: 'var(--popover)', description: 'Dialog background.' },
     label: { default: 'var(--popover-foreground)', description: 'Dialog text color.' },
+    'overlay-bg': {
+      default: 'oklch(0 0 0 / 0.5)',
+      description:
+        'Modal scrim color behind the dialog. Lower alpha + non-zero `overlay-backdrop-blur` produces an iOS-style glass scrim that frosts the page instead of dimming it.',
+    },
+    'overlay-backdrop-blur': {
+      default: '0px',
+      description:
+        'Backdrop blur applied to the modal scrim. Set non-zero so the page content behind the dialog is frosted by the overlay itself.',
+      type: 'blur',
+    },
   },
 });

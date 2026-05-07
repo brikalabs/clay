@@ -1,15 +1,22 @@
 import { Button } from '@brika/clay/components/button';
 import { ButtonGroup } from '@brika/clay/components/button-group';
-import { AlignCenter, AlignLeft, AlignRight } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@brika/clay/components/dropdown-menu';
+import { Input } from '@brika/clay/components/input';
+import { ChevronDown, ClipboardPaste, Copy, Scissors } from 'lucide-react';
 import { defineDemos } from '../_registry';
 
-/** Three related outline buttons joined in a shared frame. */
+/** Three related action buttons joined in a shared frame — each click fires once, no selection state. */
 export function ButtonGroupDefaultDemo() {
   return (
     <ButtonGroup>
-      <Button variant="outline">Bold</Button>
-      <Button variant="outline">Italic</Button>
-      <Button variant="outline">Underline</Button>
+      <Button variant="outline">Reply</Button>
+      <Button variant="outline">Reply all</Button>
+      <Button variant="outline">Forward</Button>
     </ButtonGroup>
   );
 }
@@ -25,19 +32,52 @@ export function ButtonGroupFilledDemo() {
   );
 }
 
-/** Icon-only buttons for compact toolbars — every button needs an `aria-label`. */
+/** Icon-only action buttons for a compact toolbar — every button needs an `aria-label`. */
 export function ButtonGroupIconsDemo() {
   return (
     <ButtonGroup>
-      <Button variant="outline" size="icon" aria-label="Align left">
-        <AlignLeft />
+      <Button variant="outline" size="icon" aria-label="Cut">
+        <Scissors />
       </Button>
-      <Button variant="outline" size="icon" aria-label="Align center">
-        <AlignCenter />
+      <Button variant="outline" size="icon" aria-label="Copy">
+        <Copy />
       </Button>
-      <Button variant="outline" size="icon" aria-label="Align right">
-        <AlignRight />
+      <Button variant="outline" size="icon" aria-label="Paste">
+        <ClipboardPaste />
       </Button>
+    </ButtonGroup>
+  );
+}
+
+/** Input + trailing button — classic copy-URL pattern. The wrapper's `[&>input]:flex-1` rule lets the field stretch. */
+export function ButtonGroupWithInputDemo() {
+  return (
+    <ButtonGroup className="w-full max-w-sm">
+      <Input readOnly value="https://clay.brika.dev/share/abc123" />
+      <Button variant="outline" size="icon" aria-label="Copy URL">
+        <Copy />
+      </Button>
+    </ButtonGroup>
+  );
+}
+
+/** Split button — primary action + dropdown chevron for related variants. */
+export function ButtonGroupSplitDemo() {
+  return (
+    <ButtonGroup>
+      <Button>Save changes</Button>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button size="icon" aria-label="More save options">
+            <ChevronDown />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem>Save as draft</DropdownMenuItem>
+          <DropdownMenuItem>Save and publish</DropdownMenuItem>
+          <DropdownMenuItem>Save a copy</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </ButtonGroup>
   );
 }
@@ -54,9 +94,11 @@ export function ButtonGroupVerticalDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [ButtonGroupDefaultDemo, 'Default', { description: `Three related outline buttons joined in a shared frame.` }],
+  [ButtonGroupDefaultDemo, 'Default', { description: `Three related action buttons joined in a shared frame — each click fires once, no selection state.` }],
   [ButtonGroupFilledDemo, 'Filled', { description: `Filled default variant inside a group — good for primary action clusters.` }],
-  [ButtonGroupIconsDemo, 'Icons', { description: `Icon-only buttons for compact toolbars — every button needs an \`aria-label\`.` }],
+  [ButtonGroupIconsDemo, 'Icons', { description: `Icon-only action buttons for a compact toolbar — every button needs an \`aria-label\`.` }],
+  [ButtonGroupWithInputDemo, 'With Input', { description: `Input + trailing button — classic copy-URL pattern.` }],
+  [ButtonGroupSplitDemo, 'Split Button', { description: `Primary action plus a dropdown chevron for related variants.` }],
   [ButtonGroupVerticalDemo, 'Vertical', { description: `Vertical orientation stacks buttons top-to-bottom with shared dividers.` }],
 ]);
 export const accessibility: readonly string[] = [

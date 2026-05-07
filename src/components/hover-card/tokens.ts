@@ -13,6 +13,10 @@ export const tokens = defineComponent(meta.name, {
     description: 'HoverCard elevation.',
     alias: 'hover-card',
   },
+  backdropBlur: {
+    default: '0px',
+    description: 'Backdrop blur on the hover card. Set non-zero for a frosted-glass surface.',
+  },
   border: '1px',
   motion: true,
   geometry: { paddingX: SPACING_3, paddingY: SPACING_3, gap: SPACING_2 },
