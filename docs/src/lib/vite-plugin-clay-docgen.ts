@@ -117,7 +117,7 @@ function buildParser(tsconfigPath: string | null): (files: string[]) => Componen
 
 /** Extract the component slug from an absolute file path. */
 function slugFromPath(filePath: string): string | null {
-  const match = filePath.match(/[/\\]components[/\\]([^/\\]+)[/\\][^/\\]+\.tsx$/);
+  const match = /[/\\]components[/\\]([^/\\]+)[/\\][^/\\]+\.tsx$/.exec(filePath);
   return match?.[1] ?? null;
 }
 
@@ -152,9 +152,9 @@ function normalizeDocs(docs: readonly ComponentDoc[]): Record<string, ClayCompon
       let typeName = prop.type?.name ?? 'unknown';
       if (
         typeName === 'enum' &&
-        Array.isArray((prop.type as Record<string, unknown>)?.value)
+        Array.isArray((prop.type as unknown as Record<string, unknown>)?.value)
       ) {
-        const values = (prop.type as { value: Array<{ value: string }> }).value;
+        const values = (prop.type as unknown as { value: Array<{ value: string }> }).value;
         // Drop `undefined` — it's implied by the prop being optional.
         const filtered = values.filter((v) => v.value !== 'undefined');
         typeName = filtered.map((v) => v.value).join(' | ');
@@ -181,13 +181,14 @@ function normalizeDocs(docs: readonly ComponentDoc[]): Record<string, ClayCompon
       props,
     };
 
-    (bySlug[slug] ??= []).push(componentDoc);
+    bySlug[slug] ??= [];
+    bySlug[slug].push(componentDoc);
   }
 
   // Within each slug, sort: primary component first, then alphabetical.
   for (const slug of Object.keys(bySlug)) {
     const primary = slugToPascalCase(slug);
-    bySlug[slug]!.sort((a, b) => {
+    bySlug[slug].sort((a, b) => {
       if (a.displayName === primary) return -1;
       if (b.displayName === primary) return 1;
       return a.displayName.localeCompare(b.displayName);

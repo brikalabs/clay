@@ -70,7 +70,7 @@ function TypeSignature({ raw, literals }: ParsedType) {
   );
 }
 
-function PropRow({ prop }: { prop: ClayPropDoc }) {
+function PropRow({ prop }: { readonly prop: ClayPropDoc }) {
   const parsed = parseType(prop.type);
   const id = `prop-${prop.name}`;
   return (
@@ -115,12 +115,18 @@ function PropRow({ prop }: { prop: ClayPropDoc }) {
   );
 }
 
+function propCountLabel(count: number): string {
+  if (count === 0) return 'passthrough';
+  if (count === 1) return '1 prop';
+  return `${count} props`;
+}
+
 function ComponentSection({
   doc,
   showHeading,
 }: {
-  doc: ClayComponentDoc;
-  showHeading: boolean;
+  readonly doc: ClayComponentDoc;
+  readonly showHeading: boolean;
 }) {
   const propCount = doc.props.length;
 
@@ -138,7 +144,7 @@ function ComponentSection({
           </h3>
           <span className="h-px flex-1 bg-clay-hairline" />
           <span className="rounded-full bg-clay-elevated px-2 py-0.5 font-mono text-[0.6875rem] text-clay-inactive">
-            {propCount === 0 ? 'passthrough' : `${propCount} prop${propCount !== 1 ? 's' : ''}`}
+            {propCountLabel(propCount)}
           </span>
         </div>
       )}

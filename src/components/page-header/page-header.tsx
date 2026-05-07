@@ -35,13 +35,15 @@ function PageHeaderInfo({ className, ...props }: React.ComponentProps<'div'>) {
   return <div data-slot="page-header-info" className={cn('min-w-0', className)} {...props} />;
 }
 
-function PageHeaderTitle({ className, ...props }: React.ComponentProps<'h1'>) {
+function PageHeaderTitle({ className, children, ...props }: React.ComponentProps<'h1'>) {
   return (
     <h1
       data-slot="page-header-title"
       className={cn('truncate font-semibold text-2xl tracking-tight', className)}
       {...props}
-    />
+    >
+      {children}
+    </h1>
   );
 }
 

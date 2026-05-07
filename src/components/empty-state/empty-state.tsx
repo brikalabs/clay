@@ -45,16 +45,18 @@ function EmptyStateIcon({ className, ...props }: React.ComponentProps<'div'>) {
   );
 }
 
-function EmptyStateTitle({ className, ...props }: React.ComponentProps<'h3'>) {
+function EmptyStateTitle({ className, children, ...props }: React.ComponentProps<'h3'>) {
   return (
     <h3
       data-slot="empty-state-title"
       aria-label={
-        props['aria-label'] ?? (typeof props.children === 'string' ? props.children : undefined)
+        props['aria-label'] ?? (typeof children === 'string' ? children : undefined)
       }
       className={cn('font-semibold text-base', className)}
       {...props}
-    />
+    >
+      {children}
+    </h3>
   );
 }
 

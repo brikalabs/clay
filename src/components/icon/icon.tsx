@@ -84,7 +84,7 @@ function Icon({
   'aria-label': ariaLabel,
   'aria-hidden': ariaHidden,
   ...props
-}: IconProps) {
+}: Readonly<IconProps>) {
   const isDecorative = ariaLabel === undefined && ariaHidden === undefined;
 
   return (
