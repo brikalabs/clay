@@ -124,6 +124,65 @@ export function inferTokenTypeStrict(name: string): TokenType | null {
   return null;
 }
 
+const PURE_LENGTH = /^-?\d+(?:\.\d+)?(rem|em|px|%|vh|vw|ch|ex|cm|mm|in|pt|pc)$/;
+const COLOR_FUNCTION = /^(oklch|oklab|lab|lch|rgb|rgba|hsl|hsla|hwb|color|color-mix)\s*\(/i;
+const NAMED_COLOR_KEYWORD = /^(transparent|currentcolor|inherit|initial|unset|black|white)$/i;
+const HEX_COLOR = /^#([\da-f]{3,4}|[\da-f]{6}|[\da-f]{8})$/i;
+const NUMERIC = /^\d+(\.\d+)?$/;
+const BORDER_STYLE_KEYWORD = /^(solid|dashed|dotted|double|groove|ridge|inset|outset|none|hidden)$/;
+const TIME_VALUE = /^\d+(\.\d+)?(ms|s)$/;
+const EASING_FUNCTION = /^(cubic-bezier|linear|steps|ease|ease-in|ease-out|ease-in-out)\b/;
+
+/**
+ * Value-based fallback when the token name doesn't strict-match any rule.
+ * Reads the default-light expression and infers the type from its shape:
+ *
+ *   `2.5rem`, `16rem`, `1px`, …    → length
+ *     • `≤4px`                   → `border-width` (hairlines, separator widths)
+ *     • everything else          → `size` (column widths, gaps, offsets)
+ *   `oklch(…)`, `var(…)`, `#fff` → `color`
+ *   `0.5`, `1`                   → `opacity`
+ *   `solid`, `dashed`, …         → `border-style`
+ *   `200ms`, `0.2s`              → `duration`
+ *   `cubic-bezier(…)`, `linear`  → `easing`
+ *
+ * Returns `null` for shapes the engine can't recognize, callers decide the
+ * final fallback (slot tokens default to `color`, the historical behavior).
+ *
+ * This exists because `-width` is intentionally ambiguous in the name-based
+ * rules (border thickness vs. column width), so authors used to need an
+ * explicit `type:` annotation. Reading the value lets the engine pick the
+ * right type without that annotation in the typical case.
+ */
+export function inferTokenTypeFromValue(value: string): TokenType | null {
+  const v = value.trim();
+  const length = PURE_LENGTH.exec(v);
+  if (length) {
+    if (length[1] === 'px') {
+      const px = Number.parseFloat(v);
+      if (px <= 4) return 'border-width';
+    }
+    return 'size';
+  }
+  if (COLOR_FUNCTION.test(v) || HEX_COLOR.test(v) || NAMED_COLOR_KEYWORD.test(v)) {
+    return 'color';
+  }
+  if (BORDER_STYLE_KEYWORD.test(v)) {
+    return 'border-style';
+  }
+  if (TIME_VALUE.test(v)) {
+    return 'duration';
+  }
+  if (EASING_FUNCTION.test(v)) {
+    return 'easing';
+  }
+  if (NUMERIC.test(v)) {
+    const n = Number.parseFloat(v);
+    if (n >= 0 && n <= 1) return 'opacity';
+  }
+  return null;
+}
+
 /**
  * Reverse lookup, every TokenType plus a one-line hint about what shape
  * of value it accepts. Used by docs tooltips and theme-editor UIs.
