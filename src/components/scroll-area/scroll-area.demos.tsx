@@ -29,7 +29,7 @@ export function ScrollAreaDefaultDemo() {
   );
 }
 
-/** Horizontal scroll — use `ScrollBar orientation="horizontal"` to show a horizontal bar. */
+/** Horizontal scroll, use `ScrollBar orientation="horizontal"` to show a horizontal bar. */
 export function ScrollAreaHorizontalDemo() {
   return (
     <ScrollArea className="w-80 whitespace-nowrap rounded-md border border-clay-hairline pb-3">
@@ -48,7 +48,7 @@ export function ScrollAreaHorizontalDemo() {
   );
 }
 
-/** Scroll area inside a Card — constrains a tall settings list inside a bounded surface. */
+/** Scroll area inside a Card, constrains a tall settings list inside a bounded surface. */
 export function ScrollAreaCardDemo() {
   return (
     <Card className="w-64">
@@ -75,11 +75,11 @@ export function ScrollAreaCardDemo() {
 
 export const demoMeta = defineDemos([
   [ScrollAreaDefaultDemo, 'Default', { description: `Vertical scroll area constraining a long list to a fixed height.` }],
-  [ScrollAreaHorizontalDemo, 'Horizontal', { description: `Horizontal scroll — use \`ScrollBar orientation="horizontal"\` to show a horizontal bar.` }],
-  [ScrollAreaCardDemo, 'Card', { description: `Scroll area inside a Card — constrains a tall settings list inside a bounded surface.` }],
+  [ScrollAreaHorizontalDemo, 'Horizontal', { description: `Horizontal scroll, use \`ScrollBar orientation="horizontal"\` to show a horizontal bar.` }],
+  [ScrollAreaCardDemo, 'Card', { description: `Scroll area inside a Card, constrains a tall settings list inside a bounded surface.` }],
 ]);
 export const accessibility: readonly string[] = [
-  `The scrollable region carries \`role="region"\` — pair with \`aria-label\` for context.`,
-  `Custom scrollbars do not affect keyboard scrolling — arrow keys and Page Up/Down work normally.`,
+  `The scrollable region carries \`role="region"\`, pair with \`aria-label\` for context.`,
+  `Custom scrollbars do not affect keyboard scrolling, arrow keys and Page Up/Down work normally.`,
   `Horizontal scroll areas should be announced; users may not expect horizontal scrolling.`,
 ];

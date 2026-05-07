@@ -71,7 +71,7 @@ function listComponentFolders(): readonly string[] {
   });
 }
 
-// Mirrors the `exports` map in the root package.json. Order matters —
+// Mirrors the `exports` map in the root package.json. Order matters,
 // more specific rules first. Each entry is either a string (matches an
 // exact id, OR an id followed by `/` and the tail appends to
 // `replacement`) or a RegExp. Subpath exports that point to a single
@@ -85,7 +85,7 @@ const clayAliases = [
   { find: '@brika/clay/themes', replacement: resolve(claySrc, 'themes/index.ts') },
   { find: '@brika/clay/tokens', replacement: resolve(claySrc, 'tokens/index.ts') },
   { find: '@brika/clay/tailwind', replacement: resolve(claySrc, 'tailwind.ts') },
-  // Per-component aliases — every folder under src/components. Strings,
+  // Per-component aliases, every folder under src/components. Strings,
   // because `@brika/clay/components/<name>` is consumed exactly (no tail).
   ...listComponentFolders().map((name) => ({
     find: `@brika/clay/components/${name}`,
@@ -98,7 +98,7 @@ const clayAliases = [
   { find: claySubpathRegex('assets'), replacement: `${resolve(claySrc, 'assets')}/` },
   { find: claySubpathRegex('primitives'), replacement: `${resolve(claySrc, 'primitives')}/` },
   { find: claySubpathRegex('styles'), replacement: `${resolve(claySrc, 'styles')}/` },
-  // Bare subpath exports — the package's `./<x>` export points to a
+  // Bare subpath exports, the package's `./<x>` export points to a
   // specific file, not to a directory.
   { find: '@brika/clay/primitives', replacement: resolve(claySrc, 'primitives/index.ts') },
   { find: '@brika/clay/styles', replacement: resolve(claySrc, 'styles/clay.css') },

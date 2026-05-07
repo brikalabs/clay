@@ -19,9 +19,9 @@ if (!Astro.site) {
 const SITE_NAME = 'Clay';
 const SITE_TAGLINE = "Brika's React component library, token system, and first-party themes.";
 
-// Append " — Clay" to titles that don't already mention the brand, so search
+// Append ", Clay" to titles that don't already mention the brand, so search
 // results and tab strips read consistently across pages.
-const fullTitle = title.includes(SITE_NAME) ? title : `${title} — ${SITE_NAME}`;
+const fullTitle = title.includes(SITE_NAME) ? title : `${title}, ${SITE_NAME}`;
 
 const canonicalUrl = new URL(Astro.url.pathname.replace(/\/+$/, '') || '/', Astro.site).href;
 const ogImageUrl = new URL('/og-image.svg', Astro.site).href;
@@ -37,7 +37,7 @@ const structuredData = {
 // Pre-render every theme's CSS + effects at SSR time. The map gets
 // inlined in `<head>` so the synchronous boot script below can pick the
 // saved theme out of localStorage and emit the matching `<style>` tag
-// (and `data-effects` attribute) BEFORE first paint — no flash, no
+// (and `data-effects` attribute) BEFORE first paint, no flash, no
 // extra fetch. The `clay` theme is included so first-time visitors
 // (no localStorage) get Clay's branded palette instead of the package's
 // neutral registry fallback.
@@ -80,13 +80,13 @@ const THEME_DATA_JSON = JSON.stringify(THEME_DATA);
     <meta property="og:image:type" content="image/svg+xml" />
     <meta property="og:image:width" content="512" />
     <meta property="og:image:height" content="512" />
-    <meta property="og:image:alt" content={`${SITE_NAME} — ${SITE_TAGLINE}`} />
+    <meta property="og:image:alt" content={`${SITE_NAME}, ${SITE_TAGLINE}`} />
 
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={fullTitle} />
     {description && <meta name="twitter:description" content={description} />}
     <meta name="twitter:image" content={ogImageUrl} />
-    <meta name="twitter:image:alt" content={`${SITE_NAME} — ${SITE_TAGLINE}`} />
+    <meta name="twitter:image:alt" content={`${SITE_NAME}, ${SITE_TAGLINE}`} />
 
     <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
@@ -100,11 +100,11 @@ const THEME_DATA_JSON = JSON.stringify(THEME_DATA);
     />
     <script is:inline define:vars={{ THEME_DATA_JSON }}>
       (() => {
-        // Boot script — runs synchronously in <head> before first paint.
+        // Boot script, runs synchronously in <head> before first paint.
         // 1. Reads `data-mode` (light/dark) from localStorage / OS pref.
         // 2. Reads `data-theme` (preset id) from localStorage and injects
         //    the pre-rendered `<style id="clay-theme">` so the page paints
-        //    with the chosen theme on first frame — no flash, no extra
+        //    with the chosen theme on first frame, no flash, no extra
         //    network round trip.
         // 3. Writes `data-effects` so theme effects (scanlines, glow, …)
         //    are active before paint too.
@@ -131,7 +131,7 @@ const THEME_DATA_JSON = JSON.stringify(THEME_DATA);
             return;
           }
           root.dataset.theme = themeId;
-          // Strip any prior `fx-*` classes before adding the new ones —
+          // Strip any prior `fx-*` classes before adding the new ones,
           // switching themes must clear effects from the previous one.
           for (const cls of Array.from(root.classList)) {
             if (cls.startsWith('fx-')) {
@@ -148,7 +148,7 @@ const THEME_DATA_JSON = JSON.stringify(THEME_DATA);
           tag.textContent = entry.css;
           document.head.appendChild(tag);
         } catch {
-          /* localStorage / matchMedia unavailable — let CSS defaults render. */
+          /* localStorage / matchMedia unavailable, let CSS defaults render. */
         }
       })();
     </script>

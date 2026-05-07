@@ -1,5 +1,5 @@
 /**
- * Layer 1 — Tailwind radius scale (theme-aware).
+ * Layer 1, Tailwind radius scale (theme-aware).
  *
  * Tailwind v4 ships built-in `--radius-sm` … `--radius-3xl` as fixed
  * pixel/rem values. Clay re-derives them from the user's `--radius`
@@ -8,7 +8,7 @@
  * overrides Tailwind's default at source-order (clay's stylesheet
  * loads after Tailwind's `@theme`).
  *
- * `tailwindNamespace: 'none'` keeps these out of `theme.extend` —
+ * `tailwindNamespace: 'none'` keeps these out of `theme.extend`,
  * Tailwind already generates the matching utilities from its own
  * default theme, and we only need the `:root` override.
  */

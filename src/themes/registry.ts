@@ -10,7 +10,7 @@ import type { ThemeConfig } from './types';
  * from `@brika/clay/themes` (`import { ocean } from '@brika/clay/themes'`)
  * so the bundler can drop the rest.
  *
- * Order is driven by `./presets/index.ts` via `Object.values` — to reorder
+ * Order is driven by `./presets/index.ts` via `Object.values`, to reorder
  * the picker, reorder the exports there.
  */
 export const builtInThemes: readonly ThemeConfig[] = Object.values(presets);

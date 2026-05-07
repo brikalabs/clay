@@ -2,7 +2,7 @@ import { Badge } from '@brika/clay/components/badge';
 import { Check, Circle } from 'lucide-react';
 import { defineDemos } from '../_registry';
 
-/** Default filled badge — use for status labels, counts, and tags. */
+/** Default filled badge, use for status labels, counts, and tags. */
 export function BadgeDefaultDemo() {
   return <Badge>New</Badge>;
 }
@@ -19,7 +19,7 @@ export function BadgeVariantsDemo() {
   );
 }
 
-/** SVG children are automatically sized to 12 px — no extra className needed. */
+/** SVG children are automatically sized to 12 px, no extra className needed. */
 export function BadgeWithIconDemo() {
   return (
     <div className="flex flex-wrap gap-2">
@@ -39,7 +39,7 @@ export function BadgeWithIconDemo() {
   );
 }
 
-/** `asChild` renders badge styles on the child element — useful for version or tag links. */
+/** `asChild` renders badge styles on the child element, useful for version or tag links. */
 export function BadgeAsLinkDemo() {
   return (
     <div className="flex flex-wrap gap-2">
@@ -54,13 +54,13 @@ export function BadgeAsLinkDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [BadgeDefaultDemo, 'Default', { description: `Default filled badge — use for status labels, counts, and tags.` }],
+  [BadgeDefaultDemo, 'Default', { description: `Default filled badge, use for status labels, counts, and tags.` }],
   [BadgeVariantsDemo, 'Variants', { description: `All five variants, ordered by emphasis.` }],
-  [BadgeWithIconDemo, 'With Icon', { description: `SVG children are automatically sized to 12 px — no extra className needed.` }],
-  [BadgeAsLinkDemo, 'As Link', { description: `\`asChild\` renders badge styles on the child element — useful for version or tag links.` }],
+  [BadgeWithIconDemo, 'With Icon', { description: `SVG children are automatically sized to 12 px, no extra className needed.` }],
+  [BadgeAsLinkDemo, 'As Link', { description: `\`asChild\` renders badge styles on the child element, useful for version or tag links.` }],
 ]);
 export const accessibility: readonly string[] = [
-  `Renders as a \`<span>\` — purely informational, carries no interactive role.`,
+  `Renders as a \`<span>\`, purely informational, carries no interactive role.`,
   `When used as a link with \`asChild\`, the accessible name comes from the badge text.`,
   `Numeric count badges in tab triggers should be accompanied by a visually hidden description.`,
 ];

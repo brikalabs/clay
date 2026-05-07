@@ -22,7 +22,7 @@ export const tokens = defineComponent(meta.name, {
     'tick-size': { default: '0.25rem', description: 'Tick dot diameter on the track.' },
     'thumb-border-width': {
       default: '2px',
-      description: 'Thumb border width — the contrast halo between the thumb and the track.',
+      description: 'Thumb border width, the contrast halo between the thumb and the track.',
     },
     'thumb-shadow': {
       default: 'var(--shadow-raised)',

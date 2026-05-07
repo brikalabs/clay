@@ -28,7 +28,7 @@ function runHandler(): {
 } {
   const matchUtilitiesCalls: MatchUtilitiesCall[] = [];
   const addBaseCalls: AddBaseCall[] = [];
-  // The mock blows up if the plugin reaches for a non-JIT-aware API —
+  // The mock blows up if the plugin reaches for a non-JIT-aware API,
   // that's the whole point: addUtilities/addComponents emit
   // unconditionally in v4, and we MUST avoid them for shorthand rules.
   const api: unknown = {
@@ -43,12 +43,12 @@ function runHandler(): {
     },
     addUtilities() {
       throw new Error(
-        'addUtilities() is not JIT-aware in Tailwind v4 — the plugin must use matchUtilities() instead.'
+        'addUtilities() is not JIT-aware in Tailwind v4, the plugin must use matchUtilities() instead.'
       );
     },
     addComponents() {
       throw new Error(
-        'addComponents() is not JIT-aware in Tailwind v4 — the plugin must use matchUtilities() instead.'
+        'addComponents() is not JIT-aware in Tailwind v4, the plugin must use matchUtilities() instead.'
       );
     },
   };
@@ -56,10 +56,10 @@ function runHandler(): {
   return { matchUtilitiesCalls, addBaseCalls };
 }
 
-// ─── Plugin handler — direct invocation ──────────────────────────────────────
+// ─── Plugin handler, direct invocation ──────────────────────────────────────
 
 describe('clayTailwindPlugin handler', () => {
-  test('uses matchUtilities (JIT-aware) — never addUtilities or addComponents', () => {
+  test('uses matchUtilities (JIT-aware), never addUtilities or addComponents', () => {
     expect(() => runHandler()).not.toThrow();
   });
 
@@ -94,15 +94,15 @@ describe('clayTailwindPlugin handler', () => {
       throw new Error('plugin did not call addBase for :root');
     }
     const rootRules = rootCall.rules[':root, [data-theme="clay"]'] as Record<string, string>;
-    // Layer-0 scalar — always emitted.
+    // Layer-0 scalar, always emitted.
     expect(rootRules['--radius']).toBeDefined();
-    // Layer-2 token referenced by a shorthand bundle — must be emitted
+    // Layer-2 token referenced by a shorthand bundle, must be emitted
     // so the bundle's `var(--button-padding-x)` actually resolves.
     expect(rootRules['--button-padding-x']).toBeDefined();
   });
 });
 
-// ─── End-to-end Tailwind v4 compile — true JIT pruning ───────────────────────
+// ─── End-to-end Tailwind v4 compile, true JIT pruning ───────────────────────
 
 const HERE = dirname(new URL(import.meta.url).pathname);
 const SRC = resolve(HERE, '..');
@@ -125,7 +125,7 @@ async function loadStylesheet(id: string, base: string) {
 }
 
 async function buildCss(candidates: readonly string[]): Promise<string> {
-  // Minimal input — pulls Tailwind core + our plugin, nothing else.
+  // Minimal input, pulls Tailwind core + our plugin, nothing else.
   const input = `
     @import "tailwindcss";
     @plugin "./tailwind";
@@ -143,7 +143,7 @@ async function buildCss(candidates: readonly string[]): Promise<string> {
   return compiled.build(candidates as string[]);
 }
 
-describe('Tailwind v4 compile() — JIT pruning of shorthand utilities', () => {
+describe('Tailwind v4 compile(), JIT pruning of shorthand utilities', () => {
   test('a candidate that names a registered shorthand emits its rule', async () => {
     const css = await buildCss(['button']);
     expect(css).toContain('.button {');

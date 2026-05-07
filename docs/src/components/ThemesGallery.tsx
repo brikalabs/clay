@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 // `[data-theme="<id>"]` blocks for every built-in preset are emitted by
 // the `@brika/clay/tailwind` plugin (pulled in via `@brika/clay/styles`),
 // so the cards below can paint via just `data-theme="<id>"` on their
-// `<ThemeScope>` wrappers — no inline-style payload duplicated per card.
+// `<ThemeScope>` wrappers, no inline-style payload duplicated per card.
 
 const STORAGE_KEY = 'clay-theme';
 const THEME_EVENT = 'clay:theme-change';
@@ -53,7 +53,7 @@ interface ThemeCardProps {
  *     header strip flips to a filled "Active" pill with a check.
  *   - Press: brief scale-down for tactile click feedback.
  *
- * Headline auto-fits via `clamp()` on container-query units — long names
+ * Headline auto-fits via `clamp()` on container-query units, long names
  * (Skeuomorph, Brutalist) shrink, short names (Mono) stay large.
  */
 function ThemeCard({ theme, index, active, mode, onSelect }: ThemeCardProps) {
@@ -72,10 +72,10 @@ function ThemeCard({ theme, index, active, mode, onSelect }: ThemeCardProps) {
           `display: contents` div, so both the halo span and the themed
           card body inherit the scoped theme via CSS-variable cascade.
           That makes `rounded-card` resolve to the *theme's* radius on
-          BOTH elements — sharp on Brutalist/Terminal, plump on Skeuomorph
-          — and the halo never out-rounds the card behind it. */}
+          BOTH elements, sharp on Brutalist/Terminal, plump on Skeuomorph
+         , and the halo never out-rounds the card behind it. */}
       <ThemeScope theme={theme} mode={mode}>
-        {/* Halo — sits behind the card, traces the same theme radius. */}
+        {/* Halo, sits behind the card, traces the same theme radius. */}
         <span
           aria-hidden="true"
           className="pointer-events-none absolute -inset-1 rounded-card opacity-0 shadow-2xl transition-opacity duration-200 group-hover/card:opacity-100 group-data-[active=true]/card:opacity-100"
@@ -88,7 +88,7 @@ function ThemeCard({ theme, index, active, mode, onSelect }: ThemeCardProps) {
             borderColor: palette.border,
           }}
         >
-          {/* Row 1 — drafting strip in theme's muted tone */}
+          {/* Row 1, drafting strip in theme's muted tone */}
           <div
             className="flex h-9 min-w-0 items-center gap-2 border-b px-4 font-medium font-mono text-[0.625rem] uppercase tracking-[0.14em]"
             style={{ borderColor: palette.border, color: palette['muted-foreground'] }}
@@ -128,7 +128,7 @@ function ThemeCard({ theme, index, active, mode, onSelect }: ThemeCardProps) {
             )}
           </div>
 
-          {/* Row 2 — specimen body. Big italic name + description + accent line */}
+          {/* Row 2, specimen body. Big italic name + description + accent line */}
           <div className="flex min-w-0 flex-col justify-between gap-6 px-6 pt-6 pb-5">
             <div className="min-w-0">
               <h3
@@ -151,7 +151,7 @@ function ThemeCard({ theme, index, active, mode, onSelect }: ThemeCardProps) {
               </p>
             </div>
 
-            {/* A single Button + a hairline accent — minimal, theme-aware */}
+            {/* A single Button + a hairline accent, minimal, theme-aware */}
             <div className="flex min-w-0 items-center gap-3">
               <Button size="sm" tabIndex={-1}>
                 Sample
@@ -170,7 +170,7 @@ function ThemeCard({ theme, index, active, mode, onSelect }: ThemeCardProps) {
             </div>
           </div>
 
-          {/* Row 3 — accent swatch strip, edge to edge */}
+          {/* Row 3, accent swatch strip, edge to edge */}
           <div className="flex h-2.5">
             {theme.accentSwatches.map((swatch, swatchIndex) => (
               <span
@@ -182,7 +182,7 @@ function ThemeCard({ theme, index, active, mode, onSelect }: ThemeCardProps) {
             ))}
           </div>
 
-          {/* Row 4 — footer with hex codes (mono) */}
+          {/* Row 4, footer with hex codes (mono) */}
           <div
             className="flex h-9 min-w-0 items-center justify-between gap-2 border-t px-4 font-medium font-mono text-[0.625rem] uppercase tracking-[0.14em]"
             style={{ borderColor: palette.border, color: palette['muted-foreground'] }}
@@ -203,12 +203,12 @@ function ThemeCard({ theme, index, active, mode, onSelect }: ThemeCardProps) {
 
 /**
  * Grid of theme cards. Each card is a single themed pane that uses its
- * own palette for background/foreground/border — readers can compare
+ * own palette for background/foreground/border, readers can compare
  * eleven first-party themes side by side.
  *
  * Clicking a card activates that theme site-wide via localStorage + a
  * same-tab CustomEvent the header ThemePicker also listens to, so the
- * rest of the docs follows immediately — no page reload.
+ * rest of the docs follows immediately, no page reload.
  */
 export function ThemesGallery() {
   const [activeId, setActiveId] = useState<string>('default');

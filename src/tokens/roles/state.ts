@@ -1,5 +1,5 @@
 /**
- * Layer 1 — State roles
+ * Layer 1, State roles
  * Overlay opacities for hover / focus / pressed / selected / disabled.
  */
 

@@ -4,18 +4,18 @@ import { cn } from '../../primitives/cn';
 import { Separator } from '../separator';
 
 /**
- * ButtonGroup — visually-joined cluster of buttons that share one frame.
+ * ButtonGroup, visually-joined cluster of buttons that share one frame.
  *
  * The frame (border, resting shadow, outer rounded corners, dividers) is
  * owned by the wrapper. Direct children are stripped of their own
  * `border` / `shadow` / `rounded-*` so two adjacent buttons can never
- * paint a doubled edge between them — the divider is a single `1px`
+ * paint a doubled edge between them, the divider is a single `1px`
  * left/top stroke painted by the wrapper rule, never a stack of two
  * borders. First / last children round their outer corners to match
  * the wrapper without `overflow-hidden`, so focus rings stay visible.
  *
  * Children keep their own background, text colour, and hover/active
- * states — variants like `default` (filled) and `outline` both look
+ * states, variants like `default` (filled) and `outline` both look
  * right inside the group, just without their decorative edges.
  */
 // Strip every direct child's own visual frame. `!` is needed because

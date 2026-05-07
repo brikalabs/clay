@@ -56,8 +56,8 @@ export const demoMeta = defineDemos([
   [SliderCustomTicksDemo, 'Custom Ticks'],
 ]);
 export const accessibility: readonly string[] = [
-  `Built on a native \`<input type="range">\` — all keyboard and AT semantics are native.`,
+  `Built on a native \`<input type="range">\`, all keyboard and AT semantics are native.`,
   `Arrow keys adjust value by \`step\`; Home/End jump to \`min\`/\`max\`.`,
   `Always provide a visible label linked via \`htmlFor\` or wrapped \`<label>\`.`,
-  `\`SliderValue\` pairing gives a numeric readout — include \`unit\` for percentage or currency.`,
+  `\`SliderValue\` pairing gives a numeric readout, include \`unit\` for percentage or currency.`,
 ];

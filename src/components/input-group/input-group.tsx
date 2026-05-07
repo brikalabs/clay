@@ -10,8 +10,8 @@ import { Textarea } from '../textarea';
 /**
  * Wrapper for compound input controls (PasswordInput, search bars, fields
  * with prefix/suffix addons). Mirrors the standalone Input's token surface
- * exactly — `rounded-input`, `h-[var(--input-height)]`, `bg-input-container`,
- * `border-input-border`, `shadow-surface` — and carries `data-slot="input"`
+ * exactly, `rounded-input`, `h-[var(--input-height)]`, `bg-input-container`,
+ * `border-input-border`, `shadow-surface`, and carries `data-slot="input"`
  * on the wrapper so the same `../input/input.css` rules (border-width,
  * border-style, transition) apply. Themes that tune `--input-*` retune
  * PasswordInput to match without any extra theming work.
@@ -90,7 +90,7 @@ function InputGroupAddon({
 // Addon buttons sit inside the InputGroup's fixed-height row; they need
 // to defeat the `button` shorthand bundle's `height`/`padding-*` (which
 // target a full-size 36px Button). `size-N` loses to the bundle in v4's
-// utilities-layer source order — use `h-N w-N` and explicit `px-/py-`.
+// utilities-layer source order, use `h-N w-N` and explicit `px-/py-`.
 const inputGroupButtonVariants = cva('flex items-center text-sm shadow-none', {
   variants: {
     size: {
@@ -148,7 +148,7 @@ function InputGroupText({ className, ...props }: React.ComponentProps<'span'>) {
 
 /**
  * The inner control inside an `InputGroup`. Strips border, radius,
- * background, and shadow — those live on the wrapper. Uses `h-full` so
+ * background, and shadow, those live on the wrapper. Uses `h-full` so
  * the wrapper's `--input-height` (minus the wrapper's border) drives the
  * rendered height; without that, theming `--input-border-width` to a
  * thicker value would push the inner control past the wrapper's content

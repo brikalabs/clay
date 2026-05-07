@@ -1,5 +1,5 @@
 /**
- * Theme effects — CSS-only flourishes a theme opts into via its `effects`
+ * Theme effects, CSS-only flourishes a theme opts into via its `effects`
  * field. Each effect is a `@utility fx-<name>` so they compose like any
  * other Tailwind v4 utility, including the `dark:` variant. The applied
  * theme writes the matching `fx-<name>` classes onto `<html>`; switching
@@ -16,7 +16,7 @@
  *   }
  *
  * then put `mything` in your theme JSON's `effects` array AND add `fx-mything`
- * to the `@source inline` line below — Tailwind v4 only emits utilities
+ * to the `@source inline` line below, Tailwind v4 only emits utilities
  * whose class names are referenced in source it scans, and these classes
  * are added at runtime by `applyTheme` so they need to be safelisted.
  */
@@ -24,7 +24,7 @@
 @source inline("fx-scanlines fx-glow fx-noise fx-paper fx-halftone fx-vignette fx-flicker");
 
 /* ─────────────────────────────────────────────────────────────
-   SCANLINES — repeating 1px CRT lines, blended over everything
+   SCANLINES, repeating 1px CRT lines, blended over everything
    ───────────────────────────────────────────────────────────── */
 @utility fx-scanlines {
   &::after {
@@ -58,7 +58,7 @@
 }
 
 /* ─────────────────────────────────────────────────────────────
-   GLOW — soft text-shadow on headings + primary surfaces
+   GLOW, soft text-shadow on headings + primary surfaces
    ───────────────────────────────────────────────────────────── */
 @utility fx-glow {
   & :is(h1, h2, h3, h4) {
@@ -75,7 +75,7 @@
 }
 
 /* ─────────────────────────────────────────────────────────────
-   NOISE — SVG turbulence grain (heavier — for skeuomorph etc.)
+   NOISE, SVG turbulence grain (heavier, for skeuomorph etc.)
    ───────────────────────────────────────────────────────────── */
 @utility fx-noise {
   &::before {
@@ -98,7 +98,7 @@
 }
 
 /* ─────────────────────────────────────────────────────────────
-   PAPER — lighter parchment grain (editorial / brutalist)
+   PAPER, lighter parchment grain (editorial / brutalist)
    ───────────────────────────────────────────────────────────── */
 @utility fx-paper {
   &::before {
@@ -114,7 +114,7 @@
 }
 
 /* ─────────────────────────────────────────────────────────────
-   HALFTONE — radial dot pattern overlay (comic / editorial)
+   HALFTONE, radial dot pattern overlay (comic / editorial)
    ───────────────────────────────────────────────────────────── */
 @utility fx-halftone {
   &::before {
@@ -131,7 +131,7 @@
 }
 
 /* ─────────────────────────────────────────────────────────────
-   VIGNETTE — corner-darkening radial gradient
+   VIGNETTE, corner-darkening radial gradient
    ───────────────────────────────────────────────────────────── */
 @utility fx-vignette {
   &::after {
@@ -145,8 +145,8 @@
 }
 
 /* ─────────────────────────────────────────────────────────────
-   FLICKER — subtle whole-page opacity wobble (CRT)
-   Disabled under `prefers-reduced-motion` — animation purely cosmetic.
+   FLICKER, subtle whole-page opacity wobble (CRT)
+   Disabled under `prefers-reduced-motion`, animation purely cosmetic.
    ───────────────────────────────────────────────────────────── */
 @keyframes clay-flicker {
   0%,
@@ -186,7 +186,7 @@
 }
 
 /* ─────────────────────────────────────────────────────────────
-   A11Y — collapse all overlay-based effects when the user has
+   A11Y, collapse all overlay-based effects when the user has
    asked for reduced transparency. `glow` and `flicker` stay
    (text shadows and motion are governed by `prefers-reduced-motion`).
    ───────────────────────────────────────────────────────────── */

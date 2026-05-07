@@ -22,7 +22,7 @@ function parseEntries(src: string): ParsedEntry[] {
   // Grab the array content between the outermost [ ... ]
   const start = src.indexOf('export const demoMeta');
   if (start === -1) return [];
-  // Find the assignment `= [` — skip past type annotations like `ComponentDemo[]`
+  // Find the assignment `= [`, skip past type annotations like `ComponentDemo[]`
   const assignIdx = src.indexOf('= [', start);
   if (assignIdx === -1) return [];
   const arrOpen = assignIdx + 2; // position of '['

@@ -15,7 +15,7 @@ import { isHookName, isInternalProp, slugFromPath, slugToPascalCase } from './do
  * virtual module so the docs site can render a per-component props table without
  * a separate generation step.
  *
- * Props inherited from `node_modules` are filtered out — without that, every
+ * Props inherited from `node_modules` are filtered out, without that, every
  * native-attribute-passthrough component would surface ~80 HTML props.
  */
 
@@ -128,7 +128,7 @@ function normalizeDocs(docs: readonly ComponentDoc[]): Record<string, ClayCompon
         Array.isArray((prop.type as unknown as Record<string, unknown>)?.value)
       ) {
         const values = (prop.type as unknown as { value: Array<{ value: string }> }).value;
-        // Drop `undefined` — it's implied by the prop being optional.
+        // Drop `undefined`, it's implied by the prop being optional.
         const filtered = values.filter((v) => v.value !== 'undefined');
         typeName = filtered.map((v) => v.value).join(' | ');
       }

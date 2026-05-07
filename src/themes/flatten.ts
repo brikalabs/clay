@@ -1,8 +1,8 @@
 /**
  * Flatten a `ThemeConfig` into two CSS-var dictionaries:
  *
- *   rootVars  — emitted into `:root { ... }` (light defaults).
- *   darkVars  — emitted into the dark-mode selector.
+ *   rootVars , emitted into `:root { ... }` (light defaults).
+ *   darkVars , emitted into the dark-mode selector.
  *
  * Pure function; no DOM access. Used by `applyTheme` to build the
  * injected `<style>` tag and by `themeToCssVars` to build a React style
@@ -30,7 +30,7 @@ export interface FlattenedTheme {
  * Static path → CSS-var-name map for the section sub-trees that don't
  * follow a derivable convention. `focus.width` maps to `--ring-width` (not
  * `--focus-width`) because the rendered ring is owned by the existing
- * `--ring-*` tokens — same value, different name. Listed explicitly so
+ * `--ring-*` tokens, same value, different name. Listed explicitly so
  * the irregularity stays visible.
  */
 const SECTION_VAR_MAP: Readonly<Record<string, string>> = {
@@ -113,7 +113,7 @@ function writeComponentEntries(
  * Walk a theme config and produce the two CSS-var dictionaries that
  * `applyTheme` injects into the document.
  *
- * Empty / missing sections are skipped silently — a theme that only sets
+ * Empty / missing sections are skipped silently, a theme that only sets
  * `colors.light` produces a `darkVars` empty object and the dark-mode
  * selector is left untouched by `applyTheme`.
  */
@@ -136,7 +136,7 @@ export function flattenTheme(theme: ThemeConfig): FlattenedTheme {
 
 /**
  * Render a flat var dictionary into a `:root { ... }`-style block body.
- * Stable key ordering — alphabetical — so generated `<style>` tags don't
+ * Stable key ordering, alphabetical, so generated `<style>` tags don't
  * thrash on otherwise-identical input.
  */
 export function renderVarBlock(vars: Readonly<Record<string, string>>): string {
@@ -146,7 +146,7 @@ export function renderVarBlock(vars: Readonly<Record<string, string>>): string {
 
 /**
  * Snapshot of every registry token's default value, partitioned by mode.
- * Used by `themeToCssVars` to produce a *fully-resolved* scoped scope —
+ * Used by `themeToCssVars` to produce a *fully-resolved* scoped scope,
  * every token gets a value, so descendants of the scoped element never
  * fall through to a globally-applied theme that changed the same token at
  * `:root`. Without this, a per-card theme preview leaks (the gallery

@@ -2,7 +2,7 @@
  * Section Components
  *
  * Composable card-section primitives following the shadcn pattern.
- * Each sub-component is a simple wrapper — no content props, pure composition.
+ * Each sub-component is a simple wrapper, no content props, pure composition.
  *
  * Usage:
  *   <Section id="hub-control" className="scroll-mt-4">

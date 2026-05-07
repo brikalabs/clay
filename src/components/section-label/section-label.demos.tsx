@@ -7,7 +7,7 @@ export function SectionLabelDefaultDemo() {
   return <SectionLabel>Recent activity</SectionLabel>;
 }
 
-/** Semantic tones map to status colors — `destructive`, `warning`, `success`, `info`. */
+/** Semantic tones map to status colors, `destructive`, `warning`, `success`, `info`. */
 export function SectionLabelTonesDemo() {
   return (
     <div className="flex flex-col gap-3">
@@ -39,10 +39,10 @@ export function SectionLabelWithCountDemo() {
 
 export const demoMeta = defineDemos([
   [SectionLabelDefaultDemo, 'Default', { description: `Simple uppercase group divider above a list of cards.` }],
-  [SectionLabelTonesDemo, 'Tones', { description: `Semantic tones map to status colors — \`destructive\`, \`warning\`, \`success\`, \`info\`.` }],
+  [SectionLabelTonesDemo, 'Tones', { description: `Semantic tones map to status colors, \`destructive\`, \`warning\`, \`success\`, \`info\`.` }],
   [SectionLabelWithCountDemo, 'With Count', { description: `Inline count makes quantities scannable at a glance.` }],
 ]);
 export const accessibility: readonly string[] = [
-  `Renders as \`<p>\` by default — use \`as="h3"\` when it semantically introduces a group.`,
+  `Renders as \`<p>\` by default, use \`as="h3"\` when it semantically introduces a group.`,
   `Tone colors are visual only; pair with an icon that has a meaningful \`aria-label\` when tone conveys status.`,
 ];

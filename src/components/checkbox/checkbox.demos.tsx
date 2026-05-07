@@ -15,7 +15,7 @@ export function CheckboxDefaultDemo() {
   );
 }
 
-/** Three size presets — sm, default, lg — side by side with labels. */
+/** Three size presets, sm, default, lg, side by side with labels. */
 export function CheckboxSizesDemo() {
   return (
     <div className="flex items-center gap-6">
@@ -90,14 +90,14 @@ export function CheckboxFormGroupDemo() {
 
 export const demoMeta = defineDemos([
   [CheckboxDefaultDemo, 'Default', { description: `Uncontrolled checkbox pre-checked for visible state.` }],
-  [CheckboxSizesDemo, 'Sizes', { description: `Three size presets — sm, default, lg — side by side with labels.` }],
+  [CheckboxSizesDemo, 'Sizes', { description: `Three size presets, sm, default, lg, side by side with labels.` }],
   [CheckboxIndeterminateDemo, 'Indeterminate', { description: `Tri-state checkbox cycling through unchecked, indeterminate, and checked.` }],
   [CheckboxControlledDemo, 'Controlled', { description: `Controlled checkbox with external state displayed alongside.` }],
   [CheckboxFormGroupDemo, 'Form Group', { description: `A realistic notification preferences group with independent checkboxes and labels.` }],
 ]);
 export const accessibility: readonly string[] = [
-  `Built on Radix Checkbox — keyboard, focus, and ARIA state (\`aria-checked\`) are handled automatically.`,
+  `Built on Radix Checkbox, keyboard, focus, and ARIA state (\`aria-checked\`) are handled automatically.`,
   `Indeterminate state surfaces as \`checked="indeterminate"\`; AT announces "mixed".`,
-  `Always pair with a visible label — wrap in \`<label>\` or use matching \`htmlFor\` / \`id\`.`,
+  `Always pair with a visible label, wrap in \`<label>\` or use matching \`htmlFor\` / \`id\`.`,
   `Disabled checkboxes are removed from the tab order.`,
 ];

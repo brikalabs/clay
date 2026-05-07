@@ -1,7 +1,7 @@
 {
   "id": "terminal",
   "name": "Terminal",
-  "description": "Mono UI, dashed dividers, zero radius. Amber CRT in light, phosphor green in dark — vintage terminal energy.",
+  "description": "Mono UI, dashed dividers, zero radius. Amber CRT in light, phosphor green in dark, vintage terminal energy.",
   "accentSwatches": ["#b85800", "#00ff88", "#d68a1a", "#a51a1a"],
   "colors": {
     "light": {

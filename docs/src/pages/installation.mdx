@@ -10,7 +10,7 @@ import { PackageManager } from "~/components/docs/PackageManager.tsx";
 
 <PackageManager package="@brika/clay" client:load />
 
-Every code block on this site shares a package-manager setting — pick your preferred one once and every other install block on the docs site follows.
+Every code block on this site shares a package-manager setting, pick your preferred one once and every other install block on the docs site follows.
 
 ## Peer dependencies
 
@@ -29,7 +29,7 @@ Clay ships a Tailwind v4 entry point that wires up every token (`--primary`, `--
 @import "@brika/clay/styles";
 ```
 
-That single import is enough — no extra `@source` glob, no token copy-paste. Apply a theme at runtime with [`applyTheme`](/themes) to swap the palette anywhere in the page.
+That single import is enough, no extra `@source` glob, no token copy-paste. Apply a theme at runtime with [`applyTheme`](/themes) to swap the palette anywhere in the page.
 
 ## Use a component
 
@@ -43,11 +43,11 @@ export function Save() {
 }
 ```
 
-The barrel import (`import { Button } from "@brika/clay"`) also works — pick whichever style your bundler handles most cleanly. Both route to the same ES module.
+The barrel import (`import { Button } from "@brika/clay"`) also works, pick whichever style your bundler handles most cleanly. Both route to the same ES module.
 
 ## Tailwind setup
 
-Clay targets Tailwind v4 and is built around CSS-first theming. The `@import "@brika/clay/styles"` line you added above pulls in every utility Clay's components use — Tailwind's `@source` directives are resolved relative to the imported stylesheet, so they keep working no matter where in your bundle the file lives. No extra configuration is needed when using `@tailwindcss/vite`.
+Clay targets Tailwind v4 and is built around CSS-first theming. The `@import "@brika/clay/styles"` line you added above pulls in every utility Clay's components use, Tailwind's `@source` directives are resolved relative to the imported stylesheet, so they keep working no matter where in your bundle the file lives. No extra configuration is needed when using `@tailwindcss/vite`.
 
 ## Next steps
 

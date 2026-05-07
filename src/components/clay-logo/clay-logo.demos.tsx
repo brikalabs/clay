@@ -14,6 +14,6 @@ export const demoMeta = defineDemos([
   [ClayLogoGlyphDemo, 'Glyph'],
 ]);
 export const accessibility: readonly string[] = [
-  `Purely decorative — \`aria-hidden="true"\` is applied automatically.`,
+  `Purely decorative, \`aria-hidden="true"\` is applied automatically.`,
   `When used inside a link or button, supply \`aria-label\` on the interactive wrapper.`,
 ];

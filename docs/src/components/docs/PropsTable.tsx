@@ -157,7 +157,7 @@ function ComponentSection({
         </ul>
       ) : (
         <p className="rounded-md border border-clay-hairline border-dashed px-4 py-3 text-clay-inactive text-sm italic">
-          No wrapper-specific props — all attributes pass through to the underlying primitive.
+          No wrapper-specific props, all attributes pass through to the underlying primitive.
         </p>
       )}
     </section>
@@ -179,7 +179,7 @@ export function PropsTable({ slug }: PropsTableProps) {
           wrapper-specific props.
         </p>
         <p className="mx-auto mt-1 max-w-xl text-[0.75rem] text-clay-inactive leading-relaxed">
-          All props pass through to the underlying HTML / Radix primitive — see the component source
+          All props pass through to the underlying HTML / Radix primitive, see the component source
           linked above for the full type signature.
         </p>
       </div>

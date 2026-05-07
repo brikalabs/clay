@@ -1,5 +1,5 @@
 /**
- * PageHeader — unified page-level heading.
+ * PageHeader, unified page-level heading.
  *
  * Composable primitives following the shadcn pattern.
  *

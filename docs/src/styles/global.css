@@ -16,7 +16,7 @@
 
      Plain `@theme` (not `@theme inline`) so the chrome
      CSS variables are emitted to `:root` and available to
-     direct CSS rules (html, body, .clay-prose, …) — not
+     direct CSS rules (html, body, .clay-prose, …), not
      just Tailwind utilities.
      ================================================== */
   --color-clay-canvas: var(--background);
@@ -24,8 +24,8 @@
   /*
    * `clay-base` and `clay-control` are *subtle* off-canvas surfaces used
    * by docs chrome (kbd chips, hovered rows, version pill). They derive
-   * from the foreground/background contrast pair — not the theme's
-   * saturated `--secondary` / `--accent` — so chrome stays legible on
+   * from the foreground/background contrast pair, not the theme's
+   * saturated `--secondary` / `--accent`, so chrome stays legible on
    * every theme, including ones whose accent matches the foreground
    * (Terminal: both are green). `color-mix` preserves the theme's
    * tonality while guaranteeing contrast with `--foreground` text.
@@ -42,7 +42,7 @@
   --text-color-clay-link: var(--primary);
   --text-color-clay-brand: var(--primary);
 
-  /* Display font — editorial serif for hero & page titles. The body
+  /* Display font, editorial serif for hero & page titles. The body
      stays Inter (set by @brika/clay/styles); JetBrains Mono is reserved
      for code, metadata labels, and "drafting tag" treatments. */
   --font-display: "Instrument Serif", "Iowan Old Style", Georgia, "Times New Roman", serif;
@@ -93,7 +93,7 @@ kbd,
 }
 
 /* ==================================================
-   Clay prose — tuned for MDX doc pages
+   Clay prose, tuned for MDX doc pages
    ================================================== */
 .clay-prose {
   --tw-prose-body: var(--text-color-clay-default);
@@ -199,14 +199,14 @@ kbd,
 }
 
 /* ==================================================
-   Shiki code blocks (.shiki — emitted by Astro 6 / Shiki 3
+   Shiki code blocks (.shiki, emitted by Astro 6 / Shiki 3
    with `themes: { light, dark }`. Older Astro versions used
    `.astro-code`; both are matched for forward-compat).
    With defaultColor: false, Shiki emits per-token
    CSS variables; we map them to the active mode.
    The background is owned by the wrapping
    `.clay-code-source` (a single unified surface) so the
-   header strip and the code body share one background —
+   header strip and the code body share one background,
    no double-box effect. The pre itself stays transparent
    and contributes only padding.
    ================================================== */
@@ -242,7 +242,7 @@ html[data-mode="dark"] .astro-code span {
 
 /* Inline code inside prose (.clay-prose) wraps a styled box
    around the Shiki output. */
-/* Bare `.shiki` inside prose (no `.clay-code-source` wrapper) — give
+/* Bare `.shiki` inside prose (no `.clay-code-source` wrapper), give
    it its own subtle frame so it doesn't blend into the page bg. The
    `.clay-code-source` variant overrides this in the wrapper. */
 .clay-prose .shiki,
@@ -292,11 +292,11 @@ html[data-mode="dark"] .astro-code span {
 
 /* ==================================================
    Drafting-studio typography utilities.
-   `font-display`  — editorial serif for hero / H1.
-   `mono-tag`      — small monospace label (sections,
+   `font-display` , editorial serif for hero / H1.
+   `mono-tag`     , small monospace label (sections,
                      metadata, "drafting tag" pills).
-   `hairline`      — 1px rule in the chrome border colour.
-   `numbered-rule` — hairline rule with a mono digit
+   `hairline`     , 1px rule in the chrome border colour.
+   `numbered-rule`, hairline rule with a mono digit
                      embedded on the left, used as a
                      section divider.
    ================================================== */
@@ -371,7 +371,7 @@ html[data-mode="dark"] .astro-code span {
 
 /* Drafting-paper grid used on the hero + a few accent surfaces.
    The grid sits at ~40% of the hairline colour so it stays clearly
-   subordinate to actual `.hairline` rules and section borders — no
+   subordinate to actual `.hairline` rules and section borders, no
    visual clash where a divider crosses a grid line. */
 .drafting-grid {
   --drafting-grid-tint: color-mix(in srgb, var(--color-clay-hairline) 38%, transparent);
@@ -399,7 +399,7 @@ html[data-mode="dark"] .astro-code span {
   pointer-events: none;
 }
 
-/* Subtle blueprint hatch for component-preview surfaces — finer than
+/* Subtle blueprint hatch for component-preview surfaces, finer than
    the drafting grid, doesn't compete with the demo content. */
 .preview-grid {
   background-image: radial-gradient(
@@ -410,7 +410,7 @@ html[data-mode="dark"] .astro-code span {
   background-size: 18px 18px;
 }
 
-/* Decorative corner hairlines used on the hero card — small +
+/* Decorative corner hairlines used on the hero card, small +
    marks at the four corners of an element, in the drafting style. */
 .corner-marks::before,
 .corner-marks::after,
@@ -460,7 +460,7 @@ html[data-mode="dark"] .astro-code span {
   border-color: var(--color-clay-default, var(--text-color-clay-default));
 }
 
-/* Reveal animation used on the hero — staggered via animation-delay
+/* Reveal animation used on the hero, staggered via animation-delay
    on individual elements so the eye walks from headline down through
    metadata and into the install block. */
 @keyframes clay-rise {

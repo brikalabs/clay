@@ -23,7 +23,7 @@ export function SectionDefaultDemo() {
           </SectionIcon>
           <div>
             <SectionTitle>Database</SectionTitle>
-            <SectionDescription>PostgreSQL 16 — primary cluster</SectionDescription>
+            <SectionDescription>PostgreSQL 16, primary cluster</SectionDescription>
           </div>
         </SectionInfo>
       </SectionHeader>
@@ -34,7 +34,7 @@ export function SectionDefaultDemo() {
   );
 }
 
-/** Action button and a badge in the header's right slot — for settings panels with inline controls. */
+/** Action button and a badge in the header's right slot, for settings panels with inline controls. */
 export function SectionWithActionDemo() {
   return (
     <Section className="w-full max-w-md">
@@ -64,9 +64,9 @@ export function SectionWithActionDemo() {
 
 export const demoMeta = defineDemos([
   [SectionDefaultDemo, 'Default', { description: `Section card with a header and body content.` }],
-  [SectionWithActionDemo, 'With Action', { description: `Action button and a badge in the header's right slot — for settings panels with inline controls.` }],
+  [SectionWithActionDemo, 'With Action', { description: `Action button and a badge in the header's right slot, for settings panels with inline controls.` }],
 ]);
 export const accessibility: readonly string[] = [
-  `\`SectionTitle\` renders as \`<h2>\` by default — adjust via the \`as\` prop to maintain heading hierarchy.`,
+  `\`SectionTitle\` renders as \`<h2>\` by default, adjust via the \`as\` prop to maintain heading hierarchy.`,
   `Actions in the header slot should have descriptive labels matching the operation.`,
 ];

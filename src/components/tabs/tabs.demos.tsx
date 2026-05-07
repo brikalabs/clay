@@ -16,7 +16,7 @@ export function TabsDefaultDemo() {
         <TabsTrigger value="settings">Settings</TabsTrigger>
       </TabsList>
       <TabsContent value="overview" className="mt-4 text-clay-default text-sm">
-        <p>Your project at a glance — key metrics, recent deploys, and health status.</p>
+        <p>Your project at a glance, key metrics, recent deploys, and health status.</p>
       </TabsContent>
       <TabsContent value="activity" className="mt-4 text-clay-default text-sm">
         <p>A chronological feed of commits, reviews, and comments from the last 7 days.</p>
@@ -50,7 +50,7 @@ export function TabsLineDemo() {
   );
 }
 
-/** Badge inside a tab trigger — compose freely to show counts or status. */
+/** Badge inside a tab trigger, compose freely to show counts or status. */
 export function TabsWithBadgeDemo() {
   return (
     <Tabs defaultValue="inbox" className="w-full max-w-md">
@@ -78,7 +78,7 @@ export function TabsWithBadgeDemo() {
   );
 }
 
-/** Vertical orientation — tabs stack on the left and content fills the right. */
+/** Vertical orientation, tabs stack on the left and content fills the right. */
 export function TabsVerticalDemo() {
   return (
     <Tabs defaultValue="account" orientation="vertical" className="w-full max-w-md min-h-[160px]">
@@ -104,7 +104,7 @@ export function TabsVerticalDemo() {
   );
 }
 
-/** Controlled tabs — drive the active tab programmatically with `value` and `onValueChange`. */
+/** Controlled tabs, drive the active tab programmatically with `value` and `onValueChange`. */
 export function TabsControlledDemo() {
   const tabs = ['overview', 'activity', 'settings'] as const;
   const [active, setActive] = useState<(typeof tabs)[number]>('overview');
@@ -149,12 +149,12 @@ export function TabsControlledDemo() {
 export const demoMeta = defineDemos([
   [TabsDefaultDemo, 'Default', { description: `Standard tabs with a pill-style list and three content panels.` }],
   [TabsLineDemo, 'Line', { description: `Line-style variant with an underline indicator instead of a pill.` }],
-  [TabsWithBadgeDemo, 'With Badge', { description: `Badge inside a tab trigger — compose freely to show counts or status.` }],
-  [TabsVerticalDemo, 'Vertical', { description: `Vertical orientation — tabs stack on the left and content fills the right.` }],
-  [TabsControlledDemo, 'Controlled', { description: `Controlled tabs — drive the active tab programmatically with \`value\` and \`onValueChange\`.` }],
+  [TabsWithBadgeDemo, 'With Badge', { description: `Badge inside a tab trigger, compose freely to show counts or status.` }],
+  [TabsVerticalDemo, 'Vertical', { description: `Vertical orientation, tabs stack on the left and content fills the right.` }],
+  [TabsControlledDemo, 'Controlled', { description: `Controlled tabs, drive the active tab programmatically with \`value\` and \`onValueChange\`.` }],
 ]);
 export const accessibility: readonly string[] = [
-  `Arrow keys navigate between triggers inside the list — Tab moves focus to the active panel.`,
+  `Arrow keys navigate between triggers inside the list, Tab moves focus to the active panel.`,
   `Active panel carries \`aria-labelledby\` pointing to its trigger.`,
   `Triggers carry \`role="tab"\` and \`aria-selected\`; the list carries \`role="tablist"\`.`,
   `Vertical tabs require \`orientation="vertical"\` so AT uses the correct arrow key direction.`,
