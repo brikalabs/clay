@@ -58,7 +58,7 @@
  *   });
  */
 
-import { inferTokenType } from './infer';
+import { inferTokenType, inferTokenTypeFromValue, inferTokenTypeStrict } from './infer';
 import type { TailwindNamespace, TokenCategory, TokenSpec, TokenType } from './types';
 
 // ─── Component meta ──────────────────────────────────────────────────────────
@@ -95,6 +95,12 @@ function token(
   const name = `${m.name}-${suffix}`;
   const type = inferTokenType(name);
   const namespace = TYPE_TO_NAMESPACE[type];
+  // When a family token's suffix already names the type (`card-duration`,
+  // `button-font-family`), aliasing the utility to the bare component name
+  // keeps Tailwind classes readable: `duration-card`, `font-button`. Slots
+  // with non-canonical suffixes (`card-padding-x`) keep the full name to
+  // stay unique.
+  const alias = NAMESPACE_USES_BARE_ALIAS.has(namespace) ? m.name : undefined;
   return {
     name,
     layer: 'component',
@@ -104,8 +110,16 @@ function token(
     description,
     themePath: `components.${m.themeKey}.${themeProp}`,
     tailwindNamespace: namespace,
+    utilityAlias: alias,
   };
 }
+
+const NAMESPACE_USES_BARE_ALIAS: ReadonlySet<TailwindNamespace | undefined> = new Set([
+  'motion',
+  'font',
+  'text',
+  'opacity',
+]);
 
 // ─── Token families ──────────────────────────────────────────────────────────
 //
@@ -261,6 +275,11 @@ const TYPE_TO_NAMESPACE: Partial<Record<TokenType, TailwindNamespace>> = {
   shadow: 'shadow',
   size: 'spacing',
   blur: 'blur',
+  duration: 'motion',
+  easing: 'motion',
+  opacity: 'opacity',
+  'font-family': 'font',
+  'font-size': 'text',
 };
 
 /**
@@ -288,7 +307,8 @@ export interface SlotInput {
 function slotTokens(m: ComponentMeta, entries: Readonly<Record<string, SlotInput>>): TokenSpec[] {
   return Object.entries(entries).map(([key, input]) => {
     const name = `${m.name}-${key}`;
-    const type = input.type ?? inferTokenType(name);
+    const type =
+      input.type ?? inferTokenTypeStrict(name) ?? inferTokenTypeFromValue(input.default) ?? 'color';
     const category = input.category ?? TYPE_TO_CATEGORY[type];
     const namespace = input.namespace ?? TYPE_TO_NAMESPACE[type];
     const themeProp = key.replaceAll(/-([a-z0-9])/g, (_, c: string) => c.toUpperCase());

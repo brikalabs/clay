@@ -364,34 +364,79 @@ function TokenPreview({ token }: TokenPreviewProps) {
 }
 
 /**
- * Per-namespace prefix list. A `color` token generates a full family of
- * utilities (`bg-`, `text-`, `border-`, …); `radius` and `shadow` each
- * map to a single prefix. The first entry is the canonical/most-used
- * variant, shown prominently; the rest collapse into chips.
+ * Tailwind utility prefixes per token-namespace. The first entry is the
+ * canonical/most-used variant, shown prominently; the rest collapse into
+ * `+N` chips. `motion` and `blur` discriminate further on `TokenType`
+ * because the namespace covers two distinct utility families
+ * (`duration-` vs `ease-`, `blur-` vs `backdrop-blur-`).
  */
-const NAMESPACE_PREFIXES: Partial<Record<NonNullable<ResolvedTokenSpec['tailwindNamespace']>, readonly string[]>> = {
-  color: [
-    'bg',
-    'text',
-    'border',
-    'ring',
-    'outline',
-    'fill',
-    'stroke',
-    'decoration',
-    'accent',
-    'caret',
-    'placeholder',
-  ],
-  radius: ['rounded'],
-  shadow: ['shadow'],
-};
+const COLOR_PREFIXES: readonly string[] = [
+  'bg',
+  'text',
+  'border',
+  'ring',
+  'outline',
+  'fill',
+  'stroke',
+  'decoration',
+  'accent',
+  'caret',
+  'placeholder',
+];
+
+const SPACING_PREFIXES: readonly string[] = [
+  'w',
+  'h',
+  'min-w',
+  'min-h',
+  'max-w',
+  'max-h',
+  'p',
+  'px',
+  'py',
+  'm',
+  'mx',
+  'my',
+  'gap',
+  'inset',
+  'top',
+  'right',
+  'bottom',
+  'left',
+];
+
+function prefixesFor(token: ResolvedTokenSpec): readonly string[] {
+  const ns = token.tailwindNamespace;
+  if (!ns || ns === 'none' || ns === 'default') return [];
+  switch (ns) {
+    case 'color':
+      return COLOR_PREFIXES;
+    case 'radius':
+      return ['rounded'];
+    case 'shadow':
+      return ['shadow'];
+    case 'spacing':
+      return SPACING_PREFIXES;
+    case 'text':
+      return ['text'];
+    case 'font':
+      return ['font'];
+    case 'opacity':
+      return ['opacity'];
+    case 'blur':
+      return token.name.startsWith('backdrop-')
+        ? ['backdrop-blur', 'blur']
+        : ['blur', 'backdrop-blur'];
+    case 'motion':
+      return token.type === 'easing' ? ['ease'] : ['duration'];
+  }
+}
 
 /**
- * Given a token's name, pick the most idiomatic Tailwind prefix to lead
- * with. `-foreground` color tokens read as `text-`, `-border` reads as
- * `border-`, etc. Falls back to the first entry of the namespace's prefix
- * list (`bg-` for color, `rounded-` for radius, …).
+ * Given a token, pick the most idiomatic Tailwind prefix to lead with.
+ * `-foreground` color tokens read as `text-`, `-width` size tokens read as
+ * `w-`, `-height` reads as `h-`, etc. Falls back to the first entry of
+ * the namespace's prefix list.
  */
 function pickPrimaryPrefix(
   token: ResolvedTokenSpec,
@@ -405,17 +450,21 @@ function pickPrimaryPrefix(
     if (name.endsWith('-ring')) return 'ring';
     if (name.endsWith('-outline')) return 'outline';
   }
+  if (ns === 'spacing') {
+    if (name.endsWith('-width')) return 'w';
+    if (name.endsWith('-height')) return 'h';
+    if (name.endsWith('-padding-x')) return 'px';
+    if (name.endsWith('-padding-y')) return 'py';
+    if (name.endsWith('-gap')) return 'gap';
+  }
   return prefixes[0] ?? 'bg';
 }
 
 function utilitiesFor(token: ResolvedTokenSpec): readonly string[] {
-  const ns = token.tailwindNamespace;
-  if (!ns) return [];
-  const prefixes = NAMESPACE_PREFIXES[ns];
-  if (!prefixes) return [];
+  const prefixes = prefixesFor(token);
+  if (prefixes.length === 0) return [];
   const suffix = token.utilityAlias ?? token.name;
   const primaryPrefix = pickPrimaryPrefix(token, prefixes);
-  // Lead with the most idiomatic prefix, then keep the others in declared order.
   const ordered = [primaryPrefix, ...prefixes.filter((p) => p !== primaryPrefix)];
   return ordered.map((p) => `${p}-${suffix}`);
 }
