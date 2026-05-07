@@ -31,15 +31,18 @@ export type TokenLayer = 'scalar' | 'role' | 'component';
  * requires a new category, categories are about how docs READ, types are
  * about what the value IS.
  */
-export type TokenCategory =
-  | 'color'
-  | 'geometry'
-  | 'border'
-  | 'typography'
-  | 'elevation'
-  | 'focus'
-  | 'motion'
-  | 'state';
+export const TOKEN_CATEGORIES = [
+  'color',
+  'geometry',
+  'border',
+  'typography',
+  'elevation',
+  'focus',
+  'motion',
+  'state',
+] as const;
+
+export type TokenCategory = (typeof TOKEN_CATEGORIES)[number];
 
 /**
  * Granular value type. Tells a consumer exactly what shape of value the
@@ -89,17 +92,27 @@ export type TokenType =
  *   `default` → bare name; Tailwind picks up `--default-*-width` etc.
  *   `none`   , token is consumed only by component CSS, not as a utility.
  */
-export type TailwindNamespace =
-  | 'color'
-  | 'radius'
-  | 'shadow'
-  | 'text'
-  | 'font'
-  | 'motion'
-  | 'opacity'
-  | 'blur'
-  | 'default'
-  | 'none';
+/**
+ * Single source of truth for the Tailwind namespaces Clay can target.
+ * The literal-type union below derives from this `as const` array so the
+ * runtime list (used for JSON validation in `scalars.ts`) and the compile-
+ * time type can never drift apart.
+ */
+export const TAILWIND_NAMESPACES = [
+  'color',
+  'radius',
+  'shadow',
+  'text',
+  'font',
+  'motion',
+  'opacity',
+  'blur',
+  'spacing',
+  'default',
+  'none',
+] as const;
+
+export type TailwindNamespace = (typeof TAILWIND_NAMESPACES)[number];
 
 /**
  * One token in the registry, as authored.

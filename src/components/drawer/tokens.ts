@@ -6,12 +6,10 @@ export const tokens = defineComponent(meta.name, {
   radius: {
     default: 'var(--radius-container)',
     description: 'Drawer sheet top-corner radius.',
-    alias: 'drawer',
   },
   shadow: {
     default: 'var(--shadow-overlay)',
     description: 'Drawer elevation.',
-    alias: 'drawer',
   },
   border: '1px',
   motion: true,

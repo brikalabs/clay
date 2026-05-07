@@ -10,9 +10,8 @@ export const tokens = defineComponent(meta.name, {
   radius: {
     default: 'var(--radius-surface)',
     description: 'Dialog corner radius.',
-    alias: 'dialog',
   },
-  shadow: { default: 'var(--shadow-modal)', description: 'Dialog elevation.', alias: 'dialog' },
+  shadow: { default: 'var(--shadow-modal)', description: 'Dialog elevation.' },
   border: '1px',
   motion: true,
   backdropBlur: {

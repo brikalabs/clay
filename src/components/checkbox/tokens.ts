@@ -8,7 +8,6 @@ export const tokens = defineComponent('checkbox', {
   radius: {
     default: 'var(--radius-tight)',
     description: 'Checkbox corner radius.',
-    alias: 'checkbox',
   },
   surface: { borderWidth: '1px' },
   slots: {

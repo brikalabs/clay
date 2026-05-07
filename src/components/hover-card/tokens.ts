@@ -6,12 +6,10 @@ export const tokens = defineComponent(meta.name, {
   radius: {
     default: 'var(--radius-surface)',
     description: 'HoverCard corner radius.',
-    alias: 'hover-card',
   },
   shadow: {
     default: 'var(--shadow-overlay)',
     description: 'HoverCard elevation.',
-    alias: 'hover-card',
   },
   backdropBlur: {
     default: '0px',

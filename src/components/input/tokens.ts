@@ -10,7 +10,6 @@ export const tokens = defineComponent(meta.name, {
   radius: {
     default: 'var(--radius-control)',
     description: 'Input corner radius.',
-    alias: 'input',
   },
   surface: { borderWidth: '1px' },
   backdropBlur: {

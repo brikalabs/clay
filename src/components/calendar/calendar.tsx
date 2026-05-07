@@ -39,7 +39,8 @@ function Calendar({
       showOutsideDays={showOutsideDays}
       captionLayout={captionLayout}
       className={cn(
-        'card corner-themed w-fit rounded-card border-border bg-card-container p-4 text-card-label shadow-card backdrop-blur-[var(--calendar-backdrop-blur)]',
+        'not-prose card corner-themed w-fit rounded-card border-border bg-card-container text-card-label shadow-card backdrop-blur-calendar',
+        'px-calendar-padding-x py-calendar-padding-y',
         className
       )}
       formatters={{
@@ -57,12 +58,12 @@ function Calendar({
         ),
         button_previous: cn(
           buttonVariants({ variant: buttonVariant, size: 'icon' }),
-          'size-7 p-0 aria-disabled:opacity-40',
+          'h-8 w-8 rounded-calendar p-0 aria-disabled:opacity-40',
           defaultClassNames.button_previous
         ),
         button_next: cn(
           buttonVariants({ variant: buttonVariant, size: 'icon' }),
-          'size-7 p-0 aria-disabled:opacity-40',
+          'h-8 w-8 rounded-calendar p-0 aria-disabled:opacity-40',
           defaultClassNames.button_next
         ),
         month_caption: cn(
@@ -78,21 +79,53 @@ function Calendar({
           defaultClassNames.dropdowns
         ),
         month_grid: cn('w-full border-collapse', defaultClassNames.month_grid),
-        weekdays: cn('flex', defaultClassNames.weekdays),
+        weekdays: cn('flex px-1', defaultClassNames.weekdays),
         weekday: cn(
-          'flex size-8 shrink-0 items-center justify-center text-[0.75rem] font-medium text-muted-foreground',
+          'flex size-8 shrink-0 items-center justify-center text-[0.75rem] font-medium text-calendar-weekday-foreground',
           defaultClassNames.weekday
         ),
-        week: cn('mt-1 flex', defaultClassNames.week),
+        weeks: cn(
+          'flex flex-col gap-y-calendar-week-margin-y pt-calendar-week-margin-y',
+          defaultClassNames.weeks
+        ),
+        week: cn(
+          'relative flex px-1',
+          String.raw`[&:not(:last-child)]:after:content-[""]`,
+          '[&:not(:last-child)]:after:absolute [&:not(:last-child)]:after:inset-x-0',
+          '[&:not(:last-child)]:after:h-(--calendar-week-separator-width)',
+          '[&:not(:last-child)]:after:bg-calendar-week-separator-color',
+          '[&:not(:last-child)]:after:[bottom:calc(var(--calendar-week-margin-y)*-0.5)]',
+          defaultClassNames.week
+        ),
         day: cn(
-          'group/day relative flex size-8 shrink-0 items-center justify-center p-0',
+          'group/day relative isolate flex size-8 shrink-0 items-center justify-center p-0',
           defaultClassNames.day
         ),
-        range_start: cn('rounded-l-calendar bg-primary/15', defaultClassNames.range_start),
-        range_middle: cn('rounded-none bg-primary/15', defaultClassNames.range_middle),
-        range_end: cn('rounded-r-calendar bg-primary/15', defaultClassNames.range_end),
+        range_start: cn(
+          "before:absolute before:left-1/2 before:right-0 before:-z-10 before:bg-calendar-range-bar before:content-['']",
+          'before:top-calendar-range-margin-y before:bottom-calendar-range-margin-y',
+          'before:backdrop-blur-calendar-range-backdrop-blur',
+          "[&:last-child]:before:rounded-r-calendar",
+          String.raw`[&.rdp-range\_end]:before:hidden`,
+          defaultClassNames.range_start
+        ),
+        range_middle: cn(
+          "before:absolute before:inset-x-0 before:-z-10 before:bg-calendar-range-bar before:content-['']",
+          'before:top-calendar-range-margin-y before:bottom-calendar-range-margin-y',
+          'before:backdrop-blur-calendar-range-backdrop-blur',
+          "[&:first-child]:before:rounded-l-calendar",
+          "[&:last-child]:before:rounded-r-calendar",
+          defaultClassNames.range_middle
+        ),
+        range_end: cn(
+          "before:absolute before:left-0 before:right-1/2 before:-z-10 before:bg-calendar-range-bar before:content-['']",
+          'before:top-calendar-range-margin-y before:bottom-calendar-range-margin-y',
+          'before:backdrop-blur-calendar-range-backdrop-blur',
+          "[&:first-child]:before:rounded-l-calendar",
+          defaultClassNames.range_end
+        ),
         today: defaultClassNames.today,
-        outside: cn('opacity-40', defaultClassNames.outside),
+        outside: cn('opacity-40 text-calendar-outside-foreground', defaultClassNames.outside),
         disabled: cn('pointer-events-none opacity-30', defaultClassNames.disabled),
         hidden: 'invisible',
         selected: defaultClassNames.selected,
@@ -126,13 +159,18 @@ function CalendarDayButton({
       data-slot="calendar-day"
       className={cn(
         'corner-themed inline-flex size-8 shrink-0 items-center justify-center rounded-calendar text-sm outline-none transition-colors',
-        'hover:bg-accent hover:text-accent-foreground',
+        'hover:bg-calendar-day-hover hover:text-calendar-day-hover-foreground hover:backdrop-blur-calendar-range-backdrop-blur',
         'focus-visible:ring-themed',
         'disabled:pointer-events-none',
-        modifiers.today && !modifiers.selected && 'bg-accent text-accent-foreground font-semibold',
-        modifiers.selected && !modifiers.range_middle && 'bg-primary text-primary-foreground font-semibold hover:bg-primary/90',
-        modifiers.range_middle && 'rounded-none bg-transparent text-foreground hover:bg-primary/20',
-        modifiers.outside && 'text-muted-foreground',
+        modifiers.today &&
+          !modifiers.selected &&
+          'bg-calendar-today text-calendar-today-foreground font-semibold',
+        modifiers.selected &&
+          !modifiers.range_middle &&
+          'bg-calendar-pill text-calendar-pill-foreground font-semibold hover:bg-calendar-pill hover:text-calendar-pill-foreground',
+        modifiers.range_middle &&
+          'bg-transparent text-foreground hover:bg-calendar-range-bar-hover',
+        modifiers.outside && 'text-calendar-outside-foreground',
         className
       )}
       {...props}

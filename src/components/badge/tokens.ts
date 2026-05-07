@@ -10,7 +10,6 @@ export const tokens = defineComponent(meta.name, {
   radius: {
     default: 'var(--radius-pill)',
     description: 'Badge corner radius.',
-    alias: 'badge',
   },
   surface: true,
   geometry: { height: '1.5rem', paddingX: SPACING_2, paddingY: '0.125rem', gap: SPACING_1 },

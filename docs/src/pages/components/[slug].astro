@@ -252,8 +252,11 @@ const apiNum = nextSection();
 
         <p class="mt-4 max-w-2xl text-clay-default text-sm leading-relaxed">
           Then apply with <code class="font-mono text-xs">applyTheme(myTheme)</code>{' '}
-          (see the <a href="/theming" class="text-clay-link underline-offset-2 hover:underline">theming guide</a>)
-          or scope it to a subtree with <code class="font-mono text-xs">themeToCssVars(myTheme, mode)</code>.
+          (see the <a href="/theming" class="text-clay-link underline-offset-2 hover:underline">theming guide</a>),
+          scope it to a subtree with <code class="font-mono text-xs">themeToCssVars(myTheme, mode)</code>,
+          or consume any token directly in your own JSX with the matching Tailwind utility
+          (e.g. <code class="font-mono text-xs">bg-{component.slug}-…</code>) — see the
+          chips on each token row.
         </p>
       </section>
     )

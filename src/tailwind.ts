@@ -249,6 +249,7 @@ const NS_TO_BUCKET: Partial<Record<TailwindNamespace, string>> = {
   text: 'fontSize',
   opacity: 'opacity',
   blur: 'blur',
+  spacing: 'spacing',
 };
 
 /**

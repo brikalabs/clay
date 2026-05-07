@@ -6,7 +6,7 @@ import { defineComponent } from '../../tokens/define';
 import { meta } from './meta';
 
 export const tokens = defineComponent(meta.name, {
-  radius: { default: 'var(--radius-control)', description: 'Tabs corner radius.', alias: 'tabs' },
+  radius: { default: 'var(--radius-control)', description: 'Tabs corner radius.' },
   border: '1px',
   motion: true,
   backdropBlur: {

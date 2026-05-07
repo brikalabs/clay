@@ -49,7 +49,7 @@ function Toaster({ className, style, toastOptions, ...props }: ComponentProps<ty
       toastOptions={{
         ...toastOptions,
         classNames: {
-          toast: 'corner-themed rounded-toast! shadow-toast! backdrop-blur-[var(--toast-backdrop-blur)]!',
+          toast: 'corner-themed rounded-toast! shadow-toast! backdrop-blur-toast!',
           description: 'text-muted-foreground!',
           closeButton: 'bg-popover! border-border! text-popover-foreground! hover:bg-accent!',
           ...toastOptions?.classNames,

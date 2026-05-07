@@ -6,6 +6,7 @@ group: "Library"
 ---
 
 import { TokenTable } from "~/components/docs/TokenTable.tsx";
+import CodeSource from "~/components/docs/CodeSource.astro";
 
 <section class="mb-16">
   <div class="numbered-rule mb-6">
@@ -103,4 +104,147 @@ import { TokenTable } from "~/components/docs/TokenTable.tsx";
   </div>
 
   <TokenTable layer="component" client:load />
+</section>
+
+<section class="mb-16">
+  <div class="numbered-rule mb-6">
+    <span class="num">05</span>
+    <span class="label">Tailwind utilities</span>
+    <span class="spacer hairline"></span>
+    <span class="text-clay-inactive">Auto-generated</span>
+  </div>
+
+  <h2 id="utilities" class="mb-4 scroll-mt-24 font-display text-3xl text-clay-strong leading-[1.1]">
+    Consume tokens via Tailwind utilities
+  </h2>
+
+  <div class="clay-prose mb-6">
+    Every namespaced component token in the registry is exposed as a real
+    Tailwind v4 utility. The plugin reads the token's namespace
+    (`color`, `radius`, or `shadow`) and emits the corresponding
+    `theme.extend.<bucket>` entry, so `bg-{name}`, `text-{name}`,
+    `rounded-{name}`, and `shadow-{name}` are all generated for you. No
+    arbitrary-value workaround like `bg-[var(--token)]` is needed, and
+    these utilities **scale with the theme** because they resolve to
+    `var(--<token>)` at paint time.
+
+    Use these utilities **everywhere** instead of hardcoded
+    `var(--…)` references. They're shorter to write, safer (twMerge
+    knows about them), and the docs site can link the source back to
+    the registry entry.
+  </div>
+
+  <h3 id="utilities-prefix-rules" class="mt-8 mb-2 font-display text-xl text-clay-strong">
+    Prefix rules
+  </h3>
+
+  <div class="clay-prose mb-6">
+    The Tailwind prefix is determined by the token's value type, not its
+    name. The token's name (or its `alias` if one is set) becomes the
+    suffix.
+
+    | Token type | Tailwind utilities | Example token | Generated |
+    |---|---|---|---|
+    | `color` | `bg-…`, `text-…`, `border-…`, `ring-…`, `fill-…`, `stroke-…`, `outline-…`, `decoration-…`, `from-…`/`via-…`/`to-…`, `accent-…`, `caret-…`, `placeholder-…` | `--calendar-pill` | `bg-calendar-pill`, `text-calendar-pill`, … |
+    | `radius` | `rounded-…` | `--card-radius` (alias `card`) | `rounded-card` |
+    | `shadow` | `shadow-…` | `--card-shadow` (alias `card`) | `shadow-card` |
+
+    `border-width`, `size`, and other scalar token types do **not**
+    generate utilities, write them inline with the existing arbitrary
+    syntax (`size-(--token)`, `border-(length:--token)`). Only the three
+    types above carry a `tailwindNamespace`.
+  </div>
+
+  <h3 id="utilities-naming" class="mt-8 mb-2 font-display text-xl text-clay-strong">
+    Suffix is the token name (or its alias)
+  </h3>
+
+  <div class="clay-prose mb-6">
+    Every component token's full name is `<component>-<slot>` and
+    that's the default utility suffix. A token can declare an explicit
+    `alias` in `defineComponent` to choose a shorter or
+    differently-grouped name (the `card` and `tabs` radius tokens do
+    this so they emit `rounded-card` rather than the verbose
+    `rounded-card-radius`).
+  </div>
+
+  <CodeSource lang="ts" filename="src/components/calendar/tokens.ts" code={`defineComponent('calendar', {
+  radius: {
+    default: 'var(--radius-control)',
+    description: 'Calendar day button corner radius.',
+    alias: 'calendar',                  // → utility \`rounded-calendar\`
+  },
+  slots: {
+    'pill': {
+      default: 'var(--primary)',
+      description: 'Selected day pill background.',
+                                        // no alias → utility \`bg-calendar-pill\`
+    },
+    'pill-foreground': {
+      default: 'var(--primary-foreground)',
+      description: 'Selected day pill text.',
+                                        // → utility \`text-calendar-pill-foreground\`
+    },
+    'range-bar': {
+      default: 'color-mix(in oklch, var(--primary) 15%, transparent)',
+      description: 'Range highlight bar color.',
+                                        // → utility \`bg-calendar-range-bar\`
+    },
+  },
+});`} />
+
+  <h3 id="utilities-usage" class="mt-8 mb-2 font-display text-xl text-clay-strong">
+    Idiomatic component code
+  </h3>
+
+  <div class="clay-prose mb-6">
+    Use the token's utility wherever a hardcoded color or radius would
+    have gone. The utility resolves through the registry's fallback
+    chain (component default → layer 1 role → layer 0 scalar), so a
+    theme that sets none of them still gets a sensible value.
+  </div>
+
+  <CodeSource lang="tsx" filename="calendar.tsx" code={`<button
+  className={cn(
+    'corner-themed inline-flex size-8 items-center justify-center rounded-calendar',
+    'hover:bg-calendar-day-hover hover:text-calendar-day-hover-foreground',
+    selected && 'bg-calendar-pill text-calendar-pill-foreground',
+    today && !selected && 'bg-calendar-today text-calendar-today-foreground',
+  )}
+/>`} />
+
+  <CodeSource lang="tsx" filename="slider.tsx" code={`<div className="bg-slider-track h-[var(--slider-track-height)] rounded-slider" />
+<div className="bg-slider-fill h-[var(--slider-track-height)] rounded-slider" />
+<input className="bg-slider-thumb shadow-slider-thumb border-slider-thumb-border" />`} />
+
+  <h3 id="utilities-cross-component" class="mt-8 mb-2 font-display text-xl text-clay-strong">
+    Cross-component reuse
+  </h3>
+
+  <div class="clay-prose mb-6">
+    A utility from one component is fair game in another. A custom
+    sidebar that pairs with the calendar can drop
+    `bg-calendar-range-bar` to pick up the same tint without duplicating
+    the calc. A status pill that wants to mirror the card's elevation
+    uses `shadow-card`. The utilities are global Tailwind classes; the
+    `<component>-` prefix is namespacing, not a scoping mechanism.
+  </div>
+
+  <h3 id="utilities-theming" class="mt-8 mb-2 font-display text-xl text-clay-strong">
+    Themeable by construction
+  </h3>
+
+  <div class="clay-prose mb-6">
+    Because every utility resolves to `var(--<token>)`, a theme's
+    `components.<name>` override propagates everywhere the utility is
+    used, without rebuilding. `bg-calendar-pill` written once in the
+    component code becomes whatever a theme sets `pill` to, in light
+    mode, dark mode, scoped subtree, or anywhere `applyTheme` runs.
+
+    This is the canonical pattern across the library, every new
+    component should expose its color, radius, and shadow surfaces as
+    tokens and consume them through the generated utilities. Avoid
+    `bg-[var(--…)]` arbitrary values, they bypass the registry's type
+    inference and the docs site can't surface them in the token table.
+  </div>
 </section>

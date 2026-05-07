@@ -92,14 +92,18 @@ function token(
   defaultLight: string,
   description: string
 ): TokenSpec {
+  const name = `${m.name}-${suffix}`;
+  const type = inferTokenType(name);
+  const namespace = TYPE_TO_NAMESPACE[type];
   return {
-    name: `${m.name}-${suffix}`,
+    name,
     layer: 'component',
     category,
     appliesTo: m.name,
     defaultLight,
     description,
     themePath: `components.${m.themeKey}.${themeProp}`,
+    tailwindNamespace: namespace,
   };
 }
 
@@ -108,6 +112,41 @@ function token(
 // Each helper returns an array of `TokenSpec`s for a coherent slice of the
 // component surface. `defineComponent` (below) opts in/out per family.
 
+/**
+ * One row in a token family's spec table. `key` is the user-facing camelCase
+ * key on the input object (`paddingX`, `fontFamily`); `suffix` is the
+ * kebab-case CSS-var tail (`padding-x`, `font-family`); `category` and
+ * `describe` shape the registry entry.
+ *
+ * `whenOptional` controls the family's gating behaviour: "skip" omits the
+ * token entirely when the input field is undefined; "fallback" emits it
+ * with the fallback default (used by typography, where every field always
+ * lives in the registry).
+ */
+interface FamilyField<TInput extends object> {
+  readonly key: keyof TInput;
+  readonly suffix: string;
+  readonly category: TokenCategory;
+  readonly fallback?: string;
+  readonly describe: (name: string) => string;
+  readonly whenOptional: 'skip' | 'fallback';
+}
+
+function familyTokens<TInput extends object>(
+  m: ComponentMeta,
+  defaults: TInput,
+  fields: ReadonlyArray<FamilyField<TInput>>
+): TokenSpec[] {
+  const out: TokenSpec[] = [];
+  for (const f of fields) {
+    const value = defaults[f.key] as string | undefined;
+    const resolved = value ?? (f.whenOptional === 'fallback' ? f.fallback : undefined);
+    if (resolved === undefined) continue;
+    out.push(token(m, f.category, f.suffix, String(f.key), resolved, f.describe(m.name)));
+  }
+  return out;
+}
+
 interface GeometryDefaults {
   readonly height?: string;
   readonly paddingX?: string;
@@ -115,92 +154,54 @@ interface GeometryDefaults {
   readonly gap?: string;
 }
 
+const GEOMETRY_FIELDS: ReadonlyArray<FamilyField<GeometryDefaults>> = [
+  { key: 'height', suffix: 'height', category: 'geometry', whenOptional: 'skip',
+    describe: (n) => `Default ${n} height.` },
+  { key: 'paddingX', suffix: 'padding-x', category: 'geometry', whenOptional: 'skip',
+    describe: (n) => `Inline padding inside the ${n}.` },
+  { key: 'paddingY', suffix: 'padding-y', category: 'geometry', whenOptional: 'skip',
+    describe: (n) => `Block padding inside the ${n}.` },
+  { key: 'gap', suffix: 'gap', category: 'geometry', whenOptional: 'skip',
+    describe: (n) => `Gap between adjacent children inside the ${n}.` },
+];
+
 function geometryTokens(m: ComponentMeta, defaults: GeometryDefaults = {}): TokenSpec[] {
-  const out: TokenSpec[] = [];
-  if (defaults.height !== undefined) {
-    out.push(
-      token(m, 'geometry', 'height', 'height', defaults.height, `Default ${m.name} height.`)
-    );
-  }
-  if (defaults.paddingX !== undefined) {
-    out.push(
-      token(
-        m,
-        'geometry',
-        'padding-x',
-        'paddingX',
-        defaults.paddingX,
-        `Inline padding inside the ${m.name}.`
-      )
-    );
-  }
-  if (defaults.paddingY !== undefined) {
-    out.push(
-      token(
-        m,
-        'geometry',
-        'padding-y',
-        'paddingY',
-        defaults.paddingY,
-        `Block padding inside the ${m.name}.`
-      )
-    );
-  }
-  if (defaults.gap !== undefined) {
-    out.push(
-      token(
-        m,
-        'geometry',
-        'gap',
-        'gap',
-        defaults.gap,
-        `Gap between adjacent children inside the ${m.name}.`
-      )
-    );
-  }
-  return out;
+  return familyTokens(m, defaults, GEOMETRY_FIELDS);
 }
+
+interface BorderDefaults {
+  readonly borderWidth: string;
+  readonly borderStyle?: string;
+}
+
+const BORDER_FIELDS: ReadonlyArray<FamilyField<BorderDefaults>> = [
+  { key: 'borderWidth', suffix: 'border-width', category: 'border', whenOptional: 'skip',
+    describe: (n) => `Border width on the ${n}. Set non-zero for outline-style variants.` },
+  { key: 'borderStyle', suffix: 'border-style', category: 'border', whenOptional: 'fallback',
+    fallback: 'solid',
+    describe: (n) => `Border style on the ${n} (\`solid\`, \`dashed\`, \`double\`, \`none\`).` },
+];
 
 function borderTokens(m: ComponentMeta, width = '0px'): TokenSpec[] {
-  return [
-    token(
-      m,
-      'border',
-      'border-width',
-      'borderWidth',
-      width,
-      `Border width on the ${m.name}. Set non-zero for outline-style variants.`
-    ),
-    token(
-      m,
-      'border',
-      'border-style',
-      'borderStyle',
-      'solid',
-      `Border style on the ${m.name} (\`solid\`, \`dashed\`, \`double\`, \`none\`).`
-    ),
-  ];
+  return familyTokens(m, { borderWidth: width }, BORDER_FIELDS);
 }
 
+interface MotionDefaults {
+  readonly duration?: string;
+  readonly easing?: string;
+}
+
+const MOTION_FIELDS: ReadonlyArray<FamilyField<MotionDefaults>> = [
+  { key: 'duration', suffix: 'duration', category: 'motion', whenOptional: 'fallback',
+    fallback: 'var(--motion-standard-duration)',
+    describe: (n) => `Transition duration for ${n} state changes.` },
+  { key: 'easing', suffix: 'easing', category: 'motion', whenOptional: 'fallback',
+    fallback: 'var(--motion-standard-easing)',
+    describe: (n) => `Transition easing for ${n} state changes.` },
+];
+
 function motionTokens(m: ComponentMeta): TokenSpec[] {
-  return [
-    token(
-      m,
-      'motion',
-      'duration',
-      'duration',
-      'var(--motion-standard-duration)',
-      `Transition duration for ${m.name} state changes.`
-    ),
-    token(
-      m,
-      'motion',
-      'easing',
-      'easing',
-      'var(--motion-standard-easing)',
-      `Transition easing for ${m.name} state changes.`
-    ),
-  ];
+  return familyTokens(m, {}, MOTION_FIELDS);
 }
 
 interface TypographyDefaults {
@@ -212,62 +213,24 @@ interface TypographyDefaults {
   readonly textTransform?: string;
 }
 
-const TYPOGRAPHY_FIELDS: ReadonlyArray<{
-  readonly suffix: string;
-  readonly key: keyof TypographyDefaults;
-  readonly fallback: string;
-  readonly describe: (name: string) => string;
-}> = [
-  {
-    suffix: 'font-family',
-    key: 'fontFamily',
-    fallback: 'var(--font-sans)',
-    describe: (n) => `Typeface for ${n}.`,
-  },
-  {
-    suffix: 'font-size',
-    key: 'fontSize',
-    fallback: 'var(--text-body-md)',
-    describe: (n) => `Font size for ${n}.`,
-  },
-  {
-    suffix: 'font-weight',
-    key: 'fontWeight',
-    fallback: '500',
-    describe: (n) => `Font weight for ${n}.`,
-  },
-  {
-    suffix: 'line-height',
-    key: 'lineHeight',
-    fallback: '1.25',
-    describe: (n) => `Line height for ${n}.`,
-  },
-  {
-    suffix: 'letter-spacing',
-    key: 'letterSpacing',
-    fallback: '0',
-    describe: (n) => `Letter spacing for ${n}. Useful for caps labels.`,
-  },
-  {
-    suffix: 'text-transform',
-    key: 'textTransform',
+const TYPOGRAPHY_FIELDS: ReadonlyArray<FamilyField<TypographyDefaults>> = [
+  { key: 'fontFamily', suffix: 'font-family', category: 'typography', whenOptional: 'fallback',
+    fallback: 'var(--font-sans)', describe: (n) => `Typeface for ${n}.` },
+  { key: 'fontSize', suffix: 'font-size', category: 'typography', whenOptional: 'fallback',
+    fallback: 'var(--text-body-md)', describe: (n) => `Font size for ${n}.` },
+  { key: 'fontWeight', suffix: 'font-weight', category: 'typography', whenOptional: 'fallback',
+    fallback: '500', describe: (n) => `Font weight for ${n}.` },
+  { key: 'lineHeight', suffix: 'line-height', category: 'typography', whenOptional: 'fallback',
+    fallback: '1.25', describe: (n) => `Line height for ${n}.` },
+  { key: 'letterSpacing', suffix: 'letter-spacing', category: 'typography', whenOptional: 'fallback',
+    fallback: '0', describe: (n) => `Letter spacing for ${n}. Useful for caps labels.` },
+  { key: 'textTransform', suffix: 'text-transform', category: 'typography', whenOptional: 'fallback',
     fallback: 'none',
-    describe: (n) =>
-      `Text transform for ${n} (\`uppercase\`, \`lowercase\`, \`capitalize\`, \`none\`).`,
-  },
+    describe: (n) => `Text transform for ${n} (\`uppercase\`, \`lowercase\`, \`capitalize\`, \`none\`).` },
 ];
 
 function typographyTokens(m: ComponentMeta, defaults: TypographyDefaults = {}): TokenSpec[] {
-  return TYPOGRAPHY_FIELDS.map((field) =>
-    token(
-      m,
-      'typography',
-      field.suffix,
-      field.key,
-      defaults[field.key] ?? field.fallback,
-      field.describe(m.name)
-    )
-  );
+  return familyTokens(m, defaults, TYPOGRAPHY_FIELDS);
 }
 
 // ─── Slot tokens (radius / shadow / backdrop-blur / arbitrary slots) ────────
@@ -296,6 +259,8 @@ const TYPE_TO_NAMESPACE: Partial<Record<TokenType, TailwindNamespace>> = {
   color: 'color',
   radius: 'radius',
   shadow: 'shadow',
+  size: 'spacing',
+  blur: 'blur',
 };
 
 /**
@@ -405,16 +370,20 @@ export interface ComponentDefinition {
   readonly slots?: Readonly<Record<string, SlotInput>>;
 }
 
-function collectSlots(def: ComponentDefinition): Record<string, SlotInput> {
+function collectSlots(def: ComponentDefinition, m: ComponentMeta): Record<string, SlotInput> {
   const merged: Record<string, SlotInput> = { ...def.slots };
+  // Conventional slots default their Tailwind alias to the component name,
+  // so `card-backdrop-blur` is reachable as `backdrop-blur-card` (not the
+  // verbose `backdrop-blur-card-backdrop-blur`). Explicit `alias` on the
+  // input wins.
   if (def.radius) {
-    merged.radius = def.radius;
+    merged.radius = { alias: m.name, ...def.radius };
   }
   if (def.shadow) {
-    merged.shadow = def.shadow;
+    merged.shadow = { alias: m.name, ...def.shadow };
   }
   if (def.backdropBlur) {
-    merged['backdrop-blur'] = def.backdropBlur;
+    merged['backdrop-blur'] = { alias: m.name, ...def.backdropBlur };
   }
   return merged;
 }
@@ -458,7 +427,7 @@ function bundleTokens(m: ComponentMeta, def: ComponentDefinition): TokenSpec[] {
  */
 export function defineComponent(name: string, def: ComponentDefinition): readonly TokenSpec[] {
   const m = meta(name, def.themeKey);
-  const slots = collectSlots(def);
+  const slots = collectSlots(def, m);
   return [
     ...(Object.keys(slots).length > 0 ? slotTokens(m, slots) : []),
     ...bundleTokens(m, def),

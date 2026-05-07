@@ -8,7 +8,6 @@ export const tokens = defineComponent('alert', {
   radius: {
     default: 'var(--radius-container)',
     description: 'Alert corner radius.',
-    alias: 'alert',
   },
   backdropBlur: {
     default: '0px',

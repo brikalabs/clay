@@ -152,9 +152,9 @@ export function Slider({
       data-slot="slider"
       className={cn('relative flex h-4 items-center', showLabels && 'mb-5', className)}
     >
-      <div className="pointer-events-none absolute inset-x-0 h-[var(--slider-track-height)] rounded-slider bg-slider-track" />
+      <div className="pointer-events-none absolute inset-x-0 h-slider-track-height rounded-slider bg-slider-track" />
       <div
-        className="pointer-events-none absolute left-0 h-[var(--slider-track-height)] rounded-slider bg-slider-fill"
+        className="pointer-events-none absolute left-0 h-slider-track-height rounded-slider bg-slider-fill"
         style={{ width: trackPos(value, min, max) }}
       />
       {tickValues?.map((t) => {
@@ -165,7 +165,7 @@ export function Slider({
             aria-hidden
             data-active={active || undefined}
             className={cn(
-              'pointer-events-none absolute top-1/2 size-[var(--slider-tick-size)] -translate-x-1/2 -translate-y-1/2 rounded-full transition-colors',
+              'pointer-events-none absolute top-1/2 size-slider-tick-size -translate-x-1/2 -translate-y-1/2 rounded-full transition-colors',
               active ? 'bg-slider-tick-active/70' : 'bg-slider-tick/30'
             )}
             style={{ left: trackPos(t, min, max) }}
@@ -193,8 +193,8 @@ export function Slider({
         step={step}
         className={cn(
           'relative h-4 w-full cursor-pointer appearance-none bg-transparent focus-visible:outline-none',
-          '[&::-webkit-slider-thumb]:size-[var(--slider-thumb-size)] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-slider-thumb [&::-webkit-slider-thumb]:border-[length:var(--slider-thumb-border-width)] [&::-webkit-slider-thumb]:border-slider-thumb-border [&::-webkit-slider-thumb]:border-solid [&::-webkit-slider-thumb]:bg-slider-thumb [&::-webkit-slider-thumb]:shadow-slider-thumb [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:active:scale-110',
-          '[&::-moz-range-thumb]:size-[var(--slider-thumb-size)] [&::-moz-range-thumb]:rounded-slider-thumb [&::-moz-range-thumb]:border-[length:var(--slider-thumb-border-width)] [&::-moz-range-thumb]:border-slider-thumb-border [&::-moz-range-thumb]:border-solid [&::-moz-range-thumb]:bg-slider-thumb [&::-moz-range-thumb]:shadow-slider-thumb'
+          '[&::-webkit-slider-thumb]:size-slider-thumb-size [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-slider-thumb [&::-webkit-slider-thumb]:border-(length:--slider-thumb-border-width) [&::-webkit-slider-thumb]:border-slider-thumb-border [&::-webkit-slider-thumb]:border-solid [&::-webkit-slider-thumb]:bg-slider-thumb [&::-webkit-slider-thumb]:shadow-slider-thumb [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:active:scale-110',
+          '[&::-moz-range-thumb]:size-slider-thumb-size [&::-moz-range-thumb]:rounded-slider-thumb [&::-moz-range-thumb]:border-(length:--slider-thumb-border-width) [&::-moz-range-thumb]:border-slider-thumb-border [&::-moz-range-thumb]:border-solid [&::-moz-range-thumb]:bg-slider-thumb [&::-moz-range-thumb]:shadow-slider-thumb'
         )}
       />
     </div>
