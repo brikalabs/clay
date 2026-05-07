@@ -6,9 +6,7 @@
  *   - Layer 0 scalars   → `./scalars.ts`
  *   - Layer 1 roles     → `./roles/*.ts`
  *   - Layer 2 component → co-located `tokens.ts` per component
- *                         (see `./components.ts` for the aggregator and
- *                         `./orphan-components.ts` for blocks whose
- *                         component folder doesn't exist yet)
+ *                         (see `./components.ts` for the aggregator)
  *
  * CSS is contributed at compile time by `../tailwind.ts` (the Tailwind
  * v4 plugin), no generated files, nothing to run.

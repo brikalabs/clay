@@ -5,7 +5,6 @@ export const tokens = defineComponent(meta.name, {
   radius: {
     default: '9999px',
     description: 'Radio button border radius.',
-    alias: 'radio-group',
   },
   surface: { borderWidth: '1px' },
   slots: {

@@ -363,44 +363,203 @@ function TokenPreview({ token }: TokenPreviewProps) {
   }
 }
 
-function TokenCard({ token }: { readonly token: ResolvedTokenSpec }) {
-  const cssVar = `--${token.name}`;
+/**
+ * Per-namespace prefix list. A `color` token generates a full family of
+ * utilities (`bg-`, `text-`, `border-`, …); `radius` and `shadow` each
+ * map to a single prefix. The first entry is the canonical/most-used
+ * variant, shown prominently; the rest collapse into chips.
+ */
+const NAMESPACE_PREFIXES: Partial<Record<NonNullable<ResolvedTokenSpec['tailwindNamespace']>, readonly string[]>> = {
+  color: [
+    'bg',
+    'text',
+    'border',
+    'ring',
+    'outline',
+    'fill',
+    'stroke',
+    'decoration',
+    'accent',
+    'caret',
+    'placeholder',
+  ],
+  radius: ['rounded'],
+  shadow: ['shadow'],
+};
+
+/**
+ * Given a token's name, pick the most idiomatic Tailwind prefix to lead
+ * with. `-foreground` color tokens read as `text-`, `-border` reads as
+ * `border-`, etc. Falls back to the first entry of the namespace's prefix
+ * list (`bg-` for color, `rounded-` for radius, …).
+ */
+function pickPrimaryPrefix(
+  token: ResolvedTokenSpec,
+  prefixes: readonly string[]
+): string {
+  const name = token.utilityAlias ?? token.name;
+  const ns = token.tailwindNamespace;
+  if (ns === 'color') {
+    if (name.endsWith('-foreground') || name.endsWith('-label')) return 'text';
+    if (name.endsWith('-border') || name.endsWith('-hairline')) return 'border';
+    if (name.endsWith('-ring')) return 'ring';
+    if (name.endsWith('-outline')) return 'outline';
+  }
+  return prefixes[0] ?? 'bg';
+}
+
+function utilitiesFor(token: ResolvedTokenSpec): readonly string[] {
+  const ns = token.tailwindNamespace;
+  if (!ns) return [];
+  const prefixes = NAMESPACE_PREFIXES[ns];
+  if (!prefixes) return [];
+  const suffix = token.utilityAlias ?? token.name;
+  const primaryPrefix = pickPrimaryPrefix(token, prefixes);
+  // Lead with the most idiomatic prefix, then keep the others in declared order.
+  const ordered = [primaryPrefix, ...prefixes.filter((p) => p !== primaryPrefix)];
+  return ordered.map((p) => `${p}-${suffix}`);
+}
+
+/**
+ * A single Tailwind utility, rendered as a copy-on-click pill. The
+ * `muted` variant is used for the alternate-prefix list inside an
+ * expanded chip group so the canonical utility stays visually dominant.
+ */
+function UtilityChip({
+  utility,
+  muted,
+}: {
+  readonly utility: string;
+  readonly muted?: boolean;
+}) {
+  const [copied, setCopied] = useState(false);
+  const onClick = () => {
+    void navigator.clipboard.writeText(utility).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1200);
+    });
+  };
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={`Copy ${utility}`}
+      title={copied ? 'Copied!' : `Click to copy`}
+      className={`group/chip inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 font-mono text-[0.6875rem] transition-colors focus-visible:outline-2 focus-visible:outline-clay-strong focus-visible:outline-offset-2 ${
+        muted
+          ? 'border-transparent text-clay-subtle hover:border-clay-hairline hover:bg-clay-elevated hover:text-clay-strong'
+          : 'border-clay-hairline bg-clay-elevated text-clay-strong hover:border-clay-strong'
+      } ${copied ? 'border-clay-strong text-clay-strong' : ''}`}
+    >
+      <span>{utility}</span>
+      {copied ? (
+        <Check size={10} aria-hidden className="text-clay-strong" />
+      ) : (
+        <Copy
+          size={10}
+          aria-hidden
+          className="text-clay-inactive opacity-0 transition-opacity group-hover/chip:opacity-100"
+        />
+      )}
+    </button>
+  );
+}
+
+/**
+ * Primary utility chip + a `+N` toggle that expands the remaining
+ * prefixes inline. Collapsed by default, since color tokens generate
+ * 11 prefixes and we'd rather keep each token row readable at rest.
+ */
+function UtilityChips({ utilities }: { readonly utilities: readonly string[] }) {
+  const [expanded, setExpanded] = useState(false);
+  const [primary, ...secondary] = utilities;
+  if (!primary) return null;
+  const hasSecondary = secondary.length > 0;
 
   return (
-    <li className="group flex items-start gap-3 rounded-lg border border-clay-hairline bg-clay-canvas/30 p-3 transition-colors hover:bg-clay-canvas/70">
+    <div className="flex flex-col gap-1.5">
+      <div className="flex items-center gap-1.5">
+        <UtilityChip utility={primary} />
+        {hasSecondary && (
+          <button
+            type="button"
+            onClick={() => setExpanded((v) => !v)}
+            aria-expanded={expanded}
+            className="inline-flex items-center gap-0.5 rounded font-mono text-[0.625rem] text-clay-subtle transition-colors hover:text-clay-strong focus-visible:outline-2 focus-visible:outline-clay-strong focus-visible:outline-offset-2"
+          >
+            <span>{expanded ? 'hide' : `+${secondary.length}`}</span>
+            <span aria-hidden className={`transition-transform ${expanded ? 'rotate-90' : ''}`}>
+              ›
+            </span>
+          </button>
+        )}
+      </div>
+      {expanded && hasSecondary && (
+        <div className="flex flex-wrap gap-1 border-clay-hairline/60 border-l-2 pl-3">
+          {secondary.map((u) => (
+            <UtilityChip key={u} utility={u} muted />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function TokenCard({ token }: { readonly token: ResolvedTokenSpec }) {
+  const cssVar = `--${token.name}`;
+  const utilities = utilitiesFor(token);
+
+  return (
+    <li className="group flex items-start gap-3 rounded-lg border border-clay-hairline bg-clay-canvas/20 p-3 transition-colors hover:border-clay-hairline hover:bg-clay-canvas/50">
       <div className="mt-0.5 shrink-0">
         <TokenPreview token={token} />
       </div>
-      <div className="grid min-w-0 flex-1 grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
-        <div className="min-w-0 space-y-1">
-          <div className="flex flex-wrap items-center gap-1.5">
-            <code className="break-all font-mono text-clay-strong text-xs">{cssVar}</code>
-            <CopyButton text={cssVar} label={`CSS variable ${cssVar}`} />
-            <TokenTypeChip type={token.type} />
-          </div>
+      <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+        {/* Identity: var name · theme path · type chip · default value */}
+        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+          <code className="break-all font-mono text-clay-strong text-xs">{cssVar}</code>
+          <CopyButton text={cssVar} label={`CSS variable ${cssVar}`} />
+          <TokenTypeChip type={token.type} />
+          <span aria-hidden className="ml-auto font-mono text-[0.625rem] text-clay-inactive">
+            =
+          </span>
+          <code
+            className="max-w-full truncate font-mono text-[0.6875rem] text-clay-subtle"
+            title={token.defaultLight}
+          >
+            {token.defaultLight}
+          </code>
+        </div>
+
+        {/* Theme path + dark default, both subtle */}
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
           {token.themePath && (
-            <div className="flex items-center gap-1.5">
+            <span className="flex items-center gap-1">
               <code className="break-all font-mono text-[0.6875rem] text-clay-subtle">
                 {token.themePath}
               </code>
               <CopyButton text={token.themePath} label={`theme path ${token.themePath}`} />
-            </div>
+            </span>
           )}
-          <p className="text-[0.8125rem] text-clay-default leading-snug">{token.description}</p>
-        </div>
-        <div className="flex flex-col items-start gap-0.5 sm:items-end sm:text-right">
-          <span className="font-medium font-mono text-[0.5625rem] text-clay-inactive uppercase tracking-[0.12em]">
-            Default
-          </span>
-          <code className="break-all font-mono text-[0.75rem] text-clay-default">
-            {token.defaultLight}
-          </code>
           {token.defaultDark && (
-            <code className="break-all font-mono text-[0.6875rem] text-clay-subtle">
+            <code
+              className="font-mono text-[0.625rem] text-clay-inactive"
+              title={`dark mode default: ${token.defaultDark}`}
+            >
               dark · {token.defaultDark}
             </code>
           )}
         </div>
+
+        {/* Description */}
+        <p className="text-[0.8125rem] text-clay-default leading-snug">{token.description}</p>
+
+        {/* Tailwind utilities, when applicable */}
+        {utilities.length > 0 && (
+          <div className="pt-1">
+            <UtilityChips utilities={utilities} />
+          </div>
+        )}
       </div>
     </li>
   );

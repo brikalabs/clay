@@ -6,7 +6,6 @@ export const tokens = defineComponent(meta.name, {
   radius: {
     default: 'var(--radius-control)',
     description: 'Toggle corner radius.',
-    alias: 'toggle',
   },
   surface: true,
   backdropBlur: {

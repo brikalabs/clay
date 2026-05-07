@@ -9,38 +9,23 @@
  */
 
 import SCALAR_DEFS from './scalars.data.json' with { type: 'json' };
-import type { TailwindNamespace, TokenCategory, TokenSpec } from './types';
+import {
+  TAILWIND_NAMESPACES,
+  TOKEN_CATEGORIES,
+  type TailwindNamespace,
+  type TokenCategory,
+  type TokenSpec,
+} from './types';
 
-const TOKEN_CATEGORIES: ReadonlySet<TokenCategory> = new Set([
-  'color',
-  'geometry',
-  'border',
-  'typography',
-  'elevation',
-  'focus',
-  'motion',
-  'state',
-]);
-
-const TAILWIND_NAMESPACES: ReadonlySet<TailwindNamespace> = new Set([
-  'color',
-  'radius',
-  'shadow',
-  'text',
-  'font',
-  'motion',
-  'opacity',
-  'blur',
-  'default',
-  'none',
-]);
+const CATEGORY_SET: ReadonlySet<TokenCategory> = new Set(TOKEN_CATEGORIES);
+const NAMESPACE_SET: ReadonlySet<TailwindNamespace> = new Set(TAILWIND_NAMESPACES);
 
 function isCategory(value: string): value is TokenCategory {
-  return (TOKEN_CATEGORIES as ReadonlySet<string>).has(value);
+  return (CATEGORY_SET as ReadonlySet<string>).has(value);
 }
 
 function isNamespace(value: string): value is TailwindNamespace {
-  return (TAILWIND_NAMESPACES as ReadonlySet<string>).has(value);
+  return (NAMESPACE_SET as ReadonlySet<string>).has(value);
 }
 
 interface RawScalarDef {

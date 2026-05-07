@@ -28,9 +28,7 @@
     "**/components/*/tokens.ts",
     "**/components/*/tokens.js",
     "**/tokens/components.ts",
-    "**/tokens/components.js",
-    "**/tokens/orphan-components.ts",
-    "**/tokens/orphan-components.js"
+    "**/tokens/components.js"
   ],
   "main": "./src/index.ts",
   "module": "./src/index.ts",

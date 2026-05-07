@@ -5,7 +5,6 @@ export const tokens = defineComponent(meta.name, {
   radius: {
     default: 'var(--radius-control)',
     description: 'OTP slot corner radius.',
-    alias: 'input-otp',
   },
   surface: { borderWidth: '1px' },
   backdropBlur: {

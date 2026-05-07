@@ -10,7 +10,6 @@ export const tokens = defineComponent(meta.name, {
   radius: {
     default: 'var(--radius-control)',
     description: 'Textarea corner radius.',
-    alias: 'textarea',
   },
   surface: { borderWidth: '1px' },
   backdropBlur: {

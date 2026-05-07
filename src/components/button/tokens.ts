@@ -10,12 +10,10 @@ export const tokens = defineComponent(meta.name, {
   radius: {
     default: 'var(--radius-control)',
     description: 'Button corner radius. Falls back to `radius-control`.',
-    alias: 'button',
   },
   shadow: {
     default: 'var(--shadow-surface)',
     description: 'Resting elevation under a button.',
-    alias: 'button',
   },
   surface: true,
   geometry: { height: '2.25rem', paddingX: SPACING_4, paddingY: SPACING_2, gap: SPACING_2 },

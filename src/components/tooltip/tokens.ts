@@ -10,12 +10,10 @@ export const tokens = defineComponent(meta.name, {
   radius: {
     default: 'var(--radius-control)',
     description: 'Tooltip corner radius.',
-    alias: 'tooltip',
   },
   shadow: {
     default: 'var(--shadow-overlay)',
     description: 'Tooltip elevation.',
-    alias: 'tooltip',
   },
   backdropBlur: {
     default: '0px',

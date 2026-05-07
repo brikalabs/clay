@@ -7,12 +7,10 @@ export const tokens = [
     radius: {
       default: 'var(--radius-surface)',
       description: 'Command palette container radius.',
-      alias: 'command',
     },
     shadow: {
       default: 'var(--shadow-overlay)',
       description: 'Command palette elevation.',
-      alias: 'command',
     },
     backdropBlur: {
       default: '0px',
@@ -27,7 +25,6 @@ export const tokens = [
     radius: {
       default: 'var(--radius-control)',
       description: 'Command palette item corner radius.',
-      alias: 'command-item',
     },
     surface: true,
     geometry: { paddingX: SPACING_2, paddingY: SPACING_1_5, gap: SPACING_2 },

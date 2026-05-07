@@ -10,7 +10,7 @@ import { Textarea } from '../textarea';
 /**
  * Wrapper for compound input controls (PasswordInput, search bars, fields
  * with prefix/suffix addons). Mirrors the standalone Input's token surface
- * exactly, `rounded-input`, `h-[var(--input-height)]`, `bg-input-container`,
+ * exactly, `rounded-input`, `h-input-height`, `bg-input-container`,
  * `border-input-border`, `shadow-surface`, and carries `data-slot="input"`
  * on the wrapper so the same `../input/input.css` rules (border-width,
  * border-style, transition) apply. Themes that tune `--input-*` retune
@@ -22,8 +22,8 @@ function InputGroup({ className, ...props }: React.ComponentProps<'div'>) {
       data-slot="input"
       data-input-variant="group"
       className={cn(
-        'group/input-group corner-themed relative flex w-full items-center rounded-input border border-input-border bg-input-container text-input-label shadow-surface outline-none transition-[color,box-shadow] backdrop-blur-[var(--input-group-backdrop-blur)]',
-        'h-[var(--input-height)] min-w-0 has-[>textarea]:h-auto',
+        'group/input-group corner-themed relative flex w-full items-center rounded-input border border-input-border bg-input-container text-input-label shadow-surface outline-none transition-[color,box-shadow] backdrop-blur-input-group',
+        'h-input-height min-w-0 has-[>textarea]:h-auto',
 
         // Variants based on alignment.
         'has-[>[data-align=inline-start]]:[&>input]:pl-2',
