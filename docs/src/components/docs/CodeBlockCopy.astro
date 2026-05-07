@@ -1,0 +1,51 @@
+---
+// Adds a Copy button to every markdown-rendered <pre> on the page.
+// Drop this once near the bottom of any layout that renders MDX/.md
+// content. Custom components opt out by living inside `.not-prose`.
+---
+
+<script>
+  function attachCopyButton(pre: HTMLPreElement) {
+    if (pre.dataset.copyAttached === '1') return;
+    pre.dataset.copyAttached = '1';
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'group/copy relative';
+    pre.parentNode?.insertBefore(wrapper, pre);
+    wrapper.appendChild(pre);
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.setAttribute('aria-label', 'Copy code to clipboard');
+    button.className =
+      'absolute top-2 right-2 rounded border border-clay-hairline bg-clay-elevated px-2 py-1 font-mono text-clay-subtle text-xs opacity-0 transition group-hover/copy:opacity-100 focus-visible:opacity-100 hover:bg-clay-control hover:text-clay-default';
+    button.textContent = 'Copy';
+
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(pre.textContent ?? '');
+        button.textContent = 'Copied';
+        setTimeout(() => {
+          button.textContent = 'Copy';
+        }, 1200);
+      } catch {
+        // Clipboard blocked — leave the button label so the user sees
+        // that nothing happened.
+      }
+    });
+
+    wrapper.appendChild(button);
+  }
+
+  function attachAll() {
+    document.querySelectorAll<HTMLPreElement>('main pre').forEach((pre) => {
+      if (pre.closest('.not-prose')) return;
+      attachCopyButton(pre);
+    });
+  }
+
+  attachAll();
+  // View-transition navigations swap the DOM under us — re-run so
+  // subsequent pages get buttons too.
+  document.addEventListener('astro:page-load', attachAll);
+</script>
