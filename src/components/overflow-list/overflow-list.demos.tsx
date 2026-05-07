@@ -88,7 +88,7 @@ export const demoMeta = defineDemos([
   [OverflowListActiveDemo, 'Active', { description: `The active item is always kept visible even when it would otherwise be hidden.` }],
 ]);
 export const accessibility: readonly string[] = [
-  `Hidden items remain in the DOM — the indicator communicates the count to all users.`,
+  `Hidden items remain in the DOM, the indicator communicates the count to all users.`,
   `The \`activeKey\` item is always visible; this preserves context for the current selection.`,
   `Consider wrapping the indicator in a \`Popover\` or \`Tooltip\` to reveal hidden items on demand.`,
 ];

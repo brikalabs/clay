@@ -29,7 +29,7 @@ export function isHookName(name: string): boolean {
   return /^use[A-Z]/.test(name);
 }
 
-/** Radix injects `__scope*` context props internally — never surface them. */
+/** Radix injects `__scope*` context props internally, never surface them. */
 export function isInternalProp(name: string): boolean {
   return name.startsWith('__');
 }

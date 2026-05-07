@@ -3,7 +3,7 @@
  *
  * `--spacing` is the Layer-0 base step (default `0.25rem`). Every
  * component-layer geometry default that wants to live on the same
- * grid expresses itself as `calc(var(--spacing) * N)` — when the
+ * grid expresses itself as `calc(var(--spacing) * N)`, when the
  * theme rescales `--spacing`, all of them follow.
  */
 

@@ -4,7 +4,7 @@ import { Progress } from '@brika/clay/components/progress';
 import { useEffect, useState } from 'react';
 import { defineDemos } from '../_registry';
 
-/** Basic determinate progress bar — pass `value` 0 to 100. */
+/** Basic determinate progress bar, pass `value` 0 to 100. */
 export function ProgressDefaultDemo() {
   return (
     <div className="w-full max-w-xs">
@@ -36,7 +36,7 @@ export function ProgressAnimatedDemo() {
   );
 }
 
-/** Progress with a percentage label — compose any text readout alongside the bar. */
+/** Progress with a percentage label, compose any text readout alongside the bar. */
 export function ProgressLabelledDemo() {
   const [value] = useState(42);
 
@@ -52,9 +52,9 @@ export function ProgressLabelledDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [ProgressDefaultDemo, 'Default', { description: `Basic determinate progress bar — pass \`value\` 0 to 100.` }],
+  [ProgressDefaultDemo, 'Default', { description: `Basic determinate progress bar, pass \`value\` 0 to 100.` }],
   [ProgressAnimatedDemo, 'Animated', { description: `Progress bar that increments automatically to simulate a running task.` }],
-  [ProgressLabelledDemo, 'Labelled', { description: `Progress with a percentage label — compose any text readout alongside the bar.` }],
+  [ProgressLabelledDemo, 'Labelled', { description: `Progress with a percentage label, compose any text readout alongside the bar.` }],
 ]);
 export const accessibility: readonly string[] = [
   `Carries \`role="progressbar"\`, \`aria-valuenow\`, \`aria-valuemin\`, and \`aria-valuemax\` automatically.`,

@@ -23,7 +23,7 @@ const NOTIFICATIONS = [
   { id: 7, title: 'Storage usage at 80%', time: '2 days ago' },
 ];
 
-/** Bottom-sheet overlay — drag the handle or tap outside to close. */
+/** Bottom-sheet overlay, drag the handle or tap outside to close. */
 export function DrawerDefaultDemo() {
   return (
     <Drawer>
@@ -48,7 +48,7 @@ export function DrawerDefaultDemo() {
   );
 }
 
-/** Drawer with a scrollable list body and a fixed footer — suited for notification feeds or item pickers. */
+/** Drawer with a scrollable list body and a fixed footer, suited for notification feeds or item pickers. */
 export function DrawerScrollableDemo() {
   return (
     <Drawer>
@@ -81,7 +81,7 @@ export function DrawerScrollableDemo() {
   );
 }
 
-/** Drawer used for mobile-first data entry — keeps the form reachable at the bottom of the screen. */
+/** Drawer used for mobile-first data entry, keeps the form reachable at the bottom of the screen. */
 export function DrawerFormDemo() {
   return (
     <Drawer>
@@ -111,9 +111,9 @@ export function DrawerFormDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [DrawerDefaultDemo, 'Default', { description: `Bottom-sheet overlay — drag the handle or tap outside to close.` }],
-  [DrawerScrollableDemo, 'Scrollable', { description: `Drawer with a scrollable list body and a fixed footer — suited for notification feeds or item pickers.` }],
-  [DrawerFormDemo, 'Form', { description: `Drawer used for mobile-first data entry — keeps the form reachable at the bottom of the screen.` }],
+  [DrawerDefaultDemo, 'Default', { description: `Bottom-sheet overlay, drag the handle or tap outside to close.` }],
+  [DrawerScrollableDemo, 'Scrollable', { description: `Drawer with a scrollable list body and a fixed footer, suited for notification feeds or item pickers.` }],
+  [DrawerFormDemo, 'Form', { description: `Drawer used for mobile-first data entry, keeps the form reachable at the bottom of the screen.` }],
 ]);
 export const accessibility: readonly string[] = [
   `Focus is trapped inside the drawer while open.`,

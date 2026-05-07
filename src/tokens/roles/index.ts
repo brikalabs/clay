@@ -1,5 +1,5 @@
 /**
- * Layer 1 — Roles barrel.
+ * Layer 1, Roles barrel.
  * Concatenates the per-category role arrays into a single `ROLES` list
  * consumed by `../registry.ts`.
  */

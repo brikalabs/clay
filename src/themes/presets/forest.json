@@ -1,7 +1,7 @@
 {
   "id": "forest",
   "name": "Forest",
-  "description": "Damp pine and moss — sage-tinted paper, evergreen primary.",
+  "description": "Damp pine and moss, sage-tinted paper, evergreen primary.",
   "accentSwatches": ["#2f7a3f", "#4a8c5a", "#9c7a4a", "#c78a2b"],
   "colors": {
     "light": {

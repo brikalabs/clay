@@ -23,16 +23,16 @@ import { TokenTable } from "~/components/docs/TokenTable.tsx";
     Clay's tokens cascade from foundational scalars through semantic roles
     down to component-scoped overrides.
 
-    - **Layer 0 — Scalars.** Eleven knobs that set the system's voice:
+    - **Layer 0, Scalars.** Eleven knobs that set the system's voice:
       `--radius`, `--spacing`, `--font-sans`, `--motion-duration`,
       `--ring-width`, and friends. Themes touch these to retune the whole
       library at once.
-    - **Layer 1 — Roles.** Semantic colors (`--primary`, `--background`,
+    - **Layer 1, Roles.** Semantic colors (`--primary`, `--background`,
       `--border`), semantic radii (`--radius-control`, `--radius-surface`),
       semantic shadows (`--shadow-overlay`, `--shadow-modal`), motion
       channels, state-layer opacities. These are what most components
       consume.
-    - **Layer 2 — Per-component.** Each component reads its own
+    - **Layer 2, Per-component.** Each component reads its own
       variables (`--button-padding-x`, `--card-shadow`,
       `--switch-thumb-size`) that fall back to a Layer 1 role. Themes
       override one component without affecting the rest by writing to

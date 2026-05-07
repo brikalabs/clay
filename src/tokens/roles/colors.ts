@@ -1,9 +1,9 @@
 /**
- * Layer 1 — Color roles
+ * Layer 1, Color roles
  * Themes typically override these. Listed in the order they appear in
  * existing presets to make migration mechanical.
  *
- * Definitions live in [`./colors.data.json`](./colors.data.json) — a
+ * Definitions live in [`./colors.data.json`](./colors.data.json), a
  * tabular `[name, light, dark, description]` array. Holding them in
  * JSON keeps the structurally-repeating scaffold out of TS source so
  * Sonar's CPD doesn't flag every entry as duplication.

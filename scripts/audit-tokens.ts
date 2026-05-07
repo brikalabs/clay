@@ -7,9 +7,9 @@
  *     `ease-X`, `opacity-X`, `blur-X`).
  *   - Shorthand-bundle coverage (geom / typo / motion / border).
  *   - Flags:
- *       a) registered-but-unreferenced (dead — no shorthand, no raw ref,
+ *       a) registered-but-unreferenced (dead, no shorthand, no raw ref,
  *          no namespaced utility match).
- *       b) referenced-but-unregistered (dangling — TSX uses a `--name`
+ *       b) referenced-but-unregistered (dangling, TSX uses a `--name`
  *          that the registry doesn't define).
  *
  * Usage: `bun run scripts/audit-tokens.ts`
@@ -51,7 +51,7 @@ function extractRawRefs(src: string): Set<string> {
 
 /**
  * Tailwind utility-class shape that consumes a token. Each namespace
- * maps to one or more class-name *roots* — we then check whether the
+ * maps to one or more class-name *roots*, we then check whether the
  * TSX contains `<root>-<utilityName>` as a Tailwind class fragment.
  */
 const UTILITY_ROOTS: Partial<Record<TailwindNamespace, readonly string[]>> = {
@@ -113,7 +113,7 @@ function appliesToForFolder(
 ): readonly string[] {
   // A folder owns `appliesTo: <folder>` exactly. It also owns
   // `appliesTo: <folder>-<sub>` ONLY when no sibling folder named
-  // `<folder>-<sub>` exists — otherwise that sub-name is owned by the
+  // `<folder>-<sub>` exists, otherwise that sub-name is owned by the
   // sibling (e.g. `input-otp` lives next to `input`, so `input/` does
   // NOT claim `input-otp-*` tokens).
   const owned = new Set<string>();
@@ -134,7 +134,7 @@ function bundledTokensFor(appliesTo: readonly string[], src: string): Set<string
   // The shorthand engine emits ONE class per component named exactly
   // after `appliesTo` (e.g. `.button`, `.menu-item`). A bundled token
   // only counts as "used" when the component's TSX actually applies
-  // the matching class — otherwise themes have no surface to override.
+  // the matching class, otherwise themes have no surface to override.
   const bundled = new Set<string>();
   const varRef = /var\(--([a-z][a-z0-9-]*)/;
   for (const a of appliesTo) {

@@ -116,5 +116,5 @@ export const accessibility: readonly string[] = [
   `Arrow keys navigate between top-level triggers; Enter/Space opens the dropdown.`,
   `Escape closes the open dropdown; Tab moves focus outside the menubar entirely.`,
   `Each \`MenubarMenu\` is a \`role="menu"\` with its trigger as \`role="menuitem"\`.`,
-  `Keyboard shortcuts shown in items are visual only — implement the actual shortcuts separately.`,
+  `Keyboard shortcuts shown in items are visual only, implement the actual shortcuts separately.`,
 ];

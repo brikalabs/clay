@@ -4,5 +4,5 @@ export const meta: ComponentMeta = {
   name: 'aspect-ratio',
   displayName: 'Aspect Ratio',
   group: 'Layout',
-  description: 'Displays content within a desired ratio — useful for responsive images, videos, and embeds.',
+  description: 'Displays content within a desired ratio, useful for responsive images, videos, and embeds.',
 };

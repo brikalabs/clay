@@ -10,7 +10,7 @@ import { ChevronDownIcon } from 'lucide-react';
 import { useState } from 'react';
 import { defineDemos } from '../_registry';
 
-/** Basic collapsible — trigger toggles content visibility, no controlled state needed. */
+/** Basic collapsible, trigger toggles content visibility, no controlled state needed. */
 export function CollapsibleDefaultDemo() {
   return (
     <Collapsible className="w-full max-w-sm space-y-2">
@@ -22,16 +22,16 @@ export function CollapsibleDefaultDemo() {
       </CollapsibleTrigger>
       <CollapsibleContent className="rounded-md border border-clay-hairline bg-clay-base p-3 text-clay-default text-sm">
         <ul className="space-y-1">
-          <li>Alice — Engineering</li>
-          <li>Bob — Design</li>
-          <li>Carol — Product</li>
+          <li>Alice, Engineering</li>
+          <li>Bob, Design</li>
+          <li>Carol, Product</li>
         </ul>
       </CollapsibleContent>
     </Collapsible>
   );
 }
 
-/** Chevron rotates on open using `data-[state=open]` — wire it to the trigger via `group`. */
+/** Chevron rotates on open using `data-[state=open]`, wire it to the trigger via `group`. */
 export function CollapsibleAnimatedDemo() {
   return (
     <Collapsible className="w-full max-w-sm space-y-2">
@@ -46,7 +46,7 @@ export function CollapsibleAnimatedDemo() {
   );
 }
 
-/** Controlled collapsible — manage open state with `open` and `onOpenChange`. */
+/** Controlled collapsible, manage open state with `open` and `onOpenChange`. */
 export function CollapsibleControlledDemo() {
   const [open, setOpen] = useState(false);
 
@@ -73,12 +73,12 @@ export function CollapsibleControlledDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [CollapsibleDefaultDemo, 'Default', { description: `Basic collapsible — trigger toggles content visibility, no controlled state needed.` }],
-  [CollapsibleAnimatedDemo, 'Animated', { description: `Chevron rotates on open using \`data-[state=open]\` — wire it to the trigger via \`group\`.` }],
-  [CollapsibleControlledDemo, 'Controlled', { description: `Controlled collapsible — manage open state with \`open\` and \`onOpenChange\`.` }],
+  [CollapsibleDefaultDemo, 'Default', { description: `Basic collapsible, trigger toggles content visibility, no controlled state needed.` }],
+  [CollapsibleAnimatedDemo, 'Animated', { description: `Chevron rotates on open using \`data-[state=open]\`, wire it to the trigger via \`group\`.` }],
+  [CollapsibleControlledDemo, 'Controlled', { description: `Controlled collapsible, manage open state with \`open\` and \`onOpenChange\`.` }],
 ]);
 export const accessibility: readonly string[] = [
-  `Trigger carries \`aria-expanded\` automatically — no extra markup needed.`,
+  `Trigger carries \`aria-expanded\` automatically, no extra markup needed.`,
   `Content carries \`aria-hidden\` when collapsed so AT skips it entirely.`,
   `Animate height via CSS \`overflow-hidden\` + transition, not \`display:none\`, to preserve AT semantics.`,
 ];

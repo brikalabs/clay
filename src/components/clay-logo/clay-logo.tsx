@@ -9,7 +9,7 @@ interface ClayLogoProps extends SVGProps<SVGSVGElement> {
 }
 
 /**
- * Clay brand logo — three rounded tiles (one tall left, two stacked right).
+ * Clay brand logo, three rounded tiles (one tall left, two stacked right).
  *
  * Tiles render with `currentColor` so the mark themes via Tailwind `text-*`
  * utilities (e.g. `text-clay-brand` → primary). The badge background defaults

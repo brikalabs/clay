@@ -26,7 +26,7 @@ export interface ThemeScopeProps {
   readonly className?: string;
   /**
    * Extra inline-style overrides on the wrapper. The wrapper itself
-   * carries no theme tokens inline — those live in a hoisted `<style>`
+   * carries no theme tokens inline, those live in a hoisted `<style>`
    * tag for custom themes, or in `themes-static.css` for built-ins.
    */
   readonly style?: CSSProperties;
@@ -34,7 +34,7 @@ export interface ThemeScopeProps {
 }
 
 function buildScopeCss(theme: ThemeConfig, scopeId: string): string {
-  // Complete flatten — registry defaults + theme overrides — so that the
+  // Complete flatten, registry defaults + theme overrides, so that the
   // emitted rule fully replaces every token a globally-applied theme
   // might have set on `<html>`. Without this, a nested scope inherits
   // through any token the inner theme didn't explicitly override.
@@ -77,7 +77,7 @@ function buildScopeCss(theme: ThemeConfig, scopeId: string): string {
  *
  * **One <style> per distinct theme, no matter how many scopes.** Both
  * built-in and custom themes hoist a single `<style>` tag via React 19's
- * `href`-keyed stylesheet dedup — 50 ThemeScopes of `dracula` share one
+ * `href`-keyed stylesheet dedup, 50 ThemeScopes of `dracula` share one
  * tag in `<head>`. The scope CSS uses `flattenThemeComplete`, which
  * pins every registry token, so the subtree is leak-resistant even
  * when a different theme is applied globally via `applyTheme`.
@@ -120,7 +120,7 @@ export function ThemeScope({
     </div>
   );
 
-  // Always emit the scope CSS — built-in or custom alike. React 19
+  // Always emit the scope CSS, built-in or custom alike. React 19
   // dedupes by `href`, so N scopes of the same theme produce ONE
   // `<style>` in `<head>`. `flattenThemeComplete` pins every registry
   // token in the rule, so a globally-applied theme can't leak in

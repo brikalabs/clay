@@ -1,5 +1,5 @@
 /**
- * Layer 0 — Scalars
+ * Layer 0, Scalars
  * One knob per concern. Themes set these; everything downstream cascades.
  *
  * Definitions live in [`./scalars.data.json`](./scalars.data.json).

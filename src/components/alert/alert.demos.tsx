@@ -11,7 +11,7 @@ import { AlertCircle, CheckCircle2, Info, TriangleAlert } from 'lucide-react';
 import { useState } from 'react';
 import { defineDemos } from '../_registry';
 
-/** Plain alert with title and description — the baseline composition. */
+/** Plain alert with title and description, the baseline composition. */
 export function AlertDefaultDemo() {
   return (
     <Alert className="w-full max-w-md">
@@ -56,7 +56,7 @@ export function AlertVariantsDemo() {
   );
 }
 
-/** Error alert with a leading icon — compose AlertIcon before the text slots. */
+/** Error alert with a leading icon, compose AlertIcon before the text slots. */
 export function AlertWithIconDemo() {
   return (
     <Alert variant="destructive" className="w-full max-w-md">
@@ -71,7 +71,7 @@ export function AlertWithIconDemo() {
   );
 }
 
-/** Alert with a dismiss button — controlled visibility via useState. */
+/** Alert with a dismiss button, controlled visibility via useState. */
 export function AlertDismissibleDemo() {
   const [visible, setVisible] = useState(true);
 
@@ -99,13 +99,13 @@ export function AlertDismissibleDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [AlertDefaultDemo, 'Default', { description: `Plain alert with title and description — the baseline composition.` }],
+  [AlertDefaultDemo, 'Default', { description: `Plain alert with title and description, the baseline composition.` }],
   [AlertVariantsDemo, 'Variants', { description: `All five semantic variants stacked, each with matching icon and copy.` }],
-  [AlertWithIconDemo, 'With Icon', { description: `Error alert with a leading icon — compose AlertIcon before the text slots.` }],
-  [AlertDismissibleDemo, 'Dismissible', { description: `Alert with a dismiss button — controlled visibility via useState.` }],
+  [AlertWithIconDemo, 'With Icon', { description: `Error alert with a leading icon, compose AlertIcon before the text slots.` }],
+  [AlertDismissibleDemo, 'Dismissible', { description: `Alert with a dismiss button, controlled visibility via useState.` }],
 ]);
 export const accessibility: readonly string[] = [
   `Root carries \`role="alert"\` so live-region announcements fire on mount.`,
-  `\`AlertTitle\` and \`AlertDescription\` are sibling elements — AT reads them as one block.`,
+  `\`AlertTitle\` and \`AlertDescription\` are sibling elements, AT reads them as one block.`,
   `Icon inside \`AlertIcon\` is marked \`aria-hidden\`; the text content carries the meaning.`,
 ];

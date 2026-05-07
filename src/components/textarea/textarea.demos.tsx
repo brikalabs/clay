@@ -31,7 +31,7 @@ export function TextareaDisabledDemo() {
   );
 }
 
-/** Validation error state — aria-invalid triggers the destructive border. */
+/** Validation error state, aria-invalid triggers the destructive border. */
 export function TextareaInvalidDemo() {
   return (
     <div className="w-full max-w-sm flex flex-col gap-1">
@@ -65,12 +65,12 @@ export const demoMeta = defineDemos([
   [TextareaDefaultDemo, 'Default', { description: `Multi-line text input in its default auto-sizing state.` }],
   [TextareaRowsDemo, 'Rows', { description: `Fixed height using the rows attribute.` }],
   [TextareaDisabledDemo, 'Disabled', { description: `Disabled textarea blocks interaction and reduces opacity.` }],
-  [TextareaInvalidDemo, 'Invalid', { description: `Validation error state — aria-invalid triggers the destructive border.` }],
+  [TextareaInvalidDemo, 'Invalid', { description: `Validation error state, aria-invalid triggers the destructive border.` }],
   [TextareaControlledDemo, 'Controlled', { description: `Controlled textarea showing a live character counter.` }],
 ]);
 export const accessibility: readonly string[] = [
   `Always associate with a \`<Label>\` via matching \`id\` / \`htmlFor\`.`,
   `\`aria-invalid="true"\` triggers the destructive ring; pair with a visible error message via \`aria-describedby\`.`,
-  `Disabled textareas are removed from the tab order — use \`readOnly\` when content must stay focusable.`,
+  `Disabled textareas are removed from the tab order, use \`readOnly\` when content must stay focusable.`,
   `Character count readouts should be linked via \`aria-describedby\` so AT announces remaining characters.`,
 ];

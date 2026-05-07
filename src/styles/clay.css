@@ -11,10 +11,10 @@
  * at compile time and emits `:root` defaults, dark-mode overrides,
  * `[data-theme="X"]` blocks for every preset, and the `theme.extend`
  * config that turns `bg-slider-fill`, `rounded-slider`, etc. into real
- * utilities. There are no generated CSS files — the TypeScript registry
+ * utilities. There are no generated CSS files, the TypeScript registry
  * is the only source of truth.
  *
- * Components no longer ship per-file CSS — every token-driven property
+ * Components no longer ship per-file CSS, every token-driven property
  * is composed inline in each `.tsx` via Tailwind v4 arbitrary-class
  * syntax (`(--token)`, `(length:--token)`, `[prop:var(--token)]`).
  * Cross-cutting utilities live in `./utilities.css`.

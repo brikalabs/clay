@@ -13,7 +13,7 @@ import {
 } from '@brika/clay/components/popover';
 import { defineDemos } from '../_registry';
 
-/** Filter panel inside a popover — typical pattern for inline form controls. */
+/** Filter panel inside a popover, typical pattern for inline form controls. */
 export function PopoverDefaultDemo() {
   return (
     <Popover>
@@ -82,12 +82,12 @@ export function PopoverAlignDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [PopoverDefaultDemo, 'Default', { description: `Filter panel inside a popover — typical pattern for inline form controls.` }],
+  [PopoverDefaultDemo, 'Default', { description: `Filter panel inside a popover, typical pattern for inline form controls.` }],
   [PopoverSidesDemo, 'Sides', { description: `The side prop controls which edge of the trigger the popover appears on.` }],
   [PopoverAlignDemo, 'Align', { description: `The align prop pins the content to the start, center, or end of the trigger.` }],
 ]);
 export const accessibility: readonly string[] = [
-  `Focus moves into the popover when it opens — Tab navigates within it.`,
+  `Focus moves into the popover when it opens, Tab navigates within it.`,
   `Escape and clicking outside close the popover and return focus to the trigger.`,
   `Use \`Popover\` over \`HoverCard\` when content must be keyboard-reachable.`,
   `The trigger carries \`aria-expanded\` and \`aria-controls\` pointing to the panel.`,

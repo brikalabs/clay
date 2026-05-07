@@ -74,7 +74,7 @@ function MenubarItem({
 }: React.ComponentProps<typeof MenubarPrimitive.Item> & {
   /** When `true`, adds extra leading padding to align with icon items. */
   inset?: boolean;
-  /** `"default"` or `"destructive"` — destructive renders in red. */
+  /** `"default"` or `"destructive"`, destructive renders in red. */
   variant?: 'default' | 'destructive';
 }) {
   return (

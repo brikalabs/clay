@@ -27,7 +27,7 @@ describe('defineDemos', () => {
 
   test('preserves identity of the function reference (not its name)', () => {
     // The whole point of carrying `fn` instead of `fn.name` is that the docs
-    // registry reverse-looks-up the export name from the module namespace —
+    // registry reverse-looks-up the export name from the module namespace,
     // bundler-mangled `fn.name` would have broken that lookup.
     const [entry] = defineDemos([[ExampleDemo, 'Default']]);
     expect(entry?.fn).toBe(ExampleDemo);

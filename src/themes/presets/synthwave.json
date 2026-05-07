@@ -1,7 +1,7 @@
 {
   "id": "synthwave",
   "name": "Synthwave",
-  "description": "Hot magenta on midnight purple. Glowing headlines, sharp edges — Miami Vice / Outrun energy.",
+  "description": "Hot magenta on midnight purple. Glowing headlines, sharp edges, Miami Vice / Outrun energy.",
   "accentSwatches": ["#ff2e9a", "#00f5ff", "#9d4edd", "#fcbf49"],
   "colors": {
     "light": {

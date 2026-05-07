@@ -1,5 +1,5 @@
 /**
- * Unit tests for `defineComponent` — the public entry point components
+ * Unit tests for `defineComponent`, the public entry point components
  * use to register their Layer-2 tokens.
  *
  * `defineComponent` returns the produced `TokenSpec[]` so we assert on

@@ -42,7 +42,7 @@
  *     },
  *   });
  *
- * @example  Toggle without text (Switch — two namespaces):
+ * @example  Toggle without text (Switch, two namespaces):
  *   defineComponent('switch', {
  *     radius:  { default: '9999px', alias: 'switch', description: 'Track radius.' },
  *     surface: true,                     // border + focus + motion + state, no padding/typography
@@ -301,14 +301,14 @@ const TYPE_TO_NAMESPACE: Partial<Record<TokenType, TailwindNamespace>> = {
 /**
  * Compact authoring shape for a single component-layer token slot.
  *
- *   default      — required CSS expression for `defaultLight`.
- *   description  — required one-sentence prose, surfaced in the docs site.
- *   defaultDark  — set when the dark-mode value differs.
- *   type         — override the name-suffix-based type inference.
- *   category     — override the type-derived category.
- *   namespace    — Tailwind namespace; auto-set for color/radius/shadow,
+ *   default     , required CSS expression for `defaultLight`.
+ *   description , required one-sentence prose, surfaced in the docs site.
+ *   defaultDark , set when the dark-mode value differs.
+ *   type        , override the name-suffix-based type inference.
+ *   category    , override the type-derived category.
+ *   namespace   , Tailwind namespace; auto-set for color/radius/shadow,
  *                  pass `'none'` (or omit) to suppress.
- *   alias        — Tailwind utility short name (`rounded-<alias>` etc.).
+ *   alias       , Tailwind utility short name (`rounded-<alias>` etc.).
  */
 export interface SlotInput {
   readonly default: string;
@@ -364,12 +364,12 @@ export interface ComponentDefinition {
   readonly radius?: SlotInput;
   /** Resting drop shadow / elevation. */
   readonly shadow?: SlotInput;
-  /** Backdrop-filter blur radius — for translucent surfaces (Card, Dialog, Popover, Sheet). */
+  /** Backdrop-filter blur radius, for translucent surfaces (Card, Dialog, Popover, Sheet). */
   readonly backdropBlur?: SlotInput;
 
   // ─── Multi-token bundles ────────────────────────────────────────
   /**
-   * Shortcut for `border + motion` — every interactive control surface
+   * Shortcut for `border + motion`, every interactive control surface
    * needs these. Pass `true` for a 0px resting border, or
    * `{ borderWidth: '1px' }` for a visible border on rest. When set,
    * the individual `border` / `motion` flags below are ignored.
@@ -386,10 +386,10 @@ export interface ComponentDefinition {
   readonly motion?: boolean;
 
   // ─── Sizing / typography (opt-in field-by-field) ────────────────
-  /** Sizing tokens — `height`, `paddingX`, `paddingY`, `gap`. Only set fields become tokens. */
+  /** Sizing tokens, `height`, `paddingX`, `paddingY`, `gap`. Only set fields become tokens. */
   readonly geometry?: GeometryDefaults;
   /**
-   * Text tokens — `fontFamily`, `fontSize`, `fontWeight`, `lineHeight`,
+   * Text tokens, `fontFamily`, `fontSize`, `fontWeight`, `lineHeight`,
    * `letterSpacing`, `textTransform`. Pass an object (even an empty one)
    * to opt into the full typography family; omit to skip every typography
    * token (e.g. Switch and Checkbox have no text inside).
@@ -398,7 +398,7 @@ export interface ComponentDefinition {
 
   // ─── Arbitrary named slots ──────────────────────────────────────
   /**
-   * Component-specific tokens — semantic colors (`filled-container`),
+   * Component-specific tokens, semantic colors (`filled-container`),
    * custom sizes (`track-width`, `thumb-size`), anything that doesn't
    * fit one of the conventional families above.
    */
@@ -453,7 +453,7 @@ function bundleTokens(m: ComponentMeta, def: ComponentDefinition): TokenSpec[] {
 
 /**
  * Build every Layer-2 CSS-variable token a component needs, in one
- * declarative call. Pure — no side effects. The component's `tokens.ts`
+ * declarative call. Pure, no side effects. The component's `tokens.ts`
  * exports the result; `tokens/components.ts` aggregates them.
  */
 export function defineComponent(name: string, def: ComponentDefinition): readonly TokenSpec[] {

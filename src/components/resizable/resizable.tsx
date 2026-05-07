@@ -6,7 +6,7 @@ import { Group, Panel, Separator } from 'react-resizable-panels';
 
 import { cn } from '../../primitives/cn';
 
-// Group sets flex-direction via inline style — no orientation CSS class needed.
+// Group sets flex-direction via inline style, no orientation CSS class needed.
 const ResizablePanelGroup = ({
   className,
   ...props

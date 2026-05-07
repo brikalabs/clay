@@ -1,5 +1,5 @@
 /**
- * Cross-cutting utilities — focus ring, safe-area padding, and the
+ * Cross-cutting utilities, focus ring, safe-area padding, and the
  * static `corner-*` keyword utilities. Per-component CSS no longer
  * exists; component-specific properties are composed inline in each
  * component's `.tsx` via Tailwind v4 arbitrary-class syntax.
@@ -18,7 +18,7 @@
 }
 
 /* ─────────────────────────────────────────────────────────────
-   CORNER SHAPE — THEMED
+   CORNER SHAPE, THEMED
    `corner-themed` reads the theme's global `--corner-shape` (with a
    `round` fallback) and is set on every Clay surface that wants to
    pick up the active geometry. Pair with `rounded-*` so the property
@@ -32,7 +32,7 @@
    SAFE-AREA PADDING
    Scales with both `--spacing` (density) and `--radius` (corner arc)
    so containers feel right on any theme and text never hugs a curve.
-   Formula: `max(spacing*N, radius*K)` — the spacing term mirrors the
+   Formula: `max(spacing*N, radius*K)`, the spacing term mirrors the
    classic Tailwind step (p-6 for `p-safe`, p-2 for `-md`, p-1 for
    `-sm`), the radius term takes over once corners get large enough to
    bite into content.
@@ -48,7 +48,7 @@
   padding: max(calc(var(--spacing, 0.25rem) * 1), calc(var(--radius, 0.5rem) * 0.3));
 }
 
-/* Mid-floor safe padding — for small tiles and preview headers that sit
+/* Mid-floor safe padding, for small tiles and preview headers that sit
    inside a rounded surface. `p-2` floor at default density. */
 @utility p-safe-md {
   padding: max(calc(var(--spacing, 0.25rem) * 2), calc(var(--radius, 0.5rem) * 0.6));

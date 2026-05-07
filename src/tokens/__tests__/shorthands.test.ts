@@ -25,7 +25,7 @@ const ALLOWED_PROPERTIES = new Set([
   'backdrop-filter',
 ]);
 
-describe('buildShorthandIndex — registry walker', () => {
+describe('buildShorthandIndex, registry walker', () => {
   test('emits a single .button rule with every per-component property', () => {
     const rule = SHORTHANDS['button'];
     expect(rule).toBeDefined();
@@ -96,7 +96,7 @@ describe('buildShorthandIndex — registry walker', () => {
       mkToken('demo', 'demo-border-style', 'border-style', 'border'),
       mkToken('demo', 'demo-font-weight', 'font-weight', 'typography'),
       mkToken('demo', 'demo-backdrop-blur', 'blur', 'elevation'),
-      // Slot tokens with no recognized suffix — must NOT appear.
+      // Slot tokens with no recognized suffix, must NOT appear.
       mkToken('demo', 'demo-filled-container', 'color', 'color'),
       mkToken('demo', 'demo-radius', 'radius', 'geometry'),
       mkToken('demo', 'demo-shadow', 'shadow', 'elevation'),
@@ -128,7 +128,7 @@ describe('buildShorthandIndex — registry walker', () => {
   });
 });
 
-describe('SHORTHAND_INDEX.tokenRefs — :root coverage', () => {
+describe('SHORTHAND_INDEX.tokenRefs, :root coverage', () => {
   test('every referenced token is a real registry token', () => {
     expect(TOKEN_REFS.size).toBeGreaterThan(0);
     for (const name of TOKEN_REFS) {
@@ -165,14 +165,14 @@ describe('SHORTHAND_INDEX.tokenRefs — :root coverage', () => {
   });
 });
 
-describe('cn() / twMerge interaction — shorthand survives, overrides win', () => {
+describe('cn() / twMerge interaction, shorthand survives, overrides win', () => {
   test.each([
     ['button', 'h-10'],
     ['button', 'duration-300'],
     ['button', 'text-sm'],
     ['button', 'border-2'],
     ['card', 'backdrop-blur-md'],
-  ])('keeps %s alongside %s — different layers, both survive', (shorthand, util) => {
+  ])('keeps %s alongside %s, different layers, both survive', (shorthand, util) => {
     expect(cn(shorthand, util).split(' ')).toEqual([shorthand, util]);
   });
 

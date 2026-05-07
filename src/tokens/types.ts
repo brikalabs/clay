@@ -28,7 +28,7 @@ export type TokenLayer = 'scalar' | 'role' | 'component';
  * Coarse visual category used to group tokens in docs tables and theme
  * sub-trees. Multiple `TokenType`s can share a category (e.g. `border-width`
  * and `border-style` both belong to `border`). Adding a new type rarely
- * requires a new category — categories are about how docs READ, types are
+ * requires a new category, categories are about how docs READ, types are
  * about what the value IS.
  */
 export type TokenCategory =
@@ -43,7 +43,7 @@ export type TokenCategory =
 
 /**
  * Granular value type. Tells a consumer exactly what shape of value the
- * token holds — useful for runtime validation, auto-complete in theme
+ * token holds, useful for runtime validation, auto-complete in theme
  * editors, generating typed override APIs, and rendering preview swatches.
  *
  * Inferred from the token name's suffix in the great majority of cases
@@ -52,11 +52,11 @@ export type TokenCategory =
  * level color tokens) set `type` explicitly.
  *
  * Add a new type when adding a new PRIMITIVE value-shape (gradient, filter,
- * cubic-bezier alias, etc.) — not for every new component.
+ * cubic-bezier alias, etc.), not for every new component.
  */
 export type TokenType =
   | 'color'
-  | 'size' // height, width, gap, padding, offset — generic length
+  | 'size' // height, width, gap, padding, offset, generic length
   | 'radius' // corner radius
   | 'border-width' // explicit border / outline / ring thickness
   | 'border-style' // solid / dashed / double / none
@@ -87,7 +87,7 @@ export type TokenType =
  *   `opacity` → `opacity-<name>` and color modifier `<class>/<name>`
  *   `blur`    → `blur-<name>` / `backdrop-blur-<name>`
  *   `default` → bare name; Tailwind picks up `--default-*-width` etc.
- *   `none`    — token is consumed only by component CSS, not as a utility.
+ *   `none`   , token is consumed only by component CSS, not as a utility.
  */
 export type TailwindNamespace =
   | 'color'
@@ -104,43 +104,43 @@ export type TailwindNamespace =
 /**
  * One token in the registry, as authored.
  *
- *   name           — CSS custom property minus the leading `--`.
+ *   name          , CSS custom property minus the leading `--`.
  *                    e.g. `'button-radius'` for `--button-radius`.
  *
- *   layer          — `'scalar'` | `'role'` | `'component'`.
+ *   layer         , `'scalar'` | `'role'` | `'component'`.
  *
- *   category       — coarse grouping for docs (color / geometry / border /
+ *   category      , coarse grouping for docs (color / geometry / border /
  *                    typography / elevation / focus / motion / state).
  *
- *   type           — OPTIONAL granular value type. When omitted, derived
+ *   type          , OPTIONAL granular value type. When omitted, derived
  *                    from `name` via `inferTokenType` (see `./infer.ts`).
  *                    Set explicitly only when the name doesn't follow the
  *                    suffix convention (Layer-0 scalars, role-level color
  *                    tokens whose name doesn't suffix-match).
  *
- *   appliesTo      — required when `layer === 'component'`. Identifies which
+ *   appliesTo     , required when `layer === 'component'`. Identifies which
  *                    component owns the token. Multiple specs may share an
  *                    `appliesTo` (e.g. button has many tokens).
  *
- *   defaultLight   — value used in light mode when no theme overrides.
+ *   defaultLight  , value used in light mode when no theme overrides.
  *
- *   defaultDark    — light-mode value remains in effect when omitted.
+ *   defaultDark   , light-mode value remains in effect when omitted.
  *
- *   description    — one-sentence prose. Shown in docs tables.
+ *   description   , one-sentence prose. Shown in docs tables.
  *
- *   themePath      — dotted camelCase path inside `ThemeConfig` that targets
+ *   themePath     , dotted camelCase path inside `ThemeConfig` that targets
  *                    this token. Omitted for derived tokens that have no
  *                    direct theme entry.
  *
- *   tailwindNamespace — if set, codegen emits this token in `@theme inline`
+ *   tailwindNamespace, if set, codegen emits this token in `@theme inline`
  *                    so it becomes a Tailwind utility; see `TailwindNamespace`.
  *
- *   utilityAlias   — name registered with the namespace, defaulting to
+ *   utilityAlias  , name registered with the namespace, defaulting to
  *                    `name`. Set when the utility name differs from the var
  *                    name (e.g. `--motion-instant-duration` →
  *                    `duration-instant`).
  *
- *   lineHeight     — companion line-height for `text-*` size tokens.
+ *   lineHeight    , companion line-height for `text-*` size tokens.
  *                    When set, the plugin emits a paired
  *                    `--<name>--line-height` declaration alongside the
  *                    size so Tailwind v4's `text-*` utility resolves

@@ -43,7 +43,7 @@ function ContextMenuItem({
 }: React.ComponentProps<typeof ContextMenuPrimitive.Item> & {
   /** When `true`, adds extra leading padding to align with items that have icons. */
   inset?: boolean;
-  /** `"default"` or `"destructive"` — destructive renders in red. */
+  /** `"default"` or `"destructive"`, destructive renders in red. */
   variant?: 'default' | 'destructive';
 }) {
   return (

@@ -24,7 +24,7 @@ function slugToPrefix(slug: string): string {
 
 // Extract the title from a function name by removing the component prefix and "Demo" suffix
 // e.g. ButtonVariantsDemo, prefix=Button → "Variants"
-// e.g. DropdownMenuCheckboxDemo, prefix=DropdownMenu → "Checkboxes" — we just split camelCase
+// e.g. DropdownMenuCheckboxDemo, prefix=DropdownMenu → "Checkboxes", we just split camelCase
 function nameToTitle(fnName: string, prefix: string): string {
   const noDemo = fnName.endsWith('Demo') ? fnName.slice(0, -4) : fnName;
   const noPrefix = noDemo.startsWith(prefix) ? noDemo.slice(prefix.length) : noDemo;
@@ -84,7 +84,7 @@ function extractReturnCode(body: string): string {
       i++;
     }
   }
-  // return <JSX>; — single-expression return (last occurrence)
+  // return <JSX>;, single-expression return (last occurrence)
   const lastReturn = body.lastIndexOf('return ');
   if (lastReturn !== -1) {
     const tail = body.slice(lastReturn + 7).replace(/;\s*$/, '').trim();

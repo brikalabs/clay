@@ -1,5 +1,5 @@
 /**
- * Slider — a native range input rendered over a custom track with
+ * Slider, a native range input rendered over a custom track with
  * optional tick dots and labels. Pure track primitive: pair with
  * {@link SliderValue} (or any other readout) when a numeric display is
  * needed. Single source of truth for `value` / `onChange`.
@@ -10,16 +10,16 @@ import { cn } from '../../primitives/cn';
 
 /**
  * Tick dot configuration:
- * - `true` — one dot at every `step` between min and max
- * - a number — one dot every N units (custom interval, independent of step)
- * - an array — explicit positions (preset anchors)
+ * - `true`, one dot at every `step` between min and max
+ * - a number, one dot every N units (custom interval, independent of step)
+ * - an array, explicit positions (preset anchors)
  */
 type SliderTicks = boolean | number | readonly number[];
 
 /**
  * Tick label configuration:
- * - `true` — render the raw tick value
- * - a function — render whatever node it returns
+ * - `true`, render the raw tick value
+ * - a function, render whatever node it returns
  */
 type SliderTickLabels = boolean | ((value: number) => ReactNode);
 
@@ -202,7 +202,7 @@ export function Slider({
 }
 
 /**
- * SliderValue — the boxed numeric readout / input that pairs with
+ * SliderValue, the boxed numeric readout / input that pairs with
  * {@link Slider}. Bind both to the same `value` / `onChange`.
  */
 export function SliderValue({

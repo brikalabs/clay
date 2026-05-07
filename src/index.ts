@@ -1,5 +1,5 @@
 /**
- * @brika/clay — Brika's React component library and first-party themes.
+ * @brika/clay, Brika's React component library and first-party themes.
  *
  * Public barrel. For tree-shakeable consumption import from the granular
  * paths (`@brika/clay/components/button`); use this barrel when you want

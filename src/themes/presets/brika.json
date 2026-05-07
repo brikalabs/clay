@@ -1,7 +1,7 @@
 {
   "id": "brika",
   "name": "Brika",
-  "description": "Brika classic — balanced blue, neutral greys.",
+  "description": "Brika classic, balanced blue, neutral greys.",
   "accentSwatches": ["#4a63d1", "#35924a", "#c78a2b", "#c4422d"],
   "colors": {
     "light": {

@@ -1,7 +1,7 @@
 /**
  * Docs-side composition of the component catalogue.
  *
- * Everything is auto-discovered via import.meta.glob — no hardcoded lists:
+ * Everything is auto-discovered via import.meta.glob, no hardcoded lists:
  *
  *   src/components/<slug>/meta.ts          → component identity, group, description, externalDocs
  *   src/components/<slug>/<slug>.demos.tsx → runnable demos, demoMeta, accessibility, tokens

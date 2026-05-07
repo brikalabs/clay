@@ -21,7 +21,7 @@ export function TooltipDefaultDemo() {
   );
 }
 
-/** Control open delay with delayDuration on the provider — 0 makes it instant. */
+/** Control open delay with delayDuration on the provider, 0 makes it instant. */
 export function TooltipDelayDemo() {
   return (
     <div className="flex items-center gap-4">
@@ -90,13 +90,13 @@ export function TooltipSidesDemo() {
 
 export const demoMeta = defineDemos([
   [TooltipDefaultDemo, 'Default', { description: `Wrap any element with TooltipTrigger inside a TooltipProvider to add a tooltip.` }],
-  [TooltipDelayDemo, 'Delay', { description: `Control open delay with delayDuration on the provider — 0 makes it instant.` }],
+  [TooltipDelayDemo, 'Delay', { description: `Control open delay with delayDuration on the provider, 0 makes it instant.` }],
   [TooltipDisabledElementDemo, 'Disabled Element', { description: `Wrap a disabled button in a focusable span so hover events reach the tooltip.` }],
   [TooltipSidesDemo, 'Sides', { description: `Side and sideOffset control where the tooltip appears relative to its trigger.` }],
 ]);
 export const accessibility: readonly string[] = [
-  `Tooltips open on both hover and keyboard focus — use for supplementary info, not required instructions.`,
-  `Never place interactive elements inside a \`TooltipContent\` — use \`Popover\` instead.`,
+  `Tooltips open on both hover and keyboard focus, use for supplementary info, not required instructions.`,
+  `Never place interactive elements inside a \`TooltipContent\`, use \`Popover\` instead.`,
   `\`delayDuration={0}\` on the provider makes tooltips instant, which helps keyboard-only users.`,
   `Wrap disabled buttons in a focusable \`<span tabIndex={0}>\` so the tooltip fires on focus.`,
 ];

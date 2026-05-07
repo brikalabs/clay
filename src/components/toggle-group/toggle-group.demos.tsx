@@ -2,7 +2,7 @@ import { ToggleGroup, ToggleGroupItem } from '@brika/clay/components/toggle-grou
 import { AlignCenter, AlignLeft, AlignRight, Bold, Italic, Underline } from 'lucide-react';
 import { defineDemos } from '../_registry';
 
-/** Single-selection alignment picker — only one item active at a time. */
+/** Single-selection alignment picker, only one item active at a time. */
 export function ToggleGroupDefaultDemo() {
   return (
     <ToggleGroup type="single" defaultValue="center">
@@ -19,7 +19,7 @@ export function ToggleGroupDefaultDemo() {
   );
 }
 
-/** Multiple-selection formatting group — any combination can be active. */
+/** Multiple-selection formatting group, any combination can be active. */
 export function ToggleGroupMultipleDemo() {
   return (
     <ToggleGroup type="multiple" variant="outline">
@@ -36,7 +36,7 @@ export function ToggleGroupMultipleDemo() {
   );
 }
 
-/** Text-label items — suitable for view switchers and segmented controls. */
+/** Text-label items, suitable for view switchers and segmented controls. */
 export function ToggleGroupTextDemo() {
   return (
     <ToggleGroup type="single" defaultValue="week" variant="outline">
@@ -73,9 +73,9 @@ export function ToggleGroupVerticalDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [ToggleGroupDefaultDemo, 'Default', { description: `Single-selection alignment picker — only one item active at a time.` }],
-  [ToggleGroupMultipleDemo, 'Multiple', { description: `Multiple-selection formatting group — any combination can be active.` }],
-  [ToggleGroupTextDemo, 'Text', { description: `Text-label items — suitable for view switchers and segmented controls.` }],
+  [ToggleGroupDefaultDemo, 'Default', { description: `Single-selection alignment picker, only one item active at a time.` }],
+  [ToggleGroupMultipleDemo, 'Multiple', { description: `Multiple-selection formatting group, any combination can be active.` }],
+  [ToggleGroupTextDemo, 'Text', { description: `Text-label items, suitable for view switchers and segmented controls.` }],
   [ToggleGroupDisabledDemo, 'Disabled', { description: `Individual items can be disabled while the rest remain interactive.` }],
   [ToggleGroupVerticalDemo, 'Vertical', { description: `Vertical orientation stacks items top-to-bottom with shared dividers.` }],
 ]);
@@ -83,5 +83,5 @@ export const accessibility: readonly string[] = [
   `Arrow keys navigate between items within the group; Space toggles the focused item.`,
   `\`type="single"\` enforces one active item at a time; \`type="multiple"\` allows combinations.`,
   `Icon-only items require \`aria-label\` on each \`ToggleGroupItem\`.`,
-  `The group wrapper carries \`role="group"\` — add \`aria-label\` to describe the group's purpose.`,
+  `The group wrapper carries \`role="group"\`, add \`aria-label\` to describe the group's purpose.`,
 ];

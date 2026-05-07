@@ -29,7 +29,7 @@ export function InputOTPDefaultDemo() {
   );
 }
 
-/** Four-slot PIN entry without a separator — suitable for numeric PINs. */
+/** Four-slot PIN entry without a separator, suitable for numeric PINs. */
 export function InputOTPPatternDemo() {
   return (
     <InputOTP maxLength={4}>
@@ -43,7 +43,7 @@ export function InputOTPPatternDemo() {
   );
 }
 
-/** Digits-only input using the REGEXP_ONLY_DIGITS pattern — rejects letters and symbols. */
+/** Digits-only input using the REGEXP_ONLY_DIGITS pattern, rejects letters and symbols. */
 export function InputOTPNumericDemo() {
   return (
     <InputOTP maxLength={6} pattern={REGEXP_ONLY_DIGITS}>
@@ -59,7 +59,7 @@ export function InputOTPNumericDemo() {
   );
 }
 
-/** Six-digit OTP with a muted dot placeholder in each empty, inactive slot — visual cue that vanishes on focus or fill. */
+/** Six-digit OTP with a muted dot placeholder in each empty, inactive slot, visual cue that vanishes on focus or fill. */
 export function InputOTPPlaceholderDemo() {
   return (
     <InputOTP maxLength={6}>
@@ -112,13 +112,13 @@ export function InputOTPControlledDemo() {
 
 export const demoMeta = defineDemos([
   [InputOTPDefaultDemo, 'Default', { description: `Six-digit OTP split into two groups of three with a dash separator.` }],
-  [InputOTPPatternDemo, 'Pattern', { description: `Four-slot PIN entry without a separator — suitable for numeric PINs.` }],
-  [InputOTPNumericDemo, 'Numeric', { description: `Digits-only input using the REGEXP_ONLY_DIGITS pattern — rejects letters and symbols.` }],
-  [InputOTPPlaceholderDemo, 'Placeholder', { description: `Muted dot placeholder in each empty slot — fades out on focus or fill.` }],
+  [InputOTPPatternDemo, 'Pattern', { description: `Four-slot PIN entry without a separator, suitable for numeric PINs.` }],
+  [InputOTPNumericDemo, 'Numeric', { description: `Digits-only input using the REGEXP_ONLY_DIGITS pattern, rejects letters and symbols.` }],
+  [InputOTPPlaceholderDemo, 'Placeholder', { description: `Muted dot placeholder in each empty slot, fades out on focus or fill.` }],
   [InputOTPControlledDemo, 'Controlled', { description: `Controlled OTP that shows a Verify button only once all six slots are filled.` }],
 ]);
 export const accessibility: readonly string[] = [
-  `Paste works out-of-the-box — pasting a code fills all slots.`,
+  `Paste works out-of-the-box, pasting a code fills all slots.`,
   `A single hidden \`<input>\` handles the value; each visible slot is a presentation of that input's characters.`,
   `The active slot gets a focus ring matching the input's focus state.`,
   `Numeric-only patterns should use \`inputMode="numeric"\` to bring up the numeric keyboard on mobile.`,

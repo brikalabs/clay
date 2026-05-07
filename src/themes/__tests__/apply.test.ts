@@ -90,7 +90,7 @@ describe('resetThemeVars', () => {
     expect(document.getElementById(STYLE_TAG_ID)).toBeNull();
   });
 
-  test('is idempotent — second call is a no-op', () => {
+  test('is idempotent, second call is a no-op', () => {
     resetThemeVars();
     resetThemeVars();
     expect(document.getElementById(STYLE_TAG_ID)).toBeNull();

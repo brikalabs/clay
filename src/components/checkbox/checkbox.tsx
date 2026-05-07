@@ -23,9 +23,9 @@ function Checkbox({
 }: React.ComponentProps<typeof CheckboxPrimitive.Root> & {
   /**
    * Preset edge length for the box.
-   * - `sm` — `size-3.5`
-   * - `default` — `size-4`
-   * - `lg` — `size-5`
+   * - `sm`, `size-3.5`
+   * - `default`, `size-4`
+   * - `lg`, `size-5`
    */
   size?: 'sm' | 'default' | 'lg';
   /** Additional Tailwind / utility classes merged with the base recipe. */

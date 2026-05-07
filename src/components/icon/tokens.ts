@@ -1,7 +1,7 @@
 /**
  * Layer-2 tokens for Icon. Includes the bare `--icon` color token (no
  * slot suffix) which falls outside `defineComponent`'s `<name>-<slot>`
- * convention — appended hand-authored at the end of the array.
+ * convention, appended hand-authored at the end of the array.
  */
 
 import { defineComponent } from '../../tokens/define';
@@ -17,7 +17,7 @@ export const tokens: readonly TokenSpec[] = [
       },
     },
   }),
-  // `--icon` (no suffix) — bare token for the default icon color.
+  // `--icon` (no suffix), bare token for the default icon color.
   {
     name: 'icon',
     layer: 'component',

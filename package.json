@@ -1,7 +1,7 @@
 {
   "name": "@brika/clay",
   "version": "0.0.1",
-  "description": "Clay — Brika Labs' React component library, token system, and first-party themes",
+  "description": "Clay, Brika Labs' React component library, token system, and first-party themes",
   "type": "module",
   "license": "MIT",
   "author": "BRIKA Team",

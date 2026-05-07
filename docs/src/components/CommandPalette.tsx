@@ -126,7 +126,7 @@ export function CommandPalette() {
       onClose={() => setOpen(false)}
       className="hidden backdrop:bg-black/40 backdrop:backdrop-blur-sm open:fixed open:inset-0 open:z-50 open:m-0 open:flex open:max-h-none open:min-h-screen open:w-screen open:min-w-full open:max-w-none open:items-start open:justify-center open:rounded-none open:border-0 open:bg-transparent open:p-0 open:px-4 open:pt-[15vh]"
     >
-      {/* Backdrop close — a real <button> filling the dialog so click-
+      {/* Backdrop close, a real <button> filling the dialog so click-
           outside dismisses without putting a click handler on the
           (lint-considered-non-interactive) <dialog> itself. */}
       <button

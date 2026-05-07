@@ -21,7 +21,7 @@ const buttonVariants = cva(
       size: {
         default: 'has-[>svg]:px-3',
         // `size-N` loses to the `button` bundle's `height` because the
-        // bundle sorts AFTER size-* in Tailwind v4's utilities layer —
+        // bundle sorts AFTER size-* in Tailwind v4's utilities layer,
         // use `h-N w-N` for icon variants and `py-0` everywhere fixed-
         // height variants want to defeat the bundle's `padding-block`.
         xs: "h-6 gap-1 rounded-button px-2 py-0 text-xs has-[>svg]:px-1.5 [&_svg:not([class*='size-'])]:size-3",

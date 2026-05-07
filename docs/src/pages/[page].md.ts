@@ -2,7 +2,7 @@ import type { APIContext, GetStaticPaths } from 'astro';
 import { markdownResponse } from '~/lib/component-markdown';
 
 /**
- * Component pages are handled separately by `components/[slug].md.ts` —
+ * Component pages are handled separately by `components/[slug].md.ts`,
  * they have no `.mdx` source.
  */
 

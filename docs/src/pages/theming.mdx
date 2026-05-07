@@ -74,15 +74,15 @@ import CodeSource from "~/components/docs/CodeSource.astro";
     small set of rules. The `/tokens` reference shows the exact path → var
     mapping for each entry, but the rules are:
 
-    - `colors.light.<name>` and `colors.dark.<name>` — `<name>` is a
+    - `colors.light.<name>` and `colors.dark.<name>`, `<name>` is a
       kebab-case CSS var. Both `--<name>` and `--color-<name>` are emitted.
-    - `geometry.<prop>` — looks up a static map (`fontSans` →
+    - `geometry.<prop>`, looks up a static map (`fontSans` →
       `--font-sans`, `radius` → `--radius`, etc.).
-    - `borders.<prop>` — `--border-width`, `--border-style`.
-    - `motion.<prop>` — `--motion-duration`, `--motion-easing`.
-    - `focus.<prop>` — note the rename: `focus.width` →
+    - `borders.<prop>`, `--border-width`, `--border-style`.
+    - `motion.<prop>`, `--motion-duration`, `--motion-easing`.
+    - `focus.<prop>`, note the rename: `focus.width` →
       `--ring-width`, `focus.offset` → `--ring-offset`.
-    - `components.<name>.<prop>` — `<name>` is kebab-case (`switch-thumb`),
+    - `components.<name>.<prop>`, `<name>` is kebab-case (`switch-thumb`),
       `<prop>` is camelCase (`outlineLabel` → `outline-label`).
       The walker emits `--<name>-<kebab(prop)>`.
   </div>
@@ -104,7 +104,7 @@ import CodeSource from "~/components/docs/CodeSource.astro";
     `applyTheme(theme)` injects a single `<style id="clay-theme">` tag
     into `document.head` containing both the `:root` light defaults and a
     `:is(.dark, [data-mode="dark"]):root` block for dark overrides.
-    Toggling `data-mode` afterwards costs nothing — the dark block
+    Toggling `data-mode` afterwards costs nothing, the dark block
     activates via CSS, no JS re-run. SSR-safe: returns a no-op cleanup
     when `document` is undefined.
   </div>
@@ -122,12 +122,12 @@ cleanup();`} />
 
   <div class="clay-prose mt-6 mb-6">
     For a scoped preview without affecting the rest of the document, use
-    `themeToCssVars(theme, mode)` — it returns a React `style`-prop object
+    `themeToCssVars(theme, mode)`, it returns a React `style`-prop object
     you can spread on a single subtree.
   </div>
 
   <div class="clay-prose mt-6 mb-6">
-    The cleanest way to scope a theme is the `<ThemeScope>` component —
+    The cleanest way to scope a theme is the `<ThemeScope>` component,
     no hand-rolled `<div style={...}>`, and by default no extra layout
     box (it uses `display: contents` so the wrapper never affects the
     layout tree).
@@ -141,8 +141,8 @@ cleanup();`} />
 </ThemeScope>`} />
 
   <div class="clay-prose mt-6 mb-6">
-    For *zero-DOM* theming — when you don't even want the
-    `display: contents` wrapper — pass `asChild` and a single child
+    For *zero-DOM* theming, when you don't even want the
+    `display: contents` wrapper, pass `asChild` and a single child
     element. The theme's CSS variables are merged onto the child via
     Radix Slot, so the rendered tree is exactly the child you wrote.
   </div>
@@ -165,7 +165,7 @@ cleanup();`} />
 
   <div class="clay-prose mt-6 mb-6">
     <strong>Scope leak resistance.</strong> Both `<ThemeScope>` and
-    `themeToCssVars` produce a *complete* CSS-variable map — every
+    `themeToCssVars` produce a *complete* CSS-variable map, every
     registry default plus the theme's overrides. So a scoped preview
     never inherits a token from a globally-applied theme, even if
     `applyTheme` redefined the same token at `:root`. This is what lets
@@ -243,7 +243,7 @@ cleanup();`} />
     Render the same stylesheet during HTML generation with
     `renderThemeStyleSheet(theme)` and embed it in a `<style>` tag in the
     document `<head>`. The client then mounts and calls `applyTheme`,
-    which finds the existing tag and updates its content idempotently —
+    which finds the existing tag and updates its content idempotently,
     no flash of unstyled content.
   </div>
 </section>
@@ -262,7 +262,7 @@ cleanup();`} />
 
   <div class="clay-prose mb-6">
     `@brika/clay/themes` re-exports each preset by name. Importing one
-    pulls just that JSON into your bundle — every other preset is dropped
+    pulls just that JSON into your bundle, every other preset is dropped
     by tree-shaking:
 
     ```ts
@@ -278,7 +278,7 @@ cleanup();`} />
     import { builtInThemes, builtInThemesById } from '@brika/clay/themes/registry';
     ```
 
-    Same `ThemeConfig` shape, same narrative order — just isolated to a
+    Same `ThemeConfig` shape, same narrative order, just isolated to a
     chunk you only load when you actually need to enumerate themes.
   </div>
 </section>
@@ -297,7 +297,7 @@ cleanup();`} />
 
   <div class="clay-prose mb-6">
     Clay never touches `localStorage`, cookies, or any other persistence
-    layer. Storage policy belongs to the app — your auth context, your
+    layer. Storage policy belongs to the app, your auth context, your
     user-prefs API, your SSR cookies, your privacy stance. Clay just
     exposes `applyTheme` and `builtInThemesById` and leaves the rest
     to you.
@@ -338,7 +338,7 @@ function readStoredId(): string {
 export function ClayThemeProvider({ children }: { children: ReactNode }) {
   const [themeId, setThemeIdState] = useState<string>(DEFAULT_ID);
 
-  // Read once on mount — keeps SSR output deterministic.
+  // Read once on mount, keeps SSR output deterministic.
   useEffect(() => {
     setThemeIdState(readStoredId());
   }, []);
@@ -356,7 +356,7 @@ export function ClayThemeProvider({ children }: { children: ReactNode }) {
     try {
       localStorage.setItem(STORAGE_KEY, id);
     } catch {
-      /* storage unavailable — in-memory only */
+      /* storage unavailable, in-memory only */
     }
   }, []);
 
@@ -381,20 +381,20 @@ export function useClayTheme() {
     The provider above resolves the saved id inside `useEffect`, which
     runs *after* hydration. A returning visitor whose saved theme is not
     `default` therefore sees Clay's default for one frame before the
-    real theme paints. There's no single fix — the right strategy
+    real theme paints. There's no single fix, the right strategy
     depends on whether your host can read the request before responding.
     Three options, in order of preference:
   </div>
 
   <h4 id="persist-flash-ssr" class="mt-8 mb-2 font-display text-lg text-clay-strong">
-    Option A — read it on the server <span class="text-clay-inactive">(recommended)</span>
+    Option A, read it on the server <span class="text-clay-inactive">(recommended)</span>
   </h4>
 
   <div class="clay-prose mb-6">
     If the visitor's chosen theme is in a cookie (or a session, or a
     user-prefs lookup), the server already knows the answer at HTML-gen
     time. Render the matching stylesheet inline and the page paints
-    correctly on the *first* frame — no client script, no map of every
+    correctly on the *first* frame, no client script, no map of every
     theme's CSS, no flash possible.
 
     The trick that makes this clean with Clay is that `applyTheme`
@@ -405,7 +405,7 @@ export function useClayTheme() {
     identical CSS, and the browser does no work.
   </div>
 
-  <CodeSource lang="tsx" filename="app/layout.tsx" code={`// Next.js App Router — equivalents exist in Remix (loaders),
+  <CodeSource lang="tsx" filename="app/layout.tsx" code={`// Next.js App Router, equivalents exist in Remix (loaders),
 // Astro (Astro.cookies), SvelteKit (load), Nuxt (useRequestEvent), etc.
 import { cookies } from 'next/headers';
 import { renderThemeStyleSheet } from '@brika/clay/themes';
@@ -431,7 +431,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   <div class="clay-prose mt-6 mb-6">
     For this to be flash-free, the provider must start with the same id
-    the server picked — pass `initialThemeId` through and seed
+    the server picked, pass `initialThemeId` through and seed
     `useState(initialThemeId)` instead of reading storage in
     `useEffect`. Switch the persistence write from `localStorage` to a
     cookie so the next request is also server-correct:
@@ -462,13 +462,13 @@ export function ClayThemeProvider({
 }`} />
 
   <h4 id="persist-flash-default" class="mt-8 mb-2 font-display text-lg text-clay-strong">
-    Option B — accept it
+    Option B, accept it
   </h4>
 
   <div class="clay-prose mb-6">
     The flash is one frame, on returning visitors only, and only when
     they picked a non-default theme. For a lot of apps that's a fine
-    trade for *zero* extra machinery — no SSR coupling, no extra script,
+    trade for *zero* extra machinery, no SSR coupling, no extra script,
     no per-theme CSS shipped just to bridge a frame. Ship the canonical
     provider above and stop.
 
@@ -481,12 +481,12 @@ export function ClayThemeProvider({
   </div>
 
   <h4 id="persist-flash-boot" class="mt-8 mb-2 font-display text-lg text-clay-strong">
-    Option C — inline boot script <span class="text-clay-inactive">(static hosting only)</span>
+    Option C, inline boot script <span class="text-clay-inactive">(static hosting only)</span>
   </h4>
 
   <div class="clay-prose mb-6">
-    When you can't run code on the request — pure SPA on a CDN, no
-    edge worker, theme id only in `localStorage` — the only way to
+    When you can't run code on the request, pure SPA on a CDN, no
+    edge worker, theme id only in `localStorage`, the only way to
     avoid the flash is to inline a synchronous script in `<head>` that
     picks the right CSS *before* paint. This is what
     [`next-themes`](https://github.com/pacocoursey/next-themes) and
@@ -525,7 +525,7 @@ const boot = \`
 \`;`} />
 
   <div class="clay-prose mt-6 mb-6">
-    The cost is the JSON payload — every theme's full CSS shipped in
+    The cost is the JSON payload, every theme's full CSS shipped in
     the HTML. Shrink it by inlining only the themes the user actually
     reaches: the default, plus their last selection (`localStorage`),
     plus whatever a picker can lazy-load on demand.
