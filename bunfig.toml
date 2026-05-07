@@ -1,0 +1,6 @@
+[test]
+# Emit lcov so SonarCloud (and any other coverage consumer) can pick it
+# up from coverage/lcov.info. Keep `text` for the human-readable
+# terminal summary that local devs and CI rely on.
+coverageReporter = ["text", "lcov"]
+coverageDir = "coverage"

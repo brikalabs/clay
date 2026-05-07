@@ -7,6 +7,9 @@ dist/
 docs/dist/
 docs/.astro/
 
+# Test coverage
+coverage/
+
 # Environment
 .env
 .env.*
