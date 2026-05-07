@@ -116,7 +116,7 @@ function SidebarProvider({
           data-slot="sidebar-wrapper"
           style={style}
           className={cn(
-            'group/sidebar-wrapper flex min-h-svh w-full has-data-[variant=inset]:bg-sidebar',
+            'group/sidebar-wrapper flex min-h-svh w-full has-data-[variant=inset]:bg-sidebar has-data-[variant=inset]:backdrop-blur-[var(--sidebar-backdrop-blur)]',
             className
           )}
           {...props}
@@ -150,7 +150,7 @@ function Sidebar({
       <div
         data-slot="sidebar"
         className={cn(
-          'flex h-full w-(--sidebar-width) flex-col bg-sidebar text-sidebar-foreground',
+          'flex h-full w-(--sidebar-width) flex-col bg-sidebar text-sidebar-foreground backdrop-blur-[var(--sidebar-backdrop-blur)]',
           className
         )}
         {...props}
@@ -167,7 +167,7 @@ function Sidebar({
           data-sidebar="sidebar"
           data-slot="sidebar"
           data-mobile="true"
-          className="w-[var(--sidebar-width-mobile)] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
+          className="w-[var(--sidebar-width-mobile)] bg-sidebar p-0 text-sidebar-foreground backdrop-blur-[var(--sidebar-backdrop-blur)] [&>button]:hidden"
           side={side}
         >
           <SheetHeader className="sr-only">
@@ -219,7 +219,7 @@ function Sidebar({
         <div
           data-sidebar="sidebar"
           data-slot="sidebar-inner"
-          className="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-container group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow-raised"
+          className="flex h-full w-full flex-col bg-sidebar backdrop-blur-[var(--sidebar-backdrop-blur)] group-data-[variant=floating]:rounded-container group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow-raised"
         >
           {children}
         </div>

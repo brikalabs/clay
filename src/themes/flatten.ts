@@ -102,8 +102,9 @@ function writeComponentEntries(
     return;
   }
   for (const [componentName, props] of Object.entries(components)) {
+    const kebabName = camelToKebab(componentName);
     eachStringEntry(props, (prop, value) => {
-      out[`--${componentName}-${camelToKebab(prop)}`] = value;
+      out[`--${kebabName}-${camelToKebab(prop)}`] = value;
     });
   }
 }

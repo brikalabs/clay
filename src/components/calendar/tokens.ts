@@ -9,5 +9,10 @@ export const tokens = defineComponent(meta.name, {
     alias: 'calendar',
   },
   surface: true,
+  backdropBlur: {
+    default: '0px',
+    description:
+      'Backdrop blur applied to the calendar surface. Set non-zero for a frosted-glass treatment.',
+  },
   geometry: { paddingX: SPACING_2, paddingY: SPACING_2, gap: SPACING_1 },
 });

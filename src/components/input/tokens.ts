@@ -13,6 +13,11 @@ export const tokens = defineComponent(meta.name, {
     alias: 'input',
   },
   surface: { borderWidth: '1px' },
+  backdropBlur: {
+    default: '0px',
+    description:
+      'Backdrop blur applied to the input surface. Set non-zero for a frosted-glass treatment.',
+  },
   geometry: { height: '2.25rem', paddingX: SPACING_3, paddingY: SPACING_2, gap: SPACING_2 },
   typography: { fontSize: 'var(--text-body-md)' },
   slots: {

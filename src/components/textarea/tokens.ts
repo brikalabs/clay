@@ -13,6 +13,11 @@ export const tokens = defineComponent(meta.name, {
     alias: 'textarea',
   },
   surface: { borderWidth: '1px' },
+  backdropBlur: {
+    default: '0px',
+    description:
+      'Backdrop blur applied to the textarea surface. Set non-zero for a frosted-glass treatment.',
+  },
   geometry: { paddingX: SPACING_3, paddingY: SPACING_2, gap: SPACING_2 },
   typography: { fontSize: 'var(--text-body-md)' },
 });

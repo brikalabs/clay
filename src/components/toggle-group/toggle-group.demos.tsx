@@ -61,11 +61,23 @@ export function ToggleGroupDisabledDemo() {
   );
 }
 
+/** Vertical orientation stacks items top-to-bottom with shared dividers. */
+export function ToggleGroupVerticalDemo() {
+  return (
+    <ToggleGroup type="single" defaultValue="week" orientation="vertical">
+      <ToggleGroupItem value="day">Day</ToggleGroupItem>
+      <ToggleGroupItem value="week">Week</ToggleGroupItem>
+      <ToggleGroupItem value="month">Month</ToggleGroupItem>
+    </ToggleGroup>
+  );
+}
+
 export const demoMeta = defineDemos([
   [ToggleGroupDefaultDemo, 'Default', { description: `Single-selection alignment picker — only one item active at a time.` }],
   [ToggleGroupMultipleDemo, 'Multiple', { description: `Multiple-selection formatting group — any combination can be active.` }],
   [ToggleGroupTextDemo, 'Text', { description: `Text-label items — suitable for view switchers and segmented controls.` }],
   [ToggleGroupDisabledDemo, 'Disabled', { description: `Individual items can be disabled while the rest remain interactive.` }],
+  [ToggleGroupVerticalDemo, 'Vertical', { description: `Vertical orientation stacks items top-to-bottom with shared dividers.` }],
 ]);
 export const accessibility: readonly string[] = [
   `Arrow keys navigate between items within the group; Space toggles the focused item.`,

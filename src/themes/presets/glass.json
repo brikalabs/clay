@@ -7,20 +7,20 @@
     "light": {
       "background": "#eef2f7",
       "foreground": "#0b1220",
-      "card": "rgba(255, 255, 255, 0.55)",
+      "card": "rgba(255, 255, 255, 0.35)",
       "card-foreground": "#0b1220",
-      "popover": "rgba(255, 255, 255, 0.7)",
+      "popover": "rgba(255, 255, 255, 0.4)",
       "popover-foreground": "#0b1220",
       "primary": "#0ea5e9",
       "primary-foreground": "#ffffff",
-      "secondary": "rgba(255, 255, 255, 0.6)",
+      "secondary": "rgba(255, 255, 255, 0.3)",
       "secondary-foreground": "#0b1220",
-      "muted": "rgba(255, 255, 255, 0.5)",
+      "muted": "rgba(255, 255, 255, 0.25)",
       "muted-foreground": "#3f4960",
-      "accent": "rgba(125, 211, 252, 0.35)",
+      "accent": "rgba(125, 211, 252, 0.3)",
       "accent-foreground": "#0b1220",
       "border": "rgba(255, 255, 255, 0.6)",
-      "input": "rgba(255, 255, 255, 0.4)",
+      "input": "rgba(255, 255, 255, 0.25)",
       "ring": "#7dd3fc",
       "success": "#10b981",
       "success-foreground": "#ffffff",
@@ -34,20 +34,20 @@
     "dark": {
       "background": "#070b14",
       "foreground": "#e6edf7",
-      "card": "rgba(20, 28, 48, 0.55)",
+      "card": "rgba(255, 255, 255, 0.12)",
       "card-foreground": "#e6edf7",
-      "popover": "rgba(20, 28, 48, 0.72)",
+      "popover": "rgba(255, 255, 255, 0.16)",
       "popover-foreground": "#e6edf7",
       "primary": "#7dd3fc",
       "primary-foreground": "#070b14",
-      "secondary": "rgba(40, 50, 75, 0.55)",
+      "secondary": "rgba(255, 255, 255, 0.14)",
       "secondary-foreground": "#e6edf7",
-      "muted": "rgba(40, 50, 75, 0.4)",
+      "muted": "rgba(255, 255, 255, 0.1)",
       "muted-foreground": "#90a0c0",
       "accent": "rgba(125, 211, 252, 0.25)",
       "accent-foreground": "#e6edf7",
-      "border": "rgba(255, 255, 255, 0.18)",
-      "input": "rgba(20, 28, 48, 0.45)",
+      "border": "rgba(255, 255, 255, 0.32)",
+      "input": "rgba(255, 255, 255, 0.12)",
       "ring": "#7dd3fc",
       "success": "#34d399",
       "success-foreground": "#070b14",
@@ -76,6 +76,12 @@
     "offset": "2px"
   },
   "components": {
+    "alert": {
+      "tintBase": "transparent",
+      "tintBgAmount": "22%",
+      "tintBorderAmount": "55%",
+      "backdropBlur": "16px"
+    },
     "card": {
       "backdropBlur": "20px",
       "borderWidth": "1px",
@@ -83,20 +89,74 @@
     },
     "dialog": {
       "backdropBlur": "24px",
-      "shadow": "var(--shadow-modal)"
+      "shadow": "var(--shadow-modal)",
+      "overlayBg": "rgba(255, 255, 255, 0.05)",
+      "overlayBackdropBlur": "20px"
+    },
+    "drawer": {
+      "backdropBlur": "24px"
+    },
+    "dropdownMenu": {
+      "backdropBlur": "16px"
     },
     "popover": {
       "backdropBlur": "16px",
       "shadow": "var(--shadow-overlay)"
     },
-    "menu": {
-      "backdropBlur": "16px"
-    },
     "sheet": {
       "backdropBlur": "24px"
     },
+    "command": {
+      "backdropBlur": "20px"
+    },
+    "hoverCard": {
+      "backdropBlur": "16px"
+    },
+    "menubarContent": {
+      "backdropBlur": "16px"
+    },
+    "navigationMenuViewport": {
+      "backdropBlur": "20px"
+    },
+    "tabs": {
+      "backdropBlur": "12px"
+    },
+    "toast": {
+      "backdropBlur": "16px"
+    },
     "tooltip": {
+      "backdropBlur": "8px",
       "shadow": "var(--shadow-overlay)"
+    },
+    "calendar": {
+      "backdropBlur": "20px"
+    },
+    "codeBlock": {
+      "backdropBlur": "16px"
+    },
+    "emptyState": {
+      "backdropBlur": "12px"
+    },
+    "input": {
+      "backdropBlur": "8px"
+    },
+    "inputGroup": {
+      "backdropBlur": "8px"
+    },
+    "inputOtp": {
+      "backdropBlur": "8px"
+    },
+    "textarea": {
+      "backdropBlur": "8px"
+    },
+    "progressDisplay": {
+      "backdropBlur": "16px"
+    },
+    "sidebar": {
+      "backdropBlur": "20px"
+    },
+    "toggle": {
+      "backdropBlur": "10px"
     }
   }
 }

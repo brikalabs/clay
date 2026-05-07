@@ -1,7 +1,13 @@
 'use client';
 
-import { Alert, AlertDescription, AlertIcon, AlertTitle } from '@brika/clay/components/alert';
-import { AlertCircle, CheckCircle2, Info, TriangleAlert, X } from 'lucide-react';
+import {
+  Alert,
+  AlertClose,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+} from '@brika/clay/components/alert';
+import { AlertCircle, CheckCircle2, Info, TriangleAlert } from 'lucide-react';
 import { useState } from 'react';
 import { defineDemos } from '../_registry';
 
@@ -23,38 +29,28 @@ export function AlertVariantsDemo() {
     <div className="flex w-full max-w-md flex-col gap-3">
       <Alert>
         <AlertIcon><Info /></AlertIcon>
-        <div>
-          <AlertTitle>Default</AlertTitle>
-          <AlertDescription>Quiet card-style alert for neutral notices.</AlertDescription>
-        </div>
+        <AlertTitle>Default</AlertTitle>
+        <AlertDescription>Quiet card-style alert for neutral notices.</AlertDescription>
       </Alert>
       <Alert variant="info">
         <AlertIcon><Info /></AlertIcon>
-        <div>
-          <AlertTitle>Info</AlertTitle>
-          <AlertDescription>A new version of the API is available.</AlertDescription>
-        </div>
+        <AlertTitle>Info</AlertTitle>
+        <AlertDescription>A new version of the API is available.</AlertDescription>
       </Alert>
       <Alert variant="success">
         <AlertIcon><CheckCircle2 /></AlertIcon>
-        <div>
-          <AlertTitle>Success</AlertTitle>
-          <AlertDescription>Your changes have been published.</AlertDescription>
-        </div>
+        <AlertTitle>Success</AlertTitle>
+        <AlertDescription>Your changes have been published.</AlertDescription>
       </Alert>
       <Alert variant="warning">
         <AlertIcon><TriangleAlert /></AlertIcon>
-        <div>
-          <AlertTitle>Warning</AlertTitle>
-          <AlertDescription>Storage is 90% full. Free up space to continue.</AlertDescription>
-        </div>
+        <AlertTitle>Warning</AlertTitle>
+        <AlertDescription>Storage is 90% full. Free up space to continue.</AlertDescription>
       </Alert>
       <Alert variant="destructive">
         <AlertIcon><AlertCircle /></AlertIcon>
-        <div>
-          <AlertTitle>Destructive</AlertTitle>
-          <AlertDescription>Your account has been suspended.</AlertDescription>
-        </div>
+        <AlertTitle>Destructive</AlertTitle>
+        <AlertDescription>Your account has been suspended.</AlertDescription>
       </Alert>
     </div>
   );
@@ -67,12 +63,10 @@ export function AlertWithIconDemo() {
       <AlertIcon>
         <AlertCircle />
       </AlertIcon>
-      <div>
-        <AlertTitle>Could not save changes</AlertTitle>
-        <AlertDescription>
-          Your session expired. Sign in again to continue.
-        </AlertDescription>
-      </div>
+      <AlertTitle>Could not save changes</AlertTitle>
+      <AlertDescription>
+        Your session expired. Sign in again to continue.
+      </AlertDescription>
     </Alert>
   );
 }
@@ -93,21 +87,13 @@ export function AlertDismissibleDemo() {
   }
 
   return (
-    <Alert variant="info" className="relative w-full max-w-md pr-10">
+    <Alert variant="info" className="w-full max-w-md">
       <AlertIcon><Info /></AlertIcon>
-      <div>
-        <AlertTitle>Scheduled maintenance</AlertTitle>
-        <AlertDescription>
-          The service will be unavailable on Sunday from 02:00 to 04:00 UTC.
-        </AlertDescription>
-      </div>
-      <button
-        aria-label="Dismiss alert"
-        onClick={() => setVisible(false)}
-        className="absolute right-3 top-3 rounded p-0.5 text-muted-foreground transition-colors hover:text-foreground"
-      >
-        <X className="size-4" />
-      </button>
+      <AlertTitle>Scheduled maintenance</AlertTitle>
+      <AlertDescription>
+        The service will be unavailable on Sunday from 02:00 to 04:00 UTC.
+      </AlertDescription>
+      <AlertClose onClick={() => setVisible(false)} />
     </Alert>
   );
 }

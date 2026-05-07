@@ -17,6 +17,10 @@ export const tokens = defineComponent(meta.name, {
     description: 'Tooltip elevation.',
     alias: 'tooltip',
   },
+  backdropBlur: {
+    default: '0px',
+    description: 'Backdrop blur on the tooltip. Set non-zero for a frosted-glass tooltip.',
+  },
   border: true,
   motion: true,
   geometry: { paddingX: SPACING_2, paddingY: SPACING_1 },

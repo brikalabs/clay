@@ -25,6 +25,11 @@ export const tokens = [
       description: 'Menubar dropdown elevation.',
       alias: 'menubar-content',
     },
+    backdropBlur: {
+      default: '0px',
+      description:
+        'Backdrop blur on the menubar dropdown content. Set non-zero for a frosted-glass overlay.',
+    },
     border: '1px',
     motion: true,
     geometry: { paddingX: SPACING_1, paddingY: SPACING_1 },

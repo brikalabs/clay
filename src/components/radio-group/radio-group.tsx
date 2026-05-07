@@ -5,9 +5,19 @@ import { RadioGroup as RadioGroupPrimitive } from 'radix-ui';
 import * as React from 'react';
 
 import { cn } from '../../primitives/cn';
-import { withSlot } from '../../primitives/with-slot';
 
-const RadioGroup = withSlot(RadioGroupPrimitive.Root, 'radio-group');
+function RadioGroup({
+  className,
+  ...props
+}: React.ComponentProps<typeof RadioGroupPrimitive.Root>) {
+  return (
+    <RadioGroupPrimitive.Root
+      data-slot="radio-group"
+      className={cn('grid gap-2', className)}
+      {...props}
+    />
+  );
+}
 
 function RadioGroupItem({
   className,
