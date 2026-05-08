@@ -107,12 +107,14 @@ function scanVarRefs(value: string, consume: (name: string) => void): void {
     if (at === -1) return;
     let end = at + NEEDLE.length;
     while (end < value.length) {
-      const code = value.charCodeAt(end);
-      // a-z, 0-9, or `-`. Any other byte ends the name.
+      const code = value.codePointAt(end);
+      // a-z, 0-9, or `-`. Any other byte (or supplementary code point,
+      // since registry names are ASCII-only) ends the name.
       const ok =
-        (code >= 0x61 && code <= 0x7a) ||
-        (code >= 0x30 && code <= 0x39) ||
-        code === 0x2d;
+        code !== undefined &&
+        ((code >= 0x61 && code <= 0x7a) ||
+          (code >= 0x30 && code <= 0x39) ||
+          code === 0x2d);
       if (!ok) break;
       end++;
     }
@@ -135,6 +137,80 @@ interface PluginContributions {
   readonly rootMembership: ReadonlySet<string>;
 }
 
+type TypeInfoEntry = (typeof TYPE_INFO)[TokenType];
+
+/**
+ * Membership rule for a single token. See `buildContributions` doc comment
+ * below for the full rationale. A component token with a `var(...)` chain
+ * only lands in `:root` when something forces it: shorthand bundle, hand-
+ * authored CSS, or another token's cascade reference (handled in pass 2).
+ */
+function shouldEmitToRoot(
+  token: ResolvedTokenSpec,
+  shorthandRefs: ReadonlySet<string>
+): boolean {
+  if (token.layer !== 'component') return true;
+  if (!token.defaultLight.startsWith('var(')) return true;
+  if (token.consumedByCss) return true;
+  return shorthandRefs.has(token.name);
+}
+
+/**
+ * Emit `@property` blocks for the token's main value and (optionally) its
+ * line-height pairing. Only registrable types with literal defaults get
+ * blocks, `var(...)` chains can't be the `initial-value` of an
+ * `@property`.
+ */
+function emitProperties(
+  token: ResolvedTokenSpec,
+  info: TypeInfoEntry,
+  properties: Record<string, Record<string, string>>
+): void {
+  const cssVar = `--${token.name}`;
+  if (info.syntax && isLiteral(token.defaultLight)) {
+    properties[`@property ${cssVar}`] = {
+      syntax: `"${info.syntax}"`,
+      inherits: 'true',
+      'initial-value': token.defaultLight,
+    };
+  }
+  if (token.lineHeight && isLiteral(token.lineHeight)) {
+    properties[`@property ${cssVar}--line-height`] = {
+      syntax: '"<number>"',
+      inherits: 'true',
+      'initial-value': token.lineHeight,
+    };
+  }
+}
+
+/**
+ * Place the token's `var(--name)` reference under the matching
+ * `theme.extend` bucket (`colors`, `spacing`, `borderRadius`, ...).
+ * The bare `border-width` token gets a `DEFAULT` slot so Tailwind's
+ * unprefixed `border` utility resolves to it.
+ */
+function emitThemeExtend(
+  token: ResolvedTokenSpec,
+  info: TypeInfoEntry,
+  themeExtend: Record<string, Record<string, string>>
+): void {
+  const ns = token.tailwindNamespace;
+  if (!ns || ns === 'none') return;
+  const cssVar = `--${token.name}`;
+  if (ns === 'default' && token.name === 'border-width') {
+    themeExtend.borderWidth ??= {};
+    themeExtend.borderWidth.DEFAULT = `var(${cssVar})`;
+    return;
+  }
+  if (!info.bucket) return;
+  themeExtend[info.bucket] ??= {};
+  const bucket = themeExtend[info.bucket];
+  bucket[token.utilityAlias ?? token.name] =
+    token.layer === 'component'
+      ? `var(${cssVar}, ${token.defaultLight})`
+      : `var(${cssVar})`;
+}
+
 /**
  * Single-pass walk over the registry that produces every artifact the
  * plugin needs. Replaces three separate walks (membership, base rules,
@@ -142,8 +218,8 @@ interface PluginContributions {
  * ~5x cheaper than the sum of the previous calls.
  *
  * Membership rules (which tokens land in `:root`):
- *   - Layer-0 / Layer-1 tokens: always — they're the cascade roots.
- *   - Component tokens with literal defaults: always — concrete value.
+ *   - Layer-0 / Layer-1 tokens: always, they're the cascade roots.
+ *   - Component tokens with literal defaults: always, concrete value.
  *   - Component tokens with `var(...)` chain defaults: only if some other
  *     token's default references them, the shorthand bundle consumes
  *     them, OR they're flagged `consumedByCss`. Component tokens consumed
@@ -163,58 +239,25 @@ function buildContributions(
 
   // Pass 1: classify membership + emit theme.extend, properties, dark in one go.
   for (const token of registry) {
-    const { name, type, defaultLight, defaultDark, layer, lineHeight } = token;
-    const cssVar = `--${name}`;
-    const isVarChain = defaultLight.startsWith('var(');
-
-    // Membership classification, see `buildContributions` doc comment above.
-    if (layer !== 'component' || !isVarChain || token.consumedByCss) {
-      rootMembership.add(name);
-    } else if (shorthandRefs.has(name)) {
-      rootMembership.add(name);
+    if (shouldEmitToRoot(token, shorthandRefs)) {
+      rootMembership.add(token.name);
     }
 
-    if (defaultDark && defaultDark !== defaultLight) {
-      dark[cssVar] = defaultDark;
+    const cssVar = `--${token.name}`;
+
+    if (token.defaultDark && token.defaultDark !== token.defaultLight) {
+      dark[cssVar] = token.defaultDark;
     }
 
     // Tailwind v4's `text-*` utility consumes a paired `--text-*--line-height`
     // declaration so font-size and line-height resolve in one class.
-    if (lineHeight) {
-      root[`${cssVar}--line-height`] = lineHeight;
+    if (token.lineHeight) {
+      root[`${cssVar}--line-height`] = token.lineHeight;
     }
 
-    const info = TYPE_INFO[type];
-
-    if (info.syntax && isLiteral(defaultLight)) {
-      properties[`@property ${cssVar}`] = {
-        syntax: `"${info.syntax}"`,
-        inherits: 'true',
-        'initial-value': defaultLight,
-      };
-    }
-    if (lineHeight && isLiteral(lineHeight)) {
-      properties[`@property ${cssVar}--line-height`] = {
-        syntax: '"<number>"',
-        inherits: 'true',
-        'initial-value': lineHeight,
-      };
-    }
-
-    // theme.extend bucket placement.
-    const ns = token.tailwindNamespace;
-    if (!ns || ns === 'none') {
-      continue;
-    }
-    if (ns === 'default' && name === 'border-width') {
-      (themeExtend.borderWidth ??= {}).DEFAULT = `var(${cssVar})`;
-      continue;
-    }
-    if (info.bucket) {
-      const key = token.utilityAlias ?? name;
-      (themeExtend[info.bucket] ??= {})[key] =
-        layer === 'component' ? `var(${cssVar}, ${defaultLight})` : `var(${cssVar})`;
-    }
+    const info = TYPE_INFO[token.type];
+    emitProperties(token, info, properties);
+    emitThemeExtend(token, info, themeExtend);
   }
 
   // Pass 2: cascade scan, anything referenced from another spec's default
