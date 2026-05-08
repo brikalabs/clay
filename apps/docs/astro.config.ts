@@ -48,9 +48,10 @@ const buildCommit = safeGit('rev-parse --short HEAD') || 'dev';
 const buildDate = safeGit('log -1 --format=%cI') || new Date().toISOString();
 
 const isDev = process.argv.includes('dev');
+const isBuild = process.argv.includes('build');
 
-if (!SITE) {
-  throw new Error('SITE env var is required (set in .env or your deploy environment)');
+if (isBuild && !SITE) {
+  throw new Error('SITE env var is required for production builds (set in .env or your deploy environment)');
 }
 
 // Resolve all @brika/clay/* imports directly to source.
