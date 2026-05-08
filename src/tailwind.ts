@@ -237,40 +237,13 @@ function buildContributions(
 }
 
 /**
- * Backwards-compatible thin views over `buildContributions`. Kept for tests
- * and any external consumer that imported them; production code reads the
- * fused result directly.
- */
-function buildBaseRules(
-  registry: readonly ResolvedTokenSpec[],
-  shorthandRefs: ReadonlySet<string> = new Set()
-): BaseRules {
-  return buildContributions(registry, shorthandRefs).base;
-}
-
-function buildRootMembership(
-  registry: readonly ResolvedTokenSpec[],
-  shorthandRefs: ReadonlySet<string> = new Set()
-): ReadonlySet<string> {
-  return buildContributions(registry, shorthandRefs).rootMembership;
-}
-
-function buildThemeExtend(
-  registry: readonly ResolvedTokenSpec[]
-): Record<string, Record<string, string>> {
-  return buildContributions(registry).themeExtend;
-}
-
-/**
- * Public for tests, snapshot-style assertions and benchmarks. The builders
- * are pure functions of the registry, calling them with the live registry
- * produces exactly what the plugin emits.
+ * Public surface for tests, snapshot-style assertions, and benchmarks.
+ * `buildContributions` is the only builder, every artifact reads off the
+ * single fused walk. `scanVarRefs` is exported for benchmark suites that
+ * compare the indexOf-based scanner against alternatives.
  */
 export const __internal = {
-  buildBaseRules,
   buildContributions,
-  buildRootMembership,
-  buildThemeExtend,
   scanVarRefs,
 } as const;
 

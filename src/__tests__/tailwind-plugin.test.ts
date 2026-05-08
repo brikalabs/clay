@@ -8,8 +8,27 @@ import { TOKEN_REGISTRY, TOKENS_BY_NAME } from '../tokens/registry';
 import { SHORTHAND_INDEX } from '../tokens/shorthands';
 import type { ResolvedTokenSpec } from '../tokens/types';
 
-const { buildBaseRules, buildContributions, buildRootMembership, buildThemeExtend, scanVarRefs } =
-  __internal;
+const { buildContributions, scanVarRefs } = __internal;
+
+// Convenience slices over the fused builder for tests that only care about
+// one shard of the contribution shape.
+function buildBaseRules(
+  registry: readonly ResolvedTokenSpec[],
+  shorthandRefs: ReadonlySet<string> = new Set()
+) {
+  return buildContributions(registry, shorthandRefs).base;
+}
+
+function buildThemeExtend(registry: readonly ResolvedTokenSpec[]) {
+  return buildContributions(registry).themeExtend;
+}
+
+function buildRootMembership(
+  registry: readonly ResolvedTokenSpec[],
+  shorthandRefs: ReadonlySet<string> = new Set()
+) {
+  return buildContributions(registry, shorthandRefs).rootMembership;
+}
 
 // ─── Mock plugin context ─────────────────────────────────────────────────────
 
@@ -449,27 +468,20 @@ describe('scanVarRefs (fast var(--name) scanner)', () => {
 });
 
 describe('buildContributions (fused single-pass walk)', () => {
-  test('produces output matching the legacy three-builder composition', () => {
-    const { base, themeExtend, rootMembership } = buildContributions(
-      TOKEN_REGISTRY,
-      SHORTHAND_INDEX.tokenRefs
-    );
-    const legacyBase = buildBaseRules(TOKEN_REGISTRY, SHORTHAND_INDEX.tokenRefs);
-    const legacyExtend = buildThemeExtend(TOKEN_REGISTRY);
-    const legacyMembership = buildRootMembership(TOKEN_REGISTRY, SHORTHAND_INDEX.tokenRefs);
-    expect(base.root).toEqual(legacyBase.root);
-    expect(base.dark).toEqual(legacyBase.dark);
-    expect(base.properties).toEqual(legacyBase.properties);
-    expect(themeExtend).toEqual(legacyExtend);
-    expect([...rootMembership].sort()).toEqual([...legacyMembership].sort());
-  });
-
-  test('membership and theme.extend are computed without a second pass', () => {
-    // Sanity: pure form, an empty registry returns empty payloads.
+  test('an empty registry returns empty payloads on every shard', () => {
     const out = buildContributions([], new Set());
     expect(out.base).toEqual({ properties: {}, root: {}, dark: {} });
     expect(out.themeExtend).toEqual({});
     expect([...out.rootMembership]).toEqual([]);
+  });
+
+  test('plugin module reads the same payloads the handler emits', () => {
+    // Cross-check: the live plugin handler must emit exactly what
+    // `buildContributions(TOKEN_REGISTRY, SHORTHAND_INDEX.tokenRefs)` returns.
+    const expected = buildContributions(TOKEN_REGISTRY, SHORTHAND_INDEX.tokenRefs);
+    const { addBaseCalls } = runHandler();
+    const root = findRule(addBaseCalls, ':root, [data-theme="clay"]');
+    expect(root).toEqual(expected.base.root);
   });
 });
 
@@ -786,18 +798,6 @@ describe('performance', () => {
     }
     const avg = (performance.now() - start) / ITERATIONS;
     expect(avg).toBeLessThan(3);
-  });
-
-  test('buildBaseRules thin view stays under 5ms', () => {
-    // Warm up.
-    for (let i = 0; i < 5; i++) buildBaseRules(TOKEN_REGISTRY, SHORTHAND_INDEX.tokenRefs);
-    const start = performance.now();
-    const ITERATIONS = 50;
-    for (let i = 0; i < ITERATIONS; i++) {
-      buildBaseRules(TOKEN_REGISTRY, SHORTHAND_INDEX.tokenRefs);
-    }
-    const avg = (performance.now() - start) / ITERATIONS;
-    expect(avg).toBeLessThan(5);
   });
 
   test('scanVarRefs is faster than a regex matchAll on the same input', () => {

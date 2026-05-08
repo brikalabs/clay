@@ -52,6 +52,7 @@
     "dev": "tsup --watch",
     "typecheck": "tsgo --noEmit",
     "test": "bun test",
+    "bench": "bun src/__tests__/tailwind-plugin.bench.ts",
     "prepublishOnly": "bun run build"
   },
   "peerDependencies": {
