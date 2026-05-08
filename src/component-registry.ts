@@ -92,4 +92,25 @@ export interface ComponentMeta {
   readonly description: string;
   /** Links to external libraries or specifications this component wraps or depends on. */
   readonly externalDocs?: readonly ExternalDoc[];
+  /**
+   * Accessibility callouts shown in a dedicated section on the docs page.
+   * Each entry is a short markdown sentence. Use single-quoted strings
+   * so inline-code refs (`aria-label`, `--ring`, ...) sit unescaped:
+   *
+   * ```ts
+   * accessibility: [
+   *   'Focus ring uses `--ring` token for WCAG contrast.',
+   *   'Icon-only buttons (`size="icon"`) REQUIRE an `aria-label`.',
+   * ],
+   * ```
+   *
+   * Lives on `meta.ts` rather than the demos file because:
+   *   - it's static text metadata, no React/JSX involvement
+   *   - it can be imported without pulling in component code, icons, or
+   *     example helpers (better tree-shaking for tools that just want
+   *     a11y info, e.g. a CLI auditor)
+   *   - it sits next to `description` and `displayName`, the other
+   *     prose-shaped metadata
+   */
+  readonly accessibility?: readonly string[];
 }

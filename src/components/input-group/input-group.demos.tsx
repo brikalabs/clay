@@ -1,6 +1,6 @@
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput, InputGroupText } from '@brika/clay/components/input-group';
 import { Search, X } from 'lucide-react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Currency field with dollar-sign prefix and currency code suffix. */
 export function InputGroupDefaultDemo() {
@@ -66,13 +66,8 @@ export function InputGroupTextareaDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [InputGroupDefaultDemo, 'Default', { description: `Currency field with dollar-sign prefix and currency code suffix.` }],
-  [InputGroupSearchDemo, 'Search', { description: `Search field with a leading icon and a trailing clear button.` }],
-  [InputGroupUrlDemo, 'Url', { description: `URL field with a fixed scheme prefix to guide input format.` }],
-  [InputGroupTextareaDemo, 'Textarea', { description: `Textarea variant, block-level addon labels above and below a multiline input.` }],
+  [InputGroupDefaultDemo, 'Default', { description: 'Currency field with dollar-sign prefix and currency code suffix.' }],
+  [InputGroupSearchDemo, 'Search', { description: 'Search field with a leading icon and a trailing clear button.' }],
+  [InputGroupUrlDemo, 'Url', { description: 'URL field with a fixed scheme prefix to guide input format.' }],
+  [InputGroupTextareaDemo, 'Textarea', { description: 'Textarea variant, block-level addon labels above and below a multiline input.' }],
 ]);
-export const accessibility: readonly string[] = [
-  `Addons are presentational, always pair the group with a \`<Label>\` that describes the full field.`,
-  `Icon-only addon buttons require an \`aria-label\`.`,
-  `The visible prefix (e.g. "https://") is part of the label context; announce it via \`aria-label\` on the input if needed.`,
-];

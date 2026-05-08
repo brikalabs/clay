@@ -16,7 +16,7 @@ import {
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from '@brika/clay/components/context-menu';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Right-click (or long-press on mobile) the target area to open the menu. */
 export function ContextMenuDefaultDemo() {
@@ -100,13 +100,7 @@ export function ContextMenuRadioDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [ContextMenuDefaultDemo, 'Default', { description: `Right-click (or long-press on mobile) the target area to open the menu.` }],
-  [ContextMenuCheckboxDemo, 'Checkbox', { description: `ContextMenuCheckboxItem maintains a checked state for toggleable settings.` }],
-  [ContextMenuRadioDemo, 'Radio', { description: `ContextMenuRadioGroup enforces a single active choice across a set of items.` }],
+  [ContextMenuDefaultDemo, 'Default', { description: 'Right-click (or long-press on mobile) the target area to open the menu.' }],
+  [ContextMenuCheckboxDemo, 'Checkbox', { description: 'ContextMenuCheckboxItem maintains a checked state for toggleable settings.' }],
+  [ContextMenuRadioDemo, 'Radio', { description: 'ContextMenuRadioGroup enforces a single active choice across a set of items.' }],
 ]);
-export const accessibility: readonly string[] = [
-  `Trigger carries \`aria-haspopup="menu"\` automatically.`,
-  `Keyboard: Shift+F10 or the context-menu key opens the menu on the focused trigger.`,
-  `Arrow keys navigate items; Enter/Space activate; Escape dismisses.`,
-  `Destructive items should use \`variant="destructive"\` so the visual indication matches AT context.`,
-];

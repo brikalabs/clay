@@ -7,7 +7,7 @@ import {
   AccordionTrigger,
 } from '@brika/clay/components/accordion';
 import { useState } from 'react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Single-select FAQ accordion, one item open at a time, collapsible. */
 export function AccordionDefaultDemo() {
@@ -124,14 +124,8 @@ export function AccordionControlledDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [AccordionDefaultDemo, 'Default', { description: `Single-select FAQ accordion, one item open at a time, collapsible.` }],
-  [AccordionMultipleDemo, 'Multiple', { description: `Multiple open sections at once, pass \`type="multiple"\` to the root.` }],
-  [AccordionDisabledDemo, 'Disabled', { description: `Disabled item, set \`disabled\` on \`AccordionItem\` to prevent interaction.` }],
-  [AccordionControlledDemo, 'Controlled', { description: `Controlled accordion, manage open state externally with \`value\` and \`onValueChange\`.` }],
+  [AccordionDefaultDemo, 'Default', { description: 'Single-select FAQ accordion, one item open at a time, collapsible.' }],
+  [AccordionMultipleDemo, 'Multiple', { description: 'Multiple open sections at once, pass `type="multiple"` to the root.' }],
+  [AccordionDisabledDemo, 'Disabled', { description: 'Disabled item, set `disabled` on `AccordionItem` to prevent interaction.' }],
+  [AccordionControlledDemo, 'Controlled', { description: 'Controlled accordion, manage open state externally with `value` and `onValueChange`.' }],
 ]);
-export const accessibility: readonly string[] = [
-  `Triggers carry \`aria-expanded\` and \`aria-controls\`, no extra markup needed.`,
-  `Content panels are hidden from AT via \`aria-hidden\` when collapsed.`,
-  `\`type="single" collapsible\` lets the open item be closed; omit \`collapsible\` to always keep one open.`,
-  `Arrow keys and Home/End navigate between triggers when focus is inside the accordion.`,
-];

@@ -2,10 +2,10 @@
  * Layer-2 tokens for Table.
  */
 
-import { defineComponent } from '../../tokens/define';
+import { registerComponent } from '../../tokens/define';
 import { meta } from './meta';
 
-export const tokens = defineComponent(meta.name, {
+registerComponent(meta, {
   slots: {
     'header-bg': {
       default: 'var(--muted)',

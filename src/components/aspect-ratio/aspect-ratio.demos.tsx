@@ -1,5 +1,5 @@
 import { AspectRatio } from '@brika/clay/components/aspect-ratio';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** 16/9 ratio, the standard for responsive images and video embeds. */
 export function AspectRatioDefaultDemo() {
@@ -56,12 +56,8 @@ export function AspectRatioPortraitDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [AspectRatioDefaultDemo, 'Default', { description: `16/9 ratio, the standard for responsive images and video embeds.` }],
-  [AspectRatioSquareDemo, 'Square', { description: `Square ratio, useful for profile photos, avatars, and thumbnails.` }],
-  [AspectRatioVideoDemo, 'Video', { description: `4/3 ratio, traditional video and presentation format.` }],
-  [AspectRatioPortraitDemo, 'Portrait', { description: `3/4 portrait ratio, common for product photos and editorial images.` }],
+  [AspectRatioDefaultDemo, 'Default', { description: '16/9 ratio, the standard for responsive images and video embeds.' }],
+  [AspectRatioSquareDemo, 'Square', { description: 'Square ratio, useful for profile photos, avatars, and thumbnails.' }],
+  [AspectRatioVideoDemo, 'Video', { description: '4/3 ratio, traditional video and presentation format.' }],
+  [AspectRatioPortraitDemo, 'Portrait', { description: '3/4 portrait ratio, common for product photos and editorial images.' }],
 ]);
-export const accessibility: readonly string[] = [
-  `The container is purely presentational, no ARIA role or keyboard behavior.`,
-  `Content placed inside inherits normal focus order; ensure images carry meaningful \`alt\` text.`,
-];

@@ -3,7 +3,7 @@
 import { Label } from '@brika/clay/components/label';
 import { Switch } from '@brika/clay/components/switch';
 import { useState } from 'react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Uncontrolled switch in its default on state. */
 export function SwitchDefaultDemo() {
@@ -64,15 +64,9 @@ export function SwitchSettingsRowDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [SwitchDefaultDemo, 'Default', { description: `Uncontrolled switch in its default on state.` }],
-  [SwitchControlledDemo, 'Controlled', { description: `Controlled switch with live state label next to it.` }],
-  [SwitchLabelDemo, 'Label', { description: `Switch paired with a Label, clicking the label text also toggles the switch.` }],
-  [SwitchDisabledDemo, 'Disabled', { description: `Disabled switch states, both checked and unchecked.` }],
-  [SwitchSettingsRowDemo, 'Settings Row', { description: `Settings row pattern, switch with a title and description label.` }],
+  [SwitchDefaultDemo, 'Default', { description: 'Uncontrolled switch in its default on state.' }],
+  [SwitchControlledDemo, 'Controlled', { description: 'Controlled switch with live state label next to it.' }],
+  [SwitchLabelDemo, 'Label', { description: 'Switch paired with a Label, clicking the label text also toggles the switch.' }],
+  [SwitchDisabledDemo, 'Disabled', { description: 'Disabled switch states, both checked and unchecked.' }],
+  [SwitchSettingsRowDemo, 'Settings Row', { description: 'Settings row pattern, switch with a title and description label.' }],
 ]);
-export const accessibility: readonly string[] = [
-  `Carries \`role="switch"\` with \`aria-checked\`, AT announces "on" / "off" state.`,
-  `Pair with a \`<Label>\`, clicking the label also toggles the switch.`,
-  `Disabled switches carry \`aria-disabled\` and are removed from the tab order.`,
-  `Use \`Switch\` for binary on/off settings; use \`Checkbox\` for multi-select form fields.`,
-];

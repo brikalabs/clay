@@ -2,11 +2,11 @@
  * Layer-2 tokens for Badge.
  */
 
-import { defineComponent } from '../../tokens/define';
+import { registerComponent } from '../../tokens/define';
 import { SPACING_1, SPACING_2 } from '../../tokens/spacing';
 import { meta } from './meta';
 
-export const tokens = defineComponent(meta.name, {
+registerComponent(meta, {
   radius: {
     default: 'var(--radius-pill)',
     description: 'Badge corner radius.',

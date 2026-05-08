@@ -8,7 +8,7 @@ import {
 } from '@brika/clay/components/collapsible';
 import { ChevronDownIcon } from 'lucide-react';
 import { useState } from 'react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Basic collapsible, trigger toggles content visibility, no controlled state needed. */
 export function CollapsibleDefaultDemo() {
@@ -73,12 +73,7 @@ export function CollapsibleControlledDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [CollapsibleDefaultDemo, 'Default', { description: `Basic collapsible, trigger toggles content visibility, no controlled state needed.` }],
-  [CollapsibleAnimatedDemo, 'Animated', { description: `Chevron rotates on open using \`data-[state=open]\`, wire it to the trigger via \`group\`.` }],
-  [CollapsibleControlledDemo, 'Controlled', { description: `Controlled collapsible, manage open state with \`open\` and \`onOpenChange\`.` }],
+  [CollapsibleDefaultDemo, 'Default', { description: 'Basic collapsible, trigger toggles content visibility, no controlled state needed.' }],
+  [CollapsibleAnimatedDemo, 'Animated', { description: 'Chevron rotates on open using `data-[state=open]`, wire it to the trigger via `group`.' }],
+  [CollapsibleControlledDemo, 'Controlled', { description: 'Controlled collapsible, manage open state with `open` and `onOpenChange`.' }],
 ]);
-export const accessibility: readonly string[] = [
-  `Trigger carries \`aria-expanded\` automatically, no extra markup needed.`,
-  `Content carries \`aria-hidden\` when collapsed so AT skips it entirely.`,
-  `Animate height via CSS \`overflow-hidden\` + transition, not \`display:none\`, to preserve AT semantics.`,
-];

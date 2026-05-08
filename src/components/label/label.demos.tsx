@@ -1,6 +1,6 @@
 import { Input } from '@brika/clay/components/input';
 import { Label } from '@brika/clay/components/label';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Label paired with an input, clicking the label focuses the field. */
 export function LabelDefaultDemo() {
@@ -35,13 +35,7 @@ export function LabelDisabledDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [LabelDefaultDemo, 'Default', { description: `Label paired with an input, clicking the label focuses the field.` }],
-  [LabelRequiredDemo, 'Required', { description: `Required field, add an asterisk inside a span to signal mandatory status.` }],
-  [LabelDisabledDemo, 'Disabled', { description: `Label on a disabled field, inherits reduced opacity via the peer-disabled class.` }],
+  [LabelDefaultDemo, 'Default', { description: 'Label paired with an input, clicking the label focuses the field.' }],
+  [LabelRequiredDemo, 'Required', { description: 'Required field, add an asterisk inside a span to signal mandatory status.' }],
+  [LabelDisabledDemo, 'Disabled', { description: 'Label on a disabled field, inherits reduced opacity via the peer-disabled class.' }],
 ]);
-export const accessibility: readonly string[] = [
-  `Renders a \`<label>\` element, clicking it focuses the associated input.`,
-  `Always link to the input via \`htmlFor\` matching the input's \`id\`.`,
-  `Required-field indicators (* or "required") should be inside the label or referenced via \`aria-describedby\`.`,
-  `Disabled labels inherit \`opacity-50\` visually; no ARIA change is needed.`,
-];

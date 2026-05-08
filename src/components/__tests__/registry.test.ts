@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 function ExampleDemo() {
   return null;

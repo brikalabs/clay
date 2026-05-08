@@ -3,8 +3,9 @@
  *
  * Everything is auto-discovered via import.meta.glob, no hardcoded lists:
  *
- *   src/components/<slug>/meta.ts          → component identity, group, description, externalDocs
- *   src/components/<slug>/<slug>.demos.tsx → runnable demos, demoMeta, accessibility, tokens
+ *   src/components/<slug>/meta.ts          → identity, group, description,
+ *                                            externalDocs, accessibility
+ *   src/components/<slug>/<slug>.demos.tsx → runnable demos + demoMeta
  *
  * Adding a new component requires zero edits here. Drop a folder with
  * `meta.ts` and optionally a `*.demos.tsx` and both are picked up at
@@ -35,12 +36,10 @@ const CLAY_COMPONENTS: readonly ComponentMeta[] = Object.values(metaModules)
   .map((m) => m.meta)
   .sort((a, b) => a.name.localeCompare(b.name));
 
-// ─── Demo modules (functions + demoMeta + accessibility + tokens) ─────────────
+// ─── Demo modules (functions + demoMeta) ──────────────────────────────────────
 
 interface DemosModule {
   readonly demoMeta?: readonly DemoInput[];
-  readonly accessibility?: readonly string[];
-  readonly tokens?: readonly string[];
   readonly [exportName: string]: unknown;
 }
 
@@ -103,7 +102,6 @@ function resolveDemo(input: DemoInput, source: string, mod: DemosModule): Compon
 export interface ComponentDocs {
   readonly demos: readonly ComponentDemo[];
   readonly accessibility?: readonly string[];
-  readonly tokens?: readonly string[];
   readonly externalDocs?: readonly ExternalDoc[];
 }
 
@@ -125,8 +123,7 @@ const ENTRIES: readonly ComponentEntry[] = CLAY_COMPONENTS.map((meta) => {
     description: meta.description,
     group: meta.group,
     demos: mod ? (mod.demoMeta ?? []).map((d) => resolveDemo(d, source, mod)) : [],
-    accessibility: mod?.accessibility,
-    tokens: mod?.tokens,
+    accessibility: meta.accessibility,
     externalDocs: meta.externalDocs ?? [],
   };
 });

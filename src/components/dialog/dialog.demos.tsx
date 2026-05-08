@@ -11,7 +11,7 @@ import {
 } from '@brika/clay/components/dialog';
 import { Input } from '@brika/clay/components/input';
 import { Label } from '@brika/clay/components/label';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Clean modal with a title, description, and two footer actions. */
 export function DialogDefaultDemo() {
@@ -109,13 +109,7 @@ export function DialogScrollableDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [DialogDefaultDemo, 'Default', { description: `Clean modal with a title, description, and two footer actions.` }],
-  [DialogFormDemo, 'Form', { description: `Dialog wrapping a form, useful for inline editing without leaving the page.` }],
-  [DialogScrollableDemo, 'Scrollable', { description: `Dialog with long scrollable content, the panel caps at 85vh and scrolls internally.` }],
+  [DialogDefaultDemo, 'Default', { description: 'Clean modal with a title, description, and two footer actions.' }],
+  [DialogFormDemo, 'Form', { description: 'Dialog wrapping a form, useful for inline editing without leaving the page.' }],
+  [DialogScrollableDemo, 'Scrollable', { description: 'Dialog with long scrollable content, the panel caps at 85vh and scrolls internally.' }],
 ]);
-export const accessibility: readonly string[] = [
-  `Focus is trapped inside the dialog while open, Tab cycles only through its interactive elements.`,
-  `Escape and clicking the backdrop close the dialog and return focus to the trigger.`,
-  `\`DialogTitle\` is required and becomes the accessible name, use \`sr-only\` to visually hide it if needed.`,
-  `Scrollable content should be the scrollable region, not the entire dialog.`,
-];

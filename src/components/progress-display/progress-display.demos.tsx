@@ -2,7 +2,7 @@
 
 import { ProgressDisplay } from '@brika/clay/components/progress-display';
 import { useRef } from 'react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** In-progress state, spinner, phase label, and a live log stream. */
 export function ProgressDisplayDefaultDemo() {
@@ -74,12 +74,7 @@ export function ProgressDisplayErrorDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [ProgressDisplayDefaultDemo, 'Default', { description: `In-progress state, spinner, phase label, and a live log stream.` }],
-  [ProgressDisplaySuccessDemo, 'Success', { description: `Success state, bar turns green and an optional success message is shown.` }],
-  [ProgressDisplayErrorDemo, 'Error', { description: `Error state, bar turns destructive and the error message block appears.` }],
+  [ProgressDisplayDefaultDemo, 'Default', { description: 'In-progress state, spinner, phase label, and a live log stream.' }],
+  [ProgressDisplaySuccessDemo, 'Success', { description: 'Success state, bar turns green and an optional success message is shown.' }],
+  [ProgressDisplayErrorDemo, 'Error', { description: 'Error state, bar turns destructive and the error message block appears.' }],
 ]);
-export const accessibility: readonly string[] = [
-  `Log entries update via a live region, AT announces new lines as they stream in.`,
-  `Error and success states should also be communicated via a \`toast\` or \`alert\` for AT users in background contexts.`,
-  `The scrollable log area should be reachable by keyboard when it overflows.`,
-];

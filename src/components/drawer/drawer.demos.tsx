@@ -11,7 +11,7 @@ import {
 } from '@brika/clay/components/drawer';
 import { Input } from '@brika/clay/components/input';
 import { Label } from '@brika/clay/components/label';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 const NOTIFICATIONS = [
   { id: 1, title: 'New comment on your post', time: '2 min ago' },
@@ -111,13 +111,7 @@ export function DrawerFormDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [DrawerDefaultDemo, 'Default', { description: `Bottom-sheet overlay, drag the handle or tap outside to close.` }],
-  [DrawerScrollableDemo, 'Scrollable', { description: `Drawer with a scrollable list body and a fixed footer, suited for notification feeds or item pickers.` }],
-  [DrawerFormDemo, 'Form', { description: `Drawer used for mobile-first data entry, keeps the form reachable at the bottom of the screen.` }],
+  [DrawerDefaultDemo, 'Default', { description: 'Bottom-sheet overlay, drag the handle or tap outside to close.' }],
+  [DrawerScrollableDemo, 'Scrollable', { description: 'Drawer with a scrollable list body and a fixed footer, suited for notification feeds or item pickers.' }],
+  [DrawerFormDemo, 'Form', { description: 'Drawer used for mobile-first data entry, keeps the form reachable at the bottom of the screen.' }],
 ]);
-export const accessibility: readonly string[] = [
-  `Focus is trapped inside the drawer while open.`,
-  `Escape dismisses the drawer; the drag handle is decorative and keyboard users dismiss with Escape.`,
-  `\`DrawerTitle\` is required for an accessible name.`,
-  `Ensure scrollable content inside the drawer is reachable by keyboard, not only by touch-drag.`,
-];

@@ -8,7 +8,7 @@ import {
 } from '@brika/clay/components/input-otp';
 import { REGEXP_ONLY_DIGITS } from 'input-otp';
 import { useState } from 'react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Six-digit OTP split into two groups of three with a dash separator. */
 export function InputOTPDefaultDemo() {
@@ -111,15 +111,9 @@ export function InputOTPControlledDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [InputOTPDefaultDemo, 'Default', { description: `Six-digit OTP split into two groups of three with a dash separator.` }],
-  [InputOTPPatternDemo, 'Pattern', { description: `Four-slot PIN entry without a separator, suitable for numeric PINs.` }],
-  [InputOTPNumericDemo, 'Numeric', { description: `Digits-only input using the REGEXP_ONLY_DIGITS pattern, rejects letters and symbols.` }],
-  [InputOTPPlaceholderDemo, 'Placeholder', { description: `Muted dot placeholder in each empty slot, fades out on focus or fill.` }],
-  [InputOTPControlledDemo, 'Controlled', { description: `Controlled OTP that shows a Verify button only once all six slots are filled.` }],
+  [InputOTPDefaultDemo, 'Default', { description: 'Six-digit OTP split into two groups of three with a dash separator.' }],
+  [InputOTPPatternDemo, 'Pattern', { description: 'Four-slot PIN entry without a separator, suitable for numeric PINs.' }],
+  [InputOTPNumericDemo, 'Numeric', { description: 'Digits-only input using the REGEXP_ONLY_DIGITS pattern, rejects letters and symbols.' }],
+  [InputOTPPlaceholderDemo, 'Placeholder', { description: 'Muted dot placeholder in each empty slot, fades out on focus or fill.' }],
+  [InputOTPControlledDemo, 'Controlled', { description: 'Controlled OTP that shows a Verify button only once all six slots are filled.' }],
 ]);
-export const accessibility: readonly string[] = [
-  `Paste works out-of-the-box, pasting a code fills all slots.`,
-  `A single hidden \`<input>\` handles the value; each visible slot is a presentation of that input's characters.`,
-  `The active slot gets a focus ring matching the input's focus state.`,
-  `Numeric-only patterns should use \`inputMode="numeric"\` to bring up the numeric keyboard on mobile.`,
-];

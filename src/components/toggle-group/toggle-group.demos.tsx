@@ -1,6 +1,6 @@
 import { ToggleGroup, ToggleGroupItem } from '@brika/clay/components/toggle-group';
 import { AlignCenter, AlignLeft, AlignRight, Bold, Italic, Underline } from 'lucide-react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Single-selection alignment picker, only one item active at a time. */
 export function ToggleGroupDefaultDemo() {
@@ -73,15 +73,9 @@ export function ToggleGroupVerticalDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [ToggleGroupDefaultDemo, 'Default', { description: `Single-selection alignment picker, only one item active at a time.` }],
-  [ToggleGroupMultipleDemo, 'Multiple', { description: `Multiple-selection formatting group, any combination can be active.` }],
-  [ToggleGroupTextDemo, 'Text', { description: `Text-label items, suitable for view switchers and segmented controls.` }],
-  [ToggleGroupDisabledDemo, 'Disabled', { description: `Individual items can be disabled while the rest remain interactive.` }],
-  [ToggleGroupVerticalDemo, 'Vertical', { description: `Vertical orientation stacks items top-to-bottom with shared dividers.` }],
+  [ToggleGroupDefaultDemo, 'Default', { description: 'Single-selection alignment picker, only one item active at a time.' }],
+  [ToggleGroupMultipleDemo, 'Multiple', { description: 'Multiple-selection formatting group, any combination can be active.' }],
+  [ToggleGroupTextDemo, 'Text', { description: 'Text-label items, suitable for view switchers and segmented controls.' }],
+  [ToggleGroupDisabledDemo, 'Disabled', { description: 'Individual items can be disabled while the rest remain interactive.' }],
+  [ToggleGroupVerticalDemo, 'Vertical', { description: 'Vertical orientation stacks items top-to-bottom with shared dividers.' }],
 ]);
-export const accessibility: readonly string[] = [
-  `Arrow keys navigate between items within the group; Space toggles the focused item.`,
-  `\`type="single"\` enforces one active item at a time; \`type="multiple"\` allows combinations.`,
-  `Icon-only items require \`aria-label\` on each \`ToggleGroupItem\`.`,
-  `The group wrapper carries \`role="group"\`, add \`aria-label\` to describe the group's purpose.`,
-];

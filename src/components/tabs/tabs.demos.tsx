@@ -4,7 +4,7 @@ import { Badge } from '@brika/clay/components/badge';
 import { Button } from '@brika/clay/components/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@brika/clay/components/tabs';
 import { useState } from 'react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Standard tabs with a pill-style list and three content panels. */
 export function TabsDefaultDemo() {
@@ -147,15 +147,9 @@ export function TabsControlledDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [TabsDefaultDemo, 'Default', { description: `Standard tabs with a pill-style list and three content panels.` }],
-  [TabsLineDemo, 'Line', { description: `Line-style variant with an underline indicator instead of a pill.` }],
-  [TabsWithBadgeDemo, 'With Badge', { description: `Badge inside a tab trigger, compose freely to show counts or status.` }],
-  [TabsVerticalDemo, 'Vertical', { description: `Vertical orientation, tabs stack on the left and content fills the right.` }],
-  [TabsControlledDemo, 'Controlled', { description: `Controlled tabs, drive the active tab programmatically with \`value\` and \`onValueChange\`.` }],
+  [TabsDefaultDemo, 'Default', { description: 'Standard tabs with a pill-style list and three content panels.' }],
+  [TabsLineDemo, 'Line', { description: 'Line-style variant with an underline indicator instead of a pill.' }],
+  [TabsWithBadgeDemo, 'With Badge', { description: 'Badge inside a tab trigger, compose freely to show counts or status.' }],
+  [TabsVerticalDemo, 'Vertical', { description: 'Vertical orientation, tabs stack on the left and content fills the right.' }],
+  [TabsControlledDemo, 'Controlled', { description: 'Controlled tabs, drive the active tab programmatically with `value` and `onValueChange`.' }],
 ]);
-export const accessibility: readonly string[] = [
-  `Arrow keys navigate between triggers inside the list, Tab moves focus to the active panel.`,
-  `Active panel carries \`aria-labelledby\` pointing to its trigger.`,
-  `Triggers carry \`role="tab"\` and \`aria-selected\`; the list carries \`role="tablist"\`.`,
-  `Vertical tabs require \`orientation="vertical"\` so AT uses the correct arrow key direction.`,
-];

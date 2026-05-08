@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@brika/clay/components/card';
 import { ScrollArea, ScrollBar } from '@brika/clay/components/scroll-area';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 const TAGS = [
   'typescript', 'react', 'tailwindcss', 'radix-ui', 'vite', 'astro', 'bun',
@@ -74,12 +74,7 @@ export function ScrollAreaCardDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [ScrollAreaDefaultDemo, 'Default', { description: `Vertical scroll area constraining a long list to a fixed height.` }],
-  [ScrollAreaHorizontalDemo, 'Horizontal', { description: `Horizontal scroll, use \`ScrollBar orientation="horizontal"\` to show a horizontal bar.` }],
-  [ScrollAreaCardDemo, 'Card', { description: `Scroll area inside a Card, constrains a tall settings list inside a bounded surface.` }],
+  [ScrollAreaDefaultDemo, 'Default', { description: 'Vertical scroll area constraining a long list to a fixed height.' }],
+  [ScrollAreaHorizontalDemo, 'Horizontal', { description: 'Horizontal scroll, use `ScrollBar orientation="horizontal"` to show a horizontal bar.' }],
+  [ScrollAreaCardDemo, 'Card', { description: 'Scroll area inside a Card, constrains a tall settings list inside a bounded surface.' }],
 ]);
-export const accessibility: readonly string[] = [
-  `The scrollable region carries \`role="region"\`, pair with \`aria-label\` for context.`,
-  `Custom scrollbars do not affect keyboard scrolling, arrow keys and Page Up/Down work normally.`,
-  `Horizontal scroll areas should be announced; users may not expect horizontal scrolling.`,
-];

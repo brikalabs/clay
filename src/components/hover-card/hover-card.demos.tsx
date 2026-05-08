@@ -5,7 +5,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from '@brika/clay/components/hover-card';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Hover over an inline element to preview non-critical supplemental content. */
 export function HoverCardDefaultDemo() {
@@ -77,12 +77,7 @@ export function HoverCardDelayDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [HoverCardDefaultDemo, 'Default', { description: `Hover over an inline element to preview non-critical supplemental content.` }],
-  [HoverCardProfileDemo, 'Profile', { description: `Rich profile preview with avatar, display name, handle, bio, and join date.` }],
-  [HoverCardDelayDemo, 'Delay', { description: `Open delay can be customised via the openDelay prop on HoverCard.` }],
+  [HoverCardDefaultDemo, 'Default', { description: 'Hover over an inline element to preview non-critical supplemental content.' }],
+  [HoverCardProfileDemo, 'Profile', { description: 'Rich profile preview with avatar, display name, handle, bio, and join date.' }],
+  [HoverCardDelayDemo, 'Delay', { description: 'Open delay can be customised via the openDelay prop on HoverCard.' }],
 ]);
-export const accessibility: readonly string[] = [
-  `Content opens on hover AND focus, keyboard users can trigger it via Tab.`,
-  `Not suitable for content that must be permanently reachable, use \`Popover\` for interactive content.`,
-  `Ensure the trigger is keyboard-focusable; an \`asChild\` link or button works well.`,
-];
