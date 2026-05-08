@@ -11,10 +11,10 @@ export const meta: ComponentMeta = {
   name: 'collapsible',
   displayName: 'Collapsible',
   group: 'Layout',
-  description: `Two-state container that hides or reveals content. Use for FAQs, accordions.`,
+  description: 'Two-state container that hides or reveals content. Use for FAQs, accordions.',
   accessibility: [
-    `Trigger carries \`aria-expanded\` automatically, no extra markup needed.`,
-    `Content carries \`aria-hidden\` when collapsed so AT skips it entirely.`,
-    `Animate height via CSS \`overflow-hidden\` + transition, not \`display:none\`, to preserve AT semantics.`,
+    'Trigger carries `aria-expanded` automatically, no extra markup needed.',
+    'Content carries `aria-hidden` when collapsed so AT skips it entirely.',
+    'Animate height via CSS `overflow-hidden` + transition, not `display:none`, to preserve AT semantics.',
   ],
 };

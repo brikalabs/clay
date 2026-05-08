@@ -13,8 +13,8 @@ export const meta: ComponentMeta = {
   group: 'Forms',
   description: 'A two-state button that can be toggled on or off, useful for formatting toolbars.',
   accessibility: [
-    `Carries \`aria-pressed\` automatically, AT announces "pressed" / "not pressed".`,
-    `Icon-only toggles REQUIRE an \`aria-label\`, there is no text fallback.`,
-    `Use \`variant="outline"\` to make the active state more visually distinct.`,
+    'Carries `aria-pressed` automatically, AT announces "pressed" / "not pressed".',
+    'Icon-only toggles REQUIRE an `aria-label`, there is no text fallback.',
+    'Use `variant="outline"` to make the active state more visually distinct.',
   ],
 };

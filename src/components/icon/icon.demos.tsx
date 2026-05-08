@@ -51,8 +51,8 @@ export function IconAccessibleDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [IconDefaultDemo, 'Default', { description: `Decorative icon, no \`aria-label\`, so screen readers skip it entirely.` }],
-  [IconTonesDemo, 'Tones', { description: `Three semantic tones mapped to \`--icon\`, \`--icon-muted\`, and \`--icon-primary\`.` }],
-  [IconSizesDemo, 'Sizes', { description: `Four size presets mapping to Tailwind \`size-*\` utilities.` }],
-  [IconAccessibleDemo, 'Accessible', { description: `\`aria-label\` makes the icon meaningful, screen readers announce the label text.` }],
+  [IconDefaultDemo, 'Default', { description: 'Decorative icon, no `aria-label`, so screen readers skip it entirely.' }],
+  [IconTonesDemo, 'Tones', { description: 'Three semantic tones mapped to `--icon`, `--icon-muted`, and `--icon-primary`.' }],
+  [IconSizesDemo, 'Sizes', { description: 'Four size presets mapping to Tailwind `size-*` utilities.' }],
+  [IconAccessibleDemo, 'Accessible', { description: '`aria-label` makes the icon meaningful, screen readers announce the label text.' }],
 ]);

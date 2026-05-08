@@ -54,8 +54,8 @@ export function BadgeAsLinkDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [BadgeDefaultDemo, 'Default', { description: `Default filled badge, use for status labels, counts, and tags.` }],
-  [BadgeVariantsDemo, 'Variants', { description: `All five variants, ordered by emphasis.` }],
-  [BadgeWithIconDemo, 'With Icon', { description: `SVG children are automatically sized to 12 px, no extra className needed.` }],
-  [BadgeAsLinkDemo, 'As Link', { description: `\`asChild\` renders badge styles on the child element, useful for version or tag links.` }],
+  [BadgeDefaultDemo, 'Default', { description: 'Default filled badge, use for status labels, counts, and tags.' }],
+  [BadgeVariantsDemo, 'Variants', { description: 'All five variants, ordered by emphasis.' }],
+  [BadgeWithIconDemo, 'With Icon', { description: 'SVG children are automatically sized to 12 px, no extra className needed.' }],
+  [BadgeAsLinkDemo, 'As Link', { description: '`asChild` renders badge styles on the child element, useful for version or tag links.' }],
 ]);

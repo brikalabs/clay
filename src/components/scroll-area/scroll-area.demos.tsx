@@ -74,7 +74,7 @@ export function ScrollAreaCardDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [ScrollAreaDefaultDemo, 'Default', { description: `Vertical scroll area constraining a long list to a fixed height.` }],
-  [ScrollAreaHorizontalDemo, 'Horizontal', { description: `Horizontal scroll, use \`ScrollBar orientation="horizontal"\` to show a horizontal bar.` }],
-  [ScrollAreaCardDemo, 'Card', { description: `Scroll area inside a Card, constrains a tall settings list inside a bounded surface.` }],
+  [ScrollAreaDefaultDemo, 'Default', { description: 'Vertical scroll area constraining a long list to a fixed height.' }],
+  [ScrollAreaHorizontalDemo, 'Horizontal', { description: 'Horizontal scroll, use `ScrollBar orientation="horizontal"` to show a horizontal bar.' }],
+  [ScrollAreaCardDemo, 'Card', { description: 'Scroll area inside a Card, constrains a tall settings list inside a bounded surface.' }],
 ]);

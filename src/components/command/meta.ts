@@ -14,9 +14,9 @@ export const meta: ComponentMeta = {
   description: 'A fast, composable command palette with fuzzy search, ideal for keyboard-driven power users.',
   externalDocs: [{ label: "cmdk", url: "https://cmdk.paco.me" }],
   accessibility: [
-    `Arrow keys navigate list items; Enter activates the focused item.`,
-    `The input is always focused while the list is visible, Tab closes the command palette.`,
-    `Grouped items announce their group heading; \`CommandEmpty\` is announced when no results match.`,
-    `Wrap in \`CommandDialog\` for modal use, adds focus trapping and Escape-to-close.`,
+    'Arrow keys navigate list items; Enter activates the focused item.',
+    'The input is always focused while the list is visible, Tab closes the command palette.',
+    'Grouped items announce their group heading; `CommandEmpty` is announced when no results match.',
+    'Wrap in `CommandDialog` for modal use, adds focus trapping and Escape-to-close.',
   ],
 };

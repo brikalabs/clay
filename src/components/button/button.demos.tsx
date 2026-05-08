@@ -73,10 +73,10 @@ export function ButtonAsLinkDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [ButtonDefaultDemo, 'Default', { description: `Default solid button, use for the primary call-to-action.` }],
-  [ButtonVariantsDemo, 'Variants', { description: `Six emphasis tiers in one row, ordered from most to least prominent.` }],
-  [ButtonSizesDemo, 'Sizes', { description: `Four text sizes, plus matching icon-only variants (\`icon-xs\` through \`icon-lg\`).` }],
-  [ButtonIconDemo, 'Icon', { description: `Icon-only button, \`aria-label\` is required for screen readers.` }],
-  [ButtonLoadingDemo, 'Loading', { description: `Disabled with a spinner, use while an async operation is in flight.` }],
-  [ButtonAsLinkDemo, 'As Link', { description: `\`asChild\` delegates button styles to the child element, here an anchor tag.` }],
+  [ButtonDefaultDemo, 'Default', { description: 'Default solid button, use for the primary call-to-action.' }],
+  [ButtonVariantsDemo, 'Variants', { description: 'Six emphasis tiers in one row, ordered from most to least prominent.' }],
+  [ButtonSizesDemo, 'Sizes', { description: 'Four text sizes, plus matching icon-only variants (`icon-xs` through `icon-lg`).' }],
+  [ButtonIconDemo, 'Icon', { description: 'Icon-only button, `aria-label` is required for screen readers.' }],
+  [ButtonLoadingDemo, 'Loading', { description: 'Disabled with a spinner, use while an async operation is in flight.' }],
+  [ButtonAsLinkDemo, 'As Link', { description: '`asChild` delegates button styles to the child element, here an anchor tag.' }],
 ]);

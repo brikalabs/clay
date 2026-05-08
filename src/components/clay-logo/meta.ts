@@ -11,9 +11,9 @@ export const meta: ComponentMeta = {
   name: 'clay-logo',
   displayName: 'Clay Logo',
   group: 'Primitives',
-  description: `Clay brand mark, three rounded tiles in an optional badge. Tiles use currentColor; badge bg overridable via --clay-logo-bg.`,
+  description: 'Clay brand mark, three rounded tiles in an optional badge. Tiles use currentColor; badge bg overridable via --clay-logo-bg.',
   accessibility: [
-    `Purely decorative, \`aria-hidden="true"\` is applied automatically.`,
-    `When used inside a link or button, supply \`aria-label\` on the interactive wrapper.`,
+    'Purely decorative, `aria-hidden="true"` is applied automatically.',
+    'When used inside a link or button, supply `aria-label` on the interactive wrapper.',
   ],
 };

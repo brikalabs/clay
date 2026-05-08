@@ -13,9 +13,9 @@ export const meta: ComponentMeta = {
   group: 'Forms',
   description: 'A group of two-state buttons that share variant and size context.',
   accessibility: [
-    `Arrow keys navigate between items within the group; Space toggles the focused item.`,
-    `\`type="single"\` enforces one active item at a time; \`type="multiple"\` allows combinations.`,
-    `Icon-only items require \`aria-label\` on each \`ToggleGroupItem\`.`,
-    `The group wrapper carries \`role="group"\`, add \`aria-label\` to describe the group's purpose.`,
+    'Arrow keys navigate between items within the group; Space toggles the focused item.',
+    '`type="single"` enforces one active item at a time; `type="multiple"` allows combinations.',
+    'Icon-only items require `aria-label` on each `ToggleGroupItem`.',
+    'The group wrapper carries `role="group"`, add `aria-label` to describe the group\'s purpose.',
   ],
 };

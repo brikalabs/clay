@@ -13,9 +13,9 @@ export const meta: ComponentMeta = {
   group: 'Navigation',
   description: 'Displays a menu to the user, opened on right-click or a long press.',
   accessibility: [
-    `Trigger carries \`aria-haspopup="menu"\` automatically.`,
-    `Keyboard: Shift+F10 or the context-menu key opens the menu on the focused trigger.`,
-    `Arrow keys navigate items; Enter/Space activate; Escape dismisses.`,
-    `Destructive items should use \`variant="destructive"\` so the visual indication matches AT context.`,
+    'Trigger carries `aria-haspopup="menu"` automatically.',
+    'Keyboard: Shift+F10 or the context-menu key opens the menu on the focused trigger.',
+    'Arrow keys navigate items; Enter/Space activate; Escape dismisses.',
+    'Destructive items should use `variant="destructive"` so the visual indication matches AT context.',
   ],
 };

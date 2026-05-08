@@ -59,7 +59,7 @@ export function EmptyStateSimpleDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [EmptyStateDefaultDemo, 'Default', { description: `Inbox-zero placeholder, icon, title, description, and optional action.` }],
-  [EmptyStateWithActionDemo, 'With Action', { description: `Search-results placeholder, combine with a clear-search action to guide the user.` }],
-  [EmptyStateSimpleDemo, 'Simple', { description: `Minimal empty state, title and description only, no icon or actions.` }],
+  [EmptyStateDefaultDemo, 'Default', { description: 'Inbox-zero placeholder, icon, title, description, and optional action.' }],
+  [EmptyStateWithActionDemo, 'With Action', { description: 'Search-results placeholder, combine with a clear-search action to guide the user.' }],
+  [EmptyStateSimpleDemo, 'Simple', { description: 'Minimal empty state, title and description only, no icon or actions.' }],
 ]);

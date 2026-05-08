@@ -109,6 +109,6 @@ export function MenubarFullDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [MenubarDefaultDemo, 'Default', { description: `Application menu bar with File, Edit, and View menus.` }],
-  [MenubarFullDemo, 'Full', { description: `Checkbox items for toggled settings and radio items for mutually exclusive options.` }],
+  [MenubarDefaultDemo, 'Default', { description: 'Application menu bar with File, Edit, and View menus.' }],
+  [MenubarFullDemo, 'Full', { description: 'Checkbox items for toggled settings and radio items for mutually exclusive options.' }],
 ]);

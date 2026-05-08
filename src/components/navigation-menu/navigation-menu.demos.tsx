@@ -133,7 +133,7 @@ export function NavigationMenuSimpleLinksDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [NavigationMenuDefaultDemo, 'Default', { description: `Flyout navigation with two trigger menus and a plain link.` }],
-  [NavigationMenuRichDemo, 'Rich', { description: `Rich flyout panel containing a featured item alongside a grid of documentation links.` }],
-  [NavigationMenuSimpleLinksDemo, 'Simple Links', { description: `Plain link items with no flyout, use \`navigationMenuTriggerStyle()\` for consistent sizing.` }],
+  [NavigationMenuDefaultDemo, 'Default', { description: 'Flyout navigation with two trigger menus and a plain link.' }],
+  [NavigationMenuRichDemo, 'Rich', { description: 'Rich flyout panel containing a featured item alongside a grid of documentation links.' }],
+  [NavigationMenuSimpleLinksDemo, 'Simple Links', { description: 'Plain link items with no flyout, use `navigationMenuTriggerStyle()` for consistent sizing.' }],
 ]);

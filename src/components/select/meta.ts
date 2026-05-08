@@ -11,11 +11,11 @@ export const meta: ComponentMeta = {
   name: 'select',
   displayName: 'Select',
   group: 'Forms',
-  description: `Dropdown selection menu. Wraps Radix Select with tokenised styling.`,
+  description: 'Dropdown selection menu. Wraps Radix Select with tokenised styling.',
   accessibility: [
-    `Trigger carries \`role="combobox"\` and \`aria-expanded\`, no extra markup needed.`,
-    `Arrow keys navigate options; Home/End jump to first/last; typing ahead filters.`,
-    `Selected item receives \`aria-selected="true"\` and a visible check mark.`,
-    `Disabled items carry \`aria-disabled="true"\` and are skipped by arrow navigation.`,
+    'Trigger carries `role="combobox"` and `aria-expanded`, no extra markup needed.',
+    'Arrow keys navigate options; Home/End jump to first/last; typing ahead filters.',
+    'Selected item receives `aria-selected="true"` and a visible check mark.',
+    'Disabled items carry `aria-disabled="true"` and are skipped by arrow navigation.',
   ],
 };

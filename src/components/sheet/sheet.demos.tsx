@@ -101,7 +101,7 @@ export function SheetFormDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [SheetDefaultDemo, 'Default', { description: `Right-side sheet (default), suited for filters, detail views, and settings panels.` }],
-  [SheetLeftDemo, 'Left', { description: `Left-side sheet, commonly used as an off-canvas navigation panel.` }],
-  [SheetFormDemo, 'Form', { description: `Sheet with a form, useful for quick data entry without navigating away.` }],
+  [SheetDefaultDemo, 'Default', { description: 'Right-side sheet (default), suited for filters, detail views, and settings panels.' }],
+  [SheetLeftDemo, 'Left', { description: 'Left-side sheet, commonly used as an off-canvas navigation panel.' }],
+  [SheetFormDemo, 'Form', { description: 'Sheet with a form, useful for quick data entry without navigating away.' }],
 ]);

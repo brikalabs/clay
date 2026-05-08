@@ -62,9 +62,9 @@ export function TextareaControlledDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [TextareaDefaultDemo, 'Default', { description: `Multi-line text input in its default auto-sizing state.` }],
-  [TextareaRowsDemo, 'Rows', { description: `Fixed height using the rows attribute.` }],
-  [TextareaDisabledDemo, 'Disabled', { description: `Disabled textarea blocks interaction and reduces opacity.` }],
-  [TextareaInvalidDemo, 'Invalid', { description: `Validation error state, aria-invalid triggers the destructive border.` }],
-  [TextareaControlledDemo, 'Controlled', { description: `Controlled textarea showing a live character counter.` }],
+  [TextareaDefaultDemo, 'Default', { description: 'Multi-line text input in its default auto-sizing state.' }],
+  [TextareaRowsDemo, 'Rows', { description: 'Fixed height using the rows attribute.' }],
+  [TextareaDisabledDemo, 'Disabled', { description: 'Disabled textarea blocks interaction and reduces opacity.' }],
+  [TextareaInvalidDemo, 'Invalid', { description: 'Validation error state, aria-invalid triggers the destructive border.' }],
+  [TextareaControlledDemo, 'Controlled', { description: 'Controlled textarea showing a live character counter.' }],
 ]);

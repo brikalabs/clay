@@ -63,6 +63,6 @@ export function SectionWithActionDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [SectionDefaultDemo, 'Default', { description: `Section card with a header and body content.` }],
-  [SectionWithActionDemo, 'With Action', { description: `Action button and a badge in the header's right slot, for settings panels with inline controls.` }],
+  [SectionDefaultDemo, 'Default', { description: 'Section card with a header and body content.' }],
+  [SectionWithActionDemo, 'With Action', { description: 'Action button and a badge in the header\'s right slot, for settings panels with inline controls.' }],
 ]);

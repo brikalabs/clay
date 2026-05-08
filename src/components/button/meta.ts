@@ -11,11 +11,11 @@ export const meta: ComponentMeta = {
   name: 'button',
   displayName: 'Button',
   group: 'Primitives',
-  description: `The default action affordance, a themed wrapper over the native button with CVA variants and asChild slot projection.`,
+  description: 'The default action affordance, a themed wrapper over the native button with CVA variants and asChild slot projection.',
   accessibility: [
-    `Focus ring uses \`--ring\` token for WCAG contrast.`,
-    `\`disabled\` removes pointer events and reduces opacity; it does not set \`aria-disabled\`.`,
-    `Icon-only buttons (\`size="icon"\`) REQUIRE an \`aria-label\`, there is no text fallback.`,
-    `\`asChild\` passes all button props (including \`role\` and \`aria-*\`) to the child element.`,
+    'Focus ring uses `--ring` token for WCAG contrast.',
+    '`disabled` removes pointer events and reduces opacity; it does not set `aria-disabled`.',
+    'Icon-only buttons (`size="icon"`) REQUIRE an `aria-label`, there is no text fallback.',
+    '`asChild` passes all button props (including `role` and `aria-*`) to the child element.',
   ],
 };

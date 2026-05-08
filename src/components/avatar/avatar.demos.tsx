@@ -91,9 +91,9 @@ export function AvatarGroupDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [AvatarDefaultDemo, 'Default', { description: `Default avatar with a remote image and initials fallback.` }],
-  [AvatarFallbackDemo, 'Fallback', { description: `When the image URL fails or is omitted, initials render in the fallback slot.` }],
-  [AvatarSizesDemo, 'Sizes', { description: `Three preset sizes, \`sm\` (24px), \`default\` (32px), and \`lg\` (40px).` }],
-  [AvatarBadgeDemo, 'Badge', { description: `AvatarBadge overlays a status indicator in the bottom-right corner.` }],
-  [AvatarGroupDemo, 'Group', { description: `Stacked AvatarGroup with a count bubble for the remaining members.` }],
+  [AvatarDefaultDemo, 'Default', { description: 'Default avatar with a remote image and initials fallback.' }],
+  [AvatarFallbackDemo, 'Fallback', { description: 'When the image URL fails or is omitted, initials render in the fallback slot.' }],
+  [AvatarSizesDemo, 'Sizes', { description: 'Three preset sizes, `sm` (24px), `default` (32px), and `lg` (40px).' }],
+  [AvatarBadgeDemo, 'Badge', { description: 'AvatarBadge overlays a status indicator in the bottom-right corner.' }],
+  [AvatarGroupDemo, 'Group', { description: 'Stacked AvatarGroup with a count bubble for the remaining members.' }],
 ]);

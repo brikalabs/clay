@@ -150,8 +150,8 @@ export function TableCompactDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [TableDefaultDemo, 'Default', { description: `Full workspace members table with name, email, role, and status columns.` }],
-  [TableStripedDemo, 'Striped', { description: `Striped rows using \`odd:bg-muted/40\` on TableRow, no extra wrapper needed.` }],
-  [TableActionDemo, 'Action', { description: `Actions column with Edit and Delete icon buttons per row.` }],
-  [TableCompactDemo, 'Compact', { description: `Dense table using \`text-xs\` and reduced cell padding, useful for data-heavy views.` }],
+  [TableDefaultDemo, 'Default', { description: 'Full workspace members table with name, email, role, and status columns.' }],
+  [TableStripedDemo, 'Striped', { description: 'Striped rows using `odd:bg-muted/40` on TableRow, no extra wrapper needed.' }],
+  [TableActionDemo, 'Action', { description: 'Actions column with Edit and Delete icon buttons per row.' }],
+  [TableCompactDemo, 'Compact', { description: 'Dense table using `text-xs` and reduced cell padding, useful for data-heavy views.' }],
 ]);

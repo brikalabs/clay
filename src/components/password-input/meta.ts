@@ -11,11 +11,11 @@ export const meta: ComponentMeta = {
   name: 'password-input',
   displayName: 'Password Input',
   group: 'Forms',
-  description: `Input variant for password entry with an eye toggle to reveal characters.`,
+  description: 'Input variant for password entry with an eye toggle to reveal characters.',
   accessibility: [
-    `The reveal toggle carries \`aria-label\` that updates between "Show password" and "Hide password".`,
-    `The underlying input switches between \`type="password"\` and \`type="text"\`, AT announces the mode change.`,
-    `\`aria-invalid="true"\` triggers the destructive ring; pair with a visible error message.`,
-    `Autocomplete attributes (\`autocomplete="current-password"\`) improve password-manager integration.`,
+    'The reveal toggle carries `aria-label` that updates between "Show password" and "Hide password".',
+    'The underlying input switches between `type="password"` and `type="text"`, AT announces the mode change.',
+    '`aria-invalid="true"` triggers the destructive ring; pair with a visible error message.',
+    'Autocomplete attributes (`autocomplete="current-password"`) improve password-manager integration.',
   ],
 };

@@ -91,7 +91,7 @@ export function PageHeaderBreadcrumbDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [PageHeaderDefaultDemo, 'Default', { description: `Standard page header with title, description, and a primary action.` }],
-  [PageHeaderWithCountDemo, 'With Count', { description: `PageHeaderCount adds a muted count next to the description, useful for record totals.` }],
-  [PageHeaderBreadcrumbDemo, 'Breadcrumb', { description: `Pair the page header with a Breadcrumb above it to show hierarchical location.` }],
+  [PageHeaderDefaultDemo, 'Default', { description: 'Standard page header with title, description, and a primary action.' }],
+  [PageHeaderWithCountDemo, 'With Count', { description: 'PageHeaderCount adds a muted count next to the description, useful for record totals.' }],
+  [PageHeaderBreadcrumbDemo, 'Breadcrumb', { description: 'Pair the page header with a Breadcrumb above it to show hierarchical location.' }],
 ]);

@@ -91,8 +91,8 @@ export function RadioGroupControlledDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [RadioGroupDefaultDemo, 'Default', { description: `Vertical radio group with a default value pre-selected.` }],
-  [RadioGroupDisabledDemo, 'Disabled', { description: `One item disabled independently while others remain interactive.` }],
-  [RadioGroupHorizontalDemo, 'Horizontal', { description: `Horizontal layout using orientation="horizontal" and flex-row spacing.` }],
-  [RadioGroupControlledDemo, 'Controlled', { description: `Fully controlled radio group that shows the selected value.` }],
+  [RadioGroupDefaultDemo, 'Default', { description: 'Vertical radio group with a default value pre-selected.' }],
+  [RadioGroupDisabledDemo, 'Disabled', { description: 'One item disabled independently while others remain interactive.' }],
+  [RadioGroupHorizontalDemo, 'Horizontal', { description: 'Horizontal layout using orientation="horizontal" and flex-row spacing.' }],
+  [RadioGroupControlledDemo, 'Controlled', { description: 'Fully controlled radio group that shows the selected value.' }],
 ]);

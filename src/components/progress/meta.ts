@@ -11,10 +11,10 @@ export const meta: ComponentMeta = {
   name: 'progress',
   displayName: 'Progress',
   group: 'Feedback',
-  description: `Linear determinate progress bar. Pass \`value\` 0 to 100.`,
+  description: 'Linear determinate progress bar. Pass `value` 0 to 100.',
   accessibility: [
-    `Carries \`role="progressbar"\`, \`aria-valuenow\`, \`aria-valuemin\`, and \`aria-valuemax\` automatically.`,
-    `Pair with a visible label or \`aria-label\` so AT announces what is progressing.`,
-    `Indeterminate state should also carry an accessible description explaining the uncertainty.`,
+    'Carries `role="progressbar"`, `aria-valuenow`, `aria-valuemin`, and `aria-valuemax` automatically.',
+    'Pair with a visible label or `aria-label` so AT announces what is progressing.',
+    'Indeterminate state should also carry an accessible description explaining the uncertainty.',
   ],
 };

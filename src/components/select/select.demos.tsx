@@ -118,9 +118,9 @@ export function SelectControlledDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [SelectDefaultDemo, 'Default', { description: `Basic single-value select for picking a timezone.` }],
-  [SelectGroupedDemo, 'Grouped', { description: `Options grouped by region using SelectGroup and SelectLabel.` }],
-  [SelectDisabledOptionDemo, 'Disabled Option', { description: `A single option marked disabled, users can see it but not select it.` }],
-  [SelectDisabledDemo, 'Disabled', { description: `The entire select is disabled, no interaction possible.` }],
-  [SelectControlledDemo, 'Controlled', { description: `Controlled select with an external state readout.` }],
+  [SelectDefaultDemo, 'Default', { description: 'Basic single-value select for picking a timezone.' }],
+  [SelectGroupedDemo, 'Grouped', { description: 'Options grouped by region using SelectGroup and SelectLabel.' }],
+  [SelectDisabledOptionDemo, 'Disabled Option', { description: 'A single option marked disabled, users can see it but not select it.' }],
+  [SelectDisabledDemo, 'Disabled', { description: 'The entire select is disabled, no interaction possible.' }],
+  [SelectControlledDemo, 'Controlled', { description: 'Controlled select with an external state readout.' }],
 ]);

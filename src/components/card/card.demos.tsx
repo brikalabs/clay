@@ -99,9 +99,9 @@ export function CardStatsDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [CardDefaultDemo, 'Default', { description: `Plain card with header and body content.` }],
-  [CardAccentDemo, 'Accent', { description: `Six accent variants mapped to the theme data-* palette.` }],
-  [CardInteractiveDemo, 'Interactive', { description: `Interactive card with hover lift, wrap in an anchor for full link behaviour.` }],
-  [CardFormDemo, 'Form', { description: `Form card pattern, title, inputs, and a footer action.` }],
-  [CardStatsDemo, 'Stats', { description: `Stats card showing a key metric with a trend indicator.` }],
+  [CardDefaultDemo, 'Default', { description: 'Plain card with header and body content.' }],
+  [CardAccentDemo, 'Accent', { description: 'Six accent variants mapped to the theme data-* palette.' }],
+  [CardInteractiveDemo, 'Interactive', { description: 'Interactive card with hover lift, wrap in an anchor for full link behaviour.' }],
+  [CardFormDemo, 'Form', { description: 'Form card pattern, title, inputs, and a footer action.' }],
+  [CardStatsDemo, 'Stats', { description: 'Stats card showing a key metric with a trend indicator.' }],
 ]);

@@ -89,8 +89,8 @@ export function TooltipSidesDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [TooltipDefaultDemo, 'Default', { description: `Wrap any element with TooltipTrigger inside a TooltipProvider to add a tooltip.` }],
-  [TooltipDelayDemo, 'Delay', { description: `Control open delay with delayDuration on the provider, 0 makes it instant.` }],
-  [TooltipDisabledElementDemo, 'Disabled Element', { description: `Wrap a disabled button in a focusable span so hover events reach the tooltip.` }],
-  [TooltipSidesDemo, 'Sides', { description: `Side and sideOffset control where the tooltip appears relative to its trigger.` }],
+  [TooltipDefaultDemo, 'Default', { description: 'Wrap any element with TooltipTrigger inside a TooltipProvider to add a tooltip.' }],
+  [TooltipDelayDemo, 'Delay', { description: 'Control open delay with delayDuration on the provider, 0 makes it instant.' }],
+  [TooltipDisabledElementDemo, 'Disabled Element', { description: 'Wrap a disabled button in a focusable span so hover events reach the tooltip.' }],
+  [TooltipSidesDemo, 'Sides', { description: 'Side and sideOffset control where the tooltip appears relative to its trigger.' }],
 ]);

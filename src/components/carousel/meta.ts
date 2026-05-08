@@ -14,9 +14,9 @@ export const meta: ComponentMeta = {
   description: 'A touch-friendly, accessible slideshow for cycling through items, powered by Embla.',
   externalDocs: [{ label: "Embla Carousel", url: "https://www.embla-carousel.com" }],
   accessibility: [
-    `Root carries \`role="region"\` with a label; each slide has \`role="group" aria-roledescription="slide"\`.`,
-    `Previous/Next buttons include \`sr-only\` screen-reader labels.`,
-    `Left/Right arrow keys navigate slides while focus is inside the carousel.`,
-    `Autoplay should pause on hover and focus to respect user attention and \`prefers-reduced-motion\`.`,
+    'Root carries `role="region"` with a label; each slide has `role="group" aria-roledescription="slide"`.',
+    'Previous/Next buttons include `sr-only` screen-reader labels.',
+    'Left/Right arrow keys navigate slides while focus is inside the carousel.',
+    'Autoplay should pause on hover and focus to respect user attention and `prefers-reduced-motion`.',
   ],
 };

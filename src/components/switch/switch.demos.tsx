@@ -64,9 +64,9 @@ export function SwitchSettingsRowDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [SwitchDefaultDemo, 'Default', { description: `Uncontrolled switch in its default on state.` }],
-  [SwitchControlledDemo, 'Controlled', { description: `Controlled switch with live state label next to it.` }],
-  [SwitchLabelDemo, 'Label', { description: `Switch paired with a Label, clicking the label text also toggles the switch.` }],
-  [SwitchDisabledDemo, 'Disabled', { description: `Disabled switch states, both checked and unchecked.` }],
-  [SwitchSettingsRowDemo, 'Settings Row', { description: `Settings row pattern, switch with a title and description label.` }],
+  [SwitchDefaultDemo, 'Default', { description: 'Uncontrolled switch in its default on state.' }],
+  [SwitchControlledDemo, 'Controlled', { description: 'Controlled switch with live state label next to it.' }],
+  [SwitchLabelDemo, 'Label', { description: 'Switch paired with a Label, clicking the label text also toggles the switch.' }],
+  [SwitchDisabledDemo, 'Disabled', { description: 'Disabled switch states, both checked and unchecked.' }],
+  [SwitchSettingsRowDemo, 'Settings Row', { description: 'Settings row pattern, switch with a title and description label.' }],
 ]);

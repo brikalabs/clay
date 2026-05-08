@@ -13,9 +13,9 @@ export const meta: ComponentMeta = {
   group: 'Navigation',
   description: 'A collection of links for site navigation, with optional flyout panels.',
   accessibility: [
-    `Arrow keys move between top-level items; Enter/Space opens flyout panels.`,
-    `Active link state is indicated via \`data-active\`; ensure \`aria-current="page"\` is also set for AT.`,
-    `Flyout panels are dismissed by moving focus outside or pressing Escape.`,
-    `Use \`NavigationMenuLink\` with \`asChild\` for router-link integration.`,
+    'Arrow keys move between top-level items; Enter/Space opens flyout panels.',
+    'Active link state is indicated via `data-active`; ensure `aria-current="page"` is also set for AT.',
+    'Flyout panels are dismissed by moving focus outside or pressing Escape.',
+    'Use `NavigationMenuLink` with `asChild` for router-link integration.',
   ],
 };

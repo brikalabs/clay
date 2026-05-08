@@ -58,8 +58,8 @@ export function PasswordInputFormDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [PasswordInputDefaultDemo, 'Default', { description: `Password field with lock icon and eye toggle to reveal characters.` }],
-  [PasswordInputInvalidDemo, 'Invalid', { description: `Invalid state surfaced via aria-invalid, shows destructive ring and border.` }],
-  [PasswordInputDisabledDemo, 'Disabled', { description: `Disabled password input, preserves layout, all interactions blocked.` }],
-  [PasswordInputFormDemo, 'Form', { description: `Full sign-in form context, password input paired with an email input and submit button.` }],
+  [PasswordInputDefaultDemo, 'Default', { description: 'Password field with lock icon and eye toggle to reveal characters.' }],
+  [PasswordInputInvalidDemo, 'Invalid', { description: 'Invalid state surfaced via aria-invalid, shows destructive ring and border.' }],
+  [PasswordInputDisabledDemo, 'Disabled', { description: 'Disabled password input, preserves layout, all interactions blocked.' }],
+  [PasswordInputFormDemo, 'Form', { description: 'Full sign-in form context, password input paired with an email input and submit button.' }],
 ]);

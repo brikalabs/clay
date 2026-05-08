@@ -43,10 +43,10 @@ export function InputFileDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [InputDefaultDemo, 'Default', { description: `Single-line text input in its default state.` }],
-  [InputTypesDemo, 'Types', { description: `Native input types, email, number, and search all pass through unchanged.` }],
-  [InputInvalidDemo, 'Invalid', { description: `Validation error state, set aria-invalid to trigger the destructive border.` }],
-  [InputDisabledDemo, 'Disabled', { description: `Disabled input, blocks interaction and reduces opacity.` }],
-  [InputReadonlyDemo, 'Readonly', { description: `Read-only input, focusable but not editable, useful for copy-able values.` }],
-  [InputFileDemo, 'File', { description: `File picker using the native file input type.` }],
+  [InputDefaultDemo, 'Default', { description: 'Single-line text input in its default state.' }],
+  [InputTypesDemo, 'Types', { description: 'Native input types, email, number, and search all pass through unchanged.' }],
+  [InputInvalidDemo, 'Invalid', { description: 'Validation error state, set aria-invalid to trigger the destructive border.' }],
+  [InputDisabledDemo, 'Disabled', { description: 'Disabled input, blocks interaction and reduces opacity.' }],
+  [InputReadonlyDemo, 'Readonly', { description: 'Read-only input, focusable but not editable, useful for copy-able values.' }],
+  [InputFileDemo, 'File', { description: 'File picker using the native file input type.' }],
 ]);

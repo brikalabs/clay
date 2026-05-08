@@ -50,8 +50,8 @@ export function SeparatorLabelledDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [SeparatorDefaultDemo, 'Default', { description: `Horizontal separator dividing two content blocks.` }],
-  [SeparatorVerticalDemo, 'Vertical', { description: `Vertical separator between inline elements.` }],
-  [SeparatorNavDemo, 'Nav', { description: `Vertical separator in a navigation link row.` }],
-  [SeparatorLabelledDemo, 'Labelled', { description: `Labelled horizontal separator, useful for sign-in "or continue with" patterns.` }],
+  [SeparatorDefaultDemo, 'Default', { description: 'Horizontal separator dividing two content blocks.' }],
+  [SeparatorVerticalDemo, 'Vertical', { description: 'Vertical separator between inline elements.' }],
+  [SeparatorNavDemo, 'Nav', { description: 'Vertical separator in a navigation link row.' }],
+  [SeparatorLabelledDemo, 'Labelled', { description: 'Labelled horizontal separator, useful for sign-in "or continue with" patterns.' }],
 ]);

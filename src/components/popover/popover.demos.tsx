@@ -82,7 +82,7 @@ export function PopoverAlignDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [PopoverDefaultDemo, 'Default', { description: `Filter panel inside a popover, typical pattern for inline form controls.` }],
-  [PopoverSidesDemo, 'Sides', { description: `The side prop controls which edge of the trigger the popover appears on.` }],
-  [PopoverAlignDemo, 'Align', { description: `The align prop pins the content to the start, center, or end of the trigger.` }],
+  [PopoverDefaultDemo, 'Default', { description: 'Filter panel inside a popover, typical pattern for inline form controls.' }],
+  [PopoverSidesDemo, 'Sides', { description: 'The side prop controls which edge of the trigger the popover appears on.' }],
+  [PopoverAlignDemo, 'Align', { description: 'The align prop pins the content to the start, center, or end of the trigger.' }],
 ]);

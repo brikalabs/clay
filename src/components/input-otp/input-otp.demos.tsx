@@ -111,9 +111,9 @@ export function InputOTPControlledDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [InputOTPDefaultDemo, 'Default', { description: `Six-digit OTP split into two groups of three with a dash separator.` }],
-  [InputOTPPatternDemo, 'Pattern', { description: `Four-slot PIN entry without a separator, suitable for numeric PINs.` }],
-  [InputOTPNumericDemo, 'Numeric', { description: `Digits-only input using the REGEXP_ONLY_DIGITS pattern, rejects letters and symbols.` }],
-  [InputOTPPlaceholderDemo, 'Placeholder', { description: `Muted dot placeholder in each empty slot, fades out on focus or fill.` }],
-  [InputOTPControlledDemo, 'Controlled', { description: `Controlled OTP that shows a Verify button only once all six slots are filled.` }],
+  [InputOTPDefaultDemo, 'Default', { description: 'Six-digit OTP split into two groups of three with a dash separator.' }],
+  [InputOTPPatternDemo, 'Pattern', { description: 'Four-slot PIN entry without a separator, suitable for numeric PINs.' }],
+  [InputOTPNumericDemo, 'Numeric', { description: 'Digits-only input using the REGEXP_ONLY_DIGITS pattern, rejects letters and symbols.' }],
+  [InputOTPPlaceholderDemo, 'Placeholder', { description: 'Muted dot placeholder in each empty slot, fades out on focus or fill.' }],
+  [InputOTPControlledDemo, 'Controlled', { description: 'Controlled OTP that shows a Verify button only once all six slots are filled.' }],
 ]);

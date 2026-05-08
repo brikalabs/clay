@@ -14,9 +14,9 @@ export const meta: ComponentMeta = {
   description: 'An accessible date picker calendar supporting single, range, and multiple selection modes.',
   externalDocs: [{ label: "react-day-picker", url: "https://daypicker.dev" }],
   accessibility: [
-    `Full keyboard navigation: arrow keys move between days, Enter/Space selects, Page Up/Down change months.`,
-    `Screen readers announce the selected date and current month context.`,
-    `Disabled dates carry \`aria-disabled\` and are skipped by arrow key navigation.`,
-    `For range selection, AT announces the start and end dates as they are selected.`,
+    'Full keyboard navigation: arrow keys move between days, Enter/Space selects, Page Up/Down change months.',
+    'Screen readers announce the selected date and current month context.',
+    'Disabled dates carry `aria-disabled` and are skipped by arrow key navigation.',
+    'For range selection, AT announces the start and end dates as they are selected.',
   ],
 };

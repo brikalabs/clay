@@ -73,7 +73,7 @@ export function CollapsibleControlledDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [CollapsibleDefaultDemo, 'Default', { description: `Basic collapsible, trigger toggles content visibility, no controlled state needed.` }],
-  [CollapsibleAnimatedDemo, 'Animated', { description: `Chevron rotates on open using \`data-[state=open]\`, wire it to the trigger via \`group\`.` }],
-  [CollapsibleControlledDemo, 'Controlled', { description: `Controlled collapsible, manage open state with \`open\` and \`onOpenChange\`.` }],
+  [CollapsibleDefaultDemo, 'Default', { description: 'Basic collapsible, trigger toggles content visibility, no controlled state needed.' }],
+  [CollapsibleAnimatedDemo, 'Animated', { description: 'Chevron rotates on open using `data-[state=open]`, wire it to the trigger via `group`.' }],
+  [CollapsibleControlledDemo, 'Controlled', { description: 'Controlled collapsible, manage open state with `open` and `onOpenChange`.' }],
 ]);

@@ -77,7 +77,7 @@ export function HoverCardDelayDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [HoverCardDefaultDemo, 'Default', { description: `Hover over an inline element to preview non-critical supplemental content.` }],
-  [HoverCardProfileDemo, 'Profile', { description: `Rich profile preview with avatar, display name, handle, bio, and join date.` }],
-  [HoverCardDelayDemo, 'Delay', { description: `Open delay can be customised via the openDelay prop on HoverCard.` }],
+  [HoverCardDefaultDemo, 'Default', { description: 'Hover over an inline element to preview non-critical supplemental content.' }],
+  [HoverCardProfileDemo, 'Profile', { description: 'Rich profile preview with avatar, display name, handle, bio, and join date.' }],
+  [HoverCardDelayDemo, 'Delay', { description: 'Open delay can be customised via the openDelay prop on HoverCard.' }],
 ]);

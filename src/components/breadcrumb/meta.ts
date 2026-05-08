@@ -11,11 +11,11 @@ export const meta: ComponentMeta = {
   name: 'breadcrumb',
   displayName: 'Breadcrumb',
   group: 'Navigation',
-  description: `Hierarchical location indicator with separators.`,
+  description: 'Hierarchical location indicator with separators.',
   accessibility: [
-    `Root renders \`<nav aria-label="breadcrumb">\`, no extra landmark markup needed.`,
-    `\`BreadcrumbPage\` renders \`aria-current="page"\` on the last item.`,
-    `\`BreadcrumbEllipsis\` is \`aria-hidden="true"\`, AT skips the visual indicator.`,
-    `Separator elements are presentational; AT does not read them.`,
+    'Root renders `<nav aria-label="breadcrumb">`, no extra landmark markup needed.',
+    '`BreadcrumbPage` renders `aria-current="page"` on the last item.',
+    '`BreadcrumbEllipsis` is `aria-hidden="true"`, AT skips the visual indicator.',
+    'Separator elements are presentational; AT does not read them.',
   ],
 };

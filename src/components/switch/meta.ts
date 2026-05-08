@@ -11,11 +11,11 @@ export const meta: ComponentMeta = {
   name: 'switch',
   displayName: 'Switch',
   group: 'Forms',
-  description: `Two-state toggle. Use for on/off settings; prefer Checkbox for multi-select forms.`,
+  description: 'Two-state toggle. Use for on/off settings; prefer Checkbox for multi-select forms.',
   accessibility: [
-    `Carries \`role="switch"\` with \`aria-checked\`, AT announces "on" / "off" state.`,
-    `Pair with a \`<Label>\`, clicking the label also toggles the switch.`,
-    `Disabled switches carry \`aria-disabled\` and are removed from the tab order.`,
-    `Use \`Switch\` for binary on/off settings; use \`Checkbox\` for multi-select form fields.`,
+    'Carries `role="switch"` with `aria-checked`, AT announces "on" / "off" state.',
+    'Pair with a `<Label>`, clicking the label also toggles the switch.',
+    'Disabled switches carry `aria-disabled` and are removed from the tab order.',
+    'Use `Switch` for binary on/off settings; use `Checkbox` for multi-select form fields.',
   ],
 };

@@ -109,7 +109,7 @@ export function DialogScrollableDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [DialogDefaultDemo, 'Default', { description: `Clean modal with a title, description, and two footer actions.` }],
-  [DialogFormDemo, 'Form', { description: `Dialog wrapping a form, useful for inline editing without leaving the page.` }],
-  [DialogScrollableDemo, 'Scrollable', { description: `Dialog with long scrollable content, the panel caps at 85vh and scrolls internally.` }],
+  [DialogDefaultDemo, 'Default', { description: 'Clean modal with a title, description, and two footer actions.' }],
+  [DialogFormDemo, 'Form', { description: 'Dialog wrapping a form, useful for inline editing without leaving the page.' }],
+  [DialogScrollableDemo, 'Scrollable', { description: 'Dialog with long scrollable content, the panel caps at 85vh and scrolls internally.' }],
 ]);

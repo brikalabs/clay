@@ -89,9 +89,9 @@ export function CheckboxFormGroupDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [CheckboxDefaultDemo, 'Default', { description: `Uncontrolled checkbox pre-checked for visible state.` }],
-  [CheckboxSizesDemo, 'Sizes', { description: `Three size presets, sm, default, lg, side by side with labels.` }],
-  [CheckboxIndeterminateDemo, 'Indeterminate', { description: `Tri-state checkbox cycling through unchecked, indeterminate, and checked.` }],
-  [CheckboxControlledDemo, 'Controlled', { description: `Controlled checkbox with external state displayed alongside.` }],
-  [CheckboxFormGroupDemo, 'Form Group', { description: `A realistic notification preferences group with independent checkboxes and labels.` }],
+  [CheckboxDefaultDemo, 'Default', { description: 'Uncontrolled checkbox pre-checked for visible state.' }],
+  [CheckboxSizesDemo, 'Sizes', { description: 'Three size presets, sm, default, lg, side by side with labels.' }],
+  [CheckboxIndeterminateDemo, 'Indeterminate', { description: 'Tri-state checkbox cycling through unchecked, indeterminate, and checked.' }],
+  [CheckboxControlledDemo, 'Controlled', { description: 'Controlled checkbox with external state displayed alongside.' }],
+  [CheckboxFormGroupDemo, 'Form Group', { description: 'A realistic notification preferences group with independent checkboxes and labels.' }],
 ]);

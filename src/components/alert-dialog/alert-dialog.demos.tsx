@@ -81,6 +81,6 @@ export function AlertDialogLoadingDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [AlertDialogDefaultDemo, 'Default', { description: `Destructive confirmation dialog, blocks all interaction until the user resolves it.` }],
-  [AlertDialogLoadingDemo, 'Loading', { description: `Controlled dialog where the confirm button shows a loading state while the action runs.` }],
+  [AlertDialogDefaultDemo, 'Default', { description: 'Destructive confirmation dialog, blocks all interaction until the user resolves it.' }],
+  [AlertDialogLoadingDemo, 'Loading', { description: 'Controlled dialog where the confirm button shows a loading state while the action runs.' }],
 ]);

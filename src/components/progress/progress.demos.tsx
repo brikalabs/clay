@@ -52,7 +52,7 @@ export function ProgressLabelledDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [ProgressDefaultDemo, 'Default', { description: `Basic determinate progress bar, pass \`value\` 0 to 100.` }],
-  [ProgressAnimatedDemo, 'Animated', { description: `Progress bar that increments automatically to simulate a running task.` }],
-  [ProgressLabelledDemo, 'Labelled', { description: `Progress with a percentage label, compose any text readout alongside the bar.` }],
+  [ProgressDefaultDemo, 'Default', { description: 'Basic determinate progress bar, pass `value` 0 to 100.' }],
+  [ProgressAnimatedDemo, 'Animated', { description: 'Progress bar that increments automatically to simulate a running task.' }],
+  [ProgressLabelledDemo, 'Labelled', { description: 'Progress with a percentage label, compose any text readout alongside the bar.' }],
 ]);

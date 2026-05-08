@@ -94,10 +94,10 @@ export function ButtonGroupVerticalDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [ButtonGroupDefaultDemo, 'Default', { description: `Three related action buttons joined in a shared frame, each click fires once, no selection state.` }],
-  [ButtonGroupFilledDemo, 'Filled', { description: `Filled default variant inside a group, good for primary action clusters.` }],
-  [ButtonGroupIconsDemo, 'Icons', { description: `Icon-only action buttons for a compact toolbar, every button needs an \`aria-label\`.` }],
-  [ButtonGroupWithInputDemo, 'With Input', { description: `Input + trailing button, classic copy-URL pattern.` }],
-  [ButtonGroupSplitDemo, 'Split Button', { description: `Primary action plus a dropdown chevron for related variants.` }],
-  [ButtonGroupVerticalDemo, 'Vertical', { description: `Vertical orientation stacks buttons top-to-bottom with shared dividers.` }],
+  [ButtonGroupDefaultDemo, 'Default', { description: 'Three related action buttons joined in a shared frame, each click fires once, no selection state.' }],
+  [ButtonGroupFilledDemo, 'Filled', { description: 'Filled default variant inside a group, good for primary action clusters.' }],
+  [ButtonGroupIconsDemo, 'Icons', { description: 'Icon-only action buttons for a compact toolbar, every button needs an `aria-label`.' }],
+  [ButtonGroupWithInputDemo, 'With Input', { description: 'Input + trailing button, classic copy-URL pattern.' }],
+  [ButtonGroupSplitDemo, 'Split Button', { description: 'Primary action plus a dropdown chevron for related variants.' }],
+  [ButtonGroupVerticalDemo, 'Vertical', { description: 'Vertical orientation stacks buttons top-to-bottom with shared dividers.' }],
 ]);

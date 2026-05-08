@@ -28,5 +28,5 @@ export function SidebarDefaultDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [SidebarDefaultDemo, 'Default', { description: `Sidebar is an app-shell component, it consumes a SidebarProvider context that wraps the whole app surface. A live preview inside a doc card is misleading: in real use the sidebar fills the viewport edge. Show a static screenshot-style preview here. The full doc page in apps/ui demonstrates the actual integration.` }],
+  [SidebarDefaultDemo, 'Default', { description: 'Sidebar is an app-shell component, it consumes a SidebarProvider context that wraps the whole app surface. A live preview inside a doc card is misleading: in real use the sidebar fills the viewport edge. Show a static screenshot-style preview here. The full doc page in apps/ui demonstrates the actual integration.' }],
 ]);

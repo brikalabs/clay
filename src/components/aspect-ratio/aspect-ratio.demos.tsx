@@ -56,8 +56,8 @@ export function AspectRatioPortraitDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [AspectRatioDefaultDemo, 'Default', { description: `16/9 ratio, the standard for responsive images and video embeds.` }],
-  [AspectRatioSquareDemo, 'Square', { description: `Square ratio, useful for profile photos, avatars, and thumbnails.` }],
-  [AspectRatioVideoDemo, 'Video', { description: `4/3 ratio, traditional video and presentation format.` }],
-  [AspectRatioPortraitDemo, 'Portrait', { description: `3/4 portrait ratio, common for product photos and editorial images.` }],
+  [AspectRatioDefaultDemo, 'Default', { description: '16/9 ratio, the standard for responsive images and video embeds.' }],
+  [AspectRatioSquareDemo, 'Square', { description: 'Square ratio, useful for profile photos, avatars, and thumbnails.' }],
+  [AspectRatioVideoDemo, 'Video', { description: '4/3 ratio, traditional video and presentation format.' }],
+  [AspectRatioPortraitDemo, 'Portrait', { description: '3/4 portrait ratio, common for product photos and editorial images.' }],
 ]);

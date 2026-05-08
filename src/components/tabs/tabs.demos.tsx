@@ -147,9 +147,9 @@ export function TabsControlledDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [TabsDefaultDemo, 'Default', { description: `Standard tabs with a pill-style list and three content panels.` }],
-  [TabsLineDemo, 'Line', { description: `Line-style variant with an underline indicator instead of a pill.` }],
-  [TabsWithBadgeDemo, 'With Badge', { description: `Badge inside a tab trigger, compose freely to show counts or status.` }],
-  [TabsVerticalDemo, 'Vertical', { description: `Vertical orientation, tabs stack on the left and content fills the right.` }],
-  [TabsControlledDemo, 'Controlled', { description: `Controlled tabs, drive the active tab programmatically with \`value\` and \`onValueChange\`.` }],
+  [TabsDefaultDemo, 'Default', { description: 'Standard tabs with a pill-style list and three content panels.' }],
+  [TabsLineDemo, 'Line', { description: 'Line-style variant with an underline indicator instead of a pill.' }],
+  [TabsWithBadgeDemo, 'With Badge', { description: 'Badge inside a tab trigger, compose freely to show counts or status.' }],
+  [TabsVerticalDemo, 'Vertical', { description: 'Vertical orientation, tabs stack on the left and content fills the right.' }],
+  [TabsControlledDemo, 'Controlled', { description: 'Controlled tabs, drive the active tab programmatically with `value` and `onValueChange`.' }],
 ]);

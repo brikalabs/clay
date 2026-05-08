@@ -38,7 +38,7 @@ export function SectionLabelWithCountDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [SectionLabelDefaultDemo, 'Default', { description: `Simple uppercase group divider above a list of cards.` }],
-  [SectionLabelTonesDemo, 'Tones', { description: `Semantic tones map to status colors, \`destructive\`, \`warning\`, \`success\`, \`info\`.` }],
-  [SectionLabelWithCountDemo, 'With Count', { description: `Inline count makes quantities scannable at a glance.` }],
+  [SectionLabelDefaultDemo, 'Default', { description: 'Simple uppercase group divider above a list of cards.' }],
+  [SectionLabelTonesDemo, 'Tones', { description: 'Semantic tones map to status colors, `destructive`, `warning`, `success`, `info`.' }],
+  [SectionLabelWithCountDemo, 'With Count', { description: 'Inline count makes quantities scannable at a glance.' }],
 ]);

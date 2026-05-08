@@ -100,7 +100,7 @@ export function ContextMenuRadioDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [ContextMenuDefaultDemo, 'Default', { description: `Right-click (or long-press on mobile) the target area to open the menu.` }],
-  [ContextMenuCheckboxDemo, 'Checkbox', { description: `ContextMenuCheckboxItem maintains a checked state for toggleable settings.` }],
-  [ContextMenuRadioDemo, 'Radio', { description: `ContextMenuRadioGroup enforces a single active choice across a set of items.` }],
+  [ContextMenuDefaultDemo, 'Default', { description: 'Right-click (or long-press on mobile) the target area to open the menu.' }],
+  [ContextMenuCheckboxDemo, 'Checkbox', { description: 'ContextMenuCheckboxItem maintains a checked state for toggleable settings.' }],
+  [ContextMenuRadioDemo, 'Radio', { description: 'ContextMenuRadioGroup enforces a single active choice across a set of items.' }],
 ]);

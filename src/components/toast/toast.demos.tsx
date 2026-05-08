@@ -115,8 +115,8 @@ export function ToastPositionDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [ToastDefaultDemo, 'Default', { description: `Trigger a basic notification, mount one Toaster near the app root first.` }],
-  [ToastVariantsDemo, 'Variants', { description: `Semantic intent variants and inline action button.` }],
-  [ToastPromiseDemo, 'Promise', { description: `toast.promise tracks an async operation through loading, success, and error states.` }],
-  [ToastPositionDemo, 'Position', { description: `Configure Toaster position and display duration at the mount site.` }],
+  [ToastDefaultDemo, 'Default', { description: 'Trigger a basic notification, mount one Toaster near the app root first.' }],
+  [ToastVariantsDemo, 'Variants', { description: 'Semantic intent variants and inline action button.' }],
+  [ToastPromiseDemo, 'Promise', { description: 'toast.promise tracks an async operation through loading, success, and error states.' }],
+  [ToastPositionDemo, 'Position', { description: 'Configure Toaster position and display duration at the mount site.' }],
 ]);

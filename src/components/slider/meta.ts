@@ -11,11 +11,11 @@ export const meta: ComponentMeta = {
   name: 'slider',
   displayName: 'Slider',
   group: 'Forms',
-  description: `Single-thumb numeric range track. Optional tick dots and labels mark \`step\` increments, custom intervals, or preset positions. Pair with \`<SliderValue>\` when you need a numeric readout.`,
+  description: 'Single-thumb numeric range track. Optional tick dots and labels mark `step` increments, custom intervals, or preset positions. Pair with `<SliderValue>` when you need a numeric readout.',
   accessibility: [
-    `Built on a native \`<input type="range">\`, all keyboard and AT semantics are native.`,
-    `Arrow keys adjust value by \`step\`; Home/End jump to \`min\`/\`max\`.`,
-    `Always provide a visible label linked via \`htmlFor\` or wrapped \`<label>\`.`,
-    `\`SliderValue\` pairing gives a numeric readout, include \`unit\` for percentage or currency.`,
+    'Built on a native `<input type="range">`, all keyboard and AT semantics are native.',
+    'Arrow keys adjust value by `step`; Home/End jump to `min`/`max`.',
+    'Always provide a visible label linked via `htmlFor` or wrapped `<label>`.',
+    '`SliderValue` pairing gives a numeric readout, include `unit` for percentage or currency.',
   ],
 };

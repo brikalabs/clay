@@ -124,8 +124,8 @@ export function AccordionControlledDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [AccordionDefaultDemo, 'Default', { description: `Single-select FAQ accordion, one item open at a time, collapsible.` }],
-  [AccordionMultipleDemo, 'Multiple', { description: `Multiple open sections at once, pass \`type="multiple"\` to the root.` }],
-  [AccordionDisabledDemo, 'Disabled', { description: `Disabled item, set \`disabled\` on \`AccordionItem\` to prevent interaction.` }],
-  [AccordionControlledDemo, 'Controlled', { description: `Controlled accordion, manage open state externally with \`value\` and \`onValueChange\`.` }],
+  [AccordionDefaultDemo, 'Default', { description: 'Single-select FAQ accordion, one item open at a time, collapsible.' }],
+  [AccordionMultipleDemo, 'Multiple', { description: 'Multiple open sections at once, pass `type="multiple"` to the root.' }],
+  [AccordionDisabledDemo, 'Disabled', { description: 'Disabled item, set `disabled` on `AccordionItem` to prevent interaction.' }],
+  [AccordionControlledDemo, 'Controlled', { description: 'Controlled accordion, manage open state externally with `value` and `onValueChange`.' }],
 ]);

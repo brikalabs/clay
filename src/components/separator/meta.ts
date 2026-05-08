@@ -11,10 +11,10 @@ export const meta: ComponentMeta = {
   name: 'separator',
   displayName: 'Separator',
   group: 'Layout',
-  description: `Visual or semantic divider between content sections.`,
+  description: 'Visual or semantic divider between content sections.',
   accessibility: [
-    `Renders \`<hr>\` with \`role="separator"\`, meaningful to AT when it divides distinct content sections.`,
-    `Pass \`aria-orientation="vertical"\` when used as a vertical divider between inline items.`,
-    `Purely decorative separators should carry \`aria-hidden="true"\`.`,
+    'Renders `<hr>` with `role="separator"`, meaningful to AT when it divides distinct content sections.',
+    'Pass `aria-orientation="vertical"` when used as a vertical divider between inline items.',
+    'Purely decorative separators should carry `aria-hidden="true"`.',
   ],
 };

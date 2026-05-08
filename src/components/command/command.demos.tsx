@@ -166,7 +166,7 @@ export function CommandGroupsDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [CommandDefaultDemo, 'Default', { description: `Inline command palette with grouped items, icons, and keyboard shortcuts.` }],
-  [CommandDialogDemo, 'Dialog', { description: `Modal command palette triggered by Cmd+K, the standard power-user pattern.` }],
-  [CommandGroupsDemo, 'Groups', { description: `Three groups, Suggestions, Recent, and Settings, with icons on every item.` }],
+  [CommandDefaultDemo, 'Default', { description: 'Inline command palette with grouped items, icons, and keyboard shortcuts.' }],
+  [CommandDialogDemo, 'Dialog', { description: 'Modal command palette triggered by Cmd+K, the standard power-user pattern.' }],
+  [CommandGroupsDemo, 'Groups', { description: 'Three groups, Suggestions, Recent, and Settings, with icons on every item.' }],
 ]);

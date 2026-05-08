@@ -66,8 +66,8 @@ export function InputGroupTextareaDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [InputGroupDefaultDemo, 'Default', { description: `Currency field with dollar-sign prefix and currency code suffix.` }],
-  [InputGroupSearchDemo, 'Search', { description: `Search field with a leading icon and a trailing clear button.` }],
-  [InputGroupUrlDemo, 'Url', { description: `URL field with a fixed scheme prefix to guide input format.` }],
-  [InputGroupTextareaDemo, 'Textarea', { description: `Textarea variant, block-level addon labels above and below a multiline input.` }],
+  [InputGroupDefaultDemo, 'Default', { description: 'Currency field with dollar-sign prefix and currency code suffix.' }],
+  [InputGroupSearchDemo, 'Search', { description: 'Search field with a leading icon and a trailing clear button.' }],
+  [InputGroupUrlDemo, 'Url', { description: 'URL field with a fixed scheme prefix to guide input format.' }],
+  [InputGroupTextareaDemo, 'Textarea', { description: 'Textarea variant, block-level addon labels above and below a multiline input.' }],
 ]);

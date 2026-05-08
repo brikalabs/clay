@@ -62,8 +62,8 @@ export function ToggleFormattingDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [ToggleDefaultDemo, 'Default', { description: `A single toggle button that stays pressed until clicked again.` }],
-  [ToggleVariantsDemo, 'Variants', { description: `Two variants: default (transparent background) and outline (bordered).` }],
-  [ToggleSizesDemo, 'Sizes', { description: `Three size presets side by side.` }],
-  [ToggleFormattingDemo, 'Formatting', { description: `Multiple small icon toggles for a rich-text formatting toolbar.` }],
+  [ToggleDefaultDemo, 'Default', { description: 'A single toggle button that stays pressed until clicked again.' }],
+  [ToggleVariantsDemo, 'Variants', { description: 'Two variants: default (transparent background) and outline (bordered).' }],
+  [ToggleSizesDemo, 'Sizes', { description: 'Three size presets side by side.' }],
+  [ToggleFormattingDemo, 'Formatting', { description: 'Multiple small icon toggles for a rich-text formatting toolbar.' }],
 ]);

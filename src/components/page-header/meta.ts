@@ -11,10 +11,10 @@ export const meta: ComponentMeta = {
   name: 'page-header',
   displayName: 'Page Header',
   group: 'Layout',
-  description: `Standard page title block with optional description, count, and action slots.`,
+  description: 'Standard page title block with optional description, count, and action slots.',
   accessibility: [
-    `\`PageHeaderTitle\` renders as \`<h1>\` by default, ensure only one \`<h1>\` per page.`,
-    `Action buttons should be descriptive: "New dashboard" not just "New".`,
-    `When used with a \`Breadcrumb\`, the breadcrumb provides location context the heading cannot.`,
+    '`PageHeaderTitle` renders as `<h1>` by default, ensure only one `<h1>` per page.',
+    'Action buttons should be descriptive: "New dashboard" not just "New".',
+    'When used with a `Breadcrumb`, the breadcrumb provides location context the heading cannot.',
   ],
 };

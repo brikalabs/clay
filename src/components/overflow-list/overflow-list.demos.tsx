@@ -84,6 +84,6 @@ export function OverflowListActiveDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [OverflowListDefaultDemo, 'Default', { description: `Tags that overflow the container collapse into a "+N more" badge. Resize the window to see it adapt.` }],
-  [OverflowListActiveDemo, 'Active', { description: `The active item is always kept visible even when it would otherwise be hidden.` }],
+  [OverflowListDefaultDemo, 'Default', { description: 'Tags that overflow the container collapse into a "+N more" badge. Resize the window to see it adapt.' }],
+  [OverflowListActiveDemo, 'Active', { description: 'The active item is always kept visible even when it would otherwise be hidden.' }],
 ]);

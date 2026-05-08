@@ -74,7 +74,7 @@ export function ProgressDisplayErrorDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [ProgressDisplayDefaultDemo, 'Default', { description: `In-progress state, spinner, phase label, and a live log stream.` }],
-  [ProgressDisplaySuccessDemo, 'Success', { description: `Success state, bar turns green and an optional success message is shown.` }],
-  [ProgressDisplayErrorDemo, 'Error', { description: `Error state, bar turns destructive and the error message block appears.` }],
+  [ProgressDisplayDefaultDemo, 'Default', { description: 'In-progress state, spinner, phase label, and a live log stream.' }],
+  [ProgressDisplaySuccessDemo, 'Success', { description: 'Success state, bar turns green and an optional success message is shown.' }],
+  [ProgressDisplayErrorDemo, 'Error', { description: 'Error state, bar turns destructive and the error message block appears.' }],
 ]);

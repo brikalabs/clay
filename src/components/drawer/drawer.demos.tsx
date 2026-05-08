@@ -111,7 +111,7 @@ export function DrawerFormDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [DrawerDefaultDemo, 'Default', { description: `Bottom-sheet overlay, drag the handle or tap outside to close.` }],
-  [DrawerScrollableDemo, 'Scrollable', { description: `Drawer with a scrollable list body and a fixed footer, suited for notification feeds or item pickers.` }],
-  [DrawerFormDemo, 'Form', { description: `Drawer used for mobile-first data entry, keeps the form reachable at the bottom of the screen.` }],
+  [DrawerDefaultDemo, 'Default', { description: 'Bottom-sheet overlay, drag the handle or tap outside to close.' }],
+  [DrawerScrollableDemo, 'Scrollable', { description: 'Drawer with a scrollable list body and a fixed footer, suited for notification feeds or item pickers.' }],
+  [DrawerFormDemo, 'Form', { description: 'Drawer used for mobile-first data entry, keeps the form reachable at the bottom of the screen.' }],
 ]);

@@ -50,8 +50,8 @@ export function SkeletonArticleDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [SkeletonDefaultDemo, 'Default', { description: `Single line skeleton, match width to expected text content.` }],
-  [SkeletonCardDemo, 'Card', { description: `Avatar + text skeleton for a user row or comment thread.` }],
-  [SkeletonTableDemo, 'Table', { description: `Table row skeleton with columns of varying widths.` }],
-  [SkeletonArticleDemo, 'Article', { description: `Article or blog post skeleton, heading plus body lines.` }],
+  [SkeletonDefaultDemo, 'Default', { description: 'Single line skeleton, match width to expected text content.' }],
+  [SkeletonCardDemo, 'Card', { description: 'Avatar + text skeleton for a user row or comment thread.' }],
+  [SkeletonTableDemo, 'Table', { description: 'Table row skeleton with columns of varying widths.' }],
+  [SkeletonArticleDemo, 'Article', { description: 'Article or blog post skeleton, heading plus body lines.' }],
 ]);

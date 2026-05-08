@@ -80,4 +80,35 @@ describe('component meta + demos co-location', () => {
       expect(mod.meta?.name).toBe(folder.slug);
     }
   });
+
+  test('accessibility entries are single-quoted strings, not template literals', () => {
+    // Template literals force authors to write `\\`aria-label\\`` for every
+    // inline-code ref. Single-quoted strings let them write '`aria-label`'
+    // unescaped. This guard fires when someone reintroduces the backtick form.
+    for (const folder of FOLDERS) {
+      const src = readFileSync(folder.metaPath, 'utf8');
+      const block = /\baccessibility:\s*\[\n([\s\S]*?)\n\s*\],/.exec(src);
+      if (!block) continue;
+      const body = block[1];
+      for (const rawLine of body.split('\n')) {
+        const line = rawLine.trim();
+        if (!line) continue;
+        // Each entry should start with a single quote (or `"`); flag any
+        // template literals so reviewers see the regression early.
+        expect(line.startsWith('`')).toBe(false);
+      }
+    }
+  });
+
+  test('no demo description in *.demos.tsx escapes a backtick (use single-quoted strings)', () => {
+    // Same DX win as accessibility entries, applied to `description: \\\`...\\\``
+    // payloads inside `defineDemos([...])`. Authors should write
+    // `description: '...\\`code\\`...'` instead.
+    for (const folder of FOLDERS) {
+      if (!folder.demosPath) continue;
+      const src = readFileSync(folder.demosPath, 'utf8');
+      // Match `description: \`...\\\`...\``, regardless of position in line.
+      expect(src).not.toMatch(/description:\s*`[^`]*\\`/);
+    }
+  });
 });

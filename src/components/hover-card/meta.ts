@@ -13,8 +13,8 @@ export const meta: ComponentMeta = {
   group: 'Overlays',
   description: 'A floating card that appears on hover, useful for previewing linked content.',
   accessibility: [
-    `Content opens on hover AND focus, keyboard users can trigger it via Tab.`,
-    `Not suitable for content that must be permanently reachable, use \`Popover\` for interactive content.`,
-    `Ensure the trigger is keyboard-focusable; an \`asChild\` link or button works well.`,
+    'Content opens on hover AND focus, keyboard users can trigger it via Tab.',
+    'Not suitable for content that must be permanently reachable, use `Popover` for interactive content.',
+    'Ensure the trigger is keyboard-focusable; an `asChild` link or button works well.',
   ],
 };

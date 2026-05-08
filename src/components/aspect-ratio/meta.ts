@@ -13,7 +13,7 @@ export const meta: ComponentMeta = {
   group: 'Layout',
   description: 'Displays content within a desired ratio, useful for responsive images, videos, and embeds.',
   accessibility: [
-    `The container is purely presentational, no ARIA role or keyboard behavior.`,
-    `Content placed inside inherits normal focus order; ensure images carry meaningful \`alt\` text.`,
+    'The container is purely presentational, no ARIA role or keyboard behavior.',
+    'Content placed inside inherits normal focus order; ensure images carry meaningful `alt` text.',
   ],
 };

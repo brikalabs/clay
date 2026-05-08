@@ -35,7 +35,7 @@ export function LabelDisabledDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [LabelDefaultDemo, 'Default', { description: `Label paired with an input, clicking the label focuses the field.` }],
-  [LabelRequiredDemo, 'Required', { description: `Required field, add an asterisk inside a span to signal mandatory status.` }],
-  [LabelDisabledDemo, 'Disabled', { description: `Label on a disabled field, inherits reduced opacity via the peer-disabled class.` }],
+  [LabelDefaultDemo, 'Default', { description: 'Label paired with an input, clicking the label focuses the field.' }],
+  [LabelRequiredDemo, 'Required', { description: 'Required field, add an asterisk inside a span to signal mandatory status.' }],
+  [LabelDisabledDemo, 'Disabled', { description: 'Label on a disabled field, inherits reduced opacity via the peer-disabled class.' }],
 ]);

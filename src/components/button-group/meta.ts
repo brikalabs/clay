@@ -11,10 +11,10 @@ export const meta: ComponentMeta = {
   name: 'button-group',
   displayName: 'Button Group',
   group: 'Primitives',
-  description: `Visually-joined cluster of buttons sharing borders.`,
+  description: 'Visually-joined cluster of buttons sharing borders.',
   accessibility: [
-    `The wrapper carries \`role="group"\`, add \`aria-label\` when the group's purpose is not clear from context.`,
-    `Each button inside the group keeps its individual focus ring and keyboard behavior.`,
-    `Icon-only buttons inside the group still require \`aria-label\`.`,
+    'The wrapper carries `role="group"`, add `aria-label` when the group\'s purpose is not clear from context.',
+    'Each button inside the group keeps its individual focus ring and keyboard behavior.',
+    'Icon-only buttons inside the group still require `aria-label`.',
   ],
 };
