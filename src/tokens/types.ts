@@ -172,6 +172,19 @@ export interface TokenSpec {
   readonly tailwindNamespace?: TailwindNamespace;
   readonly utilityAlias?: string;
   readonly lineHeight?: string;
+  /**
+   * Set to `true` when the token is referenced from hand-authored CSS or
+   * className strings (e.g. inside a `color-mix(... var(--token) ...)`
+   * expression where Tailwind can't insert a fallback). Forces the token
+   * to land in the `:root` defaults block even when its `defaultLight`
+   * is a `var()` chain that isn't reachable from any other registry
+   * default or shorthand-bundle utility.
+   *
+   * Tokens that are only consumed via Tailwind utilities (the auto-
+   * generated `bg-*`, `rounded-*`, ... classes) DO NOT need this flag,
+   * the utility's `var(--name, <fallback>)` covers them.
+   */
+  readonly consumedByCss?: boolean;
 }
 
 /**

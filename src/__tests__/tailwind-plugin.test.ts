@@ -8,7 +8,7 @@ import { TOKEN_REGISTRY, TOKENS_BY_NAME } from '../tokens/registry';
 import { SHORTHAND_INDEX } from '../tokens/shorthands';
 import type { ResolvedTokenSpec } from '../tokens/types';
 
-const { buildBaseRules, buildThemeExtend } = __internal;
+const { buildBaseRules, buildRootMembership, buildThemeExtend } = __internal;
 
 // ─── Mock plugin context ─────────────────────────────────────────────────────
 
@@ -60,12 +60,29 @@ function runHandler(): {
   return { matchUtilitiesCalls, addBaseCalls };
 }
 
+/**
+ * Plugin merges every `addBase` payload into a single call now; the merged
+ * rule object is the union, this helper looks the selector up across calls.
+ */
 function findRule(addBaseCalls: readonly AddBaseCall[], selector: string): Record<string, string> {
-  const call = addBaseCalls.find((c) => Object.keys(c.rules)[0] === selector);
-  if (!call) {
-    throw new Error(`addBase was not called with selector "${selector}"`);
+  for (const call of addBaseCalls) {
+    if (selector in call.rules) {
+      return call.rules[selector] as Record<string, string>;
+    }
   }
-  return call.rules[selector] as Record<string, string>;
+  throw new Error(`addBase was not called with selector "${selector}"`);
+}
+
+function maybeFindRule(
+  addBaseCalls: readonly AddBaseCall[],
+  selector: string
+): Record<string, string> | undefined {
+  for (const call of addBaseCalls) {
+    if (selector in call.rules) {
+      return call.rules[selector] as Record<string, string>;
+    }
+  }
+  return undefined;
 }
 
 function mkToken(spec: Partial<ResolvedTokenSpec> & Pick<ResolvedTokenSpec, 'name'>): ResolvedTokenSpec {
@@ -125,12 +142,60 @@ describe('clayTailwindPlugin handler', () => {
     expect(rootRules['--button-padding-x']).toBeDefined();
   });
 
-  test('emits `:root` for every registry token, deterministic and disk-I/O-free', () => {
+  test('emits `:root` for every Layer-0/1 token AND every shorthand-bundle Layer-2 token', () => {
     const { addBaseCalls } = runHandler();
     const rootRules = findRule(addBaseCalls, ':root, [data-theme="clay"]');
     for (const token of TOKEN_REGISTRY) {
-      expect(rootRules[`--${token.name}`]).toBe(token.defaultLight);
+      // Scalars + roles always land in :root, they're concrete cascade roots.
+      if (token.layer !== 'component') {
+        expect(rootRules[`--${token.name}`]).toBe(token.defaultLight);
+        continue;
+      }
+      // Component tokens with literal defaults always emit.
+      if (!token.defaultLight.startsWith('var(')) {
+        expect(rootRules[`--${token.name}`]).toBe(token.defaultLight);
+      }
+      // Component tokens consumed by a shorthand bundle must emit so the
+      // bundle's `var(--button-padding-x)` actually resolves.
+      if (SHORTHAND_INDEX.tokenRefs.has(token.name)) {
+        expect(rootRules[`--${token.name}`]).toBe(token.defaultLight);
+      }
+      // Tokens flagged `consumedByCss` must always emit.
+      if (token.consumedByCss) {
+        expect(rootRules[`--${token.name}`]).toBe(token.defaultLight);
+      }
     }
+  });
+
+  test('skips var-chain Layer-2 tokens that are reachable only through namespaced utility fallbacks', () => {
+    const { addBaseCalls } = runHandler();
+    const rootRules = findRule(addBaseCalls, ':root, [data-theme="clay"]');
+    // Build the same membership set the plugin uses; tokens NOT in this set
+    // and NOT cascade-referenced should be absent from `:root`.
+    const referencedByCascade = new Set<string>();
+    const ref = /var\(--([a-z][a-z0-9-]*)/g;
+    for (const t of TOKEN_REGISTRY) {
+      for (const v of [t.defaultLight, t.defaultDark]) {
+        if (!v) continue;
+        for (const m of v.matchAll(ref)) referencedByCascade.add(m[1]);
+      }
+    }
+    let skipped = 0;
+    for (const t of TOKEN_REGISTRY) {
+      if (
+        t.layer === 'component' &&
+        t.defaultLight.startsWith('var(') &&
+        !SHORTHAND_INDEX.tokenRefs.has(t.name) &&
+        !referencedByCascade.has(t.name) &&
+        !t.consumedByCss
+      ) {
+        expect(rootRules[`--${t.name}`]).toBeUndefined();
+        skipped++;
+      }
+    }
+    // We expect a non-trivial chunk to be filtered, this guards against a
+    // future refactor that accidentally re-enables full emission.
+    expect(skipped).toBeGreaterThan(20);
   });
 
   test('emits the dark-mode block only when at least one token has a distinct defaultDark', () => {
@@ -139,12 +204,24 @@ describe('clayTailwindPlugin handler', () => {
       (t) => t.defaultDark && t.defaultDark !== t.defaultLight
     );
     const darkSelector =
-      ':is(.dark, [data-mode="dark"]):root, :is(.dark, [data-mode="dark"])[data-theme="clay"]';
-    const darkCall = addBaseCalls.find((c) => Object.keys(c.rules)[0] === darkSelector);
+      ':where(.dark, [data-mode="dark"]):root, :where(.dark, [data-mode="dark"])[data-theme="clay"]';
+    const darkRule = maybeFindRule(addBaseCalls, darkSelector);
     if (hasDark) {
-      expect(darkCall).toBeDefined();
+      expect(darkRule).toBeDefined();
     } else {
-      expect(darkCall).toBeUndefined();
+      expect(darkRule).toBeUndefined();
+    }
+  });
+
+  test('uses zero-specificity `:where()` for the dark selector so consumers can override cleanly', () => {
+    const { addBaseCalls } = runHandler();
+    const darkRule = addBaseCalls
+      .flatMap((c) => Object.keys(c.rules))
+      .find((sel) => sel.includes('data-mode="dark"'));
+    expect(darkRule).toBeDefined();
+    if (darkRule) {
+      expect(darkRule).toContain(':where(');
+      expect(darkRule).not.toContain(':is(.dark');
     }
   });
 
@@ -170,20 +247,25 @@ describe('clayTailwindPlugin handler', () => {
 
 describe('buildBaseRules', () => {
   test('emits :root, dark, and @property payloads for the live registry', () => {
-    const out = buildBaseRules(TOKEN_REGISTRY);
-    expect(Object.keys(out.root).length).toBeGreaterThan(TOKEN_REGISTRY.length - 1);
+    const out = buildBaseRules(TOKEN_REGISTRY, SHORTHAND_INDEX.tokenRefs);
+    // We filter out unreferenced var-chain Layer-2 tokens, so :root is
+    // smaller than the full registry but still non-trivial.
+    expect(Object.keys(out.root).length).toBeGreaterThan(0);
+    expect(Object.keys(out.root).length).toBeLessThanOrEqual(TOKEN_REGISTRY.length + 32);
     expect(Object.keys(out.properties).length).toBeGreaterThan(0);
   });
 
-  test('every token in the registry is present in `root`', () => {
-    const { root } = buildBaseRules(TOKEN_REGISTRY);
+  test('every Layer-0/1 + literal-default Layer-2 token is present in `root`', () => {
+    const { root } = buildBaseRules(TOKEN_REGISTRY, SHORTHAND_INDEX.tokenRefs);
     for (const token of TOKEN_REGISTRY) {
-      expect(root[`--${token.name}`]).toBe(token.defaultLight);
+      if (token.layer !== 'component' || !token.defaultLight.startsWith('var(')) {
+        expect(root[`--${token.name}`]).toBe(token.defaultLight);
+      }
     }
   });
 
   test('only tokens with a distinct defaultDark land in `dark`', () => {
-    const { dark } = buildBaseRules(TOKEN_REGISTRY);
+    const { dark } = buildBaseRules(TOKEN_REGISTRY, SHORTHAND_INDEX.tokenRefs);
     for (const token of TOKEN_REGISTRY) {
       const cssVar = `--${token.name}`;
       if (token.defaultDark && token.defaultDark !== token.defaultLight) {
@@ -195,7 +277,7 @@ describe('buildBaseRules', () => {
   });
 
   test('font-size tokens with `lineHeight` produce a paired `--token--line-height`', () => {
-    const { root, properties } = buildBaseRules(TOKEN_REGISTRY);
+    const { root, properties } = buildBaseRules(TOKEN_REGISTRY, SHORTHAND_INDEX.tokenRefs);
     for (const token of TOKEN_REGISTRY) {
       if (!token.lineHeight) continue;
       expect(root[`--${token.name}--line-height`]).toBe(token.lineHeight);
@@ -215,6 +297,54 @@ describe('buildBaseRules', () => {
       mkToken({ name: 'foo', type: 'color', defaultLight: 'var(--bar)' }),
     ]);
     expect(properties['@property --foo']).toBeUndefined();
+  });
+
+  test('var-chain Layer-2 tokens are filtered from :root unless referenced', () => {
+    const { root } = buildBaseRules(
+      [
+        mkToken({ name: 'unused-var', layer: 'component', appliesTo: 'unused', defaultLight: 'var(--primary)' }),
+        mkToken({ name: 'unused-lit', layer: 'component', appliesTo: 'unused', defaultLight: 'red' }),
+      ],
+      new Set()
+    );
+    expect(root['--unused-lit']).toBe('red');
+    expect(root['--unused-var']).toBeUndefined();
+  });
+
+  test('var-chain Layer-2 tokens land in :root when in the shorthand bundle', () => {
+    const { root } = buildBaseRules(
+      [mkToken({ name: 'btn-gap', layer: 'component', appliesTo: 'btn', defaultLight: 'var(--spacing)' })],
+      new Set(['btn-gap'])
+    );
+    expect(root['--btn-gap']).toBe('var(--spacing)');
+  });
+
+  test('var-chain Layer-2 tokens land in :root when `consumedByCss` is set', () => {
+    const { root } = buildBaseRules(
+      [
+        mkToken({
+          name: 'tint',
+          layer: 'component',
+          appliesTo: 'a',
+          defaultLight: 'var(--background)',
+          consumedByCss: true,
+        }),
+      ],
+      new Set()
+    );
+    expect(root['--tint']).toBe('var(--background)');
+  });
+
+  test('var-chain Layer-2 tokens land in :root when referenced by another spec default', () => {
+    const { root } = buildBaseRules(
+      [
+        mkToken({ name: 'leaf', layer: 'component', appliesTo: 'a', defaultLight: 'var(--primary)' }),
+        mkToken({ name: 'parent', layer: 'component', appliesTo: 'a', defaultLight: 'var(--leaf)' }),
+      ],
+      new Set()
+    );
+    expect(root['--leaf']).toBe('var(--primary)');
+    expect(root['--parent']).toBeUndefined();
   });
 
   test('@property is skipped for types without a CSS descriptor (border-style, shadow, ...)', () => {
@@ -257,7 +387,49 @@ describe('buildBaseRules', () => {
   });
 
   test('an empty registry returns empty payloads', () => {
-    expect(buildBaseRules([])).toEqual({ properties: {}, root: {}, dark: {} });
+    expect(buildBaseRules([], new Set())).toEqual({ properties: {}, root: {}, dark: {} });
+  });
+});
+
+describe('buildRootMembership', () => {
+  test('Layer-0 / Layer-1 tokens are unconditionally members', () => {
+    const set = buildRootMembership(
+      [
+        mkToken({ name: 'r0', layer: 'scalar', appliesTo: undefined, defaultLight: 'var(--anything)' }),
+        mkToken({ name: 'r1', layer: 'role', appliesTo: undefined, defaultLight: 'var(--anything)' }),
+      ],
+      new Set()
+    );
+    expect(set.has('r0')).toBe(true);
+    expect(set.has('r1')).toBe(true);
+  });
+
+  test('a token referenced from another spec landing pulls the leaf into membership', () => {
+    const set = buildRootMembership(
+      [
+        mkToken({ name: 'leaf', layer: 'component', appliesTo: 'a', defaultLight: 'var(--primary)' }),
+        mkToken({ name: 'parent', layer: 'component', appliesTo: 'a', defaultLight: 'var(--leaf)' }),
+      ],
+      new Set()
+    );
+    expect(set.has('leaf')).toBe(true);
+  });
+
+  test('cascade scan picks up dark-mode references too', () => {
+    const set = buildRootMembership(
+      [
+        mkToken({ name: 'leaf', layer: 'component', appliesTo: 'a', defaultLight: 'var(--primary)' }),
+        mkToken({
+          name: 'parent',
+          layer: 'component',
+          appliesTo: 'a',
+          defaultLight: '#fff',
+          defaultDark: 'var(--leaf)',
+        }),
+      ],
+      new Set()
+    );
+    expect(set.has('leaf')).toBe(true);
   });
 });
 
@@ -480,11 +652,32 @@ describe('Tailwind v4 compile(), JIT pruning of shorthand utilities', () => {
     expect(css).toContain('.ease-card');
   });
 
-  test('arbitrary `(--token)` shorthand utilities resolve because every token is in :root', async () => {
+  test('arbitrary `(--token)` shorthand utilities resolve because shorthand-bundle tokens land in :root', async () => {
     // Simulates a hand-authored class like `gap-(--button-gap)` in a .tsx file.
     const css = await buildCss(['gap-(--button-gap)']);
     expect(css).toContain('--button-gap');
     expect(css).toMatch(/gap:\s*var\(--button-gap\)/);
+  });
+
+  test('color-mix expressions over `consumedByCss` tokens resolve at the use site', async () => {
+    // Models alert.tsx, where `var(--alert-tint-base)` appears inside a
+    // `color-mix(...)` expression with no fallback. The token must live in
+    // :root (which the `consumedByCss: true` flag forces) for the mix to
+    // produce a valid color.
+    const css = await buildCss([]);
+    expect(css).toContain('--alert-tint-base');
+  });
+
+  test(':root block stays under 25 KB; filtering trims var-chain Layer-2 leaves', async () => {
+    // Regression guard: if the filter accidentally regresses to "emit every
+    // token", the :root payload jumps by ~3.5 KB. Capping at 25 KB leaves a
+    // small buffer for new scalars/roles without rewarding token sprawl.
+    const css = await buildCss([]);
+    const rootBlock = css.match(/:root[^{]*\{[^}]*\}/);
+    if (!rootBlock) {
+      throw new Error('compiled CSS missing a :root block');
+    }
+    expect(rootBlock[0].length).toBeLessThan(25 * 1024);
   });
 
   test('text-* utility resolves both font-size and the paired line-height', async () => {
@@ -504,11 +697,11 @@ describe('Tailwind v4 compile(), JIT pruning of shorthand utilities', () => {
 describe('performance', () => {
   test('buildBaseRules over the full registry runs under 5ms (typical: <1ms)', () => {
     // Warm up.
-    for (let i = 0; i < 5; i++) buildBaseRules(TOKEN_REGISTRY);
+    for (let i = 0; i < 5; i++) buildBaseRules(TOKEN_REGISTRY, SHORTHAND_INDEX.tokenRefs);
     const start = performance.now();
     const ITERATIONS = 50;
     for (let i = 0; i < ITERATIONS; i++) {
-      buildBaseRules(TOKEN_REGISTRY);
+      buildBaseRules(TOKEN_REGISTRY, SHORTHAND_INDEX.tokenRefs);
     }
     const avg = (performance.now() - start) / ITERATIONS;
     expect(avg).toBeLessThan(5);

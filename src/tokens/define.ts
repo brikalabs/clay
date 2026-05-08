@@ -302,6 +302,15 @@ export interface SlotInput {
   readonly category?: TokenCategory;
   readonly namespace?: TailwindNamespace;
   readonly alias?: string;
+  /**
+   * Set when the slot is referenced directly from hand-authored CSS or
+   * className strings (e.g. inside a `color-mix(... var(--token) ...)`
+   * expression). Forces the var-chain default into `:root` even when
+   * registry-side cascade analysis would otherwise drop it. Slots only
+   * consumed through the auto-generated Tailwind utilities (`bg-*`,
+   * `rounded-*`, ...) do NOT need this flag.
+   */
+  readonly consumedByCss?: boolean;
 }
 
 function slotTokens(m: ComponentMeta, entries: Readonly<Record<string, SlotInput>>): TokenSpec[] {
@@ -324,6 +333,7 @@ function slotTokens(m: ComponentMeta, entries: Readonly<Record<string, SlotInput
       themePath: `components.${m.themeKey}.${themeProp}`,
       tailwindNamespace: namespace,
       utilityAlias: input.alias,
+      consumedByCss: input.consumedByCss,
     };
   });
 }

@@ -19,6 +19,10 @@ export const tokens = defineComponent('alert', {
       default: 'var(--background)',
       description:
         'Base color the per-variant accent is mixed into. Defaults to the page surface for opaque tints; set to `transparent` for translucent / glass variants.',
+      // Read directly via `var(--alert-tint-base)` inside `color-mix()` in
+      // alert.tsx, no Tailwind utility wraps the access, so the var-chain
+      // default must land in `:root` for the mix to resolve.
+      consumedByCss: true,
     },
     'tint-bg-amount': {
       default: '12%',
