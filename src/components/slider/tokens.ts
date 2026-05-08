@@ -2,10 +2,10 @@
  * Layer-2 tokens for Slider.
  */
 
-import { defineComponent } from '../../tokens/define';
+import { registerComponent } from '../../tokens/define';
 import { meta } from './meta';
 
-export const tokens = defineComponent(meta.name, {
+registerComponent(meta, {
   radius: {
     default: '9999px',
     description: 'Track corner radius. Set lower for square / brutalist looks.',

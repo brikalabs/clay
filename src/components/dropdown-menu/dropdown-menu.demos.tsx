@@ -16,7 +16,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@brika/clay/components/dropdown-menu';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Action menu with icons, grouped items, a separator, and a destructive item. */
 export function DropdownMenuDefaultDemo() {
@@ -133,14 +133,8 @@ export function DropdownMenuShortcutsDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [DropdownMenuDefaultDemo, 'Default', { description: `Action menu with icons, grouped items, a separator, and a destructive item.` }],
-  [DropdownMenuCheckboxDemo, 'Checkbox', { description: `DropdownMenuCheckboxItem toggles boolean view preferences and persists checked state.` }],
-  [DropdownMenuRadioDemo, 'Radio', { description: `DropdownMenuRadioGroup enforces a single active selection across a set of items.` }],
-  [DropdownMenuShortcutsDemo, 'Shortcuts', { description: `DropdownMenuShortcut renders right-aligned keyboard hints, purely visual, not functional.` }],
+  [DropdownMenuDefaultDemo, 'Default', { description: 'Action menu with icons, grouped items, a separator, and a destructive item.' }],
+  [DropdownMenuCheckboxDemo, 'Checkbox', { description: 'DropdownMenuCheckboxItem toggles boolean view preferences and persists checked state.' }],
+  [DropdownMenuRadioDemo, 'Radio', { description: 'DropdownMenuRadioGroup enforces a single active selection across a set of items.' }],
+  [DropdownMenuShortcutsDemo, 'Shortcuts', { description: 'DropdownMenuShortcut renders right-aligned keyboard hints, purely visual, not functional.' }],
 ]);
-export const accessibility: readonly string[] = [
-  `Arrow keys navigate items; Enter/Space activate; Escape closes and returns focus to the trigger.`,
-  `Checkbox items carry \`aria-checked\`; radio items carry \`aria-checked\` within a \`role="group"\`.`,
-  `\`DropdownMenuShortcut\` renders keyboard hints, these are visual only and not announced by AT.`,
-  `Destructive items should use \`variant="destructive"\` to make intent clear visually and in context.`,
-];

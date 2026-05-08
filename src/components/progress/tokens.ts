@@ -2,10 +2,10 @@
  * Layer-2 tokens for Progress.
  */
 
-import { defineComponent } from '../../tokens/define';
+import { registerComponent } from '../../tokens/define';
 import { meta } from './meta';
 
-export const tokens = defineComponent(meta.name, {
+registerComponent(meta, {
   slots: {
     'track-color': {
       default: 'var(--secondary)',

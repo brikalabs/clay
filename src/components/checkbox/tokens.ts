@@ -2,9 +2,9 @@
  * Layer-2 tokens for Checkbox.
  */
 
-import { defineComponent } from '../../tokens/define';
+import { registerComponent } from '../../tokens/define';
 
-export const tokens = defineComponent('checkbox', {
+registerComponent('checkbox', {
   radius: {
     default: 'var(--radius-tight)',
     description: 'Checkbox corner radius.',

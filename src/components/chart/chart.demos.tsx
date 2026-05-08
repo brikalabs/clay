@@ -1,5 +1,5 @@
 import { Chart } from '@brika/clay/components/chart';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 const now = Date.now();
 const data = Array.from({ length: 24 }, (_, index) => ({
@@ -18,8 +18,3 @@ export function ChartDefaultDemo() {
 export const demoMeta = defineDemos([
   [ChartDefaultDemo, 'Default'],
 ]);
-export const accessibility: readonly string[] = [
-  `Charts are visual, provide a \`<caption>\` or adjacent text summary for screen readers.`,
-  `Recharts renders an SVG; ensure the wrapper has \`role="img"\` and \`aria-label\` describing the data.`,
-  `Tooltips visible on hover are not reliably announced by AT, critical data should also appear in text form.`,
-];

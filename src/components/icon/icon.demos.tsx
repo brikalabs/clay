@@ -1,6 +1,6 @@
 import { Icon } from '@brika/clay/components/icon';
 import { Bell, Star, User } from 'lucide-react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Decorative icon, no `aria-label`, so screen readers skip it entirely. */
 export function IconDefaultDemo() {
@@ -51,13 +51,8 @@ export function IconAccessibleDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [IconDefaultDemo, 'Default', { description: `Decorative icon, no \`aria-label\`, so screen readers skip it entirely.` }],
-  [IconTonesDemo, 'Tones', { description: `Three semantic tones mapped to \`--icon\`, \`--icon-muted\`, and \`--icon-primary\`.` }],
-  [IconSizesDemo, 'Sizes', { description: `Four size presets mapping to Tailwind \`size-*\` utilities.` }],
-  [IconAccessibleDemo, 'Accessible', { description: `\`aria-label\` makes the icon meaningful, screen readers announce the label text.` }],
+  [IconDefaultDemo, 'Default', { description: 'Decorative icon, no `aria-label`, so screen readers skip it entirely.' }],
+  [IconTonesDemo, 'Tones', { description: 'Three semantic tones mapped to `--icon`, `--icon-muted`, and `--icon-primary`.' }],
+  [IconSizesDemo, 'Sizes', { description: 'Four size presets mapping to Tailwind `size-*` utilities.' }],
+  [IconAccessibleDemo, 'Accessible', { description: '`aria-label` makes the icon meaningful, screen readers announce the label text.' }],
 ]);
-export const accessibility: readonly string[] = [
-  `Decorative by default, \`aria-hidden="true"\` is set when no \`aria-label\` is provided.`,
-  `Pass \`aria-label\` to make the icon carry standalone meaning (e.g. status indicator).`,
-  `Do not use an icon alone as a button label, always pair with \`aria-label\` on the button.`,
-];

@@ -1,6 +1,6 @@
 import { Slider, SliderValue } from '@brika/clay/components/slider';
 import { useState } from 'react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 export function SliderDefaultDemo() {
   const [value, setValue] = useState(50);
@@ -55,9 +55,3 @@ export const demoMeta = defineDemos([
   [SliderStepIntervalDemo, 'Step Interval'],
   [SliderCustomTicksDemo, 'Custom Ticks'],
 ]);
-export const accessibility: readonly string[] = [
-  `Built on a native \`<input type="range">\`, all keyboard and AT semantics are native.`,
-  `Arrow keys adjust value by \`step\`; Home/End jump to \`min\`/\`max\`.`,
-  `Always provide a visible label linked via \`htmlFor\` or wrapped \`<label>\`.`,
-  `\`SliderValue\` pairing gives a numeric readout, include \`unit\` for percentage or currency.`,
-];

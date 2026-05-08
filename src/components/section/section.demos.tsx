@@ -10,7 +10,7 @@ import {
   SectionTitle,
 } from '@brika/clay/components/section';
 import { Server, Terminal } from 'lucide-react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Section card with a header and body content. */
 export function SectionDefaultDemo() {
@@ -63,10 +63,6 @@ export function SectionWithActionDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [SectionDefaultDemo, 'Default', { description: `Section card with a header and body content.` }],
-  [SectionWithActionDemo, 'With Action', { description: `Action button and a badge in the header's right slot, for settings panels with inline controls.` }],
+  [SectionDefaultDemo, 'Default', { description: 'Section card with a header and body content.' }],
+  [SectionWithActionDemo, 'With Action', { description: 'Action button and a badge in the header\'s right slot, for settings panels with inline controls.' }],
 ]);
-export const accessibility: readonly string[] = [
-  `\`SectionTitle\` renders as \`<h2>\` by default, adjust via the \`as\` prop to maintain heading hierarchy.`,
-  `Actions in the header slot should have descriptive labels matching the operation.`,
-];

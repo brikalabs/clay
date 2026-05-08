@@ -3,7 +3,7 @@
 import { Checkbox } from '@brika/clay/components/checkbox';
 import { Label } from '@brika/clay/components/label';
 import { useState } from 'react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Uncontrolled checkbox pre-checked for visible state. */
 export function CheckboxDefaultDemo() {
@@ -89,15 +89,9 @@ export function CheckboxFormGroupDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [CheckboxDefaultDemo, 'Default', { description: `Uncontrolled checkbox pre-checked for visible state.` }],
-  [CheckboxSizesDemo, 'Sizes', { description: `Three size presets, sm, default, lg, side by side with labels.` }],
-  [CheckboxIndeterminateDemo, 'Indeterminate', { description: `Tri-state checkbox cycling through unchecked, indeterminate, and checked.` }],
-  [CheckboxControlledDemo, 'Controlled', { description: `Controlled checkbox with external state displayed alongside.` }],
-  [CheckboxFormGroupDemo, 'Form Group', { description: `A realistic notification preferences group with independent checkboxes and labels.` }],
+  [CheckboxDefaultDemo, 'Default', { description: 'Uncontrolled checkbox pre-checked for visible state.' }],
+  [CheckboxSizesDemo, 'Sizes', { description: 'Three size presets, sm, default, lg, side by side with labels.' }],
+  [CheckboxIndeterminateDemo, 'Indeterminate', { description: 'Tri-state checkbox cycling through unchecked, indeterminate, and checked.' }],
+  [CheckboxControlledDemo, 'Controlled', { description: 'Controlled checkbox with external state displayed alongside.' }],
+  [CheckboxFormGroupDemo, 'Form Group', { description: 'A realistic notification preferences group with independent checkboxes and labels.' }],
 ]);
-export const accessibility: readonly string[] = [
-  `Built on Radix Checkbox, keyboard, focus, and ARIA state (\`aria-checked\`) are handled automatically.`,
-  `Indeterminate state surfaces as \`checked="indeterminate"\`; AT announces "mixed".`,
-  `Always pair with a visible label, wrap in \`<label>\` or use matching \`htmlFor\` / \`id\`.`,
-  `Disabled checkboxes are removed from the tab order.`,
-];

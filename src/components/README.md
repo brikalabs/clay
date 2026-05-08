@@ -14,10 +14,10 @@ For a component named `<name>` (kebab-case, matches the token prefix):
 1. Create folder `src/components/<name>/`
 2. Files inside the folder:
    - `<name>.tsx` -- React component, sets `data-slot="<name>"` on the root for devtools / test selectors
-   - `tokens.ts` -- Layer-2 tokens, exports a `tokens` array built via `defineComponent(...)`
+   - `tokens.ts` -- Layer-2 tokens, calls `registerComponent(meta, { ... })` at module load
    - `meta.ts` -- `name`, `displayName`, `group`, `description` for the docs site
    - `index.ts` -- one-line barrel re-export
-3. Add a named import of `tokens` and a spread into the array in [`src/tokens/components.ts`](../tokens/components.ts)
+3. Add a side-effect import line to [`src/components/register.ts`](./register.ts): `import './<name>/tokens';`
 4. Re-export from [`src/index.ts`](../index.ts) if the component is part of the public API
 
 That's it. No edits to `clay.css`, `tailwind.ts`, `tsup.config.ts`, or
@@ -87,17 +87,17 @@ export { MyComponent };
 
 ### `tokens.ts`
 
-Layer-2 component tokens, built via the single
-[`defineComponent`](../tokens/define.ts) entry point and exported as a
-`tokens` array. Every option is a named key, TypeScript autocompletes
-everything you can pass.
+Layer-2 component tokens. Use the [`registerComponent`](../tokens/define.ts)
+entry point: it builds the tokens AND pushes them into the registry as a
+side effect when the module loads, so the file is the registration. Every
+option is a named key, TypeScript autocompletes everything you can pass.
 
 ```ts
-import { defineComponent } from '../../tokens/define';
+import { registerComponent } from '../../tokens/define';
 import { SPACING_4, SPACING_6 } from '../../tokens/spacing';
 import { meta } from './meta';
 
-export const tokens = defineComponent(meta.name, {
+registerComponent(meta, {
   radius: { default: 'var(--radius-container)', description: 'Corner radius.', alias: 'my-component' },
   shadow: { default: 'var(--shadow-surface)', description: 'Resting elevation.', alias: 'my-component' },
   border: '1px',
@@ -110,6 +110,10 @@ export const tokens = defineComponent(meta.name, {
   },
 });
 ```
+
+Pass a string instead of `meta` when the token namespace differs from the
+folder's meta name (e.g. `'menu'` / `'menu-item'` inside
+`dropdown-menu/tokens.ts`).
 
 **What each top-level key does:**
 
@@ -124,9 +128,8 @@ export const tokens = defineComponent(meta.name, {
 | `themeKey?` | Override the camelCase theme key when it differs from the kebab-case name (e.g. `'switchThumb'` for `'switch-thumb'`). |
 
 **Multi-namespace components** (e.g. Switch + SwitchThumb,
-DropdownMenu + DropdownMenuItem) export a `tokens` array that spreads
-two `defineComponent` results, see
-[`switch/tokens.ts`](./switch/tokens.ts) and
+DropdownMenu + DropdownMenuItem) call `registerComponent(...)` once per
+namespace, see [`switch/tokens.ts`](./switch/tokens.ts) and
 [`dropdown-menu/tokens.ts`](./dropdown-menu/tokens.ts).
 
 See [`button/tokens.ts`](./button/tokens.ts) for an interactive control,
@@ -137,11 +140,11 @@ See [`button/tokens.ts`](./button/tokens.ts) for an interactive control,
 
 Metadata consumed by the docs site for sidebar grouping and the page
 header. `group` must be one of the values in
-[`_registry.ts`](./_registry.ts#L14): `Primitives`, `Forms`, `Overlays`,
+[`component-registry.ts`](../component-registry.ts#L14): `Primitives`, `Forms`, `Overlays`,
 `Navigation`, `Feedback`, `Layout`, `Data`.
 
 ```ts
-import type { ComponentMeta } from '../_registry';
+import type { ComponentMeta } from '../../component-registry';
 
 export const meta: ComponentMeta = {
   name: 'my-component',
@@ -188,9 +191,10 @@ export * from './my-component';
   sets its own `data-slot` and composes its own classes inline in the
   `.tsx`, no CSS bridge selector ties them together.
 - **Bare tokens.** Tokens that don't follow the `<name>-<slot>`
-  convention (e.g. `--icon` with no slot suffix) can be appended to the
-  exported `tokens` array as plain `TokenSpec` literals, see
-  [`icon/tokens.ts`](./icon/tokens.ts).
+  convention (e.g. `--icon` with no slot suffix) bypass `registerComponent`
+  and call the lower-level `register([...])` from
+  [`../tokens/registry-state`](../tokens/registry-state.ts) with a plain
+  `TokenSpec` literal, see [`icon/tokens.ts`](./icon/tokens.ts).
 
 ## Verifying
 

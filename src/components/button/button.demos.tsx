@@ -1,6 +1,6 @@
 import { Button } from '@brika/clay/components/button';
 import { Loader2, Settings } from 'lucide-react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Default solid button, use for the primary call-to-action. */
 export function ButtonDefaultDemo() {
@@ -73,16 +73,10 @@ export function ButtonAsLinkDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [ButtonDefaultDemo, 'Default', { description: `Default solid button, use for the primary call-to-action.` }],
-  [ButtonVariantsDemo, 'Variants', { description: `Six emphasis tiers in one row, ordered from most to least prominent.` }],
-  [ButtonSizesDemo, 'Sizes', { description: `Four text sizes, plus matching icon-only variants (\`icon-xs\` through \`icon-lg\`).` }],
-  [ButtonIconDemo, 'Icon', { description: `Icon-only button, \`aria-label\` is required for screen readers.` }],
-  [ButtonLoadingDemo, 'Loading', { description: `Disabled with a spinner, use while an async operation is in flight.` }],
-  [ButtonAsLinkDemo, 'As Link', { description: `\`asChild\` delegates button styles to the child element, here an anchor tag.` }],
+  [ButtonDefaultDemo, 'Default', { description: 'Default solid button, use for the primary call-to-action.' }],
+  [ButtonVariantsDemo, 'Variants', { description: 'Six emphasis tiers in one row, ordered from most to least prominent.' }],
+  [ButtonSizesDemo, 'Sizes', { description: 'Four text sizes, plus matching icon-only variants (`icon-xs` through `icon-lg`).' }],
+  [ButtonIconDemo, 'Icon', { description: 'Icon-only button, `aria-label` is required for screen readers.' }],
+  [ButtonLoadingDemo, 'Loading', { description: 'Disabled with a spinner, use while an async operation is in flight.' }],
+  [ButtonAsLinkDemo, 'As Link', { description: '`asChild` delegates button styles to the child element, here an anchor tag.' }],
 ]);
-export const accessibility: readonly string[] = [
-  `Focus ring uses \`--ring\` token for WCAG contrast.`,
-  `\`disabled\` removes pointer events and reduces opacity; it does not set \`aria-disabled\`.`,
-  `Icon-only buttons (\`size="icon"\`) REQUIRE an \`aria-label\`, there is no text fallback.`,
-  `\`asChild\` passes all button props (including \`role\` and \`aria-*\`) to the child element.`,
-];
