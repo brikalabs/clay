@@ -1,3 +1,11 @@
+[install]
+# Hoisted node_modules layout so `tsc --emitDeclarationOnly` can write
+# portable type references for re-exports from deeply-installed deps
+# (e.g. radix-ui sub-packages). Bun's default isolated layout puts
+# packages under `node_modules/.bun/<hash>/...` which TS rejects as
+# non-portable in TS2883.
+linker = "hoisted"
+
 [test]
 # Emit lcov so SonarCloud (and any other coverage consumer) can pick it
 # up from coverage/lcov.info. Keep `text` for the human-readable
