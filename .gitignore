@@ -1,11 +1,9 @@
 # Dependencies
 node_modules/
-docs/node_modules/
 
 # Build output
 dist/
-docs/dist/
-docs/.astro/
+**/.astro/
 
 # Test coverage
 coverage/
@@ -13,11 +11,6 @@ coverage/
 # Environment
 .env
 .env.*
-docs/.env
-docs/.env.*
-
-# Bun
-docs/bun.lock
 
 # OS
 .DS_Store
