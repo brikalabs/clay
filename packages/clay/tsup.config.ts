@@ -1,9 +1,10 @@
 import { cpSync, mkdirSync, readdirSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { defineConfig } from 'tsup';
 
 const SRC = 'src';
 const DIST = 'dist';
+const REPO_ROOT = resolve(__dirname, '..', '..');
 
 function componentEntries(): Record<string, string> {
   const out: Record<string, string> = {};
@@ -88,14 +89,12 @@ export default defineConfig({
     return { js: '.js' };
   },
   onSuccess: async () => {
-    // 1. Copy hand-authored CSS so `@brika/clay/styles` resolves and the
-    //    plugin's `readFileSync` walk over `dist/styles/` finds files at
-    //    the same relative paths they had under `src/`. Per-component
-    //    CSS no longer exists — every token-driven property is composed
-    //    inline in each `.tsx` via Tailwind v4 arbitrary-class syntax.
+    // 1. Hand-authored CSS so `@brika/clay/styles` resolves and the
+    //    Tailwind plugin's `readFileSync` walk over `dist/styles/` finds
+    //    files at the same relative paths they had under `src/`.
     mkdirSync(join(DIST, 'styles'), { recursive: true });
     cpSync(join(SRC, 'styles'), join(DIST, 'styles'), { recursive: true });
-    // 3. Copy theme preset JSON next to the bundled `themes.js` so the
+    // 2. Theme preset JSON next to the bundled `themes.js` so the
     //    `with { type: 'json' }` static imports keep resolving for any
     //    consumer that prefers the source path (the json is also inlined
     //    into themes.js, but presets/ stays useful for tooling).
@@ -103,11 +102,11 @@ export default defineConfig({
     cpSync(join(SRC, 'themes', 'presets'), join(DIST, 'themes', 'presets'), {
       recursive: true,
     });
-    // 4. Copy brand SVG assets so `@brika/clay/assets/<name>.svg` resolves
-    //    for downstream consumers (favicon, README, marketing surfaces).
+    // 3. Brand SVGs are repo-level marketing artifacts (root `/assets/`).
+    //    Copy into the package's dist so `@brika/clay/assets/<name>.svg`
+    //    keeps resolving for downstream consumers.
     mkdirSync(join(DIST, 'assets'), { recursive: true });
-    cpSync(join(SRC, 'assets'), join(DIST, 'assets'), { recursive: true });
-    // Sanity log: how many component entries shipped.
-    console.log(`[clay] copied styles + ${COMPONENT_ENTRY_NAMES.size} components`);
+    cpSync(join(REPO_ROOT, 'assets'), join(DIST, 'assets'), { recursive: true });
+    console.log(`[clay] copied styles + assets + ${COMPONENT_ENTRY_NAMES.size} components`);
   },
 });

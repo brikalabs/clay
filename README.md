@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/brikalabs/clay/main/src/assets/clay-ui-depth.svg">
-    <img src="https://raw.githubusercontent.com/brikalabs/clay/main/src/assets/clay-ui-depth-dark.svg" alt="Clay" width="120" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/brikalabs/clay/main/assets/clay-ui-depth.svg">
+    <img src="https://raw.githubusercontent.com/brikalabs/clay/main/assets/clay-ui-depth-dark.svg" alt="Clay" width="120" />
   </picture>
 </p>
 
