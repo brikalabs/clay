@@ -77,8 +77,3 @@ export const demoMeta = defineDemos([
   [CollapsibleAnimatedDemo, 'Animated', { description: `Chevron rotates on open using \`data-[state=open]\`, wire it to the trigger via \`group\`.` }],
   [CollapsibleControlledDemo, 'Controlled', { description: `Controlled collapsible, manage open state with \`open\` and \`onOpenChange\`.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Trigger carries \`aria-expanded\` automatically, no extra markup needed.`,
-  `Content carries \`aria-hidden\` when collapsed so AT skips it entirely.`,
-  `Animate height via CSS \`overflow-hidden\` + transition, not \`display:none\`, to preserve AT semantics.`,
-];

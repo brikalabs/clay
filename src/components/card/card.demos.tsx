@@ -105,8 +105,3 @@ export const demoMeta = defineDemos([
   [CardFormDemo, 'Form', { description: `Form card pattern, title, inputs, and a footer action.` }],
   [CardStatsDemo, 'Stats', { description: `Stats card showing a key metric with a trend indicator.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Card is a layout container with no implicit role, add \`role="article"\` for standalone content.`,
-  `Interactive cards (with the \`interactive\` prop) should also carry \`tabIndex={0}\` and \`onKeyDown\` for keyboard activation.`,
-  `Accent color is visual only, convey variant meaning through text or \`aria-label\` as well.`,
-];

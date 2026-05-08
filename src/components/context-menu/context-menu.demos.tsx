@@ -104,9 +104,3 @@ export const demoMeta = defineDemos([
   [ContextMenuCheckboxDemo, 'Checkbox', { description: `ContextMenuCheckboxItem maintains a checked state for toggleable settings.` }],
   [ContextMenuRadioDemo, 'Radio', { description: `ContextMenuRadioGroup enforces a single active choice across a set of items.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Trigger carries \`aria-haspopup="menu"\` automatically.`,
-  `Keyboard: Shift+F10 or the context-menu key opens the menu on the focused trigger.`,
-  `Arrow keys navigate items; Enter/Space activate; Escape dismisses.`,
-  `Destructive items should use \`variant="destructive"\` so the visual indication matches AT context.`,
-];

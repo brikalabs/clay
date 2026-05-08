@@ -105,9 +105,3 @@ export const demoMeta = defineDemos([
   [SheetLeftDemo, 'Left', { description: `Left-side sheet, commonly used as an off-canvas navigation panel.` }],
   [SheetFormDemo, 'Form', { description: `Sheet with a form, useful for quick data entry without navigating away.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Focus is trapped inside the sheet while open.`,
-  `Escape dismisses the sheet and returns focus to the trigger.`,
-  `\`SheetTitle\` is required for an accessible name, use \`sr-only\` to visually hide it if the design omits a heading.`,
-  `The \`side\` prop ("top", "right", "bottom", "left") does not affect AT semantics.`,
-];

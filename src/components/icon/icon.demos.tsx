@@ -56,8 +56,3 @@ export const demoMeta = defineDemos([
   [IconSizesDemo, 'Sizes', { description: `Four size presets mapping to Tailwind \`size-*\` utilities.` }],
   [IconAccessibleDemo, 'Accessible', { description: `\`aria-label\` makes the icon meaningful, screen readers announce the label text.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Decorative by default, \`aria-hidden="true"\` is set when no \`aria-label\` is provided.`,
-  `Pass \`aria-label\` to make the icon carry standalone meaning (e.g. status indicator).`,
-  `Do not use an icon alone as a button label, always pair with \`aria-label\` on the button.`,
-];

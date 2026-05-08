@@ -115,9 +115,3 @@ export const demoMeta = defineDemos([
   [DrawerScrollableDemo, 'Scrollable', { description: `Drawer with a scrollable list body and a fixed footer, suited for notification feeds or item pickers.` }],
   [DrawerFormDemo, 'Form', { description: `Drawer used for mobile-first data entry, keeps the form reachable at the bottom of the screen.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Focus is trapped inside the drawer while open.`,
-  `Escape dismisses the drawer; the drag handle is decorative and keyboard users dismiss with Escape.`,
-  `\`DrawerTitle\` is required for an accessible name.`,
-  `Ensure scrollable content inside the drawer is reachable by keyboard, not only by touch-drag.`,
-];

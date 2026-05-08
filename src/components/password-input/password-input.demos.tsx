@@ -63,9 +63,3 @@ export const demoMeta = defineDemos([
   [PasswordInputDisabledDemo, 'Disabled', { description: `Disabled password input, preserves layout, all interactions blocked.` }],
   [PasswordInputFormDemo, 'Form', { description: `Full sign-in form context, password input paired with an email input and submit button.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `The reveal toggle carries \`aria-label\` that updates between "Show password" and "Hide password".`,
-  `The underlying input switches between \`type="password"\` and \`type="text"\`, AT announces the mode change.`,
-  `\`aria-invalid="true"\` triggers the destructive ring; pair with a visible error message.`,
-  `Autocomplete attributes (\`autocomplete="current-password"\`) improve password-manager integration.`,
-];

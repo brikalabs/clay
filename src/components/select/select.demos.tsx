@@ -124,9 +124,3 @@ export const demoMeta = defineDemos([
   [SelectDisabledDemo, 'Disabled', { description: `The entire select is disabled, no interaction possible.` }],
   [SelectControlledDemo, 'Controlled', { description: `Controlled select with an external state readout.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Trigger carries \`role="combobox"\` and \`aria-expanded\`, no extra markup needed.`,
-  `Arrow keys navigate options; Home/End jump to first/last; typing ahead filters.`,
-  `Selected item receives \`aria-selected="true"\` and a visible check mark.`,
-  `Disabled items carry \`aria-disabled="true"\` and are skipped by arrow navigation.`,
-];

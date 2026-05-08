@@ -96,9 +96,3 @@ export const demoMeta = defineDemos([
   [RadioGroupHorizontalDemo, 'Horizontal', { description: `Horizontal layout using orientation="horizontal" and flex-row spacing.` }],
   [RadioGroupControlledDemo, 'Controlled', { description: `Fully controlled radio group that shows the selected value.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Arrow keys move selection within the group, Tab leaves the group entirely.`,
-  `Always pair items with visible \`<Label htmlFor={id}>\` elements.`,
-  `Disabled individual items carry \`aria-disabled\` and are skipped by arrow keys.`,
-  `Use \`defaultValue\` for uncontrolled initial selection; \`value\` + \`onValueChange\` for controlled.`,
-];

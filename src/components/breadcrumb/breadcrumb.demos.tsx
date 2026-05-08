@@ -81,9 +81,3 @@ export const demoMeta = defineDemos([
   [BreadcrumbCollapsedDemo, 'Collapsed', { description: `Deep path with middle segments collapsed into an ellipsis indicator.` }],
   [BreadcrumbCustomSeparatorDemo, 'Custom Separator', { description: `Slash character as a separator instead of the default chevron.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Root renders \`<nav aria-label="breadcrumb">\`, no extra landmark markup needed.`,
-  `\`BreadcrumbPage\` renders \`aria-current="page"\` on the last item.`,
-  `\`BreadcrumbEllipsis\` is \`aria-hidden="true"\`, AT skips the visual indicator.`,
-  `Separator elements are presentational; AT does not read them.`,
-];

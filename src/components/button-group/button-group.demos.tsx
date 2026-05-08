@@ -101,8 +101,3 @@ export const demoMeta = defineDemos([
   [ButtonGroupSplitDemo, 'Split Button', { description: `Primary action plus a dropdown chevron for related variants.` }],
   [ButtonGroupVerticalDemo, 'Vertical', { description: `Vertical orientation stacks buttons top-to-bottom with shared dividers.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `The wrapper carries \`role="group"\`, add \`aria-label\` when the group's purpose is not clear from context.`,
-  `Each button inside the group keeps its individual focus ring and keyboard behavior.`,
-  `Icon-only buttons inside the group still require \`aria-label\`.`,
-];

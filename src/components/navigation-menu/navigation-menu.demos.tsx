@@ -137,9 +137,3 @@ export const demoMeta = defineDemos([
   [NavigationMenuRichDemo, 'Rich', { description: `Rich flyout panel containing a featured item alongside a grid of documentation links.` }],
   [NavigationMenuSimpleLinksDemo, 'Simple Links', { description: `Plain link items with no flyout, use \`navigationMenuTriggerStyle()\` for consistent sizing.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Arrow keys move between top-level items; Enter/Space opens flyout panels.`,
-  `Active link state is indicated via \`data-active\`; ensure \`aria-current="page"\` is also set for AT.`,
-  `Flyout panels are dismissed by moving focus outside or pressing Escape.`,
-  `Use \`NavigationMenuLink\` with \`asChild\` for router-link integration.`,
-];

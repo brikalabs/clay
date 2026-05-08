@@ -129,9 +129,3 @@ export const demoMeta = defineDemos([
   [AccordionDisabledDemo, 'Disabled', { description: `Disabled item, set \`disabled\` on \`AccordionItem\` to prevent interaction.` }],
   [AccordionControlledDemo, 'Controlled', { description: `Controlled accordion, manage open state externally with \`value\` and \`onValueChange\`.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Triggers carry \`aria-expanded\` and \`aria-controls\`, no extra markup needed.`,
-  `Content panels are hidden from AT via \`aria-hidden\` when collapsed.`,
-  `\`type="single" collapsible\` lets the open item be closed; omit \`collapsible\` to always keep one open.`,
-  `Arrow keys and Home/End navigate between triggers when focus is inside the accordion.`,
-];

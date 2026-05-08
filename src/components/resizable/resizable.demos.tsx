@@ -52,8 +52,3 @@ export const demoMeta = defineDemos([
   [ResizableDefaultDemo, 'Default'],
   [ResizableVerticalDemo, 'Vertical'],
 ]);
-export const accessibility: readonly string[] = [
-  `The resize handle carries \`role="separator"\` and responds to arrow keys for keyboard resizing.`,
-  `\`withHandle\` renders a visible grip icon, improving discoverability of the resize affordance.`,
-  `Ensure panels have meaningful \`aria-label\` values when used as distinct content regions.`,
-];

@@ -120,9 +120,3 @@ export const demoMeta = defineDemos([
   [ToastPromiseDemo, 'Promise', { description: `toast.promise tracks an async operation through loading, success, and error states.` }],
   [ToastPositionDemo, 'Position', { description: `Configure Toaster position and display duration at the mount site.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Built on Sonner's \`aria-live\` region, announcements fire automatically.`,
-  `Auto-dismiss duration defaults to 4 s; override via \`toast(msg, { duration })\` for critical messages.`,
-  `Action buttons inside toasts should have descriptive \`label\` text.`,
-  `Respects \`prefers-reduced-motion\`, animations are skipped for users with motion sensitivity.`,
-];

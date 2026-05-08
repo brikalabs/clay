@@ -42,7 +42,3 @@ export const demoMeta = defineDemos([
   [SectionLabelTonesDemo, 'Tones', { description: `Semantic tones map to status colors, \`destructive\`, \`warning\`, \`success\`, \`info\`.` }],
   [SectionLabelWithCountDemo, 'With Count', { description: `Inline count makes quantities scannable at a glance.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Renders as \`<p>\` by default, use \`as="h3"\` when it semantically introduces a group.`,
-  `Tone colors are visual only; pair with an icon that has a meaningful \`aria-label\` when tone conveys status.`,
-];

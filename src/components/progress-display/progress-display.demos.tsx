@@ -78,8 +78,3 @@ export const demoMeta = defineDemos([
   [ProgressDisplaySuccessDemo, 'Success', { description: `Success state, bar turns green and an optional success message is shown.` }],
   [ProgressDisplayErrorDemo, 'Error', { description: `Error state, bar turns destructive and the error message block appears.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Log entries update via a live region, AT announces new lines as they stream in.`,
-  `Error and success states should also be communicated via a \`toast\` or \`alert\` for AT users in background contexts.`,
-  `The scrollable log area should be reachable by keyboard when it overflows.`,
-];

@@ -112,9 +112,3 @@ export const demoMeta = defineDemos([
   [MenubarDefaultDemo, 'Default', { description: `Application menu bar with File, Edit, and View menus.` }],
   [MenubarFullDemo, 'Full', { description: `Checkbox items for toggled settings and radio items for mutually exclusive options.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Arrow keys navigate between top-level triggers; Enter/Space opens the dropdown.`,
-  `Escape closes the open dropdown; Tab moves focus outside the menubar entirely.`,
-  `Each \`MenubarMenu\` is a \`role="menu"\` with its trigger as \`role="menuitem"\`.`,
-  `Keyboard shortcuts shown in items are visual only, implement the actual shortcuts separately.`,
-];

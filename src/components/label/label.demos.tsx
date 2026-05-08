@@ -39,9 +39,3 @@ export const demoMeta = defineDemos([
   [LabelRequiredDemo, 'Required', { description: `Required field, add an asterisk inside a span to signal mandatory status.` }],
   [LabelDisabledDemo, 'Disabled', { description: `Label on a disabled field, inherits reduced opacity via the peer-disabled class.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Renders a \`<label>\` element, clicking it focuses the associated input.`,
-  `Always link to the input via \`htmlFor\` matching the input's \`id\`.`,
-  `Required-field indicators (* or "required") should be inside the label or referenced via \`aria-describedby\`.`,
-  `Disabled labels inherit \`opacity-50\` visually; no ARIA change is needed.`,
-];

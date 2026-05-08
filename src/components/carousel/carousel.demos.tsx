@@ -55,9 +55,3 @@ export const demoMeta = defineDemos([
   [CarouselDefaultDemo, 'Default'],
   [CarouselMultipleDemo, 'Multiple'],
 ]);
-export const accessibility: readonly string[] = [
-  `Root carries \`role="region"\` with a label; each slide has \`role="group" aria-roledescription="slide"\`.`,
-  `Previous/Next buttons include \`sr-only\` screen-reader labels.`,
-  `Left/Right arrow keys navigate slides while focus is inside the carousel.`,
-  `Autoplay should pause on hover and focus to respect user attention and \`prefers-reduced-motion\`.`,
-];

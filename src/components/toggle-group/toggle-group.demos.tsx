@@ -79,9 +79,3 @@ export const demoMeta = defineDemos([
   [ToggleGroupDisabledDemo, 'Disabled', { description: `Individual items can be disabled while the rest remain interactive.` }],
   [ToggleGroupVerticalDemo, 'Vertical', { description: `Vertical orientation stacks items top-to-bottom with shared dividers.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Arrow keys navigate between items within the group; Space toggles the focused item.`,
-  `\`type="single"\` enforces one active item at a time; \`type="multiple"\` allows combinations.`,
-  `Icon-only items require \`aria-label\` on each \`ToggleGroupItem\`.`,
-  `The group wrapper carries \`role="group"\`, add \`aria-label\` to describe the group's purpose.`,
-];

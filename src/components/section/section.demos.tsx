@@ -66,7 +66,3 @@ export const demoMeta = defineDemos([
   [SectionDefaultDemo, 'Default', { description: `Section card with a header and body content.` }],
   [SectionWithActionDemo, 'With Action', { description: `Action button and a badge in the header's right slot, for settings panels with inline controls.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `\`SectionTitle\` renders as \`<h2>\` by default, adjust via the \`as\` prop to maintain heading hierarchy.`,
-  `Actions in the header slot should have descriptive labels matching the operation.`,
-];

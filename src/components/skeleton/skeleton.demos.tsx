@@ -55,8 +55,3 @@ export const demoMeta = defineDemos([
   [SkeletonTableDemo, 'Table', { description: `Table row skeleton with columns of varying widths.` }],
   [SkeletonArticleDemo, 'Article', { description: `Article or blog post skeleton, heading plus body lines.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Mark skeleton containers with \`aria-hidden="true"\` and \`aria-busy="true"\` on the parent.`,
-  `When content loads, remove the busy state and announce the result via a live region.`,
-  `Do not use \`Skeleton\` inside elements that carry interactive roles.`,
-];

@@ -104,8 +104,3 @@ export const demoMeta = defineDemos([
   [AlertWithIconDemo, 'With Icon', { description: `Error alert with a leading icon, compose AlertIcon before the text slots.` }],
   [AlertDismissibleDemo, 'Dismissible', { description: `Alert with a dismiss button, controlled visibility via useState.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Root carries \`role="alert"\` so live-region announcements fire on mount.`,
-  `\`AlertTitle\` and \`AlertDescription\` are sibling elements, AT reads them as one block.`,
-  `Icon inside \`AlertIcon\` is marked \`aria-hidden\`; the text content carries the meaning.`,
-];

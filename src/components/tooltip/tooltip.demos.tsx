@@ -94,9 +94,3 @@ export const demoMeta = defineDemos([
   [TooltipDisabledElementDemo, 'Disabled Element', { description: `Wrap a disabled button in a focusable span so hover events reach the tooltip.` }],
   [TooltipSidesDemo, 'Sides', { description: `Side and sideOffset control where the tooltip appears relative to its trigger.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Tooltips open on both hover and keyboard focus, use for supplementary info, not required instructions.`,
-  `Never place interactive elements inside a \`TooltipContent\`, use \`Popover\` instead.`,
-  `\`delayDuration={0}\` on the provider makes tooltips instant, which helps keyboard-only users.`,
-  `Wrap disabled buttons in a focusable \`<span tabIndex={0}>\` so the tooltip fires on focus.`,
-];

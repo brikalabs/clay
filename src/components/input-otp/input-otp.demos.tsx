@@ -117,9 +117,3 @@ export const demoMeta = defineDemos([
   [InputOTPPlaceholderDemo, 'Placeholder', { description: `Muted dot placeholder in each empty slot, fades out on focus or fill.` }],
   [InputOTPControlledDemo, 'Controlled', { description: `Controlled OTP that shows a Verify button only once all six slots are filled.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Paste works out-of-the-box, pasting a code fills all slots.`,
-  `A single hidden \`<input>\` handles the value; each visible slot is a presentation of that input's characters.`,
-  `The active slot gets a focus ring matching the input's focus state.`,
-  `Numeric-only patterns should use \`inputMode="numeric"\` to bring up the numeric keyboard on mobile.`,
-];

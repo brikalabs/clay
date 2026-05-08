@@ -138,9 +138,3 @@ export const demoMeta = defineDemos([
   [DropdownMenuRadioDemo, 'Radio', { description: `DropdownMenuRadioGroup enforces a single active selection across a set of items.` }],
   [DropdownMenuShortcutsDemo, 'Shortcuts', { description: `DropdownMenuShortcut renders right-aligned keyboard hints, purely visual, not functional.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Arrow keys navigate items; Enter/Space activate; Escape closes and returns focus to the trigger.`,
-  `Checkbox items carry \`aria-checked\`; radio items carry \`aria-checked\` within a \`role="group"\`.`,
-  `\`DropdownMenuShortcut\` renders keyboard hints, these are visual only and not announced by AT.`,
-  `Destructive items should use \`variant="destructive"\` to make intent clear visually and in context.`,
-];

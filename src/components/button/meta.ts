@@ -1,7 +1,8 @@
 /**
- * Component metadata picked up by the auto-registry. Keep this file
- * minimal, demos, accessibility callouts, and token lists live with
- * the docs site, which composes them on top of this metadata.
+ * Component metadata picked up by the auto-registry. Static prose
+ * metadata (description, accessibility callouts, external docs) lives
+ * here so consumers can read it without pulling in React, icons, or
+ * the demo helpers.
  */
 
 import type { ComponentMeta } from '../_registry';
@@ -11,4 +12,10 @@ export const meta: ComponentMeta = {
   displayName: 'Button',
   group: 'Primitives',
   description: `The default action affordance, a themed wrapper over the native button with CVA variants and asChild slot projection.`,
+  accessibility: [
+    `Focus ring uses \`--ring\` token for WCAG contrast.`,
+    `\`disabled\` removes pointer events and reduces opacity; it does not set \`aria-disabled\`.`,
+    `Icon-only buttons (\`size="icon"\`) REQUIRE an \`aria-label\`, there is no text fallback.`,
+    `\`asChild\` passes all button props (including \`role\` and \`aria-*\`) to the child element.`,
+  ],
 };

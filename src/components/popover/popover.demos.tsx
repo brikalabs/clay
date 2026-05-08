@@ -86,9 +86,3 @@ export const demoMeta = defineDemos([
   [PopoverSidesDemo, 'Sides', { description: `The side prop controls which edge of the trigger the popover appears on.` }],
   [PopoverAlignDemo, 'Align', { description: `The align prop pins the content to the start, center, or end of the trigger.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Focus moves into the popover when it opens, Tab navigates within it.`,
-  `Escape and clicking outside close the popover and return focus to the trigger.`,
-  `Use \`Popover\` over \`HoverCard\` when content must be keyboard-reachable.`,
-  `The trigger carries \`aria-expanded\` and \`aria-controls\` pointing to the panel.`,
-];

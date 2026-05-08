@@ -56,8 +56,3 @@ export const demoMeta = defineDemos([
   [ProgressAnimatedDemo, 'Animated', { description: `Progress bar that increments automatically to simulate a running task.` }],
   [ProgressLabelledDemo, 'Labelled', { description: `Progress with a percentage label, compose any text readout alongside the bar.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Carries \`role="progressbar"\`, \`aria-valuenow\`, \`aria-valuemin\`, and \`aria-valuemax\` automatically.`,
-  `Pair with a visible label or \`aria-label\` so AT announces what is progressing.`,
-  `Indeterminate state should also carry an accessible description explaining the uncertainty.`,
-];

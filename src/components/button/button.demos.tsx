@@ -80,9 +80,3 @@ export const demoMeta = defineDemos([
   [ButtonLoadingDemo, 'Loading', { description: `Disabled with a spinner, use while an async operation is in flight.` }],
   [ButtonAsLinkDemo, 'As Link', { description: `\`asChild\` delegates button styles to the child element, here an anchor tag.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Focus ring uses \`--ring\` token for WCAG contrast.`,
-  `\`disabled\` removes pointer events and reduces opacity; it does not set \`aria-disabled\`.`,
-  `Icon-only buttons (\`size="icon"\`) REQUIRE an \`aria-label\`, there is no text fallback.`,
-  `\`asChild\` passes all button props (including \`role\` and \`aria-*\`) to the child element.`,
-];

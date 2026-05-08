@@ -55,8 +55,3 @@ export const demoMeta = defineDemos([
   [SeparatorNavDemo, 'Nav', { description: `Vertical separator in a navigation link row.` }],
   [SeparatorLabelledDemo, 'Labelled', { description: `Labelled horizontal separator, useful for sign-in "or continue with" patterns.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Renders \`<hr>\` with \`role="separator"\`, meaningful to AT when it divides distinct content sections.`,
-  `Pass \`aria-orientation="vertical"\` when used as a vertical divider between inline items.`,
-  `Purely decorative separators should carry \`aria-hidden="true"\`.`,
-];

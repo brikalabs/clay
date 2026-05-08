@@ -59,8 +59,3 @@ export const demoMeta = defineDemos([
   [BadgeWithIconDemo, 'With Icon', { description: `SVG children are automatically sized to 12 px, no extra className needed.` }],
   [BadgeAsLinkDemo, 'As Link', { description: `\`asChild\` renders badge styles on the child element, useful for version or tag links.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Renders as a \`<span>\`, purely informational, carries no interactive role.`,
-  `When used as a link with \`asChild\`, the accessible name comes from the badge text.`,
-  `Numeric count badges in tab triggers should be accompanied by a visually hidden description.`,
-];

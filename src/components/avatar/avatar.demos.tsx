@@ -97,8 +97,3 @@ export const demoMeta = defineDemos([
   [AvatarBadgeDemo, 'Badge', { description: `AvatarBadge overlays a status indicator in the bottom-right corner.` }],
   [AvatarGroupDemo, 'Group', { description: `Stacked AvatarGroup with a count bubble for the remaining members.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `\`AvatarImage\` requires an \`alt\` attribute, use the user's name or leave empty (\`alt=""\`) for decorative use.`,
-  `\`AvatarFallback\` is visible only when the image fails or is missing; AT reads the fallback text.`,
-  `Status badge text should be wrapped in an \`aria-label\` when it conveys meaning (e.g. "Online").`,
-];

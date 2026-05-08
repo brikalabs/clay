@@ -95,8 +95,3 @@ export const demoMeta = defineDemos([
   [PageHeaderWithCountDemo, 'With Count', { description: `PageHeaderCount adds a muted count next to the description, useful for record totals.` }],
   [PageHeaderBreadcrumbDemo, 'Breadcrumb', { description: `Pair the page header with a Breadcrumb above it to show hierarchical location.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `\`PageHeaderTitle\` renders as \`<h1>\` by default, ensure only one \`<h1>\` per page.`,
-  `Action buttons should be descriptive: "New dashboard" not just "New".`,
-  `When used with a \`Breadcrumb\`, the breadcrumb provides location context the heading cannot.`,
-];

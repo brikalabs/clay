@@ -153,9 +153,3 @@ export const demoMeta = defineDemos([
   [TabsVerticalDemo, 'Vertical', { description: `Vertical orientation, tabs stack on the left and content fills the right.` }],
   [TabsControlledDemo, 'Controlled', { description: `Controlled tabs, drive the active tab programmatically with \`value\` and \`onValueChange\`.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Arrow keys navigate between triggers inside the list, Tab moves focus to the active panel.`,
-  `Active panel carries \`aria-labelledby\` pointing to its trigger.`,
-  `Triggers carry \`role="tab"\` and \`aria-selected\`; the list carries \`role="tablist"\`.`,
-  `Vertical tabs require \`orientation="vertical"\` so AT uses the correct arrow key direction.`,
-];

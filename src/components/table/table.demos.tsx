@@ -155,9 +155,3 @@ export const demoMeta = defineDemos([
   [TableActionDemo, 'Action', { description: `Actions column with Edit and Delete icon buttons per row.` }],
   [TableCompactDemo, 'Compact', { description: `Dense table using \`text-xs\` and reduced cell padding, useful for data-heavy views.` }],
 ]);
-export const accessibility: readonly string[] = [
-  `Use \`<TableCaption>\` to describe the table, it becomes the accessible name via \`aria-labelledby\`.`,
-  `Sortable column headers should carry \`aria-sort="ascending"\` or \`"descending"\`.`,
-  `Action buttons in cells require \`aria-label\` that includes the row context (e.g. "Edit Alicia Reyes").`,
-  `The table responds to standard AT table-navigation keys (e.g. Ctrl+Alt+arrows in screen readers).`,
-];
