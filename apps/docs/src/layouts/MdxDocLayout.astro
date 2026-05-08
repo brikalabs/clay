@@ -3,7 +3,7 @@ import { Toaster } from '@brika/clay/components/toast';
 import CodeBlockCopy from '~/components/docs/CodeBlockCopy.astro';
 import { CopyPageMenu } from '~/components/docs/CopyPageMenu.tsx';
 import { OnThisPage } from '~/components/OnThisPage.tsx';
-import { repoTreeUrl } from '~/lib/github';
+import { claySourceUrl } from '~/lib/github';
 import DocLayout from './DocLayout.astro';
 
 interface ExternalDoc {
@@ -31,7 +31,7 @@ const pageUrl = new URL(pathname, Astro.site).href;
 const markdownUrl = `${pathname}.md`;
 
 const componentSourceUrl = frontmatter.sourceFile
-  ? repoTreeUrl(`src/${frontmatter.sourceFile}`)
+  ? claySourceUrl(frontmatter.sourceFile)
   : undefined;
 
 // Fetch favicons at build time and embed as base64 data URLs so the browser

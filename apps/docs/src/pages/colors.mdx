@@ -64,4 +64,4 @@ Every token is defined with CSS `light-dark()`:
 --color-clay-canvas: light-dark(oklch(98.75% 0 0), oklch(10% 0 0));
 ```
 
-The active value tracks `color-scheme` on `<html>`. The [ThemeToggle](https://github.com/brikalabs/brika/blob/main/apps/clay-docs/src/components/ThemeToggle.tsx) sets `data-mode="dark"` or `"light"`, which flips the page's `color-scheme`, which flips every `light-dark()` call atomically. One token, two values, no class-based overrides per component.
+The active value tracks `color-scheme` on `<html>`. The [ThemeToggle](https://github.com/brikalabs/clay/blob/main/apps/docs/src/components/ThemeToggle.tsx) sets `data-mode="dark"` or `"light"`, which flips the page's `color-scheme`, which flips every `light-dark()` call atomically. One token, two values, no class-based overrides per component.

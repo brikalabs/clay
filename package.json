@@ -17,20 +17,14 @@
   "workspaces": ["packages/*", "apps/*"],
   "scripts": {
     "build": "bun run --filter '@brika/clay' build",
-    "dev": "bun run --filter '@brika/clay' dev",
+    "dev": "bun run --filter '@brika/clay-docs' dev",
+    "dev:lib": "bun run --filter '@brika/clay' dev",
     "test": "bun test",
     "typecheck": "bun run --filter '*' typecheck"
   },
   "devDependencies": {
-    "@happy-dom/global-registrator": "^20.9.0",
-    "@types/react": "^19.2.7",
-    "@types/react-dom": "^19.2.3",
     "@typescript/native-preview": "latest",
     "bun-types": "latest",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
-    "tailwindcss": "^4.0.0",
-    "tsup": "^8.3.5",
     "typescript": "^6.0.2"
   }
 }

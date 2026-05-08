@@ -1,7 +1,13 @@
 import { SITE } from '~/config';
 
+const CLAY_PKG_PATH = 'packages/clay/src';
+
+export function claySourceUrl(path: string): string {
+  return `${SITE.github.repo}/tree/${SITE.github.branch}/${CLAY_PKG_PATH}/${path}`;
+}
+
 export function componentSourceUrl(slug: string): string {
-  return `${SITE.github.repo}/tree/${SITE.github.branch}/src/components/${slug}`;
+  return claySourceUrl(`components/${slug}`);
 }
 
 export function repoTreeUrl(path: string): string {
