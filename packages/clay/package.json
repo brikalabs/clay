@@ -48,8 +48,48 @@
     "./tokens": "./src/tokens/index.ts"
   },
   "files": ["dist", "README.md", "LICENSE", "CHANGELOG.md"],
+  "publishConfig": {
+    "access": "public",
+    "main": "./dist/index.js",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+      ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+      "./assets/*": "./dist/assets/*",
+      "./components/*": {
+        "types": "./dist/components/*/index.d.ts",
+        "import": "./dist/components/*/index.js"
+      },
+      "./primitives": {
+        "types": "./dist/primitives/index.d.ts",
+        "import": "./dist/primitives/index.js"
+      },
+      "./primitives/*": {
+        "types": "./dist/primitives/*.d.ts",
+        "import": "./dist/primitives/*.js"
+      },
+      "./styles": "./dist/styles/clay.css",
+      "./styles/*": "./dist/styles/*.css",
+      "./tailwind": {
+        "types": "./dist/tailwind.d.ts",
+        "import": "./dist/tailwind.js"
+      },
+      "./themes": {
+        "types": "./dist/themes/index.d.ts",
+        "import": "./dist/themes/index.js"
+      },
+      "./themes/registry": {
+        "types": "./dist/themes/registry.d.ts",
+        "import": "./dist/themes/registry.js"
+      },
+      "./tokens": {
+        "types": "./dist/tokens/index.d.ts",
+        "import": "./dist/tokens/index.js"
+      }
+    }
+  },
   "scripts": {
-    "build": "tsup && tsc --emitDeclarationOnly --noEmit false",
+    "build": "tsup && tsc -p tsconfig.build.json --emitDeclarationOnly --noEmit false",
     "dev": "tsup --watch",
     "typecheck": "tsgo --noEmit",
     "test": "bun test",
