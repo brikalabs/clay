@@ -28,3 +28,8 @@ npm-debug.log*
 
 # TypeScript
 *.tsbuildinfo
+
+# Pack-time artifacts (prepack writes a backup, postpack cleans it up;
+# this guards against an interrupted run leaving the backup behind).
+package.json.bak
+*.tgz

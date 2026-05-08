@@ -94,6 +94,8 @@
     "typecheck": "tsgo --noEmit",
     "test": "bun test",
     "bench": "bun src/__tests__/tailwind-plugin.bench.ts",
+    "prepack": "bun run ./scripts/prepack.ts pre",
+    "postpack": "bun run ./scripts/prepack.ts post",
     "prepublishOnly": "bun run build"
   },
   "peerDependencies": {
