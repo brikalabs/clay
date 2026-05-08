@@ -5,7 +5,7 @@
  * the demo helpers.
  */
 
-import type { ComponentMeta } from '../_registry';
+import type { ComponentMeta } from '../../component-registry';
 
 export const meta: ComponentMeta = {
   name: 'sidebar',
@@ -15,7 +15,7 @@ export const meta: ComponentMeta = {
   accessibility: [
     '`SidebarProvider` exposes `collapsed` state via context, sync `aria-expanded` on the toggle button.',
     'The sidebar should have `role="navigation"` or `role="complementary"` depending on content.',
-    'Keyboard shortcut (default `Cmd+B`) should be announced via `aria-keyshortcuts` on the trigger.',
+    'The default keyboard shortcut `Cmd+B` should be announced via `aria-keyshortcuts` on the trigger.',
     'Rail-collapsed state hides labels visually; ensure icon-only items still carry `aria-label`.',
   ],
 };

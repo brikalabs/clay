@@ -16,7 +16,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@brika/clay/components/dropdown-menu';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Action menu with icons, grouped items, a separator, and a destructive item. */
 export function DropdownMenuDefaultDemo() {

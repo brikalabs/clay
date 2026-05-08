@@ -3,7 +3,7 @@
 import { Calendar } from '@brika/clay/components/calendar';
 import { useState } from 'react';
 import type { DateRange } from 'react-day-picker';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 export function CalendarDefaultDemo() {
   const [date, setDate] = useState<Date | undefined>(new Date());

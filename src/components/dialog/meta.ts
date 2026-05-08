@@ -5,7 +5,7 @@
  * the demo helpers.
  */
 
-import type { ComponentMeta } from '../_registry';
+import type { ComponentMeta } from '../../component-registry';
 
 export const meta: ComponentMeta = {
   name: 'dialog',

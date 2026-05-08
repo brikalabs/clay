@@ -7,7 +7,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from '@brika/clay/components/navigation-menu';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Flyout navigation with two trigger menus and a plain link. */
 export function NavigationMenuDefaultDemo() {

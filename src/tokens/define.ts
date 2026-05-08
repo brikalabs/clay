@@ -58,7 +58,9 @@
  *   });
  */
 
+import type { ComponentMeta as PublicComponentMeta } from '../component-registry';
 import { inferTokenType, inferTokenTypeFromValue, inferTokenTypeStrict } from './infer';
+import { register } from './registry-state';
 import type { TailwindNamespace, TokenCategory, TokenSpec, TokenType } from './types';
 
 // ─── Component meta ──────────────────────────────────────────────────────────
@@ -452,8 +454,8 @@ function bundleTokens(m: ComponentMeta, def: ComponentDefinition): TokenSpec[] {
 
 /**
  * Build every Layer-2 CSS-variable token a component needs, in one
- * declarative call. Pure, no side effects. The component's `tokens.ts`
- * exports the result; `tokens/components.ts` aggregates them.
+ * declarative call. Pure, no side effects, callers (`registerComponent`,
+ * tests) decide whether to push the result into the registry.
  */
 export function defineComponent(name: string, def: ComponentDefinition): readonly TokenSpec[] {
   const m = meta(name, def.themeKey);
@@ -464,4 +466,35 @@ export function defineComponent(name: string, def: ComponentDefinition): readonl
     ...(def.geometry ? geometryTokens(m, def.geometry) : []),
     ...(def.typography ? typographyTokens(m, def.typography) : []),
   ];
+}
+
+/**
+ * Build a component's tokens AND push them into the global Layer-2
+ * registry in one call. Component `tokens.ts` files use this, the
+ * top-level call IS the registration:
+ *
+ * ```ts
+ * import { registerComponent } from '../../tokens/define';
+ * import { meta } from './meta';
+ *
+ * registerComponent(meta, {
+ *   radius: { default: 'var(--radius-control)', description: '…' },
+ *   surface: true,
+ * });
+ * ```
+ *
+ * Pass the component's `meta` object (the kebab-case `name` is read off
+ * it) for the conventional case. Pass a string for components whose token
+ * namespace differs from the directory's meta name (`'menu'` /
+ * `'menu-item'` inside `dropdown-menu/tokens.ts`) or for namespace-only
+ * registrations that don't have a `meta.ts`.
+ */
+export function registerComponent(
+  metaOrName: PublicComponentMeta | string,
+  def: ComponentDefinition
+): readonly TokenSpec[] {
+  const name = typeof metaOrName === 'string' ? metaOrName : metaOrName.name;
+  const tokens = defineComponent(name, def);
+  register(tokens);
+  return tokens;
 }

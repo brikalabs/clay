@@ -1,6 +1,6 @@
 import { Slider, SliderValue } from '@brika/clay/components/slider';
 import { useState } from 'react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 export function SliderDefaultDemo() {
   const [value, setValue] = useState(50);

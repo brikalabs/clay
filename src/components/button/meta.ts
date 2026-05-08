@@ -5,7 +5,7 @@
  * the demo helpers.
  */
 
-import type { ComponentMeta } from '../_registry';
+import type { ComponentMeta } from '../../component-registry';
 
 export const meta: ComponentMeta = {
   name: 'button',
@@ -15,7 +15,7 @@ export const meta: ComponentMeta = {
   accessibility: [
     'Focus ring uses `--ring` token for WCAG contrast.',
     '`disabled` removes pointer events and reduces opacity; it does not set `aria-disabled`.',
-    'Icon-only buttons (`size="icon"`) REQUIRE an `aria-label`, there is no text fallback.',
-    '`asChild` passes all button props (including `role` and `aria-*`) to the child element.',
+    'Icon-only buttons with `size="icon"` REQUIRE an `aria-label`, there is no text fallback.',
+    '`asChild` passes all button props, including `role` and `aria-*`, to the child element.',
   ],
 };

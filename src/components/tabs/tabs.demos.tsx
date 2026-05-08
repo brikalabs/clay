@@ -4,7 +4,7 @@ import { Badge } from '@brika/clay/components/badge';
 import { Button } from '@brika/clay/components/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@brika/clay/components/tabs';
 import { useState } from 'react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Standard tabs with a pill-style list and three content panels. */
 export function TabsDefaultDemo() {

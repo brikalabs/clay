@@ -3,7 +3,7 @@
 import { Label } from '@brika/clay/components/label';
 import { Switch } from '@brika/clay/components/switch';
 import { useState } from 'react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Uncontrolled switch in its default on state. */
 export function SwitchDefaultDemo() {

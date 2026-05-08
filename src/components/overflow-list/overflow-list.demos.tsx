@@ -8,7 +8,7 @@ import {
   OverflowListItem,
   useOverflowList,
 } from '@brika/clay/components/overflow-list';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 const TAGS = [
   'production',

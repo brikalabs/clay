@@ -1,5 +1,5 @@
 import { Input } from '@brika/clay/components/input';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Single-line text input in its default state. */
 export function InputDefaultDemo() {

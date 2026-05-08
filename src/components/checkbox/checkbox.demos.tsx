@@ -3,7 +3,7 @@
 import { Checkbox } from '@brika/clay/components/checkbox';
 import { Label } from '@brika/clay/components/label';
 import { useState } from 'react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Uncontrolled checkbox pre-checked for visible state. */
 export function CheckboxDefaultDemo() {

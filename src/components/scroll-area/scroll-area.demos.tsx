@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@brika/clay/components/card';
 import { ScrollArea, ScrollBar } from '@brika/clay/components/scroll-area';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 const TAGS = [
   'typescript', 'react', 'tailwindcss', 'radix-ui', 'vite', 'astro', 'bun',

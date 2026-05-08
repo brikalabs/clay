@@ -1,6 +1,6 @@
 import { SectionLabel } from '@brika/clay/components/section-label';
 import { AlertTriangle, CheckCircle, Info, Zap } from 'lucide-react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Simple uppercase group divider above a list of cards. */
 export function SectionLabelDefaultDemo() {

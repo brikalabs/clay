@@ -21,7 +21,7 @@ import {
   User,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Inline command palette with grouped items, icons, and keyboard shortcuts. */
 export function CommandDefaultDemo() {

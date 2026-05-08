@@ -11,7 +11,7 @@ import {
 } from '@brika/clay/components/drawer';
 import { Input } from '@brika/clay/components/input';
 import { Label } from '@brika/clay/components/label';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 const NOTIFICATIONS = [
   { id: 1, title: 'New comment on your post', time: '2 min ago' },

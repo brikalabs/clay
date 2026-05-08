@@ -6,8 +6,8 @@
  * everything in one place.
  */
 
-export type { ComponentDemo, ComponentGroup, ComponentMeta, DemoInput, ExternalDoc } from './components/_registry';
-export { defineDemos } from './components/_registry';
+export type { ComponentDemo, ComponentGroup, ComponentMeta, DemoInput, ExternalDoc } from './component-registry';
+export { defineDemos } from './component-registry';
 export * from './components/accordion';
 export * from './components/alert';
 export * from './components/alert-dialog';

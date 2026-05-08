@@ -16,7 +16,7 @@ import {
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from '@brika/clay/components/context-menu';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Right-click (or long-press on mobile) the target area to open the menu. */
 export function ContextMenuDefaultDemo() {

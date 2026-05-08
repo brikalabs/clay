@@ -2,11 +2,11 @@
  * Layer-2 tokens for Select.
  */
 
-import { defineComponent } from '../../tokens/define';
+import { registerComponent } from '../../tokens/define';
 import { SPACING_2, SPACING_3 } from '../../tokens/spacing';
 import { meta } from './meta';
 
-export const tokens = defineComponent(meta.name, {
+registerComponent(meta, {
   radius: {
     default: 'var(--radius-control)',
     description: 'Select trigger corner radius.',

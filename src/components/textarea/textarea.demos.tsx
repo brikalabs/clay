@@ -2,7 +2,7 @@
 
 import { Textarea } from '@brika/clay/components/textarea';
 import { useState } from 'react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Multi-line text input in its default auto-sizing state. */
 export function TextareaDefaultDemo() {

@@ -1,6 +1,6 @@
 import { Label } from '@brika/clay/components/label';
 import { PasswordInput } from '@brika/clay/components/password-input';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Password field with lock icon and eye toggle to reveal characters. */
 export function PasswordInputDefaultDemo() {

@@ -2,10 +2,10 @@
  * Layer-2 tokens for Sidebar.
  */
 
-import { defineComponent } from '../../tokens/define';
+import { registerComponent } from '../../tokens/define';
 import { meta } from './meta';
 
-export const tokens = defineComponent(meta.name, {
+registerComponent(meta, {
   backdropBlur: {
     default: '0px',
     description:

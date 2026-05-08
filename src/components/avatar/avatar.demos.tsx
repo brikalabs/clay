@@ -7,7 +7,7 @@ import {
   AvatarImage,
 } from '@brika/clay/components/avatar';
 import { Circle } from 'lucide-react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Default avatar with a remote image and initials fallback. */
 export function AvatarDefaultDemo() {

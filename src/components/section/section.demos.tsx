@@ -10,7 +10,7 @@ import {
   SectionTitle,
 } from '@brika/clay/components/section';
 import { Server, Terminal } from 'lucide-react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Section card with a header and body content. */
 export function SectionDefaultDemo() {

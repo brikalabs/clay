@@ -5,20 +5,23 @@
  * Three layers, each authored in its own file:
  *   - Layer 0 scalars   → `./scalars.ts`
  *   - Layer 1 roles     → `./roles/*.ts`
- *   - Layer 2 component → co-located `tokens.ts` per component
- *                         (see `./components.ts` for the aggregator)
+ *   - Layer 2 component → co-located `tokens.ts` per component, each
+ *                         self-registers via `registerComponent(...)`.
+ *                         `../components/register.ts` is the side-effect-
+ *                         import list that loads them all.
  *
  * CSS is contributed at compile time by `../tailwind.ts` (the Tailwind
  * v4 plugin), no generated files, nothing to run.
  */
 
-import { COMPONENT_TOKENS } from './components';
+import '../components/register';
 import { inferTokenType } from './infer';
+import { getComponentTokens } from './registry-state';
 import { ROLES } from './roles';
 import { SCALARS } from './scalars';
 import type { ResolvedTokenSpec, TokenSpec } from './types';
 
-const RAW_REGISTRY: readonly TokenSpec[] = [...SCALARS, ...ROLES, ...COMPONENT_TOKENS];
+const RAW_REGISTRY: readonly TokenSpec[] = [...SCALARS, ...ROLES, ...getComponentTokens()];
 
 /**
  * Full token registry. Every entry has its `type` filled in, either

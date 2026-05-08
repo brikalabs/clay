@@ -12,7 +12,7 @@ import {
   SheetTrigger,
 } from '@brika/clay/components/sheet';
 import { Textarea } from '@brika/clay/components/textarea';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Right-side sheet (default), suited for filters, detail views, and settings panels. */
 export function SheetDefaultDemo() {

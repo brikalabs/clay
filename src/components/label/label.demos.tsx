@@ -1,6 +1,6 @@
 import { Input } from '@brika/clay/components/input';
 import { Label } from '@brika/clay/components/label';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Label paired with an input, clicking the label focuses the field. */
 export function LabelDefaultDemo() {

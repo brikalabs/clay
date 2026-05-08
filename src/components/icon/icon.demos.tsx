@@ -1,6 +1,6 @@
 import { Icon } from '@brika/clay/components/icon';
 import { Bell, Star, User } from 'lucide-react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Decorative icon, no `aria-label`, so screen readers skip it entirely. */
 export function IconDefaultDemo() {

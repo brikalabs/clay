@@ -1,5 +1,5 @@
 import { Separator } from '@brika/clay/components/separator';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Horizontal separator dividing two content blocks. */
 export function SeparatorDefaultDemo() {

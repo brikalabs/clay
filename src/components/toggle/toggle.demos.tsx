@@ -1,6 +1,6 @@
 import { Toggle } from '@brika/clay/components/toggle';
 import { Bold, Italic, Underline } from 'lucide-react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** A single toggle button that stays pressed until clicked again. */
 export function ToggleDefaultDemo() {

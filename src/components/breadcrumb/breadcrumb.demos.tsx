@@ -7,7 +7,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@brika/clay/components/breadcrumb';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Standard trail with two ancestor links and the current page. */
 export function BreadcrumbDefaultDemo() {

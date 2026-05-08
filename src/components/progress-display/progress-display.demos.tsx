@@ -2,7 +2,7 @@
 
 import { ProgressDisplay } from '@brika/clay/components/progress-display';
 import { useRef } from 'react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** In-progress state, spinner, phase label, and a live log stream. */
 export function ProgressDisplayDefaultDemo() {

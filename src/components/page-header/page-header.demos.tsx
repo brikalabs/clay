@@ -16,7 +16,7 @@ import {
   PageHeaderTitle,
 } from '@brika/clay/components/page-header';
 import { Plus } from 'lucide-react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Standard page header with title, description, and a primary action. */
 export function PageHeaderDefaultDemo() {

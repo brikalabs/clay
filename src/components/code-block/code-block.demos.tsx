@@ -1,5 +1,5 @@
 import { CodeBlock, CodeBlockContent, CodeBlockHeader, CodeBlockInfo } from '@brika/clay';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 const SAMPLE = `import { Button } from "@brika/clay/components/button";
 

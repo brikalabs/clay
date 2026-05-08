@@ -3,7 +3,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from '@brika/clay/components/resizable';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 export function ResizableDefaultDemo() {
   return (

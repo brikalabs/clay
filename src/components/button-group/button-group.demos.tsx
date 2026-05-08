@@ -8,7 +8,7 @@ import {
 } from '@brika/clay/components/dropdown-menu';
 import { Input } from '@brika/clay/components/input';
 import { ChevronDown, ClipboardPaste, Copy, Scissors } from 'lucide-react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Three related action buttons joined in a shared frame, each click fires once, no selection state. */
 export function ButtonGroupDefaultDemo() {

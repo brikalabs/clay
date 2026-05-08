@@ -1,6 +1,6 @@
 import { Badge } from '@brika/clay/components/badge';
 import { Check, Circle } from 'lucide-react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Default filled badge, use for status labels, counts, and tags. */
 export function BadgeDefaultDemo() {

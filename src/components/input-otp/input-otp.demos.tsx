@@ -8,7 +8,7 @@ import {
 } from '@brika/clay/components/input-otp';
 import { REGEXP_ONLY_DIGITS } from 'input-otp';
 import { useState } from 'react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Six-digit OTP split into two groups of three with a dash separator. */
 export function InputOTPDefaultDemo() {

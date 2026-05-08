@@ -5,7 +5,7 @@
  * the demo helpers.
  */
 
-import type { ComponentMeta } from '../_registry';
+import type { ComponentMeta } from '../../component-registry';
 
 export const meta: ComponentMeta = {
   name: 'avatar',
@@ -13,7 +13,7 @@ export const meta: ComponentMeta = {
   group: 'Data',
   description: 'User avatar with image, fallback initials, and status badge.',
   accessibility: [
-    '`AvatarImage` requires an `alt` attribute, use the user\'s name or leave empty (`alt=""`) for decorative use.',
+    '`AvatarImage` requires an `alt` attribute; use the user\'s name, or `alt=""` for decorative use.',
     '`AvatarFallback` is visible only when the image fails or is missing; AT reads the fallback text.',
     'Status badge text should be wrapped in an `aria-label` when it conveys meaning (e.g. "Online").',
   ],

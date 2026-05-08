@@ -13,7 +13,7 @@ import {
   MenubarSubTrigger,
   MenubarTrigger,
 } from '@brika/clay/components/menubar';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Application menu bar with File, Edit, and View menus. */
 export function MenubarDefaultDemo() {

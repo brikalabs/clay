@@ -11,7 +11,7 @@ import {
   TableRow,
 } from '@brika/clay/components/table';
 import { Pencil, Trash2 } from 'lucide-react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 const members = [
   { name: 'Alicia Reyes', email: 'alicia@brika.io', role: 'Admin', status: 'Active' },

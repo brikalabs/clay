@@ -5,7 +5,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from '@brika/clay/components/hover-card';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Hover over an inline element to preview non-critical supplemental content. */
 export function HoverCardDefaultDemo() {

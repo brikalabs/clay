@@ -1,4 +1,4 @@
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 /**
  * Sidebar is an app-shell component, it consumes a SidebarProvider context
  * that wraps the whole app surface. A live preview inside a doc card is

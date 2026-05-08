@@ -27,8 +27,8 @@
     "**/*.css",
     "**/components/*/tokens.ts",
     "**/components/*/tokens.js",
-    "**/tokens/components.ts",
-    "**/tokens/components.js"
+    "**/components/register.ts",
+    "**/components/register.js"
   ],
   "main": "./src/index.ts",
   "module": "./src/index.ts",

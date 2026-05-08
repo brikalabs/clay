@@ -1,6 +1,6 @@
 import { Button } from '@brika/clay/components/button';
 import { Loader2, Settings } from 'lucide-react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Default solid button, use for the primary call-to-action. */
 export function ButtonDefaultDemo() {

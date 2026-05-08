@@ -8,7 +8,7 @@ import {
 } from '@brika/clay/components/collapsible';
 import { ChevronDownIcon } from 'lucide-react';
 import { useState } from 'react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Basic collapsible, trigger toggles content visibility, no controlled state needed. */
 export function CollapsibleDefaultDemo() {

@@ -13,7 +13,7 @@ import {
 } from '@brika/clay/components/alert-dialog';
 import { Button } from '@brika/clay/components/button';
 import { useState } from 'react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Destructive confirmation dialog, blocks all interaction until the user resolves it. */
 export function AlertDialogDefaultDemo() {

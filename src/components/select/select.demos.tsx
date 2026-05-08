@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from '@brika/clay/components/select';
 import { useState } from 'react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Basic single-value select for picking a timezone. */
 export function SelectDefaultDemo() {

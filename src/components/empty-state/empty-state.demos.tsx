@@ -7,7 +7,7 @@ import {
   EmptyStateTitle,
 } from '@brika/clay/components/empty-state';
 import { Inbox, Search } from 'lucide-react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Inbox-zero placeholder, icon, title, description, and optional action. */
 export function EmptyStateDefaultDemo() {

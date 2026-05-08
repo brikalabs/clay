@@ -11,7 +11,7 @@ import {
   PopoverTitle,
   PopoverTrigger,
 } from '@brika/clay/components/popover';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Filter panel inside a popover, typical pattern for inline form controls. */
 export function PopoverDefaultDemo() {

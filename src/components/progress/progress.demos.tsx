@@ -2,7 +2,7 @@
 
 import { Progress } from '@brika/clay/components/progress';
 import { useEffect, useState } from 'react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Basic determinate progress bar, pass `value` 0 to 100. */
 export function ProgressDefaultDemo() {

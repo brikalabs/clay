@@ -1,6 +1,6 @@
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput, InputGroupText } from '@brika/clay/components/input-group';
 import { Search, X } from 'lucide-react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Currency field with dollar-sign prefix and currency code suffix. */
 export function InputGroupDefaultDemo() {

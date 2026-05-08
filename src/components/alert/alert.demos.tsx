@@ -9,7 +9,7 @@ import {
 } from '@brika/clay/components/alert';
 import { AlertCircle, CheckCircle2, Info, TriangleAlert } from 'lucide-react';
 import { useState } from 'react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Plain alert with title and description, the baseline composition. */
 export function AlertDefaultDemo() {

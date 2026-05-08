@@ -6,7 +6,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@brika/clay/components/carousel';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 const SLIDES_5 = [1, 2, 3, 4, 5] as const;
 const SLIDES_6 = [1, 2, 3, 4, 5, 6] as const;

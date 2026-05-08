@@ -1,5 +1,5 @@
 import { AspectRatio } from '@brika/clay/components/aspect-ratio';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** 16/9 ratio, the standard for responsive images and video embeds. */
 export function AspectRatioDefaultDemo() {

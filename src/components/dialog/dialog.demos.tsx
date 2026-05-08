@@ -11,7 +11,7 @@ import {
 } from '@brika/clay/components/dialog';
 import { Input } from '@brika/clay/components/input';
 import { Label } from '@brika/clay/components/label';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Clean modal with a title, description, and two footer actions. */
 export function DialogDefaultDemo() {

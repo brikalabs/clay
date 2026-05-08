@@ -7,7 +7,7 @@ import {
   AccordionTrigger,
 } from '@brika/clay/components/accordion';
 import { useState } from 'react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Single-select FAQ accordion, one item open at a time, collapsible. */
 export function AccordionDefaultDemo() {

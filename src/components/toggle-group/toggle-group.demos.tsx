@@ -1,6 +1,6 @@
 import { ToggleGroup, ToggleGroupItem } from '@brika/clay/components/toggle-group';
 import { AlignCenter, AlignLeft, AlignRight, Bold, Italic, Underline } from 'lucide-react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Single-selection alignment picker, only one item active at a time. */
 export function ToggleGroupDefaultDemo() {

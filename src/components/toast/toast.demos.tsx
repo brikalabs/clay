@@ -2,7 +2,7 @@
 
 import { Button } from '@brika/clay/components/button';
 import { toast } from '@brika/clay/components/toast';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Trigger a basic notification, mount one Toaster near the app root first. */
 export function ToastDefaultDemo() {

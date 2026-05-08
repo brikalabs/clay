@@ -1,5 +1,5 @@
 import { Skeleton } from '@brika/clay/components/skeleton';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Single line skeleton, match width to expected text content. */
 export function SkeletonDefaultDemo() {

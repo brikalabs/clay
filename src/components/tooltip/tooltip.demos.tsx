@@ -5,7 +5,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@brika/clay/components/tooltip';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Wrap any element with TooltipTrigger inside a TooltipProvider to add a tooltip. */
 export function TooltipDefaultDemo() {

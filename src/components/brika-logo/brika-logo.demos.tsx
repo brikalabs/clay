@@ -1,5 +1,5 @@
 import { BrikaLogo } from '@brika/clay/components/brika-logo';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 export function BrikaLogoDefaultDemo() {
   return <BrikaLogo className="size-12 text-clay-strong" />;

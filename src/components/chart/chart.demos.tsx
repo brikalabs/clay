@@ -1,5 +1,5 @@
 import { Chart } from '@brika/clay/components/chart';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 const now = Date.now();
 const data = Array.from({ length: 24 }, (_, index) => ({

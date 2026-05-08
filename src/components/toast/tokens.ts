@@ -2,9 +2,9 @@
  * Layer-2 tokens for Toast.
  */
 
-import { defineComponent } from '../../tokens/define';
+import { registerComponent } from '../../tokens/define';
 
-export const tokens = defineComponent('toast', {
+registerComponent('toast', {
   radius: {
     default: 'var(--radius-container)',
     description: 'Toast corner radius.',

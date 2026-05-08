@@ -3,7 +3,7 @@
 import { Label } from '@brika/clay/components/label';
 import { RadioGroup, RadioGroupItem } from '@brika/clay/components/radio-group';
 import { useState } from 'react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Vertical radio group with a default value pre-selected. */
 export function RadioGroupDefaultDemo() {
