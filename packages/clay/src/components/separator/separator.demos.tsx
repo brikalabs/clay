@@ -1,5 +1,5 @@
 import { Separator } from '@brika/clay/components/separator';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Horizontal separator dividing two content blocks. */
 export function SeparatorDefaultDemo() {
@@ -38,7 +38,7 @@ export function SeparatorNavDemo() {
   );
 }
 
-/** Labelled horizontal separator — useful for sign-in "or continue with" patterns. */
+/** Labelled horizontal separator, useful for sign-in "or continue with" patterns. */
 export function SeparatorLabelledDemo() {
   return (
     <div className="w-64 flex items-center gap-3">
@@ -50,13 +50,8 @@ export function SeparatorLabelledDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [SeparatorDefaultDemo, 'Default', { description: `Horizontal separator dividing two content blocks.` }],
-  [SeparatorVerticalDemo, 'Vertical', { description: `Vertical separator between inline elements.` }],
-  [SeparatorNavDemo, 'Nav', { description: `Vertical separator in a navigation link row.` }],
-  [SeparatorLabelledDemo, 'Labelled', { description: `Labelled horizontal separator — useful for sign-in "or continue with" patterns.` }],
+  [SeparatorDefaultDemo, 'Default', { description: 'Horizontal separator dividing two content blocks.' }],
+  [SeparatorVerticalDemo, 'Vertical', { description: 'Vertical separator between inline elements.' }],
+  [SeparatorNavDemo, 'Nav', { description: 'Vertical separator in a navigation link row.' }],
+  [SeparatorLabelledDemo, 'Labelled', { description: 'Labelled horizontal separator, useful for sign-in "or continue with" patterns.' }],
 ]);
-export const accessibility: readonly string[] = [
-  `Renders \`<hr>\` with \`role="separator"\` — meaningful to AT when it divides distinct content sections.`,
-  `Pass \`aria-orientation="vertical"\` when used as a vertical divider between inline items.`,
-  `Purely decorative separators should carry \`aria-hidden="true"\`.`,
-];

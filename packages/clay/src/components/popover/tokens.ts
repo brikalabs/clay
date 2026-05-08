@@ -2,20 +2,18 @@
  * Layer-2 tokens for Popover.
  */
 
-import { defineComponent } from '../../tokens/define';
+import { registerComponent } from '../../tokens/define';
 import { SPACING_2, SPACING_3 } from '../../tokens/spacing';
 import { meta } from './meta';
 
-export const tokens = defineComponent(meta.name, {
+registerComponent(meta, {
   radius: {
     default: 'var(--radius-surface)',
     description: 'Popover corner radius.',
-    alias: 'popover',
   },
   shadow: {
     default: 'var(--shadow-overlay)',
     description: 'Popover elevation.',
-    alias: 'popover',
   },
   border: '1px',
   motion: true,

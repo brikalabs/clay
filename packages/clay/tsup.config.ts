@@ -10,7 +10,7 @@ function componentEntries(): Record<string, string> {
   const out: Record<string, string> = {};
   const componentsDir = join(SRC, 'components');
   for (const name of readdirSync(componentsDir)) {
-    // Skip private folders (`_`, `__tests__`, etc.) and dotfiles — they
+    // Skip private folders (`_`, `__tests__`, etc.) and dotfiles, they
     // hold internal helpers or tests, not shippable component entries.
     if (name.startsWith('_') || name.startsWith('.')) {
       continue;
@@ -19,7 +19,7 @@ function componentEntries(): Record<string, string> {
     if (!statSync(full).isDirectory()) {
       continue;
     }
-    // Emit at `dist/components/<name>/index.js` — folder layout, matches
+    // Emit at `dist/components/<name>/index.js`, folder layout, matches
     // what `tsc --emitDeclarationOnly` produces for the .d.ts files. If
     // these diverged (flat .js, folder .d.ts) the barrel `export * from
     // './components/button'` wouldn't find types: TS sees `button.js`,
@@ -62,7 +62,7 @@ export default defineConfig({
   format: ['esm'],
   target: 'es2022',
   // DTS is emitted by `tsc --emitDeclarationOnly` (see package.json `build`
-  // script) — it scales better than tsup's worker for many-entry libraries
+  // script), it scales better than tsup's worker for many-entry libraries
   // and outputs at the source layout (`dist/components/<name>/index.d.ts`)
   // which the package.json `exports` map references.
   dts: false,
@@ -89,9 +89,12 @@ export default defineConfig({
     return { js: '.js' };
   },
   onSuccess: async () => {
-    // 1. Hand-authored CSS so `@brika/clay/styles` resolves and the
+    // 1. Copy hand-authored CSS so `@brika/clay/styles` resolves and the
     //    Tailwind plugin's `readFileSync` walk over `dist/styles/` finds
-    //    files at the same relative paths they had under `src/`.
+    //    files at the same relative paths they had under `src/`. Per-
+    //    component CSS no longer exists, every token-driven property is
+    //    composed inline in each `.tsx` via Tailwind v4 arbitrary-class
+    //    syntax.
     mkdirSync(join(DIST, 'styles'), { recursive: true });
     cpSync(join(SRC, 'styles'), join(DIST, 'styles'), { recursive: true });
     // 2. Theme preset JSON next to the bundled `themes.js` so the

@@ -10,7 +10,7 @@
     {
       "name": "clay",
       "source": "./claude",
-      "description": "Clay design system: components, tokens, themes, with a usage skill, /clay-docs command, and a clay-expert agent.",
+      "description": "Clay design system: components, tokens, themes, with a usage skill, /clay:docs command, and a clay:expert agent.",
       "version": "0.0.1",
       "homepage": "https://clay.brika.dev",
       "tags": ["design-system", "react", "tokens", "theming"]

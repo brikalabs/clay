@@ -53,7 +53,7 @@ function nextSection(): string {
 }
 
 // Pull the tokens scoped to this component from the registry. They power
-// the Tokens section below — every CSS variable, default value, and
+// the Tokens section below, every CSS variable, default value, and
 // theme-config path a consumer needs to personalize this component.
 const registryTokens = TOKEN_REGISTRY.filter((token) => token.appliesTo === component.slug);
 const hasRegistryTokens = registryTokens.length > 0;
@@ -229,7 +229,7 @@ const apiNum = nextSection();
         </h3>
         <p class="mb-4 max-w-2xl text-clay-default text-sm leading-relaxed">
           Authoring a theme is plain JSON. Drop overrides under
-          <code class="font-mono text-xs">components.{overrideComponentKey}</code> — the names
+          <code class="font-mono text-xs">components.{overrideComponentKey}</code>, the names
           are camelCase versions of the variable suffix.
         </p>
 
@@ -252,8 +252,11 @@ const apiNum = nextSection();
 
         <p class="mt-4 max-w-2xl text-clay-default text-sm leading-relaxed">
           Then apply with <code class="font-mono text-xs">applyTheme(myTheme)</code>{' '}
-          (see the <a href="/theming" class="text-clay-link underline-offset-2 hover:underline">theming guide</a>)
-          or scope it to a subtree with <code class="font-mono text-xs">themeToCssVars(myTheme, mode)</code>.
+          (see the <a href="/theming" class="text-clay-link underline-offset-2 hover:underline">theming guide</a>),
+          scope it to a subtree with <code class="font-mono text-xs">themeToCssVars(myTheme, mode)</code>,
+          or consume any token directly in your own JSX with the matching Tailwind utility
+          (e.g. <code class="font-mono text-xs">bg-{component.slug}-…</code>) — see the
+          chips on each token row.
         </p>
       </section>
     )
@@ -270,7 +273,7 @@ const apiNum = nextSection();
     </h2>
     <p class="mb-6 max-w-2xl text-clay-default text-sm leading-relaxed">
       Props specific to {component.name}. Native HTML attributes pass through to the
-      underlying primitive — see the
+      underlying primitive, see the
       <a
         href={githubBase}
         rel="noopener noreferrer"

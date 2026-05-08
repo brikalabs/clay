@@ -1,7 +1,7 @@
 {
   "id": "clay",
   "name": "Clay",
-  "description": "Warm paper, terracotta primary, earthy data palette — Clay's house theme.",
+  "description": "Warm paper, terracotta primary, earthy data palette, Clay's house theme.",
   "accentSwatches": ["#9b6b48", "#5a8c4f", "#c78a2b", "#b8443a"],
   "colors": {
     "light": {

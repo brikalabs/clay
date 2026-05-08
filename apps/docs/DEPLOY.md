@@ -1,7 +1,7 @@
 # Deploying clay-docs to clay.brika.dev
 
 The site deploys to Cloudflare Workers (Static Assets) via Wrangler.
-Astro builds a static `./dist`, which the Worker serves directly — no
+Astro builds a static `./dist`, which the Worker serves directly, no
 server-side script required.
 
 ## One-time setup

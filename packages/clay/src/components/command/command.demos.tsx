@@ -21,7 +21,7 @@ import {
   User,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Inline command palette with grouped items, icons, and keyboard shortcuts. */
 export function CommandDefaultDemo() {
@@ -62,7 +62,7 @@ export function CommandDefaultDemo() {
   );
 }
 
-/** Modal command palette triggered by Cmd+K — the standard power-user pattern. */
+/** Modal command palette triggered by Cmd+K, the standard power-user pattern. */
 export function CommandDialogDemo() {
   const [open, setOpen] = useState(false);
 
@@ -119,7 +119,7 @@ export function CommandDialogDemo() {
   );
 }
 
-/** Three groups — Suggestions, Recent, and Settings — with icons on every item. */
+/** Three groups, Suggestions, Recent, and Settings, with icons on every item. */
 export function CommandGroupsDemo() {
   return (
     <Command className="rounded-lg border shadow-md w-80">
@@ -140,7 +140,7 @@ export function CommandGroupsDemo() {
         <CommandGroup heading="Recent">
           <CommandItem>
             <Clock />
-            Design review — yesterday
+            Design review, yesterday
           </CommandItem>
           <CommandItem>
             <FileText />
@@ -166,13 +166,7 @@ export function CommandGroupsDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [CommandDefaultDemo, 'Default', { description: `Inline command palette with grouped items, icons, and keyboard shortcuts.` }],
-  [CommandDialogDemo, 'Dialog', { description: `Modal command palette triggered by Cmd+K — the standard power-user pattern.` }],
-  [CommandGroupsDemo, 'Groups', { description: `Three groups — Suggestions, Recent, and Settings — with icons on every item.` }],
+  [CommandDefaultDemo, 'Default', { description: 'Inline command palette with grouped items, icons, and keyboard shortcuts.' }],
+  [CommandDialogDemo, 'Dialog', { description: 'Modal command palette triggered by Cmd+K, the standard power-user pattern.' }],
+  [CommandGroupsDemo, 'Groups', { description: 'Three groups, Suggestions, Recent, and Settings, with icons on every item.' }],
 ]);
-export const accessibility: readonly string[] = [
-  `Arrow keys navigate list items; Enter activates the focused item.`,
-  `The input is always focused while the list is visible — Tab closes the command palette.`,
-  `Grouped items announce their group heading; \`CommandEmpty\` is announced when no results match.`,
-  `Wrap in \`CommandDialog\` for modal use — adds focus trapping and Escape-to-close.`,
-];

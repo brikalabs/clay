@@ -1,7 +1,7 @@
 /**
  * Shape of a Clay theme preset.
  *
- * A theme is plain data — JSON in `./presets/*.json` for first-party themes,
+ * A theme is plain data, JSON in `./presets/*.json` for first-party themes,
  * or a literal `ThemeConfig` from consumer code. `applyTheme(theme, mode)`
  * (in `./apply.ts`) injects a `<style>` tag with `:root` and dark-mode rules
  * derived from the theme. `themeToCssVars(theme, mode)` returns the same
@@ -13,12 +13,12 @@
  * motion, focus, and per-component overrides to fully re-skin the library.
  *
  * Token naming conventions:
- *   colors.{light,dark}.<token>  — kebab-case CSS var name, e.g. `card-foreground`.
- *   geometry.<prop>              — camelCase, e.g. `fontSans`.
- *   borders.<prop>               — camelCase.
- *   motion.<prop>                — camelCase.
- *   focus.<prop>                 — camelCase.
- *   components.<name>.<prop>     — `<name>` is kebab-case (matches CSS),
+ *   colors.{light,dark}.<token> , kebab-case CSS var name, e.g. `card-foreground`.
+ *   geometry.<prop>             , camelCase, e.g. `fontSans`.
+ *   borders.<prop>              , camelCase.
+ *   motion.<prop>               , camelCase.
+ *   focus.<prop>                , camelCase.
+ *   components.<name>.<prop>    , `<name>` is kebab-case (matches CSS),
  *                                  `<prop>` is camelCase. The walker emits
  *                                  `--<name>-<kebab(prop)>` as the CSS var.
  */
@@ -60,7 +60,7 @@ export interface ThemeFocus {
 }
 
 /**
- * Per-component override map. Open-ended on prop names — the registry is
+ * Per-component override map. Open-ended on prop names, the registry is
  * the authoritative list of valid keys; expressing that as a TS literal
  * union would force a type-update on every new component token, with
  * little real safety win. Theme JSON is validated at runtime by the
@@ -72,13 +72,13 @@ export type ComponentTokenMap = Readonly<Record<string, string>>;
  * Visual flourishes a theme can opt into. Each is a CSS-only effect wired
  * up by `@brika/clay/styles` via `html[data-effects~="<name>"]` selectors.
  *
- * - `scanlines` — repeating horizontal CRT-style lines, blended over the page
- * - `glow`      — soft `text-shadow` on headings and primary buttons
- * - `noise`     — SVG turbulence grain overlay (heavier)
- * - `paper`     — subtle parchment grain (lighter than `noise`)
- * - `halftone`  — radial-gradient dot pattern overlay
- * - `vignette`  — corner-darkening radial gradient
- * - `flicker`   — slow opacity flicker, auto-disabled by `prefers-reduced-motion`
+ * - `scanlines`, repeating horizontal CRT-style lines, blended over the page
+ * - `glow`     , soft `text-shadow` on headings and primary buttons
+ * - `noise`    , SVG turbulence grain overlay (heavier)
+ * - `paper`    , subtle parchment grain (lighter than `noise`)
+ * - `halftone` , radial-gradient dot pattern overlay
+ * - `vignette` , corner-darkening radial gradient
+ * - `flicker`  , slow opacity flicker, auto-disabled by `prefers-reduced-motion`
  */
 export type ThemeEffect =
   | 'scanlines'

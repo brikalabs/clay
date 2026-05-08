@@ -1,5 +1,5 @@
 /**
- * Layer 1 — Geometry roles
+ * Layer 1, Geometry roles
  * Semantic radii derived from the base `--radius` scalar.
  *
  * Tabular `[alias, value, description]` form expanded by a builder so
@@ -38,7 +38,7 @@ const RADIUS_DEFS: readonly RadiusEntry[] = [
   [
     'surface',
     'calc(var(--radius) + 0.25rem)',
-    'Radius for dialogs, sheets, popovers — surfaces that float.',
+    'Radius for dialogs, sheets, popovers, surfaces that float.',
   ],
 ];
 

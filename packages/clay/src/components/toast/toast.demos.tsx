@@ -2,9 +2,9 @@
 
 import { Button } from '@brika/clay/components/button';
 import { toast } from '@brika/clay/components/toast';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
-/** Trigger a basic notification — mount one Toaster near the app root first. */
+/** Trigger a basic notification, mount one Toaster near the app root first. */
 export function ToastDefaultDemo() {
   return (
     <Button
@@ -115,14 +115,8 @@ export function ToastPositionDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [ToastDefaultDemo, 'Default', { description: `Trigger a basic notification — mount one Toaster near the app root first.` }],
-  [ToastVariantsDemo, 'Variants', { description: `Semantic intent variants and inline action button.` }],
-  [ToastPromiseDemo, 'Promise', { description: `toast.promise tracks an async operation through loading, success, and error states.` }],
-  [ToastPositionDemo, 'Position', { description: `Configure Toaster position and display duration at the mount site.` }],
+  [ToastDefaultDemo, 'Default', { description: 'Trigger a basic notification, mount one Toaster near the app root first.' }],
+  [ToastVariantsDemo, 'Variants', { description: 'Semantic intent variants and inline action button.' }],
+  [ToastPromiseDemo, 'Promise', { description: 'toast.promise tracks an async operation through loading, success, and error states.' }],
+  [ToastPositionDemo, 'Position', { description: 'Configure Toaster position and display duration at the mount site.' }],
 ]);
-export const accessibility: readonly string[] = [
-  `Built on Sonner's \`aria-live\` region — announcements fire automatically.`,
-  `Auto-dismiss duration defaults to 4 s; override via \`toast(msg, { duration })\` for critical messages.`,
-  `Action buttons inside toasts should have descriptive \`label\` text.`,
-  `Respects \`prefers-reduced-motion\` — animations are skipped for users with motion sensitivity.`,
-];

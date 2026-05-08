@@ -1,5 +1,5 @@
 /**
- * Layer 1 — Material-inspired typography scale.
+ * Layer 1, Material-inspired typography scale.
  *
  * Five families × three sizes (lg / md / sm) = 15 size tiers, each
  * paired with a line-height. Sizes derive from `--text-base` so a theme

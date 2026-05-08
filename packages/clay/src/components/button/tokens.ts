@@ -2,20 +2,18 @@
  * Layer-2 tokens for Button.
  */
 
-import { defineComponent } from '../../tokens/define';
+import { registerComponent } from '../../tokens/define';
 import { SPACING_2, SPACING_4 } from '../../tokens/spacing';
 import { meta } from './meta';
 
-export const tokens = defineComponent(meta.name, {
+registerComponent(meta, {
   radius: {
     default: 'var(--radius-control)',
     description: 'Button corner radius. Falls back to `radius-control`.',
-    alias: 'button',
   },
   shadow: {
     default: 'var(--shadow-surface)',
     description: 'Resting elevation under a button.',
-    alias: 'button',
   },
   surface: true,
   geometry: { height: '2.25rem', paddingX: SPACING_4, paddingY: SPACING_2, gap: SPACING_2 },

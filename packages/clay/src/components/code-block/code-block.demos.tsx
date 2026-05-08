@@ -1,5 +1,5 @@
 import { CodeBlock, CodeBlockContent, CodeBlockHeader, CodeBlockInfo } from '@brika/clay';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 const SAMPLE = `import { Button } from "@brika/clay/components/button";
 
@@ -32,8 +32,3 @@ export function CodeBlockDefaultDemo() {
 export const demoMeta = defineDemos([
   [CodeBlockDefaultDemo, 'Default'],
 ]);
-export const accessibility: readonly string[] = [
-  `Code blocks are non-interactive regions; Tab moves through the copy button, not character by character.`,
-  `Copy button carries \`aria-label="Copy code"\` and should announce success state via a live region.`,
-  `Syntax highlighting is visual only; AT reads the raw code text without colour cues.`,
-];

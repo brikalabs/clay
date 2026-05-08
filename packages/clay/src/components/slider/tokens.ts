@@ -2,14 +2,13 @@
  * Layer-2 tokens for Slider.
  */
 
-import { defineComponent } from '../../tokens/define';
+import { registerComponent } from '../../tokens/define';
 import { meta } from './meta';
 
-export const tokens = defineComponent(meta.name, {
+registerComponent(meta, {
   radius: {
     default: '9999px',
     description: 'Track corner radius. Set lower for square / brutalist looks.',
-    alias: 'slider',
   },
   slots: {
     'track-height': { default: '0.25rem', description: 'Slider track thickness.' },
@@ -22,7 +21,7 @@ export const tokens = defineComponent(meta.name, {
     'tick-size': { default: '0.25rem', description: 'Tick dot diameter on the track.' },
     'thumb-border-width': {
       default: '2px',
-      description: 'Thumb border width — the contrast halo between the thumb and the track.',
+      description: 'Thumb border width, the contrast halo between the thumb and the track.',
     },
     'thumb-shadow': {
       default: 'var(--shadow-raised)',

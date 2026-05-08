@@ -10,12 +10,12 @@ interface CopyPageMenuProps {
 }
 
 function buildLlmPrompt(markdownUrl: string): string {
-  return `Read ${markdownUrl} — it's the Markdown source for a page from the Clay component library. Help me understand and use what it documents.`;
+  return `Read ${markdownUrl}, it's the Markdown source for a page from the Clay component library. Help me understand and use what it documents.`;
 }
 
 /**
  * "Copy page" split-button with a dropdown of LLM-friendly and clipboard
- * actions. Mirrors the pattern shadcn and kumo use — gives readers who want
+ * actions. Mirrors the pattern shadcn and kumo use, gives readers who want
  * to dump the page into an AI a one-click path instead of fiddling with
  * select + copy + context-switch.
  */
@@ -39,7 +39,7 @@ export function CopyPageMenu({ pageUrl, markdownUrl }: CopyPageMenuProps) {
       setCopied(true);
       setTimeout(() => setCopied(false), 1400);
     } catch {
-      // Clipboard unavailable — drop silently.
+      // Clipboard unavailable, drop silently.
     }
   };
 

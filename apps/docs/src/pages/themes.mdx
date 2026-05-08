@@ -1,7 +1,7 @@
 ---
 layout: ~/layouts/MdxDocLayout.astro
 title: "Themes"
-description: "Sixteen first-party presets ship with Clay — eleven palette themes plus five showcase themes that retune geometry, borders, typography, motion, and translucency."
+description: "Sixteen first-party presets ship with Clay, eleven palette themes plus five showcase themes that retune geometry, borders, typography, motion, and translucency."
 group: "Library"
 ---
 
@@ -20,10 +20,10 @@ import ScopeTabs from "~/components/docs/ScopeTabs.astro";
     Pick a theme
   </h2>
   <p class="mb-8 max-w-2xl text-clay-default text-sm leading-relaxed">
-    Each card renders under its own theme — a side-by-side visual diff. Click a card to apply
+    Each card renders under its own theme, a side-by-side visual diff. Click a card to apply
     that theme site-wide. Clay itself never reads or writes
-    <code class="rounded border border-clay-hairline bg-clay-base px-1 py-px font-mono text-[0.8125rem] text-clay-default">localStorage</code> — see <a class="underline decoration-clay-hairline underline-offset-2 hover:text-clay-strong" href="/theming#persist">Theming → Persist</a> for how to persist the choice in your app.
-    The five <em>showcase</em> themes — Brutalist, Editorial, Terminal, Skeuomorph, Glass — go
+    <code class="rounded border border-clay-hairline bg-clay-base px-1 py-px font-mono text-[0.8125rem] text-clay-default">localStorage</code>, see <a class="underline decoration-clay-hairline underline-offset-2 hover:text-clay-strong" href="/theming#persist">Theming → Persist</a> for how to persist the choice in your app.
+    The five <em>showcase</em> themes, Brutalist, Editorial, Terminal, Skeuomorph, Glass, go
     beyond colour: zero-radius mono brutalism, frosted translucent layers, full monospace,
     heavy shadows, the works.
   </p>
@@ -42,7 +42,7 @@ import ScopeTabs from "~/components/docs/ScopeTabs.astro";
   <p class="mb-5 max-w-2xl text-clay-default text-sm leading-relaxed">
     <code class="rounded border border-clay-hairline bg-clay-base px-1 py-px font-mono text-[0.8125rem] text-clay-default">applyTheme(theme)</code> injects a <code class="rounded border border-clay-hairline bg-clay-base px-1 py-px font-mono text-[0.8125rem] text-clay-default">{`<style id="clay-theme">`}</code> tag into the head with both <code class="rounded border border-clay-hairline bg-clay-base px-1 py-px font-mono text-[0.8125rem] text-clay-default">:root</code> and dark-mode blocks. Toggling
     <code class="rounded border border-clay-hairline bg-clay-base px-1 py-px font-mono text-[0.8125rem] text-clay-default">data-mode="dark"</code> on
-    <code class="rounded border border-clay-hairline bg-clay-base px-1 py-px font-mono text-[0.8125rem] text-clay-default">{`<html>`}</code> flips between them via CSS — no re-render, no JS re-run.
+    <code class="rounded border border-clay-hairline bg-clay-base px-1 py-px font-mono text-[0.8125rem] text-clay-default">{`<html>`}</code> flips between them via CSS, no re-render, no JS re-run.
   </p>
   <CodeSource
     code={`import { applyTheme, nord } from "@brika/clay/themes";
@@ -126,7 +126,7 @@ cleanup();`}
     Each theme is exported by name from
     <code class="rounded border border-clay-hairline bg-clay-base px-1 py-px font-mono text-[0.8125rem] text-clay-default">@brika/clay/themes</code>
     so a single-theme import drops the rest at build time. The full
-    ordered list — <code class="rounded border border-clay-hairline bg-clay-base px-1 py-px font-mono text-[0.8125rem] text-clay-default">builtInThemes</code> and <code class="rounded border border-clay-hairline bg-clay-base px-1 py-px font-mono text-[0.8125rem] text-clay-default">builtInThemesById</code> — lives behind an opt-in
+    ordered list, <code class="rounded border border-clay-hairline bg-clay-base px-1 py-px font-mono text-[0.8125rem] text-clay-default">builtInThemes</code> and <code class="rounded border border-clay-hairline bg-clay-base px-1 py-px font-mono text-[0.8125rem] text-clay-default">builtInThemesById</code>, lives behind an opt-in
     <code class="rounded border border-clay-hairline bg-clay-base px-1 py-px font-mono text-[0.8125rem] text-clay-default">@brika/clay/themes/registry</code> entry, so pickers can pull every preset and one-theme apps don't have to.
     Eleven palette themes
     (<code class="rounded border border-clay-hairline bg-clay-base px-1 py-px font-mono text-[0.8125rem] text-clay-default">nord</code>,
@@ -158,6 +158,6 @@ cleanup();`}
     Remembering the choice
   </h2>
   <p class="max-w-2xl text-clay-default text-sm leading-relaxed">
-    Clay doesn't manage storage. Your app decides where the active theme id lives — <code class="rounded border border-clay-hairline bg-clay-base px-1 py-px font-mono text-[0.8125rem] text-clay-default">localStorage</code>, a cookie, a user-prefs API, anywhere — and calls <code class="rounded border border-clay-hairline bg-clay-base px-1 py-px font-mono text-[0.8125rem] text-clay-default">applyTheme</code> with the matching preset. See <a class="underline decoration-clay-hairline underline-offset-2 hover:text-clay-strong" href="/theming#persist">Theming → Persist</a> for a React provider + SSR boot script recipe you can drop into your tree.
+    Clay doesn't manage storage. Your app decides where the active theme id lives, <code class="rounded border border-clay-hairline bg-clay-base px-1 py-px font-mono text-[0.8125rem] text-clay-default">localStorage</code>, a cookie, a user-prefs API, anywhere, and calls <code class="rounded border border-clay-hairline bg-clay-base px-1 py-px font-mono text-[0.8125rem] text-clay-default">applyTheme</code> with the matching preset. See <a class="underline decoration-clay-hairline underline-offset-2 hover:text-clay-strong" href="/theming#persist">Theming → Persist</a> for a React provider + SSR boot script recipe you can drop into your tree.
   </p>
 </section>

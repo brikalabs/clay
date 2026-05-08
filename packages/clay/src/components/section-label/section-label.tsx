@@ -1,9 +1,9 @@
 /**
- * SectionLabel — small uppercase group header for in-page partitions.
+ * SectionLabel, small uppercase group header for in-page partitions.
  *
  * Typically used above a sub-group of cards, e.g. "2 errors" or
  * "3 needs attention" preceding the card list. Uses semantic tokens
- * only — no hardcoded colors.
+ * only, no hardcoded colors.
  *
  * Usage:
  *   <SectionLabel tone="destructive" icon={AlertTriangle}>

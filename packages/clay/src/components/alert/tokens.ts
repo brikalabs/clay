@@ -2,13 +2,12 @@
  * Layer-2 tokens for Alert.
  */
 
-import { defineComponent } from '../../tokens/define';
+import { registerComponent } from '../../tokens/define';
 
-export const tokens = defineComponent('alert', {
+registerComponent('alert', {
   radius: {
     default: 'var(--radius-container)',
     description: 'Alert corner radius.',
-    alias: 'alert',
   },
   backdropBlur: {
     default: '0px',
@@ -20,6 +19,10 @@ export const tokens = defineComponent('alert', {
       default: 'var(--background)',
       description:
         'Base color the per-variant accent is mixed into. Defaults to the page surface for opaque tints; set to `transparent` for translucent / glass variants.',
+      // Read directly via `var(--alert-tint-base)` inside `color-mix()` in
+      // alert.tsx, no Tailwind utility wraps the access, so the var-chain
+      // default must land in `:root` for the mix to resolve.
+      consumedByCss: true,
     },
     'tint-bg-amount': {
       default: '12%',

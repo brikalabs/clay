@@ -1,4 +1,4 @@
-# Clay — architecture
+# Clay, architecture
 
 This document describes how Clay is wired internally: the token registry,
 the Tailwind v4 plugin, the per-component shorthand utility system, the
@@ -15,7 +15,7 @@ output, read this file.
 
 Clay is three things stacked in one package:
 
-1. **A typed token registry** — every CSS variable Clay can address is a
+1. **A typed token registry**, every CSS variable Clay can address is a
    `TokenSpec` record in [`src/tokens/registry.ts`](src/tokens/registry.ts).
    The registry is the single source of truth; nothing in CSS or
    generated files duplicates it.
@@ -27,7 +27,7 @@ Clay is three things stacked in one package:
 3. **A small set of React components** in `src/components/<name>/` whose
    class strings are written directly against the tokens above.
 
-Themes are runtime overrides of the same registry — a `ThemeConfig` is
+Themes are runtime overrides of the same registry, a `ThemeConfig` is
 flattened into a single `<style>` tag whose body is `:root { --token: …; }`.
 
 The library ships zero generated files. Compile-time output is produced
@@ -72,15 +72,15 @@ interface TokenSpec {
 
 There are three layers, each authored in its own file:
 
-- **Layer 0 — Scalars** (`src/tokens/scalars.ts`). The dial-pad: `--radius`,
+- **Layer 0, Scalars** (`src/tokens/scalars.ts`). The dial-pad: `--radius`,
   `--spacing`, `--font-sans`, `--motion-standard-duration`,
   `--ring-width`, `--text-base`. Every later layer ultimately rides on
   these.
-- **Layer 1 — Roles** (`src/tokens/roles/*.ts`). Semantic intent layered
+- **Layer 1, Roles** (`src/tokens/roles/*.ts`). Semantic intent layered
   on top of scalars: `--primary`, `--background`, `--border`,
   `--radius-control`, `--shadow-overlay`, `--motion-instant-duration`.
   A role's `defaultLight` is typically a `var(--<scalar>)` chain.
-- **Layer 2 — Component** (`src/components/<name>/tokens.ts`). Per-component
+- **Layer 2, Component** (`src/components/<name>/tokens.ts`). Per-component
   identity: `--button-padding-x`, `--card-shadow`, `--menu-item-gap`.
   Authored declaratively via `defineComponent`:
 
@@ -111,14 +111,14 @@ There are three layers, each authored in its own file:
 The aggregator [`src/tokens/registry.ts`](src/tokens/registry.ts) imports
 all three layers and exposes:
 
-- `TOKEN_REGISTRY: readonly ResolvedTokenSpec[]` — every spec, with
+- `TOKEN_REGISTRY: readonly ResolvedTokenSpec[]`, every spec, with
   `type` filled in from `inferTokenType` when omitted.
-- `TOKENS_BY_NAME: Record<string, ResolvedTokenSpec>` — O(1) lookup.
-- `tokensByType(type)` — for tooling that needs all colors / radii / etc.
+- `TOKENS_BY_NAME: Record<string, ResolvedTokenSpec>`, O(1) lookup.
+- `tokensByType(type)`, for tooling that needs all colors / radii / etc.
 
 ---
 
-## Tailwind v4 plugin — what `src/tailwind.ts` emits
+## Tailwind v4 plugin, what `src/tailwind.ts` emits
 
 The plugin is loaded by the consumer's CSS:
 
@@ -148,7 +148,7 @@ Tokens whose `type` maps to a CSS `@property` syntax descriptor and whose
 The browser then type-checks values theme authors set against custom
 properties (a malformed value falls back to `initial-value`) and
 animations interpolate cleanly. Tokens whose default is a `var()` chain
-are skipped — the CSS spec requires `initial-value` to be a *computed*
+are skipped, the CSS spec requires `initial-value` to be a *computed*
 value, and `var()` resolves later.
 
 ### 2. `:root` defaults + dark-mode overrides (always-emit)
@@ -160,7 +160,7 @@ For Layer-2 tokens the rule is more subtle: literal defaults always emit,
 but `var()`-chain defaults only emit if some downstream code reads them
 directly. "Downstream" means either:
 
-- Hand-authored CSS or TSX referencing `var(--token)` / `(--token)` —
+- Hand-authored CSS or TSX referencing `var(--token)` / `(--token)`,
   picked up by `readDirectVarReferences()` which greps the `src/styles`
   and `src/components/*/<name>.tsx` files.
 - The auto-generated shorthand utility (see §3) which references
@@ -176,7 +176,7 @@ const REFERENCED_COMPONENT_TOKENS: ReadonlySet<string> = new Set([
 ```
 
 The point of this filter is that a Layer-2 token whose default is just
-`var(--shadow-surface)` adds nothing if no one reads the var directly —
+`var(--shadow-surface)` adds nothing if no one reads the var directly,
 the same fallback chain is reachable via `theme.extend.boxShadow.button`,
 which Tailwind's JIT only emits when a class like `shadow-button`
 actually appears in source.
@@ -196,7 +196,7 @@ has three ways to emit utilities:
 The first three are convenient but **emit their content unconditionally**
 in v4. The only way to get JIT pruning from the JS plugin is
 `matchUtilities`, which Tailwind designs as a parametric utility
-generator — `tab-2`, `tab-4`, etc. — but accepts a `values: { DEFAULT: '' }`
+generator, `tab-2`, `tab-4`, etc., but accepts a `values: { DEFAULT: '' }`
 option that makes each entry behave like a static utility while still
 participating in the content-scanner pipeline.
 
@@ -221,7 +221,7 @@ When the source contains no `button`, nothing emits.
 The `src/__tests__/tailwind-plugin.test.ts` suite verifies this contract
 two ways:
 
-- A mock plugin api whose `addUtilities` and `addComponents` *throw* —
+- A mock plugin api whose `addUtilities` and `addComponents` *throw*,
   the plugin must reach for `matchUtilities` only.
 - Tailwind v4's `compile()` with curated candidate lists, asserting that
   asking for `['button']` emits `.button` but no other shorthand, and
@@ -277,8 +277,8 @@ const SUFFIX_TO_PROPERTY: Readonly<Record<string, string>> = {
 
 Slot tokens whose value needs a wrapper (currently just
 `<component>-backdrop-blur` → `backdrop-filter: blur(var(...))`) go
-through a special-cases table. Suffixes outside both tables — slot
-tokens like `filled-container`, `track-width`, `radius`, `shadow` — are
+through a special-cases table. Suffixes outside both tables, slot
+tokens like `filled-container`, `track-width`, `radius`, `shadow`, are
 intentionally skipped; they're already accessible through their own
 Tailwind utilities (`bg-button-filled-container`, `rounded-button`,
 `shadow-card`).
@@ -304,7 +304,7 @@ SHORTHAND_INDEX.rules['button'] = {
 };
 ```
 
-Plus `SHORTHAND_INDEX.tokenRefs` — the union of every token name any
+Plus `SHORTHAND_INDEX.tokenRefs`, the union of every token name any
 shorthand references, used to gate `:root` emission for var-chain
 defaults.
 
@@ -314,8 +314,8 @@ registration), so all three consumers see identical data.
 
 ### Why one class per component
 
-An earlier iteration split each component into four classes —
-`button-geom`, `button-typo`, `button-motion`, `button-border` — to
+An earlier iteration split each component into four classes,
+`button-geom`, `button-typo`, `button-motion`, `button-border`, to
 mirror the families inside `defineComponent`. In practice every consumer
 either applied all four or none, the four-way split delivered no
 override granularity that wasn't already covered by the Tailwind
@@ -339,14 +339,14 @@ Three layers participate in the consumer's CSS, in increasing precedence:
 ```
 
 `matchUtilities` lands in the utilities layer; so does `h-10`. Within
-the utilities layer Tailwind v4 sorts by internal weight — built-in
+the utilities layer Tailwind v4 sorts by internal weight, built-in
 single-property utilities like `h-10` end up sorted *after* multi-property
 custom utilities like `.button`, so a consumer's `<button class="button h-10">`
 gets `.button`'s height overridden by `h-10` via plain CSS source order.
 No `tailwind-merge` cross-conflict rule is needed for that case.
 
 Inside `cn()`, `tailwind-merge` is extended so each shorthand class is
-its own single-member group — this collapses `cn('button', 'button')` to
+its own single-member group, this collapses `cn('button', 'button')` to
 one occurrence but lets `cn('button', 'badge')` keep both:
 
 ```ts
@@ -360,7 +360,7 @@ const twMerge = extendTailwindMerge({
 ```
 
 There is no cross-group conflict between shorthand and Tailwind
-utilities — that's deliberate. Cross-conflict would force `tailwind-merge`
+utilities, that's deliberate. Cross-conflict would force `tailwind-merge`
 to drop `.button` whenever a single conflicting property arrived (e.g.
 `h-10`), but `.button` sets ten other properties we still want; CSS
 cascade is the right tool for this, not class deduplication.
@@ -386,8 +386,8 @@ interface ThemeConfig {
 }
 ```
 
-`flattenTheme(theme, mode)` walks the JSON in registry order — every
-section maps to a token via `themePath` — and produces a flat
+`flattenTheme(theme, mode)` walks the JSON in registry order, every
+section maps to a token via `themePath`, and produces a flat
 `Record<cssVarName, value>` for `:root`. `renderThemeStyleSheet(theme)`
 returns the CSS text of two blocks (`:root { … }` for light defaults,
 `:is(.dark, [data-mode="dark"]):root { … }` for dark overrides).
@@ -396,7 +396,7 @@ Two runtimes consume the flattened output:
 
 - **`applyTheme(theme)`** injects a single `<style id="clay-theme">` into
   the document head. Returns a cleanup function. Toggling
-  `data-mode="dark"` on `<html>` afterwards is free — the dark block
+  `data-mode="dark"` on `<html>` afterwards is free, the dark block
   activates via CSS, no JS re-run.
 
 - **`<ThemeScope theme={x}>`** scopes a theme to a subtree by inlining
@@ -404,7 +404,7 @@ Two runtimes consume the flattened output:
   `<div>` with `display: contents` (no layout box, vars still inherit);
   `asChild` writes the same vars onto a single child via Radix Slot for
   zero-DOM-impact theming. React 19's `href`-keyed stylesheet hoisting
-  deduplicates — fifty `<ThemeScope theme={dracula}>`s share one `<style>`
+  deduplicates, fifty `<ThemeScope theme={dracula}>`s share one `<style>`
   in `<head>`.
 
 Themes never modify Layer-2 component tokens directly except through
@@ -418,19 +418,19 @@ vice versa.
 
 The package is built by [`tsup.config.ts`](tsup.config.ts):
 
-- One entry per public export in `package.json#exports` — every
+- One entry per public export in `package.json#exports`, every
   component compiles to `dist/components/<name>/index.js`, every
   primitive to `dist/primitives/<name>.js`, plus root, themes, tokens,
   and tailwind.
 - ESM only, ES2022 target.
-- `dts: false` — Tailwind v4 + the `@property` machinery does not need
+- `dts: false`, Tailwind v4 + the `@property` machinery does not need
   `.d.ts` for the registry, and tsup's DTS worker is slow on multi-entry
   setups. Types are emitted via `tsc --emitDeclarationOnly` in the same
   build script (see `package.json#scripts.build`).
 - `onSuccess` copies `src/styles`, `src/themes/presets`, and `src/assets`
   to `dist/`. The `@source "../**/*.{ts,tsx,js}"` directive in
   `clay.css` is relative to the file, so it resolves to `dist/**` after
-  publish — Tailwind scans the bundled JS for class strings, the same
+  publish, Tailwind scans the bundled JS for class strings, the same
   way it scans tsx in the workspace.
 
 There is no codegen. The Tailwind plugin reads the registry every time
@@ -444,11 +444,11 @@ plugin API.
 | File | What it asserts |
 |---|---|
 | `src/__tests__/smoke.test.ts` | Barrel exports the public API. |
-| `src/tokens/__tests__/registry.test.ts` | Registry invariants — unique names, every component-layer token has `appliesTo`, every type maps to its declared category, etc. |
+| `src/tokens/__tests__/registry.test.ts` | Registry invariants, unique names, every component-layer token has `appliesTo`, every type maps to its declared category, etc. |
 | `src/tokens/__tests__/define.test.ts` | `defineComponent` expansion semantics. |
-| `src/tokens/__tests__/shorthands.test.ts` | The pure walker — synthetic registries and the live one, including edge cases like multi-segment `appliesTo` (`menu-item` vs `menu`). |
-| `src/__tests__/tailwind-plugin.test.ts` | The plugin contract — that the handler reaches for `matchUtilities` only, registers a utility per `SHORTHAND_INDEX` entry, and that Tailwind v4's `compile()` actually JIT-prunes unused shorthands when given a curated candidate list. |
-| `scripts/audit-tokens.ts` | Not a test — runnable script that cross-checks `TOKEN_REGISTRY` against TSX source for dangling refs and dead tokens. Run with `bun run scripts/audit-tokens.ts`. |
+| `src/tokens/__tests__/shorthands.test.ts` | The pure walker, synthetic registries and the live one, including edge cases like multi-segment `appliesTo` (`menu-item` vs `menu`). |
+| `src/__tests__/tailwind-plugin.test.ts` | The plugin contract, that the handler reaches for `matchUtilities` only, registers a utility per `SHORTHAND_INDEX` entry, and that Tailwind v4's `compile()` actually JIT-prunes unused shorthands when given a curated candidate list. |
+| `scripts/audit-tokens.ts` | Not a test, runnable script that cross-checks `TOKEN_REGISTRY` against TSX source for dangling refs and dead tokens. Run with `bun run scripts/audit-tokens.ts`. |
 
 ---
 
@@ -459,7 +459,7 @@ src/
 ├── components/<name>/
 │   ├── <name>.tsx              ← uses `class="<name>"` for shorthand
 │   ├── <name>.demos.tsx        ← docs site demos
-│   ├── tokens.ts               ← defineComponent(...) — the author surface
+│   ├── tokens.ts               ← defineComponent(...), the author surface
 │   ├── meta.ts                 ← display name, group, externalDocs
 │   └── index.ts                ← `export * from './<name>'`
 ├── primitives/
@@ -468,7 +468,7 @@ src/
 │   ├── use-mobile.ts
 │   └── with-slot.ts
 ├── styles/
-│   ├── clay.css                ← @plugin + @import + @source — entry
+│   ├── clay.css                ← @plugin + @import + @source, entry
 │   ├── utilities.css           ← cross-cutting utilities (corner-themed, ring-themed, p-safe…)
 │   ├── components.css          ← hand-authored bridge layer (small, will probably shrink further)
 │   └── effects.css             ← scrollbars, accordion animations, etc.
@@ -484,7 +484,7 @@ src/
 │   ├── registry.ts             ← TOKEN_REGISTRY, TOKENS_BY_NAME
 │   ├── types.ts                ← TokenSpec, TokenLayer, TokenCategory, …
 │   ├── infer.ts                ← suffix → TokenType inference
-│   ├── define.ts               ← defineComponent — declarative tokens.ts API
+│   ├── define.ts               ← defineComponent, declarative tokens.ts API
 │   ├── scalars.ts              ← Layer 0
 │   ├── roles/                  ← Layer 1 (one file per category)
 │   ├── components.ts           ← Layer 2 aggregator
@@ -517,7 +517,7 @@ src/
    dangling refs or dead tokens.
 6. Run `bun test` and `bun run typecheck`.
 
-A new component contributes zero CSS to consumers who don't import it —
+A new component contributes zero CSS to consumers who don't import it,
 its shorthand class is JIT-pruned by Tailwind's content scanner, and
 its slot-token utilities only emit when something references them.
 
@@ -531,7 +531,7 @@ its slot-token utilities only emit when something references them.
   a CSS spec rule, not a Clay choice.
 - **`matchUtilities` requires `values`.** The trick we use to make
   shorthand classes look static is `values: { DEFAULT: '' }`. There is
-  no documented "static utility from JS plugin" alternative in v4 — both
+  no documented "static utility from JS plugin" alternative in v4, both
   `addUtilities` and `addComponents` are always-emit.
 - **The audit script can't see consumer code.** `scripts/audit-tokens.ts`
   cross-checks Clay's own TSX. If a consumer references a token Clay

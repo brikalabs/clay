@@ -1,10 +1,10 @@
 /**
- * Component metadata shape — co-located with the components themselves.
+ * Component metadata shape, co-located with the components themselves.
  *
  * Each component folder ships a `meta.ts` exporting `meta: ComponentMeta`.
  * Discovery happens in user code (the docs site uses `import.meta.glob`
  * to assemble the runtime list), so adding a new component is zero
- * edits in this package — drop a folder with `meta.ts` and you're done.
+ * edits in this package, drop a folder with `meta.ts` and you're done.
  *
  * This file is the package-level shape contract. It exports types only;
  * no runtime list lives here, which is what keeps Clay free of
@@ -35,7 +35,7 @@ export interface ComponentDemo {
   readonly title: string;
   /** One-sentence explanation rendered between the heading and the demo. */
   readonly description?: string;
-  /** Minimal JSX snippet shown in the code panel — auto-extracted if omitted. */
+  /** Minimal JSX snippet shown in the code panel, auto-extracted if omitted. */
   readonly code: string;
 }
 
@@ -54,7 +54,7 @@ export interface DemoInput {
 /**
  * Type-safe, concise way to declare demos inside a `.demos.tsx` file.
  *
- * Pass the actual function references (not strings!) — TypeScript catches
+ * Pass the actual function references (not strings!), TypeScript catches
  * undefined names at compile time, and the docs registry recovers the
  * export-name string at build time by identity-matching against the
  * module namespace. This avoids `Function.prototype.name`, which the
@@ -92,4 +92,25 @@ export interface ComponentMeta {
   readonly description: string;
   /** Links to external libraries or specifications this component wraps or depends on. */
   readonly externalDocs?: readonly ExternalDoc[];
+  /**
+   * Accessibility callouts shown in a dedicated section on the docs page.
+   * Each entry is a short markdown sentence. Use single-quoted strings
+   * so inline-code refs (`aria-label`, `--ring`, ...) sit unescaped:
+   *
+   * ```ts
+   * accessibility: [
+   *   'Focus ring uses `--ring` token for WCAG contrast.',
+   *   'Icon-only buttons (`size="icon"`) REQUIRE an `aria-label`.',
+   * ],
+   * ```
+   *
+   * Lives on `meta.ts` rather than the demos file because:
+   *   - it's static text metadata, no React/JSX involvement
+   *   - it can be imported without pulling in component code, icons, or
+   *     example helpers (better tree-shaking for tools that just want
+   *     a11y info, e.g. a CLI auditor)
+   *   - it sits next to `description` and `displayName`, the other
+   *     prose-shaped metadata
+   */
+  readonly accessibility?: readonly string[];
 }

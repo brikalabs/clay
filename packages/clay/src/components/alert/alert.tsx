@@ -5,7 +5,7 @@ import * as React from 'react';
 import { cn } from '../../primitives/cn';
 
 const alertVariants = cva(
-  'corner-themed relative grid w-full grid-cols-[0_1fr] items-start gap-y-0.5 rounded-alert border px-4 py-3 text-sm backdrop-blur-[var(--alert-backdrop-blur)] has-[>[data-slot=alert-icon]]:grid-cols-[1rem_1fr] has-[>[data-slot=alert-icon],>[data-slot=alert-close]]:gap-x-3',
+  'corner-themed relative grid w-full grid-cols-[0_1fr] items-start gap-y-0.5 rounded-alert border px-4 py-3 text-sm backdrop-blur-alert has-[>[data-slot=alert-icon]]:grid-cols-[1rem_1fr] has-[>[data-slot=alert-icon],>[data-slot=alert-close]]:gap-x-3',
   {
     variants: {
       variant: {
@@ -103,7 +103,7 @@ interface AlertIconProps extends React.ComponentProps<'div'> {
  * Optional icon slot, laid out at the start of the alert row. Pass any
  * SVG or lucide icon as the child; size defaults to 1rem square. The
  * glyph picks up the variant's `--alert-accent` color so it reads as a
- * semantic flag — falling back to the inherited text color on the
+ * semantic flag, falling back to the inherited text color on the
  * default (untinted) variant.
  */
 function AlertIcon({ className, ...props }: Readonly<AlertIconProps>) {
@@ -129,7 +129,7 @@ interface AlertCloseProps extends React.ComponentProps<'button'> {
  * Trailing dismiss button for an `Alert`. Lives in the third grid column
  * so it sits at the top-right without the parent needing extra padding
  * or `relative` positioning. Defaults to a lucide `X` icon; pass a child
- * to override. The caller owns visibility — wire `onClick` to whatever
+ * to override. The caller owns visibility, wire `onClick` to whatever
  * state controls whether the alert renders.
  */
 function AlertClose({ children, className, ...props }: Readonly<AlertCloseProps>) {

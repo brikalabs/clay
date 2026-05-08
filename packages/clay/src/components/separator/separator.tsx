@@ -7,7 +7,7 @@ import { cn } from '../../primitives/cn';
 
 /**
  * Separator. Border-driven so themes can override `--separator-width` to
- * make it thicker and `--separator-style` to make it dashed/double — the
+ * make it thicker and `--separator-style` to make it dashed/double, the
  * line color comes from `--separator-color` (defaults to `--border`).
  * The wired-up width/style/color come from `./separator.css`; the rectangle
  * itself has zero block-size on horizontal and zero inline-size on
@@ -25,7 +25,7 @@ function Separator({
       decorative={decorative}
       orientation={orientation}
       className={cn(
-        'data-[orientation=horizontal]:border-t-(length:--separator-width) data-[orientation=vertical]:border-l-(length:--separator-width) shrink-0 border-(--separator-color) [border-style:var(--separator-style)] data-[orientation=horizontal]:h-0 data-[orientation=vertical]:h-full data-[orientation=horizontal]:w-full data-[orientation=vertical]:w-0',
+        'data-[orientation=horizontal]:border-t-(length:--separator-width) data-[orientation=vertical]:border-l-(length:--separator-width) shrink-0 border-separator-color [border-style:var(--separator-style)] data-[orientation=horizontal]:h-0 data-[orientation=vertical]:h-full data-[orientation=horizontal]:w-full data-[orientation=vertical]:w-0',
         className
       )}
       {...props}

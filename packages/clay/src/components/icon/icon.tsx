@@ -33,7 +33,7 @@ export type IconSize = NonNullable<VariantProps<typeof iconVariants>['size']>;
  * Component identity of any SVG icon (e.g. a `lucide-react` icon).
  *
  * Anything that renders an SVG and accepts standard `SVGProps` will
- * satisfy this contract — the wrapper does not depend on lucide-react
+ * satisfy this contract, the wrapper does not depend on lucide-react
  * at the type level so consumers can pass any compatible SVG component.
  */
 export type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
@@ -59,7 +59,7 @@ export interface IconProps extends Omit<React.SVGProps<SVGSVGElement>, 'ref'> {
   size?: IconSize;
   /**
    * Extra class names merged onto the rendered SVG. Use this to
-   * override defaults or compose layout utilities — Clay merges with
+   * override defaults or compose layout utilities, Clay merges with
    * `tailwind-merge` so the caller's classes win on conflict.
    */
   className?: string;
@@ -72,7 +72,7 @@ export interface IconProps extends Omit<React.SVGProps<SVGSVGElement>, 'ref'> {
  * `<Icon as={Bell} tone="primary" />` instead of remembering
  * `text-icon-primary`.
  *
- * Decorative by default — if no `aria-label` is supplied the icon is
+ * Decorative by default, if no `aria-label` is supplied the icon is
  * marked `aria-hidden="true"` so screen readers skip it. Pass an
  * `aria-label` (or `role="img"`) to surface meaning.
  */

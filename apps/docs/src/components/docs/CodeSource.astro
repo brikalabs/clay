@@ -6,7 +6,7 @@ import { Code } from 'astro:components';
  *
  * Renders Astro's bundled Shiki via `<Code>`. The wrapper owns the
  * background, border, and radius so the header strip and code body
- * share one continuous surface — no double-box effect when Shiki's own
+ * share one continuous surface, no double-box effect when Shiki's own
  * background colour differs from the docs chrome.
  *
  * Two variants:
@@ -161,7 +161,7 @@ const lineCount = code
           }, 1400);
         }
       } catch {
-        // Clipboard blocked — keep button state.
+        // Clipboard blocked, keep button state.
       }
     });
   }

@@ -2,17 +2,16 @@
  * Layer-2 tokens for Card.
  */
 
-import { defineComponent } from '../../tokens/define';
+import { registerComponent } from '../../tokens/define';
 import { SPACING_4, SPACING_6 } from '../../tokens/spacing';
 import { meta } from './meta';
 
-export const tokens = defineComponent(meta.name, {
+registerComponent(meta, {
   radius: {
     default: 'var(--radius-container)',
     description: 'Card corner radius.',
-    alias: 'card',
   },
-  shadow: { default: 'var(--shadow-raised)', description: 'Card elevation.', alias: 'card' },
+  shadow: { default: 'var(--shadow-raised)', description: 'Card elevation.' },
   border: '1px',
   motion: true,
   backdropBlur: {

@@ -1,17 +1,15 @@
-import { defineComponent } from '../../tokens/define';
+import { registerComponent } from '../../tokens/define';
 import { SPACING_2, SPACING_4, SPACING_6 } from '../../tokens/spacing';
 import { meta } from './meta';
 
-export const tokens = defineComponent(meta.name, {
+registerComponent(meta, {
   radius: {
     default: 'var(--radius-container)',
     description: 'Drawer sheet top-corner radius.',
-    alias: 'drawer',
   },
   shadow: {
     default: 'var(--shadow-overlay)',
     description: 'Drawer elevation.',
-    alias: 'drawer',
   },
   border: '1px',
   motion: true,

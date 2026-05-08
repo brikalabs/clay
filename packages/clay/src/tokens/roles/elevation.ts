@@ -1,8 +1,8 @@
 /**
- * Layer 1 — Elevation roles
+ * Layer 1, Elevation roles
  *
  * Two tiers:
- *   - Numeric scale (`shadow-xs..2xl`) — tunable per theme; the cascade
+ *   - Numeric scale (`shadow-xs..2xl`), tunable per theme; the cascade
  *     resolves regardless of Tailwind preflight behaviour. Themes can
  *     flatten these to `none` (Brutalist/Terminal) or push them harder
  *     (Skeuomorph) without touching Tailwind.
@@ -84,14 +84,14 @@ const SEMANTIC_DEFS: readonly ShadowEntry[] = [
   [
     'shadow-overlay',
     'var(--shadow-md)',
-    'Popovers, dropdowns, tooltips — anything floating.',
+    'Popovers, dropdowns, tooltips, anything floating.',
     'overlay',
   ],
   ['shadow-modal', 'var(--shadow-lg)', 'Dialogs and sheets that command focus.', 'modal'],
   [
     'shadow-spotlight',
     'var(--shadow-xl)',
-    'Toasts and command palettes — most-elevated transient surfaces.',
+    'Toasts and command palettes, most-elevated transient surfaces.',
     'spotlight',
   ],
 ];

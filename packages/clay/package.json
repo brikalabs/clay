@@ -1,7 +1,7 @@
 {
   "name": "@brika/clay",
   "version": "0.0.1",
-  "description": "Clay — Brika Labs' React component library, token system, and first-party themes",
+  "description": "Clay, Brika Labs' React component library, token system, and first-party themes",
   "type": "module",
   "license": "MIT",
   "author": "BRIKA Team",
@@ -28,10 +28,8 @@
     "**/*.css",
     "**/components/*/tokens.ts",
     "**/components/*/tokens.js",
-    "**/tokens/components.ts",
-    "**/tokens/components.js",
-    "**/tokens/orphan-components.ts",
-    "**/tokens/orphan-components.js"
+    "**/components/register.ts",
+    "**/components/register.js"
   ],
   "main": "./src/index.ts",
   "module": "./src/index.ts",
@@ -55,6 +53,7 @@
     "dev": "tsup --watch",
     "typecheck": "tsgo --noEmit",
     "test": "bun test",
+    "bench": "bun src/__tests__/tailwind-plugin.bench.ts",
     "prepublishOnly": "bun run build"
   },
   "peerDependencies": {

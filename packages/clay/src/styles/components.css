@@ -1,6 +1,6 @@
 /**
  * Cross-cutting hand-authored rules. Per-component bridge CSS no longer
- * exists — every component composes its token-driven properties inline
+ * exists, every component composes its token-driven properties inline
  * via Tailwind v4 arbitrary classes (`(--token)`, `(length:--token)`,
  * `[prop:var(--token)]`, `[corner-shape:var(--<name>-corner-shape,…)]`),
  * so the only CSS that lives outside the Tailwind plugin is the

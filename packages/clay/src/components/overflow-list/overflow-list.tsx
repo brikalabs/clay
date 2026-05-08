@@ -40,7 +40,7 @@ interface UseOverflowListOptions<T> {
   items: T[];
   /** Extract a unique string key from each item. */
   getKey: (item: T) => string;
-  /** Key of the currently active item — always kept visible even when it
+  /** Key of the currently active item, always kept visible even when it
    *  would otherwise overflow. */
   activeKey?: string;
   /** Extra reactive values that should trigger re-measurement. */
@@ -78,7 +78,7 @@ function useOverflowList<T>({
 
   const [overflowCount, setOverflowCount] = React.useState(0);
 
-  // ── Measure visible items (runs before paint — no flash) ───────────────
+  // ── Measure visible items (runs before paint, no flash) ───────────────
   React.useLayoutEffect(() => {
     if (pauseRef.current) {
       return;
@@ -146,7 +146,7 @@ function useOverflowList<T>({
       const fits = countFittingItems(currentItems, key, available, gap);
 
       if (fits < 0) {
-        // Uncached item — show all so useLayoutEffect can measure
+        // Uncached item, show all so useLayoutEffect can measure
         setOverflowCount(0);
         return;
       }
@@ -223,7 +223,7 @@ function OverflowList({ className, ...props }: React.ComponentProps<'div'>) {
   );
 }
 
-/** Inner container — clips overflow items. Attach `containerRef` here. */
+/** Inner container, clips overflow items. Attach `containerRef` here. */
 function OverflowListContent({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
@@ -234,7 +234,7 @@ function OverflowListContent({ className, ...props }: React.ComponentProps<'div'
   );
 }
 
-/** Wrapper for each item — provides the measurement data-attribute. */
+/** Wrapper for each item, provides the measurement data-attribute. */
 function OverflowListItem({
   className,
   itemId,

@@ -1,5 +1,5 @@
 /**
- * Layer 1 — Color roles
+ * Layer 1, Color roles
  * Themes typically override these. Listed in the order they appear in
  * existing presets to make migration mechanical.
  *
@@ -66,10 +66,10 @@ const COLOR_DEFS: readonly ColorEntry[] = [
   ['destructive-foreground', 'oklch(0.99 0 0)', 'oklch(0.96 0.01 260)', 'Text color paired with `destructive`.'],
 
   // ─── Workflow status ───────────────────────────────────────────────────
-  ['status-idle', 'oklch(0.7 0.02 260)', 'oklch(0.5 0.02 260)', 'Workflow status — idle / pending nodes.'],
-  ['status-running', 'oklch(0.55 0.18 265)', 'oklch(0.7 0.16 265)', 'Workflow status — currently executing.'],
-  ['status-completed', 'oklch(0.55 0.16 145)', 'oklch(0.72 0.15 145)', 'Workflow status — finished successfully.'],
-  ['status-error', 'oklch(0.55 0.22 25)', 'oklch(0.65 0.2 25)', 'Workflow status — failed / errored.'],
+  ['status-idle', 'oklch(0.7 0.02 260)', 'oklch(0.5 0.02 260)', 'Workflow status, idle / pending nodes.'],
+  ['status-running', 'oklch(0.55 0.18 265)', 'oklch(0.7 0.16 265)', 'Workflow status, currently executing.'],
+  ['status-completed', 'oklch(0.55 0.16 145)', 'oklch(0.72 0.15 145)', 'Workflow status, finished successfully.'],
+  ['status-error', 'oklch(0.55 0.22 25)', 'oklch(0.65 0.2 25)', 'Workflow status, failed / errored.'],
 
   // ─── Data viz sequential scale ─────────────────────────────────────────
   ['data-1', 'oklch(0.55 0.18 265)', 'oklch(0.7 0.16 265)', 'Data-viz sequential color 1.'],
@@ -82,7 +82,7 @@ const COLOR_DEFS: readonly ColorEntry[] = [
   ['data-8', 'oklch(0.6 0.18 340)', 'oklch(0.72 0.16 340)', 'Data-viz sequential color 8.'],
 
   // ─── Sidebar surface (defaults to card family) ─────────────────────────
-  ['sidebar', 'var(--card)', 'var(--card)', 'Sidebar surface — defaults to the card role.'],
+  ['sidebar', 'var(--card)', 'var(--card)', 'Sidebar surface, defaults to the card role.'],
   ['sidebar-foreground', 'var(--card-foreground)', 'var(--card-foreground)', 'Text color inside the sidebar.'],
   ['sidebar-primary', 'var(--primary)', 'var(--primary)', 'Primary accent for sidebar selection / focus.'],
   ['sidebar-primary-foreground', 'var(--primary-foreground)', 'var(--primary-foreground)', 'Text on `sidebar-primary` surfaces.'],
@@ -114,11 +114,11 @@ const COLOR_DEFS: readonly ColorEntry[] = [
   // ─── Material-inspired surface tonal scale ─────────────────────────────
   ['surface-dim', 'color-mix(in oklch, var(--background) 88%, var(--surface-tint, var(--primary)))', 'color-mix(in oklch, var(--background) 88%, var(--surface-tint, var(--primary)))', 'Lowest tonal surface in the Material-inspired surface scale.'],
   ['surface-bright', 'color-mix(in oklch, var(--background) 96%, white)', 'color-mix(in oklch, var(--background) 96%, white)', 'Highest tonal surface, lifted toward white.'],
-  ['surface-container-lowest', 'color-mix(in oklch, var(--background) 96%, var(--surface-tint, var(--primary)))', 'color-mix(in oklch, var(--background) 96%, var(--surface-tint, var(--primary)))', 'Surface container — lowest elevation.'],
-  ['surface-container-low', 'color-mix(in oklch, var(--background) 93%, var(--surface-tint, var(--primary)))', 'color-mix(in oklch, var(--background) 93%, var(--surface-tint, var(--primary)))', 'Surface container — low elevation.'],
-  ['surface-container', 'color-mix(in oklch, var(--background) 90%, var(--surface-tint, var(--primary)))', 'color-mix(in oklch, var(--background) 90%, var(--surface-tint, var(--primary)))', 'Surface container — default elevation.'],
-  ['surface-container-high', 'color-mix(in oklch, var(--background) 86%, var(--surface-tint, var(--primary)))', 'color-mix(in oklch, var(--background) 86%, var(--surface-tint, var(--primary)))', 'Surface container — high elevation.'],
-  ['surface-container-highest', 'color-mix(in oklch, var(--background) 82%, var(--surface-tint, var(--primary)))', 'color-mix(in oklch, var(--background) 82%, var(--surface-tint, var(--primary)))', 'Surface container — highest elevation.'],
+  ['surface-container-lowest', 'color-mix(in oklch, var(--background) 96%, var(--surface-tint, var(--primary)))', 'color-mix(in oklch, var(--background) 96%, var(--surface-tint, var(--primary)))', 'Surface container, lowest elevation.'],
+  ['surface-container-low', 'color-mix(in oklch, var(--background) 93%, var(--surface-tint, var(--primary)))', 'color-mix(in oklch, var(--background) 93%, var(--surface-tint, var(--primary)))', 'Surface container, low elevation.'],
+  ['surface-container', 'color-mix(in oklch, var(--background) 90%, var(--surface-tint, var(--primary)))', 'color-mix(in oklch, var(--background) 90%, var(--surface-tint, var(--primary)))', 'Surface container, default elevation.'],
+  ['surface-container-high', 'color-mix(in oklch, var(--background) 86%, var(--surface-tint, var(--primary)))', 'color-mix(in oklch, var(--background) 86%, var(--surface-tint, var(--primary)))', 'Surface container, high elevation.'],
+  ['surface-container-highest', 'color-mix(in oklch, var(--background) 82%, var(--surface-tint, var(--primary)))', 'color-mix(in oklch, var(--background) 82%, var(--surface-tint, var(--primary)))', 'Surface container, highest elevation.'],
 ];
 
 export const COLOR_ROLES: readonly TokenSpec[] = COLOR_DEFS.map(toColorRole);

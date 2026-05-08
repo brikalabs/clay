@@ -1,40 +1,40 @@
 ---
-name: clay-usage
-description: How to use the Clay design system (@brika/clay) — its three-layer token model, theme application, and component import patterns. Trigger when @brika/clay appears in package.json, when imports from @brika/clay or @brika/clay/components/* are added or edited, or when the user asks how to theme, override tokens, or compose Clay components.
+name: usage
+description: How to use the Clay design system (@brika/clay), its three-layer token model, theme application, and component import patterns. Trigger when @brika/clay appears in package.json, when imports from @brika/clay or @brika/clay/components/* are added or edited, or when the user asks how to theme, override tokens, or compose Clay components.
 allowed-tools:
   - WebFetch
   - Read
   - Grep
 ---
 
-# Clay design system — usage primer
+# Clay design system, usage primer
 
 Clay is a token-driven React component library: every visual property a
 component cares about is exposed as a CSS custom property, and themes
 override those properties at the root. Consumers don't subclass or
-override component CSS — they retune tokens.
+override component CSS, they retune tokens.
 
 ## Importing components
 
 Two equivalent surfaces:
 
 ```ts
-// Granular — preferred. Tree-shakes cleanly, surfaces the per-component
+// Granular, preferred. Tree-shakes cleanly, surfaces the per-component
 // type signature and tokens.
 import { Button } from '@brika/clay/components/button';
 
-// Barrel — convenient for prototyping or re-exporting from a local module.
+// Barrel, convenient for prototyping or re-exporting from a local module.
 import { Button } from '@brika/clay';
 ```
 
 Per-component docs live at `https://clay.brika.dev/components/<slug>.md`
-(LLM-friendly markdown). Use the `/clay-docs <name>` slash command to
+(LLM-friendly markdown). Use the `/clay:docs <name>` slash command to
 pull a specific component's docs into context on demand instead of
 guessing at props.
 
 ## Token model
 
-Three layers — read upward, override downward.
+Three layers, read upward, override downward.
 
 1. **Scalars** (`src/tokens/scalars.ts`, `src/tokens/spacing.ts`): raw
    primitives. `SPACING_2`, color ramps, radius scales, motion
@@ -44,8 +44,8 @@ Three layers — read upward, override downward.
    `--clay-elevated`, `--icon`, `--icon-muted`, `--radius-card`,
    `--shadow-surface`, etc. Components consume these. Themes override
    these to restyle the whole library.
-3. **Component tokens** (`src/components/<slug>/tokens.ts`): per-component
-   variables — `--button-height`, `--input-border-width`,
+3. **Component tokens** (`src/components/<slug>/tokens.ts`):
+   per-component variables: `--button-height`, `--input-border-width`,
    `--card-backdrop-blur`. Reach for these only when a single component
    needs to diverge from its semantic-role default.
 
@@ -55,8 +55,8 @@ specific value or remap to another scalar.
 
 ## Theming
 
-A theme is a `ThemeConfig` object — a partial overlay over the registry
-defaults — applied at runtime:
+A theme is a `ThemeConfig` object, a partial overlay over the registry
+defaults, applied at runtime:
 
 ```ts
 import { applyTheme } from '@brika/clay/themes';
@@ -80,13 +80,13 @@ docs page rather than reasoning from memory:
 WebFetch https://clay.brika.dev/components/<slug>.md
 ```
 
-Or hand the user the `/clay-docs <slug>` shortcut. The full component
+Or hand the user the `/clay:docs <slug>` shortcut. The full component
 catalogue is at `https://clay.brika.dev/llms.txt`.
 
 ## Common pitfalls
 
 - **Don't override component CSS directly** with `className` to retheme.
-  Override the relevant role token instead — your override survives
+  Override the relevant role token instead, your override survives
   upgrades; CSS rewrites don't.
 - **`asChild` is everywhere.** Most Clay primitives accept `asChild` so
   you can compose with `<a>`, `<Link>`, or another primitive while
@@ -94,5 +94,5 @@ catalogue is at `https://clay.brika.dev/llms.txt`.
   `forwardRef` workarounds.
 - **The `tokens` export is the source of truth.** When asked about
   what's themeable on a component, read `src/components/<slug>/tokens.ts`
-  rather than grepping CSS — the registry there is what `applyTheme`
+  rather than grepping CSS, the registry there is what `applyTheme`
   actually consumes.

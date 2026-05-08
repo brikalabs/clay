@@ -8,7 +8,7 @@ import {
   OverflowListItem,
   useOverflowList,
 } from '@brika/clay/components/overflow-list';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 const TAGS = [
   'production',
@@ -84,11 +84,6 @@ export function OverflowListActiveDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [OverflowListDefaultDemo, 'Default', { description: `Tags that overflow the container collapse into a "+N more" badge. Resize the window to see it adapt.` }],
-  [OverflowListActiveDemo, 'Active', { description: `The active item is always kept visible even when it would otherwise be hidden.` }],
+  [OverflowListDefaultDemo, 'Default', { description: 'Tags that overflow the container collapse into a "+N more" badge. Resize the window to see it adapt.' }],
+  [OverflowListActiveDemo, 'Active', { description: 'The active item is always kept visible even when it would otherwise be hidden.' }],
 ]);
-export const accessibility: readonly string[] = [
-  `Hidden items remain in the DOM — the indicator communicates the count to all users.`,
-  `The \`activeKey\` item is always visible; this preserves context for the current selection.`,
-  `Consider wrapping the indicator in a \`Popover\` or \`Tooltip\` to reveal hidden items on demand.`,
-];

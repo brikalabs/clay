@@ -1,7 +1,7 @@
 {
   "name": "clay-monorepo",
   "version": "0.0.0",
-  "description": "Clay design system — Bun workspace root.",
+  "description": "Clay design system, Bun workspace root.",
   "private": true,
   "type": "module",
   "license": "MIT",

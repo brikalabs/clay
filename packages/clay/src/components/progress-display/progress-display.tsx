@@ -59,7 +59,7 @@ export function ProgressDisplay({
       </div>
 
       {/* Log output */}
-      <ScrollArea className="h-40 rounded-md border bg-muted/30 backdrop-blur-[var(--progress-display-backdrop-blur)]">
+      <ScrollArea className="h-40 rounded-md border bg-muted/30 backdrop-blur-progress-display">
         <div ref={scrollRef} className="space-y-1 break-words p-3 font-mono text-xs">
           {logs.length === 0 && isProcessing && emptyLogsMessage && (
             <div className="text-muted-foreground">{emptyLogsMessage}</div>

@@ -2,14 +2,13 @@
  * Layer-2 tokens for CodeBlock.
  */
 
-import { defineComponent } from '../../tokens/define';
+import { registerComponent } from '../../tokens/define';
 import { meta } from './meta';
 
-export const tokens = defineComponent(meta.name, {
+registerComponent(meta, {
   radius: {
     default: 'var(--radius-control)',
     description: 'Code block corner radius.',
-    alias: 'code-block',
   },
   typography: {
     fontFamily: 'var(--font-mono)',

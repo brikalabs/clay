@@ -1,29 +1,30 @@
 /**
- * Clay's token registry — single source of truth for every CSS custom
+ * Clay's token registry, single source of truth for every CSS custom
  * property that participates in theming.
  *
  * Three layers, each authored in its own file:
  *   - Layer 0 scalars   → `./scalars.ts`
  *   - Layer 1 roles     → `./roles/*.ts`
- *   - Layer 2 component → co-located `tokens.ts` per component
- *                         (see `./components.ts` for the aggregator and
- *                         `./orphan-components.ts` for blocks whose
- *                         component folder doesn't exist yet)
+ *   - Layer 2 component → co-located `tokens.ts` per component, each
+ *                         self-registers via `registerComponent(...)`.
+ *                         `../components/register.ts` is the side-effect-
+ *                         import list that loads them all.
  *
  * CSS is contributed at compile time by `../tailwind.ts` (the Tailwind
- * v4 plugin) — no generated files, nothing to run.
+ * v4 plugin), no generated files, nothing to run.
  */
 
-import { COMPONENT_TOKENS } from './components';
+import '../components/register';
 import { inferTokenType } from './infer';
+import { getComponentTokens } from './registry-state';
 import { ROLES } from './roles';
 import { SCALARS } from './scalars';
 import type { ResolvedTokenSpec, TokenSpec } from './types';
 
-const RAW_REGISTRY: readonly TokenSpec[] = [...SCALARS, ...ROLES, ...COMPONENT_TOKENS];
+const RAW_REGISTRY: readonly TokenSpec[] = [...SCALARS, ...ROLES, ...getComponentTokens()];
 
 /**
- * Full token registry. Every entry has its `type` filled in — either
+ * Full token registry. Every entry has its `type` filled in, either
  * explicitly authored or inferred from the name's suffix (see
  * `./infer.ts`). Downstream code can safely treat `type` as required.
  */

@@ -1,13 +1,13 @@
 /**
- * @brika/clay — Brika's React component library and first-party themes.
+ * @brika/clay, Brika's React component library and first-party themes.
  *
  * Public barrel. For tree-shakeable consumption import from the granular
  * paths (`@brika/clay/components/button`); use this barrel when you want
  * everything in one place.
  */
 
-export type { ComponentDemo, ComponentGroup, ComponentMeta, DemoInput, ExternalDoc } from './components/_registry';
-export { defineDemos } from './components/_registry';
+export type { ComponentDemo, ComponentGroup, ComponentMeta, DemoInput, ExternalDoc } from './component-registry';
+export { defineDemos } from './component-registry';
 export * from './components/accordion';
 export * from './components/alert';
 export * from './components/alert-dialog';

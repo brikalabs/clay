@@ -1,7 +1,7 @@
-import { defineComponent } from '../../tokens/define';
+import { registerComponent } from '../../tokens/define';
 import { meta } from './meta';
 
-export const tokens = defineComponent(meta.name, {
+registerComponent(meta, {
   slots: {
     'handle-size': { default: '1px', description: 'Resize handle thickness along the resize axis.' },
     'handle-color': { default: 'var(--border)', description: 'Resting handle color.' },

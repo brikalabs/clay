@@ -3,7 +3,7 @@
 import { Label } from '@brika/clay/components/label';
 import { RadioGroup, RadioGroupItem } from '@brika/clay/components/radio-group';
 import { useState } from 'react';
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 
 /** Vertical radio group with a default value pre-selected. */
 export function RadioGroupDefaultDemo() {
@@ -91,14 +91,8 @@ export function RadioGroupControlledDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [RadioGroupDefaultDemo, 'Default', { description: `Vertical radio group with a default value pre-selected.` }],
-  [RadioGroupDisabledDemo, 'Disabled', { description: `One item disabled independently while others remain interactive.` }],
-  [RadioGroupHorizontalDemo, 'Horizontal', { description: `Horizontal layout using orientation="horizontal" and flex-row spacing.` }],
-  [RadioGroupControlledDemo, 'Controlled', { description: `Fully controlled radio group that shows the selected value.` }],
+  [RadioGroupDefaultDemo, 'Default', { description: 'Vertical radio group with a default value pre-selected.' }],
+  [RadioGroupDisabledDemo, 'Disabled', { description: 'One item disabled independently while others remain interactive.' }],
+  [RadioGroupHorizontalDemo, 'Horizontal', { description: 'Horizontal layout using orientation="horizontal" and flex-row spacing.' }],
+  [RadioGroupControlledDemo, 'Controlled', { description: 'Fully controlled radio group that shows the selected value.' }],
 ]);
-export const accessibility: readonly string[] = [
-  `Arrow keys move selection within the group — Tab leaves the group entirely.`,
-  `Always pair items with visible \`<Label htmlFor={id}>\` elements.`,
-  `Disabled individual items carry \`aria-disabled\` and are skipped by arrow keys.`,
-  `Use \`defaultValue\` for uncontrolled initial selection; \`value\` + \`onValueChange\` for controlled.`,
-];

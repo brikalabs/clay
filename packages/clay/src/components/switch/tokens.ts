@@ -5,37 +5,34 @@
  * the switch even though it has its own token namespace.
  */
 
-import { defineComponent } from '../../tokens/define';
+import { registerComponent } from '../../tokens/define';
 import { meta } from './meta';
 
-export const tokens = [
-  ...defineComponent(meta.name, {
-    radius: {
-      default: '9999px',
-      description: 'Switch track corner radius. Default is fully rounded.',
-      alias: 'switch',
+registerComponent(meta, {
+  radius: {
+    default: '9999px',
+    description: 'Switch track corner radius. Default is fully rounded.',
+  },
+  surface: true,
+  slots: {
+    'track-width': {
+      default: '2.5rem',
+      description: 'Switch track width. Fits two thumb diameters + padding + border.',
     },
-    surface: true,
-    slots: {
-      'track-width': {
-        default: '2.5rem',
-        description: 'Switch track width. Fits two thumb diameters + padding + border.',
-      },
-      'track-height': {
-        default: '1.5rem',
-        description: 'Switch track height. Leaves room for thumb + padding + border.',
-      },
+    'track-height': {
+      default: '1.5rem',
+      description: 'Switch track height. Leaves room for thumb + padding + border.',
     },
-  }),
-  ...defineComponent('switch-thumb', {
-    themeKey: 'switchThumb',
-    radius: {
-      default: '9999px',
-      description: 'Switch thumb corner radius.',
-      alias: 'switch-thumb',
-    },
-    slots: {
-      size: { default: '1rem', description: 'Switch thumb diameter at the default size.' },
-    },
-  }),
-];
+  },
+});
+
+registerComponent('switch-thumb', {
+  themeKey: 'switchThumb',
+  radius: {
+    default: '9999px',
+    description: 'Switch thumb corner radius.',
+  },
+  slots: {
+    size: { default: '1rem', description: 'Switch thumb diameter at the default size.' },
+  },
+});

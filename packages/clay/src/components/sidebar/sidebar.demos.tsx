@@ -1,6 +1,6 @@
-import { defineDemos } from '../_registry';
+import { defineDemos } from '../../component-registry';
 /**
- * Sidebar is an app-shell component — it consumes a SidebarProvider context
+ * Sidebar is an app-shell component, it consumes a SidebarProvider context
  * that wraps the whole app surface. A live preview inside a doc card is
  * misleading: in real use the sidebar fills the viewport edge.
  *
@@ -28,11 +28,5 @@ export function SidebarDefaultDemo() {
 }
 
 export const demoMeta = defineDemos([
-  [SidebarDefaultDemo, 'Default', { description: `Sidebar is an app-shell component — it consumes a SidebarProvider context that wraps the whole app surface. A live preview inside a doc card is misleading: in real use the sidebar fills the viewport edge. Show a static screenshot-style preview here. The full doc page in apps/ui demonstrates the actual integration.` }],
+  [SidebarDefaultDemo, 'Default', { description: 'Sidebar is an app-shell component, it consumes a SidebarProvider context that wraps the whole app surface. A live preview inside a doc card is misleading: in real use the sidebar fills the viewport edge. Show a static screenshot-style preview here. The full doc page in apps/ui demonstrates the actual integration.' }],
 ]);
-export const accessibility: readonly string[] = [
-  `\`SidebarProvider\` exposes \`collapsed\` state via context — sync \`aria-expanded\` on the toggle button.`,
-  `The sidebar should have \`role="navigation"\` or \`role="complementary"\` depending on content.`,
-  `Keyboard shortcut (default \`Cmd+B\`) should be announced via \`aria-keyshortcuts\` on the trigger.`,
-  `Rail-collapsed state hides labels visually; ensure icon-only items still carry \`aria-label\`.`,
-];

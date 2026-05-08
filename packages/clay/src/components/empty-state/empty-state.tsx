@@ -1,5 +1,5 @@
 /**
- * EmptyState — unified empty / no-results placeholder.
+ * EmptyState, unified empty / no-results placeholder.
  *
  * Icon sits inside a soft rounded pill, centered. Consistent padding
  * across all pages so "no plugins" and "no logs" feel like siblings.
@@ -37,7 +37,7 @@ function EmptyStateIcon({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="empty-state-icon"
       className={cn(
-        'mb-4 flex size-16 items-center justify-center rounded-2xl bg-muted/50 text-muted-foreground backdrop-blur-[var(--empty-state-backdrop-blur)] [&_svg:not([class*="size-"])]:size-8',
+        'mb-4 flex size-16 items-center justify-center rounded-2xl bg-muted/50 text-muted-foreground backdrop-blur-empty-state [&_svg:not([class*="size-"])]:size-8',
         className
       )}
       {...props}

@@ -5,7 +5,7 @@ type CssVarKey = `--${string}`;
 /**
  * Build a React `style` object from a map of CSS custom-property names to values.
  *
- * Keys may be supplied with or without the leading `--` — both forms normalise
+ * Keys may be supplied with or without the leading `--`, both forms normalise
  * to a single `--name` custom property. Used as the foundation for the
  * `applyTheme` helper landing in PR #3.
  */
