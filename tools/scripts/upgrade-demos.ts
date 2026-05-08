@@ -4,13 +4,13 @@
  * Uses dynamic import to read the actual demoMeta values (no regex parsing of TS),
  * then rewrites each file with the new format.
  *
- * Run: bun scripts/upgrade-demos.ts
+ * Run from repo root: `bun tools/scripts/upgrade-demos.ts`
  */
 
 import { readdirSync, readFileSync, writeFileSync, existsSync } from 'fs';
 import { join, resolve } from 'path';
 
-const COMPONENTS_DIR = 'src/components';
+const COMPONENTS_DIR = 'packages/clay/src/components';
 
 // ─── Source parsing helpers ────────────────────────────────────────────────────
 

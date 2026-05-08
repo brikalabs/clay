@@ -1,20 +1,20 @@
 /**
- * Migrates demo files from docs/src/components/demos/<slug>.tsx
- * into src/components/<slug>/<slug>.demos.tsx
+ * Migrates demo files from apps/docs/src/components/demos/<slug>.tsx
+ * into packages/clay/src/components/<slug>/<slug>.demos.tsx
  *
  * For each component it:
  *   1. Copies the exported demo functions verbatim
  *   2. Derives demoMeta (name, title, description from JSDoc, code from return body)
  *   3. Adds an empty accessibility array as a placeholder
  *
- * Run: bun scripts/migrate-demos.ts
+ * Run from repo root: `bun tools/scripts/migrate-demos.ts`
  */
 
 import { readdirSync, readFileSync, writeFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
-const DEMOS_DIR = 'docs/src/components/demos';
-const COMPONENTS_DIR = 'src/components';
+const DEMOS_DIR = 'apps/docs/src/components/demos';
+const COMPONENTS_DIR = 'packages/clay/src/components';
 const SKIP = new Set(['HomeGrid.tsx', 'ThemesGallery.tsx']);
 
 // Convert slug → PascalCase prefix (e.g. "input-group" → "InputGroup")

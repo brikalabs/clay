@@ -4,7 +4,8 @@ on:
   push:
     branches: [main]
     paths:
-      - 'docs/**'
+      - 'apps/docs/**'
+      - 'packages/clay/**'
   release:
     types: [published]
   workflow_dispatch:
@@ -30,15 +31,15 @@ jobs:
           bun-version: latest
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile && bun install --frozen-lockfile --cwd docs
+        run: bun install --frozen-lockfile
 
       - name: Build
-        run: bun run --cwd docs build
+        run: bun run --cwd apps/docs build
         env:
           SITE: https://clay.brika.dev
 
       - name: Deploy
-        working-directory: docs
+        working-directory: apps/docs
         run: bunx wrangler deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

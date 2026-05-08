@@ -1,8 +1,10 @@
 import { existsSync, readdirSync, statSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { withCustomConfig } from 'react-docgen-typescript';
 
-const claySrc = resolve('/Users/maxsch/Personal/brika/packages/clay/src');
+const here = dirname(fileURLToPath(import.meta.url));
+const claySrc = resolve(here, '../../../packages/clay/src');
 const componentsDir = resolve(claySrc, 'components');
 const tsconfigPath = resolve(claySrc, '..', 'tsconfig.json');
 

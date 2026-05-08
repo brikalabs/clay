@@ -30,10 +30,7 @@ jobs:
       - name: Build
         run: bun run build
 
-      - name: Install docs dependencies
-        run: bun install --frozen-lockfile --cwd docs
-
       - name: Build docs
-        run: bun run --cwd docs build
+        run: bun run --cwd apps/docs build
         env:
           SITE: https://clay.brika.dev

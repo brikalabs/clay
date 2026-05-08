@@ -2,12 +2,12 @@
  * Repairs .demos.tsx files where `import { defineDemos }` was injected
  * at the wrong position (inside a multi-line import block).
  *
- * Run: bun scripts/repair-imports.ts
+ * Run from repo root: `bun tools/scripts/repair-imports.ts`
  */
 import { readdirSync, readFileSync, writeFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
-const COMPONENTS_DIR = 'src/components';
+const COMPONENTS_DIR = 'packages/clay/src/components';
 const BAD_LINE = "import { defineDemos } from '../_registry';";
 
 function repair(filePath: string): boolean {

@@ -4,7 +4,7 @@ type DemoModule = Readonly<Record<string, ComponentType<Record<string, never>>>>
 
 // Discover all *.demos.tsx files co-located with their components in the Clay package.
 const demoModules = import.meta.glob<DemoModule>(
-  '../../../src/components/*/*.demos.tsx',
+  '../../../../packages/clay/src/components/*/*.demos.tsx',
   { eager: true }
 );
 

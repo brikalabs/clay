@@ -6,7 +6,7 @@ import mdx from '@astrojs/mdx';
 import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'astro/config';
-import clayPackageJson from '../package.json' with { type: 'json' };
+import clayPackageJson from '../../packages/clay/package.json' with { type: 'json' };
 import { clayDocgenPlugin } from './src/lib/vite-plugin-clay-docgen.ts';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -54,11 +54,11 @@ if (!SITE) {
 }
 
 // Resolve all @brika/clay/* imports directly to source.
-// bun installs the file:.. workspace dep respecting the `files` field
+// bun installs the workspace dep respecting the `files` field
 // (dist only), so node_modules/@brika/clay has no src/ or package.json.
 // Vite aliases run in all environments (client + SSR) and bypass the
 // broken package resolution entirely.
-const claySrc = resolve(here, '../src');
+const claySrc = resolve(here, '../../packages/clay/src');
 
 function listComponentFolders(): readonly string[] {
   const componentsRoot = resolve(claySrc, 'components');
@@ -95,7 +95,9 @@ const clayAliases = [
   // appends to `replacement`). These MUST come before their bare
   // counterparts so e.g. `@brika/clay/styles/foo` hits the regex, not
   // the bare `@brika/clay/styles` rule below.
-  { find: claySubpathRegex('assets'), replacement: `${resolve(claySrc, 'assets')}/` },
+  // Brand SVGs live at the workspace root (`/assets/`) — not under
+  // packages/clay/src — so the alias points outside the clay package.
+  { find: claySubpathRegex('assets'), replacement: `${resolve(here, '../../assets')}/` },
   { find: claySubpathRegex('primitives'), replacement: `${resolve(claySrc, 'primitives')}/` },
   { find: claySubpathRegex('styles'), replacement: `${resolve(claySrc, 'styles')}/` },
   // Bare subpath exports — the package's `./<x>` export points to a
@@ -126,11 +128,12 @@ export default defineConfig({
     },
     server: {
       fs: {
-        // Clay source lives ONE LEVEL ABOVE the docs project. Vite's
-        // default `fs.allow` is the docs root only, so reads of the
-        // aliased `../src/**` files fail without this. Allow the whole
-        // workspace root.
-        allow: [resolve(here, '..')],
+        // Clay source lives in a sibling package under the workspace
+        // root (`packages/clay/src/`). Vite's default `fs.allow` is
+        // the docs root only, so reads of the aliased
+        // `../../packages/clay/src/**` files fail without this.
+        // Allow the whole workspace root.
+        allow: [resolve(here, '../..')],
       },
     },
     optimizeDeps: {

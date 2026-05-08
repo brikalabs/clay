@@ -1,11 +1,11 @@
 /**
  * Fills in the accessibility arrays for all component .demos.tsx files.
- * Run: bun scripts/fill-accessibility.ts
+ * Run from repo root: `bun tools/scripts/fill-accessibility.ts`
  */
 import { readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
-const DIR = 'src/components';
+const DIR = 'packages/clay/src/components';
 
 const A11Y: Record<string, string[]> = {
   accordion: [

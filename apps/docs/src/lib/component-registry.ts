@@ -27,7 +27,7 @@ interface MetaModule {
 }
 
 const metaModules = import.meta.glob<MetaModule>(
-  '../../../src/components/*/meta.ts',
+  '../../../../packages/clay/src/components/*/meta.ts',
   { eager: true }
 );
 
@@ -45,13 +45,13 @@ interface DemosModule {
 }
 
 const demosModules = import.meta.glob<DemosModule>(
-  '../../../src/components/*/*.demos.tsx',
+  '../../../../packages/clay/src/components/*/*.demos.tsx',
   { eager: true }
 );
 
 // Raw source text for code-snippet auto-extraction.
 const demoSources = import.meta.glob<string>(
-  '../../../src/components/*/*.demos.tsx',
+  '../../../../packages/clay/src/components/*/*.demos.tsx',
   { eager: true, query: '?raw', import: 'default' }
 );
 

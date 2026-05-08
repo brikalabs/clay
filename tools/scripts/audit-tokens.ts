@@ -12,20 +12,20 @@
  *       b) referenced-but-unregistered (dangling — TSX uses a `--name`
  *          that the registry doesn't define).
  *
- * Usage: `bun run scripts/audit-tokens.ts`
+ * Usage: `bun run tools/scripts/audit-tokens.ts`
  */
 
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { TOKEN_REGISTRY } from '../src/tokens/registry';
-import { SHORTHAND_INDEX } from '../src/tokens/shorthands';
-import type { ResolvedTokenSpec, TailwindNamespace } from '../src/tokens/types';
+import { TOKEN_REGISTRY } from '../../packages/clay/src/tokens/registry';
+import { SHORTHAND_INDEX } from '../../packages/clay/src/tokens/shorthands';
+import type { ResolvedTokenSpec, TailwindNamespace } from '../../packages/clay/src/tokens/types';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const ROOT = join(HERE, '..');
-const COMPONENTS_DIR = join(ROOT, 'src/components');
+const REPO_ROOT = join(HERE, '..', '..');
+const COMPONENTS_DIR = join(REPO_ROOT, 'packages/clay/src/components');
 
 const VAR_REF_RE = /\((?:[a-z][\w-]*\s*:\s*)?--([a-z][a-z0-9-]*)/g;
 

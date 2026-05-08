@@ -106,7 +106,9 @@ describe('clayTailwindPlugin handler', () => {
 
 const HERE = dirname(new URL(import.meta.url).pathname);
 const SRC = resolve(HERE, '..');
-const TAILWIND_DIR = resolve(SRC, '../node_modules/tailwindcss');
+// Tailwind lives at the workspace root in a hoisted node_modules layout.
+// HERE = packages/clay/src/__tests__, so jump up four to reach the root.
+const TAILWIND_DIR = resolve(HERE, '../../../../node_modules/tailwindcss');
 
 async function loadStylesheet(id: string, base: string) {
   if (id === 'tailwindcss') {
