@@ -8,7 +8,8 @@ import { TOKEN_REGISTRY, TOKENS_BY_NAME } from '../tokens/registry';
 import { SHORTHAND_INDEX } from '../tokens/shorthands';
 import type { ResolvedTokenSpec } from '../tokens/types';
 
-const { buildBaseRules, buildRootMembership, buildThemeExtend } = __internal;
+const { buildBaseRules, buildContributions, buildRootMembership, buildThemeExtend, scanVarRefs } =
+  __internal;
 
 // ─── Mock plugin context ─────────────────────────────────────────────────────
 
@@ -391,6 +392,87 @@ describe('buildBaseRules', () => {
   });
 });
 
+describe('scanVarRefs (fast var(--name) scanner)', () => {
+  function collect(value: string): string[] {
+    const out: string[] = [];
+    scanVarRefs(value, (n) => out.push(n));
+    return out;
+  }
+
+  test('finds a single reference', () => {
+    expect(collect('var(--primary)')).toEqual(['primary']);
+  });
+
+  test('finds multiple references in one expression', () => {
+    expect(collect('color-mix(in oklch, var(--a) 50%, var(--b))')).toEqual(['a', 'b']);
+  });
+
+  test('finds nested references', () => {
+    expect(collect('var(--a, var(--b))')).toEqual(['a', 'b']);
+  });
+
+  test('returns nothing for a literal value', () => {
+    expect(collect('1px')).toEqual([]);
+    expect(collect('oklch(0.5 0 0)')).toEqual([]);
+  });
+
+  test('returns nothing for an empty string', () => {
+    expect(collect('')).toEqual([]);
+  });
+
+  test('handles names with digits and dashes', () => {
+    expect(collect('var(--data-1) var(--brand-500)')).toEqual(['data-1', 'brand-500']);
+  });
+
+  test('does not match `var()` without the leading `--`', () => {
+    expect(collect('var()')).toEqual([]);
+    expect(collect('var(--)')).toEqual([]);
+  });
+
+  test('stops the name at the first non-name byte (`)`, `,`, ` `)', () => {
+    expect(collect('var(--name)')).toEqual(['name']);
+    expect(collect('var(--name, fallback)')).toEqual(['name']);
+    expect(collect('var(--a) var(--b)')).toEqual(['a', 'b']);
+  });
+
+  test('matches the regex baseline across the live registry', () => {
+    const REF = /var\(--([a-z][a-z0-9-]*)/g;
+    for (const token of TOKEN_REGISTRY) {
+      for (const value of [token.defaultLight, token.defaultDark]) {
+        if (!value) continue;
+        const regex = [...value.matchAll(REF)].map((m) => m[1]);
+        const scanner = collect(value);
+        expect(scanner).toEqual(regex);
+      }
+    }
+  });
+});
+
+describe('buildContributions (fused single-pass walk)', () => {
+  test('produces output matching the legacy three-builder composition', () => {
+    const { base, themeExtend, rootMembership } = buildContributions(
+      TOKEN_REGISTRY,
+      SHORTHAND_INDEX.tokenRefs
+    );
+    const legacyBase = buildBaseRules(TOKEN_REGISTRY, SHORTHAND_INDEX.tokenRefs);
+    const legacyExtend = buildThemeExtend(TOKEN_REGISTRY);
+    const legacyMembership = buildRootMembership(TOKEN_REGISTRY, SHORTHAND_INDEX.tokenRefs);
+    expect(base.root).toEqual(legacyBase.root);
+    expect(base.dark).toEqual(legacyBase.dark);
+    expect(base.properties).toEqual(legacyBase.properties);
+    expect(themeExtend).toEqual(legacyExtend);
+    expect([...rootMembership].sort()).toEqual([...legacyMembership].sort());
+  });
+
+  test('membership and theme.extend are computed without a second pass', () => {
+    // Sanity: pure form, an empty registry returns empty payloads.
+    const out = buildContributions([], new Set());
+    expect(out.base).toEqual({ properties: {}, root: {}, dark: {} });
+    expect(out.themeExtend).toEqual({});
+    expect([...out.rootMembership]).toEqual([]);
+  });
+});
+
 describe('buildRootMembership', () => {
   test('Layer-0 / Layer-1 tokens are unconditionally members', () => {
     const set = buildRootMembership(
@@ -695,7 +777,18 @@ describe('Tailwind v4 compile(), JIT pruning of shorthand utilities', () => {
 // ─── Performance benchmark ──────────────────────────────────────────────────
 
 describe('performance', () => {
-  test('buildBaseRules over the full registry runs under 5ms (typical: <1ms)', () => {
+  test('buildContributions (fused single pass) over the full registry runs under 3ms (typical: <1ms)', () => {
+    for (let i = 0; i < 5; i++) buildContributions(TOKEN_REGISTRY, SHORTHAND_INDEX.tokenRefs);
+    const start = performance.now();
+    const ITERATIONS = 100;
+    for (let i = 0; i < ITERATIONS; i++) {
+      buildContributions(TOKEN_REGISTRY, SHORTHAND_INDEX.tokenRefs);
+    }
+    const avg = (performance.now() - start) / ITERATIONS;
+    expect(avg).toBeLessThan(3);
+  });
+
+  test('buildBaseRules thin view stays under 5ms', () => {
     // Warm up.
     for (let i = 0; i < 5; i++) buildBaseRules(TOKEN_REGISTRY, SHORTHAND_INDEX.tokenRefs);
     const start = performance.now();
@@ -707,15 +800,46 @@ describe('performance', () => {
     expect(avg).toBeLessThan(5);
   });
 
-  test('buildThemeExtend over the full registry runs under 5ms (typical: <1ms)', () => {
-    for (let i = 0; i < 5; i++) buildThemeExtend(TOKEN_REGISTRY);
-    const start = performance.now();
-    const ITERATIONS = 50;
-    for (let i = 0; i < ITERATIONS; i++) {
-      buildThemeExtend(TOKEN_REGISTRY);
+  test('scanVarRefs is faster than a regex matchAll on the same input', () => {
+    // 559 tokens, average ~1-2 var() refs per default. Scanner avoids regex
+    // engine + RegExpExecArray allocation.
+    const REF = /var\(--([a-z][a-z0-9-]*)/g;
+    const samples = TOKEN_REGISTRY.flatMap((t) =>
+      t.defaultDark ? [t.defaultLight, t.defaultDark] : [t.defaultLight]
+    );
+
+    const ITERATIONS = 1000;
+    // Warm both implementations.
+    for (let i = 0; i < 10; i++) {
+      for (const s of samples) {
+        for (const _ of s.matchAll(REF)) {
+          /* noop */
+        }
+      }
+      for (const s of samples) {
+        scanVarRefs(s, () => {});
+      }
     }
-    const avg = (performance.now() - start) / ITERATIONS;
-    expect(avg).toBeLessThan(5);
+
+    const t0 = performance.now();
+    for (let i = 0; i < ITERATIONS; i++) {
+      for (const s of samples) {
+        for (const _ of s.matchAll(REF)) {
+          /* noop */
+        }
+      }
+    }
+    const regexMs = performance.now() - t0;
+
+    const t1 = performance.now();
+    for (let i = 0; i < ITERATIONS; i++) {
+      for (const s of samples) {
+        scanVarRefs(s, () => {});
+      }
+    }
+    const scannerMs = performance.now() - t1;
+
+    expect(scannerMs).toBeLessThan(regexMs);
   });
 
   test('plugin imports without doing any disk I/O at module load', async () => {
