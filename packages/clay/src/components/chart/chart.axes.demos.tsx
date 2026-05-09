@@ -1,22 +1,6 @@
 import { Chart } from '@brika/clay/components/chart';
 import { defineDemos } from '../../component-registry';
-
-const HOUR = 60 * 60 * 1000;
-const DAY = 24 * HOUR;
-
-function generate(
-  points: number,
-  intervalMs: number,
-  seed: number,
-  amplitude: number,
-  drift: number
-): Array<{ ts: number; value: number }> {
-  const now = Date.now();
-  return Array.from({ length: points }, (_, index) => ({
-    ts: now - (points - 1 - index) * intervalMs,
-    value: 30 + Math.sin(index / seed) * amplitude + index * drift,
-  }));
-}
+import { DAY, generate, HOUR } from './chart.demo-data';
 
 const hourly = generate(24, HOUR, 3, 18, 1.5);
 const monthly = generate(30, DAY, 4, 22, 0.4);
