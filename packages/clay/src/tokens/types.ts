@@ -81,16 +81,24 @@ export type TokenType =
  * token as a utility. Codegen reads this to decide whether (and how) to
  * register the token with Tailwind.
  *
- *   `color`   → `bg-<name>`, `text-<name>`, `border-<name>` (for `--color-*`)
- *   `radius`  → `rounded-<name>` (for `--radius-*`)
- *   `shadow`  → `shadow-<name>` (for `--shadow-*`)
- *   `text`    → `text-<name>` size+line-height pair (for `--text-*`)
- *   `font`    → `font-<name>` (for `--font-*`)
- *   `motion`  → `duration-<name>` / `ease-<name>` (for `--motion-*-duration`/`-easing`)
- *   `opacity` → `opacity-<name>` and color modifier `<class>/<name>`
- *   `blur`    → `blur-<name>` / `backdrop-blur-<name>`
- *   `default` → bare name; Tailwind picks up `--default-*-width` etc.
- *   `none`   , token is consumed only by component CSS, not as a utility.
+ *   `color`        → `bg-<name>`, `text-<name>`, `border-<name>` (for `--color-*`)
+ *   `radius`       → `rounded-<name>` (for `--radius-*`)
+ *   `shadow`       → `shadow-<name>` (for `--shadow-*`)
+ *   `text`         → `text-<name>` size+line-height pair (for `--text-*`)
+ *   `font`         → `font-<name>` (for `--font-*`)
+ *   `motion`       → `duration-<name>` / `ease-<name>` (for `--motion-*-duration`/`-easing`)
+ *   `opacity`      → `opacity-<name>` and color modifier `<class>/<name>`
+ *   `blur`         → `blur-<name>` / `backdrop-blur-<name>`
+ *   `border-w`     → `border-w-<name>` (registered via `matchUtilities`, sets `border-width`)
+ *   `border-style` → `border-style-<name>` (registered via `matchUtilities`)
+ *   `font-weight`  → `font-weight-<name>` (registered via `matchUtilities`; longer prefix
+ *                     avoids colliding with `font-<name>` font-family utilities)
+ *   `leading`      → `leading-<name>` (registered via `matchUtilities`, sets `line-height`)
+ *   `tracking`     → `tracking-<name>` (registered via `matchUtilities`, sets `letter-spacing`)
+ *   `case`         → `case-<name>` (registered via `matchUtilities`, sets `text-transform`)
+ *   `corner`       → `corner-<name>` (registered via `matchUtilities`, sets `corner-shape`)
+ *   `default`      → bare name; Tailwind picks up `--default-*-width` etc.
+ *   `none`         → token is consumed only by component CSS, not as a utility.
  */
 /**
  * Single source of truth for the Tailwind namespaces Clay can target.
@@ -108,6 +116,13 @@ export const TAILWIND_NAMESPACES = [
   'opacity',
   'blur',
   'spacing',
+  'border-w',
+  'border-style',
+  'font-weight',
+  'leading',
+  'tracking',
+  'case',
+  'corner',
   'default',
   'none',
 ] as const;

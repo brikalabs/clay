@@ -19,9 +19,9 @@ import { cn } from '../../primitives/cn';
 const sectionLabelIconVariants = cva('size-3.5', {
   variants: {
     tone: {
-      default: 'text-muted-foreground',
+      default: 'text-section-label-color',
       warning: 'text-warning',
-      destructive: 'text-destructive',
+      destructive: 'text-section-label-icon-destructive-color',
       success: 'text-success',
       info: 'text-info',
     },
@@ -50,7 +50,7 @@ function SectionLabel({
   return (
     <div
       data-slot="section-label"
-      className={cn('flex items-center gap-1.5 text-muted-foreground text-xs', className)}
+      className={cn('flex items-center gap-1.5 text-section-label-color text-xs', className)}
       {...props}
     >
       {Icon && <Icon className={sectionLabelIconVariants({ tone })} />}

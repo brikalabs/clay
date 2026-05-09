@@ -8,12 +8,12 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '../tooltip';
 // --- Variants ---
 
 const codeBlockVariants = cva(
-  'code-block overflow-hidden rounded-code-block border border-border bg-code-block-bg backdrop-blur-code-block',
+  'code-block overflow-hidden rounded-code-block border border-code-block-border-color bg-code-block-bg backdrop-blur-code-block',
   {
     variants: {
       variant: {
         default: '',
-        subtle: 'border-transparent bg-muted/30',
+        subtle: 'border-transparent bg-code-block-subtle-bg',
       },
     },
     defaultVariants: {
@@ -23,7 +23,7 @@ const codeBlockVariants = cva(
 );
 
 const codeBlockHeaderVariants = cva(
-  'flex items-center gap-2 border-border border-b bg-muted/60 px-3 py-2',
+  'flex items-center gap-2 border-code-block-border-color border-b bg-code-block-header-bg px-3 py-2',
   {
     variants: {
       variant: {
@@ -50,7 +50,7 @@ const codeBlockContentVariants = cva('m-0', {
 });
 
 const codeBlockGutterVariants = cva(
-  'select-none border-border/60 border-r bg-muted/40 px-3 font-mono text-muted-foreground tabular-nums',
+  'select-none border-code-block-gutter-border border-r bg-code-block-gutter-bg px-3 font-mono text-code-block-gutter-label tabular-nums',
   {
     variants: {
       size: {

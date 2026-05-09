@@ -26,7 +26,7 @@ function Switch({
       data-slot="switch"
       data-size={size}
       className={cn(
-        'switch peer group/switch corner-themed box-border inline-flex shrink-0 items-center rounded-switch border-[length:1px] border-transparent p-0.5 shadow-surface outline-none transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-switch-track-height data-[size=sm]:h-4 data-[size=default]:w-switch-track-width data-[size=sm]:w-7 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input dark:data-[state=unchecked]:bg-input/80',
+        'switch peer group/switch corner-themed box-border inline-flex shrink-0 items-center rounded-switch border-[length:1px] border-transparent p-0.5 shadow-surface outline-none transition-all focus-visible:border-switch-focus-border focus-visible:ring-[3px] focus-visible:ring-switch-focus-ring/50 disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-switch-track-height data-[size=sm]:h-4 data-[size=default]:w-switch-track-width data-[size=sm]:w-7 data-[state=checked]:bg-switch-checked-container data-[state=unchecked]:bg-switch-unchecked-container dark:data-[state=unchecked]:bg-switch-unchecked-container/80',
         className
       )}
       {...props}
@@ -34,7 +34,7 @@ function Switch({
       <SwitchPrimitive.Thumb
         data-slot="switch-thumb"
         className={cn(
-          'corner-themed pointer-events-none block rounded-switch-thumb bg-background ring-0 transition-transform data-[state=checked]:translate-x-full data-[state=unchecked]:translate-x-0 group-data-[size=default]/switch:size-switch-thumb-size group-data-[size=sm]/switch:size-3 dark:data-[state=checked]:bg-primary-foreground dark:data-[state=unchecked]:bg-foreground'
+          'corner-themed pointer-events-none block rounded-switch-thumb bg-switch-thumb-unchecked-color ring-0 transition-transform data-[state=checked]:translate-x-full data-[state=unchecked]:translate-x-0 group-data-[size=default]/switch:size-switch-thumb-size group-data-[size=sm]/switch:size-3 dark:data-[state=checked]:bg-switch-thumb-checked-color-dark dark:data-[state=unchecked]:bg-switch-thumb-unchecked-color-dark'
         )}
       />
     </SwitchPrimitive.Root>

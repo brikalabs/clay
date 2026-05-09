@@ -1,22 +1,19 @@
-import { existsSync, readdirSync, statSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import {
-  type ComponentDoc,
-  type ParserOptions,
-  withCustomConfig,
-  withDefaultConfig,
-} from 'react-docgen-typescript';
-import { isHookName, isInternalProp, slugFromPath, slugToPascalCase } from './docgen-helpers';
+import { type AstComponentDoc, extractComponentDocs } from './clay-docgen-ast';
+import { slugFromPath, slugToPascalCase } from './docgen-helpers';
 
 /**
- * Runs react-docgen-typescript over `src/components/<slug>/<slug>.tsx`
- * at build start (and on file change in dev), then exposes the result as a
- * virtual module so the docs site can render a per-component props table without
- * a separate generation step.
+ * Walks `src/components/<slug>/<slug>.tsx` with a parser-only AST visitor
+ * (see `clay-docgen-ast.ts`) and exposes the result as a virtual module
+ * so the docs site can render per-component props tables without a
+ * separate generation step.
  *
- * Props inherited from `node_modules` are filtered out, without that, every
- * native-attribute-passthrough component would surface ~80 HTML props.
+ * Cost model: parsing one entry file is ~10-30ms (TypeScript parser, no
+ * type checker). A full cold parse of all entries is ~1s; the disk cache
+ * keyed on a content hash skips even that on warm boot.
  */
 
 export interface ClayDocgenPluginOptions {
@@ -56,8 +53,6 @@ export interface ClayComponentDoc {
   readonly props: readonly ClayPropDoc[];
 }
 
-const SKIPPED_PROPS = new Set(['key', 'ref']);
-
 /**
  * Generic description fallback for props that recur across many Radix-based
  * primitives. Lets us document them once globally instead of asking every
@@ -80,82 +75,66 @@ function componentEntryFile(componentsDir: string, slug: string): string | null 
   return existsSync(candidate) ? candidate : null;
 }
 
-function buildParser(tsconfigPath: string | null): (files: string[]) => ComponentDoc[] {
-  const parserOptions: ParserOptions = {
-    savePropValueAsString: true,
-    shouldExtractLiteralValuesFromEnum: true,
-    shouldRemoveUndefinedFromOptional: true,
-    propFilter: (prop) => {
-      if (SKIPPED_PROPS.has(prop.name) || isInternalProp(prop.name)) {
-        return false;
+// Walks the components tree and returns every `.ts`/`.tsx` file. Used to
+// build the cache key — any source change under `components/` may
+// affect parsed output (a renamed local interface, a new prop, a JSDoc
+// edit), so the conservative key is the full content hash.
+function listAllComponentSourceFiles(componentsDir: string): string[] {
+  const out: string[] = [];
+  const walk = (dir: string): void => {
+    for (const entry of readdirSync(dir)) {
+      if (entry.startsWith('.') || entry === 'node_modules') {
+        continue;
       }
-      if (prop.parent) {
-        return !prop.parent.fileName.includes('node_modules');
+      const full = resolve(dir, entry);
+      if (statSync(full).isDirectory()) {
+        walk(full);
+      } else if (/\.tsx?$/.test(entry)) {
+        out.push(full);
       }
-      return true;
-    },
+    }
   };
-  const parser =
-    tsconfigPath && existsSync(tsconfigPath)
-      ? withCustomConfig(tsconfigPath, parserOptions)
-      : withDefaultConfig(parserOptions);
-  return (files) => parser.parse(files);
+  walk(componentsDir);
+  return out.sort((a, b) => a.localeCompare(b));
 }
 
-function normalizeDocs(docs: readonly ComponentDoc[]): Record<string, ClayComponentDoc[]> {
+// Bump when the cache file shape or generation logic changes so old
+// entries don't get reused under a different code path.
+const CACHE_VERSION = 2;
+
+function hashSourceFiles(files: readonly string[]): string {
+  const h = createHash('sha256');
+  h.update(`v${CACHE_VERSION}\0`);
+  for (const file of files) {
+    h.update(file);
+    h.update('\0');
+    h.update(readFileSync(file));
+    h.update('\0');
+  }
+  return h.digest('hex');
+}
+
+function normalizeDocs(docs: readonly AstComponentDoc[]): Record<string, ClayComponentDoc[]> {
   const bySlug: Record<string, ClayComponentDoc[]> = {};
 
   for (const doc of docs) {
-    if (!doc.displayName || isHookName(doc.displayName)) {
-      continue;
-    }
     const slug = slugFromPath(doc.filePath);
     if (!slug) {
       continue;
     }
-
-    const props = Object.values(doc.props).map<ClayPropDoc>((prop) => {
-      const tsdoc = prop.description?.trim() ?? '';
-      const fallback = COMMON_PROP_DESCRIPTIONS[prop.name] ?? '';
-
-      // When react-docgen-typescript resolves a string/number enum or union type,
-      // it returns `type.name === "enum"` with the actual values in `type.value`
-      // (an array of `{ value: string, description: string }`). We join them into
-      // a pipe-separated union so the PropsTable can render them as literals.
-      let typeName = prop.type?.name ?? 'unknown';
-      if (
-        typeName === 'enum' &&
-        Array.isArray((prop.type as unknown as Record<string, unknown>)?.value)
-      ) {
-        const values = (prop.type as unknown as { value: Array<{ value: string }> }).value;
-        // Drop `undefined`, it's implied by the prop being optional.
-        const filtered = values.filter((v) => v.value !== 'undefined');
-        typeName = filtered.map((v) => v.value).join(' | ');
-      }
-
-      return {
-        name: prop.name,
-        type: typeName,
-        required: prop.required,
-        defaultValue: prop.defaultValue?.value ?? null,
-        description: tsdoc || fallback,
-      };
-    });
-    props.sort((a, b) => {
-      if (a.required !== b.required) {
-        return a.required ? -1 : 1;
-      }
-      return a.name.localeCompare(b.name);
-    });
-
-    const componentDoc: ClayComponentDoc = {
-      displayName: doc.displayName,
-      description: doc.description ?? '',
-      props,
-    };
-
+    const props = doc.props.map<ClayPropDoc>((prop) => ({
+      name: prop.name,
+      type: prop.type,
+      required: prop.required,
+      defaultValue: prop.defaultValue,
+      description: prop.description || (COMMON_PROP_DESCRIPTIONS[prop.name] ?? ''),
+    }));
     bySlug[slug] ??= [];
-    bySlug[slug].push(componentDoc);
+    bySlug[slug].push({
+      displayName: doc.displayName,
+      description: doc.description,
+      props,
+    });
   }
 
   // Within each slug, sort: primary component first, then alphabetical.
@@ -171,32 +150,153 @@ function normalizeDocs(docs: readonly ComponentDoc[]): Record<string, ClayCompon
   return bySlug;
 }
 
+function parseEntries(entryFiles: readonly string[]): readonly AstComponentDoc[] {
+  const out: AstComponentDoc[] = [];
+  for (const file of entryFiles) {
+    for (const doc of extractComponentDocs(file)) {
+      out.push(doc);
+    }
+  }
+  return out;
+}
+
+function log(message: string): void {
+  // Match Astro/Vite's terminal style: timestamp prefix, colored tag.
+  const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+  // eslint-disable-next-line no-console -- intentional dev-server log
+  console.log(`\x1b[90m${time}\x1b[0m \x1b[36m[clay-docgen]\x1b[0m ${message}`);
+}
+
 export function clayDocgenPlugin(_options: ClayDocgenPluginOptions): ClayDocgenPlugin {
   const here = dirname(fileURLToPath(import.meta.url));
   const claySrc = resolve(here, '../../../../packages/clay/src');
   const componentsDir = resolve(claySrc, 'components');
-  const tsconfigPath = resolve(claySrc, '..', 'tsconfig.json');
+  const cacheDir = resolve(here, '../../node_modules/.cache/clay-docgen');
+  const cacheFile = resolve(cacheDir, 'cache.json');
 
   const watchedFiles = new Set<string>();
   let cache: Record<string, ClayComponentDoc[]> | null = null;
 
+  function readDiskCache(key: string): Record<string, ClayComponentDoc[]> | null {
+    try {
+      const raw = readFileSync(cacheFile, 'utf8');
+      const parsed = JSON.parse(raw) as {
+        key?: string;
+        docs?: Record<string, ClayComponentDoc[]>;
+      };
+      if (parsed.key === key && parsed.docs) {
+        return parsed.docs;
+      }
+    } catch {
+      // No cache yet, or invalid JSON — fall through to fresh parse.
+    }
+    return null;
+  }
+
+  function writeDiskCache(key: string, docs: Record<string, ClayComponentDoc[]>): void {
+    try {
+      mkdirSync(cacheDir, { recursive: true });
+      writeFileSync(cacheFile, JSON.stringify({ key, docs }));
+    } catch (err) {
+      log(`failed to write disk cache: ${(err as Error).message}`);
+    }
+  }
+
   function generate(): Record<string, ClayComponentDoc[]> {
     const slugs = listComponentSlugs(componentsDir);
-    const files = slugs
+    const entryFiles = slugs
       .map((slug) => componentEntryFile(componentsDir, slug))
       .filter((file): file is string => file !== null);
-    for (const file of files) {
+    for (const file of entryFiles) {
       watchedFiles.add(file);
     }
-    const parse = buildParser(tsconfigPath);
-    const docs = parse(files);
-    return normalizeDocs(docs);
+
+    const hashStart = performance.now();
+    const allSources = listAllComponentSourceFiles(componentsDir);
+    const key = hashSourceFiles(allSources);
+    const hashMs = Math.round(performance.now() - hashStart);
+
+    const cached = readDiskCache(key);
+    if (cached) {
+      const componentCount = Object.values(cached).reduce((acc, arr) => acc + arr.length, 0);
+      log(`cache hit (${componentCount} components, hashed ${allSources.length} files in ${hashMs}ms)`);
+      return cached;
+    }
+
+    log(`parsing ${entryFiles.length} component entries (cache miss)...`);
+    const parseStart = performance.now();
+    const docs = normalizeDocs(parseEntries(entryFiles));
+    const parseMs = Math.round(performance.now() - parseStart);
+    const componentCount = Object.values(docs).reduce((acc, arr) => acc + arr.length, 0);
+    log(`parsed ${componentCount} components in ${parseMs}ms — writing disk cache`);
+    writeDiskCache(key, docs);
+    return docs;
   }
 
   function getDocs(): Record<string, ClayComponentDoc[]> {
     cache ??= generate();
     return cache;
   }
+
+  // Re-parse a single component's entry file and patch the result into
+  // the in-memory aggregate. Lets edits to one component skip the full
+  // 64-file parse — typical edit-loop drops from ~10s to a few hundred ms.
+  function reparseSlug(slug: string): boolean {
+    if (!cache) {
+      return false;
+    }
+    const entry = componentEntryFile(componentsDir, slug);
+    if (!entry) {
+      // Component folder/file was removed — drop its docs.
+      if (cache[slug]) {
+        delete cache[slug];
+        persistCache();
+        log(`removed slug "${slug}" from cache`);
+      }
+      return true;
+    }
+    const t = performance.now();
+    const partial = normalizeDocs(parseEntries([entry]));
+    // Merge: parsing one entry file may surface more than one display name
+    // (e.g. <Card>, <CardHeader>) — they all share the slug derived from
+    // the file path, so the result is keyed by slug just like the full run.
+    if (partial[slug]) {
+      cache[slug] = partial[slug];
+    } else {
+      // Entry compiled to no exported components — clear stale entries.
+      delete cache[slug];
+    }
+    persistCache();
+    log(`re-parsed "${slug}" in ${Math.round(performance.now() - t)}ms`);
+    return true;
+  }
+
+  function persistCache(): void {
+    if (!cache) {
+      return;
+    }
+    const allSources = listAllComponentSourceFiles(componentsDir);
+    const key = hashSourceFiles(allSources);
+    writeDiskCache(key, cache);
+  }
+
+  // Cheap pre-walk: populates `watchedFiles` without parsing. Lets the
+  // file watcher route entry-file changes correctly even before the
+  // virtual module is first imported.
+  function preWatchEntryFiles(): void {
+    for (const slug of listComponentSlugs(componentsDir)) {
+      const file = componentEntryFile(componentsDir, slug);
+      if (file) {
+        watchedFiles.add(file);
+      }
+    }
+  }
+
+  // `<slug>/<slug>.tsx` — the entry file the AST walker reads. Changes
+  // to other files under `components/<slug>/` (helpers, demos, tokens)
+  // may still affect output, but we can't isolate which slug is
+  // affected, so those trigger a full reparse on next load.
+  const ENTRY_FILE_RE = /^([^/]+)\/\1\.tsx$/;
 
   return {
     name: 'clay-docgen',
@@ -211,20 +311,51 @@ export function clayDocgenPlugin(_options: ClayDocgenPluginOptions): ClayDocgenP
       return `export default ${JSON.stringify(docs)};\n`;
     },
     configureServer(server) {
-      // Eagerly populate so the watcher knows which files matter.
-      getDocs();
+      // No eager parse — defer until the virtual module is actually
+      // imported. The watcher still needs to know which files matter,
+      // so pre-walk just the entry list (cheap; no TS program).
+      preWatchEntryFiles();
+      log(`ready (lazy: ${watchedFiles.size} components registered, parse deferred)`);
       for (const file of watchedFiles) {
         server.watcher.add(file);
       }
+      // The components directory lives outside the docs root, so Vite's
+      // default watcher ignores it. Add it explicitly so changes to any
+      // demos.tsx, meta.ts, tokens.ts, or new component folder reach
+      // the dev server and trigger a reload.
+      server.watcher.add(componentsDir);
+
       const onChange = (file: string) => {
-        if (!watchedFiles.has(file)) {
+        if (!file.startsWith(componentsDir)) {
           return;
         }
-        cache = null;
+        if (!/\.(ts|tsx)$/.test(file)) {
+          return;
+        }
+        const relative = file.slice(componentsDir.length + 1);
+        const entryMatch = ENTRY_FILE_RE.exec(relative);
+
+        // Fast path: entry file change with the aggregate already built.
+        // Reparse just that slug and patch the in-memory map. Avoids the
+        // ~10s full-reparse cost.
+        if (entryMatch && cache) {
+          reparseSlug(entryMatch[1]);
+        } else if (cache) {
+          // Non-entry source changed (or entry without a built cache):
+          // we can't isolate the affected slug, so drop the full cache
+          // and let the next load do a full reparse. Disk cache is
+          // keyed by content hash, so it'll auto-invalidate too.
+          cache = null;
+          log(`invalidated by ${relative} (full reparse on next load)`);
+        }
+
         const mod = server.moduleGraph.getModuleById(RESOLVED_VIRTUAL_ID);
         if (mod) {
           server.moduleGraph.invalidateModule(mod);
         }
+        // Demos / meta / tokens changes don't strictly invalidate the
+        // virtual module, but the docs site composes them via
+        // `import.meta.glob`, so a full reload is still needed.
         server.ws?.send({ type: 'full-reload' });
       };
       const watcher = server.watcher as unknown as {

@@ -61,10 +61,10 @@ function InputOTPSlot({
       data-slot="input-otp-slot"
       data-active={isActive}
       className={cn(
-        'input-otp corner-themed relative flex size-input-otp-size items-center justify-center border-input-border bg-input-container text-sm shadow-surface outline-none transition-all backdrop-blur-input-otp',
+        'input-otp corner-themed relative flex size-input-otp-size items-center justify-center border-input-otp-border bg-input-otp-container text-input-otp-label text-sm shadow-surface outline-none transition-all backdrop-blur-input-otp',
         'border-t-(length:--input-otp-border-width) border-b-(length:--input-otp-border-width) border-r-(length:--input-otp-border-width) first:rounded-l-input-otp first:border-l-(length:--input-otp-border-width) last:rounded-r-input-otp',
-        'data-[active=true]:z-10 data-[active=true]:ring-[3px] data-[active=true]:ring-ring/50 data-[active=true]:border-ring',
-        'aria-invalid:border-destructive aria-invalid:ring-destructive/20',
+        'data-[active=true]:z-10 data-[active=true]:ring-[3px] data-[active=true]:ring-input-otp-focus-ring/50 data-[active=true]:border-input-otp-focus-border',
+        'aria-invalid:border-input-otp-invalid-ring aria-invalid:ring-input-otp-invalid-ring/20',
         className
       )}
       {...props}
@@ -73,12 +73,12 @@ function InputOTPSlot({
       {showPlaceholder && (
         <span
           aria-hidden="true"
-          className="size-1.5 rounded-full bg-muted-foreground/40"
+          className="size-1.5 rounded-full bg-input-otp-placeholder-color/40"
         />
       )}
       {hasFakeCaret && (
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div className="animate-caret-blink h-4 w-px bg-foreground duration-1000" />
+          <div className="animate-caret-blink h-4 w-px bg-input-otp-caret-color duration-1000" />
         </div>
       )}
     </div>
@@ -88,7 +88,7 @@ function InputOTPSlot({
 function InputOTPSeparator({ ...props }: React.ComponentProps<'div'>) {
   return (
     <div data-slot="input-otp-separator" role="separator" {...props}>
-      <MinusIcon className="size-4 text-muted-foreground" />
+      <MinusIcon className="size-4 text-input-otp-separator-color" />
     </div>
   );
 }

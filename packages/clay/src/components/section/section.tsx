@@ -1,8 +1,8 @@
 /**
  * Section Components
  *
- * Composable card-section primitives following the shadcn pattern.
- * Each sub-component is a simple wrapper, no content props, pure composition.
+ * Composable card-section primitives. Each sub-component is a simple
+ * wrapper, no content props, pure composition.
  *
  * Usage:
  *   <Section id="hub-control" className="scroll-mt-4">
@@ -77,7 +77,7 @@ function SectionDescription({ className, ...props }: React.ComponentProps<'p'>) 
   return (
     <p
       data-slot="section-description"
-      className={cn('text-muted-foreground text-sm', className)}
+      className={cn('text-section-description-color text-sm', className)}
       {...props}
     />
   );

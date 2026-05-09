@@ -41,31 +41,34 @@ export function ProgressDisplay({
       {/* Progress bar */}
       <div className="space-y-2">
         <div className="flex items-center justify-between text-sm">
-          <span className="text-muted-foreground">{phaseLabel}</span>
-          {success && <CheckCircle2 className="size-4 text-emerald-500" />}
-          {error && <XCircle className="size-4 text-destructive" />}
+          <span className="text-progress-display-phase-foreground">{phaseLabel}</span>
+          {success && <CheckCircle2 className="size-4 text-progress-display-success-color" />}
+          {error && <XCircle className="size-4 text-progress-display-error-color" />}
           {isProcessing && !success && !error && (
-            <Loader2 className="size-4 animate-spin text-primary" />
+            <Loader2 className="size-4 animate-spin text-progress-display-spinner-color" />
           )}
         </div>
         <Progress
           value={progressValue}
           className={cn(
             'h-2',
-            error && '[&>div]:bg-destructive',
-            success && '[&>div]:bg-emerald-500'
+            error && '[&>div]:bg-progress-display-error-color',
+            success && '[&>div]:bg-progress-display-success-color'
           )}
         />
       </div>
 
       {/* Log output */}
-      <ScrollArea className="h-40 rounded-md border bg-muted/30 backdrop-blur-progress-display">
+      <ScrollArea className="h-40 rounded-md border bg-progress-display-log-bg backdrop-blur-progress-display">
         <div ref={scrollRef} className="space-y-1 break-words p-3 font-mono text-xs">
           {logs.length === 0 && isProcessing && emptyLogsMessage && (
-            <div className="text-muted-foreground">{emptyLogsMessage}</div>
+            <div className="text-progress-display-log-foreground">{emptyLogsMessage}</div>
           )}
           {logs.map((log, i) => (
-            <div key={`log-${i}-${log.slice(0, 24)}`} className="text-muted-foreground">
+            <div
+              key={`log-${i}-${log.slice(0, 24)}`}
+              className="text-progress-display-log-foreground"
+            >
               {log}
             </div>
           ))}
@@ -74,14 +77,14 @@ export function ProgressDisplay({
 
       {/* Error display */}
       {error && (
-        <div className="rounded-md border border-destructive/50 bg-destructive/10 p-3 text-destructive text-sm">
+        <div className="rounded-md border border-progress-display-error-border bg-progress-display-error-bg p-3 text-progress-display-error-color text-sm">
           {error}
         </div>
       )}
 
       {/* Success message */}
       {success && successMessage && (
-        <div className="rounded-md border border-emerald-500/50 bg-emerald-500/10 p-3 text-emerald-600 text-sm">
+        <div className="rounded-md border border-progress-display-success-border bg-progress-display-success-bg p-3 text-progress-display-success-color text-sm">
           {successMessage}
         </div>
       )}

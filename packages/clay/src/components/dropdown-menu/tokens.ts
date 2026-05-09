@@ -25,6 +25,29 @@ registerComponent('menu', {
     description: 'Backdrop blur applied behind a translucent dropdown menu.',
   },
   geometry: { paddingX: SPACING_1, paddingY: SPACING_1, gap: '0.125rem' },
+  slots: {
+    'surface-container': {
+      default: 'var(--popover)',
+      description: 'Background of the menu surface (popover, dropdown, sub-menu).',
+    },
+    'surface-label': {
+      default: 'var(--popover-foreground)',
+      description: 'Default foreground color inside the menu surface.',
+    },
+    'separator-color': {
+      default: 'var(--border)',
+      description: 'Color of the horizontal divider rule between menu groups.',
+    },
+    'shortcut-color': {
+      default: 'var(--muted-foreground)',
+      description: 'Color of the keyboard-shortcut hint shown at the right of an item.',
+    },
+    'icon-color': {
+      default: 'var(--muted-foreground)',
+      description:
+        'Default color of inline SVG icons inside menu items. Items can opt out by setting an explicit `text-*` class on the icon.',
+    },
+  },
 });
 
 registerComponent('menu-item', {
@@ -36,4 +59,19 @@ registerComponent('menu-item', {
   surface: true,
   geometry: { paddingX: SPACING_2, paddingY: SPACING_1_5, gap: SPACING_2 },
   typography: { fontSize: 'var(--text-body-md)' },
+  slots: {
+    'focus-container': {
+      default: 'var(--accent)',
+      description: 'Background of a menu item under focus / hover / open state.',
+    },
+    'focus-label': {
+      default: 'var(--accent-foreground)',
+      description: 'Foreground color of a menu item under focus / hover / open state.',
+    },
+    'destructive-color': {
+      default: 'var(--destructive)',
+      description:
+        'Single color driving the destructive variant: text uses it directly, focus background uses it at 10% (light) / 20% (dark) opacity. Override to retune the destructive intent across every menu.',
+    },
+  },
 });

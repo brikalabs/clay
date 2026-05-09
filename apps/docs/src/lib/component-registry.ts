@@ -28,7 +28,7 @@ interface MetaModule {
 }
 
 const metaModules = import.meta.glob<MetaModule>(
-  '../../../../packages/clay/src/components/*/meta.ts',
+  '~clay/components/*/meta.ts',
   { eager: true }
 );
 
@@ -36,7 +36,7 @@ const CLAY_COMPONENTS: readonly ComponentMeta[] = Object.values(metaModules)
   .map((m) => m.meta)
   .sort((a, b) => a.name.localeCompare(b.name));
 
-// ─── Demo modules (functions + demoMeta) ──────────────────────────────────────
+// ─── Demo modules (functions + demoMeta) ──────────────────────────────────
 
 interface DemosModule {
   readonly demoMeta?: readonly DemoInput[];
@@ -44,13 +44,13 @@ interface DemosModule {
 }
 
 const demosModules = import.meta.glob<DemosModule>(
-  '../../../../packages/clay/src/components/*/*.demos.tsx',
+  '~clay/components/*/*.demos.tsx',
   { eager: true }
 );
 
 // Raw source text for code-snippet auto-extraction.
 const demoSources = import.meta.glob<string>(
-  '../../../../packages/clay/src/components/*/*.demos.tsx',
+  '~clay/components/*/*.demos.tsx',
   { eager: true, query: '?raw', import: 'default' }
 );
 
@@ -58,15 +58,46 @@ function slugFromPath(path: string): string {
   return /\/components\/([a-z0-9-]+)\/[^/]+\.demos\.tsx$/.exec(path)?.[1] ?? '';
 }
 
-const DEMOS_BY_SLUG = new Map<string, DemosModule>(
-  Object.entries(demosModules).map(([path, mod]) => [slugFromPath(path), mod])
-);
+interface DemoFile {
+  readonly path: string;
+  readonly mod: DemosModule;
+  readonly source: string;
+}
 
-const SOURCES_BY_SLUG = new Map<string, string>(
-  Object.entries(demoSources).map(([path, src]) => [slugFromPath(path), src])
-);
+/**
+ * Multiple `*.demos.tsx` files per component folder are supported, the
+ * registry concatenates their `demoMeta` arrays in glob (alphabetical) order.
+ * Splitting demos lets a component grow past one file (Chart's variants,
+ * for example) without forcing every demo into a single 500+ line module.
+ */
+const FILES_BY_SLUG = (() => {
+  const out = new Map<string, DemoFile[]>();
+  for (const [path, mod] of Object.entries(demosModules)) {
+    const slug = slugFromPath(path);
+    if (!slug) continue;
+    const files = out.get(slug) ?? [];
+    files.push({ path, mod, source: demoSources[path] ?? '' });
+    out.set(slug, files);
+  }
+  // Stable order: alphabetical by path so the resulting demo list is
+  // deterministic regardless of glob iteration order.
+  for (const [slug, files] of out) {
+    out.set(slug, [...files].sort((a, b) => a.path.localeCompare(b.path)));
+  }
+  return out;
+})();
 
-// ─── Source code extraction ────────────────────────────────────────────────────
+function ownerFile(slug: string, fn: unknown): DemoFile | undefined {
+  return FILES_BY_SLUG.get(slug)?.find((file) =>
+    Object.values(file.mod).includes(fn)
+  );
+}
+
+function demoMetaFor(slug: string): readonly DemoInput[] {
+  return (FILES_BY_SLUG.get(slug) ?? []).flatMap((file) => file.mod.demoMeta ?? []);
+}
+
+// ─── Source code extraction ───────────────────────────────────────────
 // Lives in `./extract-demo-code.ts` so it's testable under Bun without
 // pulling in the Vite-only `import.meta.glob` calls that this module makes.
 
@@ -87,17 +118,18 @@ function exportNameOf(mod: DemosModule, fn: unknown): string {
 }
 
 /** Resolve a DemoInput to a full ComponentDemo, with code auto-extracted from source. */
-function resolveDemo(input: DemoInput, source: string, mod: DemosModule): ComponentDemo {
-  const name = exportNameOf(mod, input.fn);
+function resolveDemo(slug: string, input: DemoInput): ComponentDemo {
+  const file = ownerFile(slug, input.fn);
+  const name = file ? exportNameOf(file.mod, input.fn) : '';
   return {
     name,
     title: input.title,
     description: input.description,
-    code: extractDemoCode(source, name),
+    code: file ? extractDemoCode(file.source, name) : '',
   };
 }
 
-// ─── Public types ─────────────────────────────────────────────────────────────
+// ─── Public types ────────────────────────────────────────────────
 
 export interface ComponentDocs {
   readonly demos: readonly ComponentDemo[];
@@ -111,22 +143,18 @@ export interface ComponentEntry extends ComponentMeta, ComponentDocs {
   readonly externalDocs: readonly ExternalDoc[];
 }
 
-// ─── Composed entries ─────────────────────────────────────────────────────────
+// ─── Composed entries ─────────────────────────────────────────────
 
-const ENTRIES: readonly ComponentEntry[] = CLAY_COMPONENTS.map((meta) => {
-  const mod = DEMOS_BY_SLUG.get(meta.name);
-  const source = SOURCES_BY_SLUG.get(meta.name) ?? '';
-  return {
-    slug: meta.name,
-    name: meta.displayName,
-    displayName: meta.displayName,
-    description: meta.description,
-    group: meta.group,
-    demos: mod ? (mod.demoMeta ?? []).map((d) => resolveDemo(d, source, mod)) : [],
-    accessibility: meta.accessibility,
-    externalDocs: meta.externalDocs ?? [],
-  };
-});
+const ENTRIES: readonly ComponentEntry[] = CLAY_COMPONENTS.map((meta) => ({
+  slug: meta.name,
+  name: meta.displayName,
+  displayName: meta.displayName,
+  description: meta.description,
+  group: meta.group,
+  demos: demoMetaFor(meta.name).map((d) => resolveDemo(meta.name, d)),
+  accessibility: meta.accessibility,
+  externalDocs: meta.externalDocs ?? [],
+}));
 
 export const COMPONENTS: readonly ComponentEntry[] = ENTRIES;
 

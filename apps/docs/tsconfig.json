@@ -6,7 +6,8 @@
     "jsxImportSource": "react",
     "types": ["astro/client"],
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "~clay/*": ["../../packages/clay/src/*"]
     }
   },
   "include": [".astro/types.d.ts", "**/*"],

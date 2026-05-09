@@ -20,7 +20,8 @@
     "dev": "bun run --filter '@brika/clay-docs' dev",
     "dev:lib": "bun run --filter '@brika/clay' dev",
     "test": "bun test",
-    "typecheck": "bun run --filter '*' typecheck"
+    "typecheck": "bun run --filter '*' typecheck",
+    "audit:tokens": "bun run tools/scripts/audit-tokens.ts"
   },
   "devDependencies": {
     "@typescript/native-preview": "latest",

@@ -22,4 +22,19 @@ registerComponent(meta, {
     description: 'Backdrop blur applied behind a translucent popover.',
   },
   geometry: { paddingX: SPACING_3, paddingY: SPACING_3, gap: SPACING_2 },
+  slots: {
+    'surface-container': {
+      default: 'var(--popover)',
+      description: 'Background of the popover surface.',
+    },
+    'surface-label': {
+      default: 'var(--popover-foreground)',
+      description: 'Default foreground color inside the popover surface.',
+    },
+    'description-color': {
+      default: 'var(--muted-foreground)',
+      description:
+        'Foreground color of `<PopoverDescription>` text shown beneath the popover title.',
+    },
+  },
 });

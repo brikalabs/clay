@@ -34,9 +34,9 @@ function SwatchStrip({ theme, count = 4, height = 14 }: SwatchStripProps) {
       aria-hidden="true"
       style={{ height }}
     >
-      {theme.accentSwatches.slice(0, count).map((swatch, index) => (
+      {theme.accentSwatches.slice(0, count).map((swatch) => (
         <span
-          key={`${theme.id}-swatch-${index}-${swatch}`}
+          key={`${theme.id}-swatch-${swatch}`}
           className="block w-2"
           style={{ backgroundColor: swatch }}
         />

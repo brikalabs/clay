@@ -16,7 +16,7 @@ interface BrikaLogoProps extends SVGProps<SVGSVGElement> {
  */
 export function BrikaLogo({ variant = 'mark', className, ...props }: Readonly<BrikaLogoProps>) {
   const isFull = variant === 'full';
-  const fill = isFull ? 'white' : 'currentColor';
+  const fill = isFull ? 'var(--brika-logo-full-fg)' : 'currentColor';
 
   return (
     <svg
@@ -26,7 +26,7 @@ export function BrikaLogo({ variant = 'mark', className, ...props }: Readonly<Br
       className={cn('shrink-0', className)}
       {...props}
     >
-      {isFull && <rect width="240" height="240" rx="65" fill="black" />}
+      {isFull && <rect width="240" height="240" rx="65" fill="var(--brika-logo-full-bg)" />}
       <path
         d="M119 60.8929C119 58.2059 119 56.8625 119.143 55.734C120.177 47.5898 126.59 41.1767 134.734 40.1432C135.862 40 137.206 40 139.893 40H146C166.987 40 184 57.0132 184 78C184 98.9868 166.987 116 146 116H139.893C137.206 116 135.862 116 134.734 115.857C126.59 114.823 120.177 108.41 119.143 100.266C119 99.1375 119 97.7941 119 95.1071V60.8929Z"
         fill={fill}

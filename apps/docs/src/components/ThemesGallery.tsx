@@ -172,9 +172,9 @@ function ThemeCard({ theme, index, active, mode, onSelect }: ThemeCardProps) {
 
           {/* Row 3, accent swatch strip, edge to edge */}
           <div className="flex h-2.5">
-            {theme.accentSwatches.map((swatch, swatchIndex) => (
+            {theme.accentSwatches.map((swatch) => (
               <span
-                key={`${theme.id}-${swatchIndex}-${swatch}`}
+                key={`${theme.id}-${swatch}`}
                 className="block flex-1"
                 style={{ backgroundColor: swatch }}
                 aria-hidden="true"

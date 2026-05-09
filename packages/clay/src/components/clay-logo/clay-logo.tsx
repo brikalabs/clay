@@ -32,7 +32,7 @@ export function ClayLogo({ variant = 'badge', className, ...props }: Readonly<Cl
           width="94"
           height="94"
           rx="22"
-          fill="var(--clay-logo-bg, var(--secondary))"
+          fill="var(--clay-logo-bg)"
         />
       )}
       <rect x="24" y="22" width="18.7" height="56" rx="4" fill="currentColor" />

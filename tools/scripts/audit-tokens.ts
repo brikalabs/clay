@@ -4,7 +4,9 @@
  *   - Lists every reference in the component's TSX, both raw `var(--…)`
  *     and Tailwind utility-class shapes derived from `tailwindNamespace`
  *     (`bg-X`, `rounded-X`, `shadow-X`, `text-X`, `font-X`, `duration-X`,
- *     `ease-X`, `opacity-X`, `blur-X`).
+ *     `ease-X`, `opacity-X`, `blur-X`, plus the spacing family
+ *     `size-X`, `h-X`, `w-X`, `p?-X`, `m?-X`, `gap-X`, `top/right/bottom/left-X`,
+ *     `inset-X`, `space-x/y-X`, `translate-x/y-X`).
  *   - Shorthand-bundle coverage (geom / typo / motion / border).
  *   - Flags:
  *       a) registered-but-unreferenced (dead, no shorthand, no raw ref,
@@ -12,7 +14,7 @@
  *       b) referenced-but-unregistered (dangling, TSX uses a `--name`
  *          that the registry doesn't define).
  *
- * Usage: `bun run tools/scripts/audit-tokens.ts`
+ * Usage: `bun run audit:tokens`
  */
 
 import { readdirSync, readFileSync, statSync } from 'node:fs';
@@ -56,9 +58,17 @@ function extractRawRefs(src: string): Set<string> {
  */
 const UTILITY_ROOTS: Partial<Record<TailwindNamespace, readonly string[]>> = {
   color: [
-    'bg', 'text', 'border', 'outline', 'ring', 'fill', 'stroke',
-    'from', 'to', 'via', 'divide', 'accent', 'caret', 'decoration',
-    'placeholder', 'shadow',
+    'bg', 'text', 'fill', 'stroke',
+    // border family: bare + each side / axis / logical
+    'border', 'border-x', 'border-y', 'border-t', 'border-r', 'border-b', 'border-l',
+    'border-s', 'border-e',
+    // outline + ring (incl. ring-offset, which sets ring-offset-color in v4)
+    'outline', 'ring', 'ring-offset', 'inset-ring',
+    // gradients
+    'from', 'to', 'via',
+    // misc color slots
+    'divide', 'divide-x', 'divide-y',
+    'accent', 'caret', 'decoration', 'placeholder', 'shadow',
   ],
   radius: [
     'rounded', 'rounded-t', 'rounded-r', 'rounded-b', 'rounded-l',
@@ -71,6 +81,23 @@ const UTILITY_ROOTS: Partial<Record<TailwindNamespace, readonly string[]>> = {
   motion: ['duration', 'ease'],
   opacity: ['opacity'],
   blur: ['blur', 'backdrop-blur'],
+  spacing: [
+    // size / dims
+    'size', 'h', 'w', 'min-h', 'min-w', 'max-h', 'max-w',
+    // padding
+    'p', 'px', 'py', 'pt', 'pr', 'pb', 'pl', 'ps', 'pe',
+    // margin
+    'm', 'mx', 'my', 'mt', 'mr', 'mb', 'ml', 'ms', 'me',
+    // gap / space-between
+    'gap', 'gap-x', 'gap-y', 'space-x', 'space-y',
+    // inset
+    'top', 'right', 'bottom', 'left', 'start', 'end',
+    'inset', 'inset-x', 'inset-y',
+    // transform / scroll
+    'translate-x', 'translate-y',
+    'scroll-m', 'scroll-mx', 'scroll-my', 'scroll-mt', 'scroll-mr', 'scroll-mb', 'scroll-ml',
+    'scroll-p', 'scroll-px', 'scroll-py', 'scroll-pt', 'scroll-pr', 'scroll-pb', 'scroll-pl',
+  ],
 };
 
 function utilityClasses(token: ResolvedTokenSpec): readonly string[] {
@@ -82,9 +109,10 @@ function utilityClasses(token: ResolvedTokenSpec): readonly string[] {
   return roots.map((root) => `${root}-${utilityName}`);
 }
 
-// Include `!` in the right boundary for Tailwind v4 important modifier
-// (`rounded-toast!`), `/` for the opacity-modifier (`bg-card/50`).
-const CLASS_BOUNDARY_LEFT = String.raw`(^|[\s"'\`(\[:])`;
+// Include `!` in BOTH boundaries: Tailwind v4 accepts `rounded-toast!`
+// (trailing important) and `!rounded-toast` (leading important). `/` on
+// the right is the opacity-modifier (`bg-card/50`).
+const CLASS_BOUNDARY_LEFT = String.raw`(^|[\s"'\`(\[:!])`;
 const CLASS_BOUNDARY_RIGHT = String.raw`($|[\s"'\`)\]/!])`;
 
 function refsViaUtility(src: string, token: ResolvedTokenSpec): boolean {
@@ -232,6 +260,14 @@ function main(): void {
       console.log(`  · dead (registered, not referenced anywhere):`);
       for (const n of a.dead) console.log(`      --${n}`);
     }
+  }
+
+  // Dangling refs are always a hard failure (TSX reads a token the
+  // registry doesn't define). Dead tokens are also a failure: every
+  // registered token emits :root defaults / @property blocks, so
+  // registering one nothing reads is paying CSS bytes for nothing.
+  if (totalDead > 0 || totalDangling > 0) {
+    process.exit(1);
   }
 }
 

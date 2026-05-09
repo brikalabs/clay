@@ -82,11 +82,19 @@ There are three layers, each authored in its own file:
   A role's `defaultLight` is typically a `var(--<scalar>)` chain.
 - **Layer 2, Component** (`src/components/<name>/tokens.ts`). Per-component
   identity: `--button-padding-x`, `--card-shadow`, `--menu-item-gap`.
-  Authored declaratively via `defineComponent`:
+  Each component's `tokens.ts` self-registers at module load via
+  `registerComponent(meta, { ... })`. The aggregator
+  [`src/components/register.ts`](packages/clay/src/components/register.ts)
+  is just a list of side-effect imports, one line per component, and
+  [`src/tokens/registry.ts`](packages/clay/src/tokens/registry.ts) reads
+  the accumulated tokens via `getComponentTokens()`.
 
   ```ts
   // src/components/button/tokens.ts
-  defineComponent('button', {
+  import { registerComponent } from '../../tokens/define';
+  import { meta } from './meta';
+
+  registerComponent(meta, {
     radius:     { default: 'var(--radius-control)', alias: 'button', description: '…' },
     shadow:     { default: 'var(--shadow-surface)', alias: 'button', description: '…' },
     surface:    true,                                          // border + motion
@@ -101,15 +109,15 @@ There are three layers, each authored in its own file:
   });
   ```
 
-  `defineComponent` expands those declarative keys into `TokenSpec[]`:
+  `registerComponent` expands those declarative keys into `TokenSpec[]`:
   `geometry: { height, paddingX, ... }` becomes four token specs whose
   names are `<component>-height`, `<component>-padding-x`, etc. The
   `surface` shortcut adds the border + motion families. Every per-token
   `defaultLight` is just a string, so role-cascading happens through CSS
   (`var(--button-shadow)` → `var(--shadow-surface)` → `var(--shadow-raised)`).
 
-The aggregator [`src/tokens/registry.ts`](src/tokens/registry.ts) imports
-all three layers and exposes:
+The aggregator [`src/tokens/registry.ts`](packages/clay/src/tokens/registry.ts)
+imports all three layers and exposes:
 
 - `TOKEN_REGISTRY: readonly ResolvedTokenSpec[]`, every spec, with
   `type` filled in from `inferTokenType` when omitted.
@@ -218,7 +226,7 @@ When the build sees `class="button"` in source, `.button` is emitted with
 its bundled declarations (`height`, `padding-inline`, `transition-*`, etc.).
 When the source contains no `button`, nothing emits.
 
-The `src/__tests__/tailwind-plugin.test.ts` suite verifies this contract
+The `packages/clay/src/__tests__/tailwind-plugin.test.ts` suite verifies this contract
 two ways:
 
 - A mock plugin api whose `addUtilities` and `addComponents` *throw*,
@@ -443,25 +451,27 @@ plugin API.
 
 | File | What it asserts |
 |---|---|
-| `src/__tests__/smoke.test.ts` | Barrel exports the public API. |
-| `src/tokens/__tests__/registry.test.ts` | Registry invariants, unique names, every component-layer token has `appliesTo`, every type maps to its declared category, etc. |
-| `src/tokens/__tests__/define.test.ts` | `defineComponent` expansion semantics. |
-| `src/tokens/__tests__/shorthands.test.ts` | The pure walker, synthetic registries and the live one, including edge cases like multi-segment `appliesTo` (`menu-item` vs `menu`). |
-| `src/__tests__/tailwind-plugin.test.ts` | The plugin contract, that the handler reaches for `matchUtilities` only, registers a utility per `SHORTHAND_INDEX` entry, and that Tailwind v4's `compile()` actually JIT-prunes unused shorthands when given a curated candidate list. |
-| `scripts/audit-tokens.ts` | Not a test, runnable script that cross-checks `TOKEN_REGISTRY` against TSX source for dangling refs and dead tokens. Run with `bun run scripts/audit-tokens.ts`. |
+| `packages/clay/src/__tests__/smoke.test.ts` | Barrel exports the public API. |
+| `packages/clay/src/tokens/__tests__/registry.test.ts` | Registry invariants, unique names, every component-layer token has `appliesTo`, every type maps to its declared category, etc. |
+| `packages/clay/src/tokens/__tests__/define.test.ts` | `registerComponent` expansion semantics. |
+| `packages/clay/src/tokens/__tests__/shorthands.test.ts` | The pure walker, synthetic registries and the live one, including edge cases like multi-segment `appliesTo` (`menu-item` vs `menu`). |
+| `packages/clay/src/__tests__/tailwind-plugin.test.ts` | The plugin contract, that the handler reaches for `matchUtilities` only, registers a utility per `SHORTHAND_INDEX` entry, and that Tailwind v4's `compile()` actually JIT-prunes unused shorthands when given a curated candidate list. |
+| `tools/scripts/audit-tokens.ts` | Not a test, runnable script that cross-checks `TOKEN_REGISTRY` against TSX source for dangling refs and dead tokens. Run with `bun run audit:tokens`. |
 
 ---
 
 ## File map
 
 ```
-src/
-├── components/<name>/
-│   ├── <name>.tsx              ← uses `class="<name>"` for shorthand
-│   ├── <name>.demos.tsx        ← docs site demos
-│   ├── tokens.ts               ← defineComponent(...), the author surface
-│   ├── meta.ts                 ← display name, group, externalDocs
-│   └── index.ts                ← `export * from './<name>'`
+packages/clay/src/
+├── components/
+│   ├── register.ts             ← side-effect imports of every <name>/tokens.ts
+│   └── <name>/
+│       ├── <name>.tsx          ← uses `class="<name>"` for shorthand
+│       ├── <name>.demos.tsx    ← docs site demos
+│       ├── tokens.ts           ← registerComponent(meta, { ... }), the author surface
+│       ├── meta.ts             ← display name, group, externalDocs
+│       └── index.ts            ← `export * from './<name>'`
 ├── primitives/
 │   ├── cn.ts                   ← clsx + extended tailwind-merge
 │   ├── cssVars.ts              ← stringly-typed → React style helper
@@ -481,27 +491,31 @@ src/
 │   ├── presets/*.json          ← 17 first-party themes
 │   └── index.ts
 ├── tokens/
-│   ├── registry.ts             ← TOKEN_REGISTRY, TOKENS_BY_NAME
+│   ├── registry.ts             ← TOKEN_REGISTRY, TOKENS_BY_NAME (imports components/register)
+│   ├── registry-state.ts       ← module-scoped accumulator + register/getComponentTokens
 │   ├── types.ts                ← TokenSpec, TokenLayer, TokenCategory, …
 │   ├── infer.ts                ← suffix → TokenType inference
-│   ├── define.ts               ← defineComponent, declarative tokens.ts API
+│   ├── define.ts               ← registerComponent, declarative tokens.ts API
 │   ├── scalars.ts              ← Layer 0
 │   ├── roles/                  ← Layer 1 (one file per category)
-│   ├── components.ts           ← Layer 2 aggregator
-│   ├── orphan-components.ts    ← Layer 2 entries whose component folder doesn't exist yet
 │   └── shorthands.ts           ← SHORTHAND_INDEX walker (consumed by plugin + cn)
 ├── tailwind.ts                 ← Tailwind v4 plugin
 └── index.ts                    ← root barrel
+
+tools/scripts/
+└── audit-tokens.ts             ← cross-checks TOKEN_REGISTRY against TSX (run via `bun run audit:tokens`)
 ```
 
 ---
 
 ## Adding a new component
 
-1. Create `src/components/<name>/` with `tokens.ts`, `<name>.tsx`,
-   `meta.ts`, `index.ts`.
-2. In `tokens.ts` call `defineComponent('<name>', { … })` and re-export
-   from [`src/tokens/components.ts`](src/tokens/components.ts).
+1. Create `packages/clay/src/components/<name>/` with `tokens.ts`,
+   `<name>.tsx`, `meta.ts`, `index.ts`.
+2. In `tokens.ts` call `registerComponent(meta, { … })`. Register the
+   component by adding one side-effect line to
+   [`packages/clay/src/components/register.ts`](packages/clay/src/components/register.ts):
+   `import './<name>/tokens';`
 3. Use the auto-generated `<name>` shorthand class in your TSX:
 
    ```tsx
@@ -513,8 +527,8 @@ src/
 
 4. Reference slot tokens via Tailwind utility namespaces (`bg-<name>-filled-container`,
    `text-<name>-filled-label`, `rounded-<name>`, `shadow-<name>`).
-5. Run `bun run scripts/audit-tokens.ts` to confirm there are no
-   dangling refs or dead tokens.
+5. Run `bun run audit:tokens` to confirm there are no dangling refs or
+   dead tokens.
 6. Run `bun test` and `bun run typecheck`.
 
 A new component contributes zero CSS to consumers who don't import it,
@@ -533,7 +547,7 @@ its slot-token utilities only emit when something references them.
   shorthand classes look static is `values: { DEFAULT: '' }`. There is
   no documented "static utility from JS plugin" alternative in v4, both
   `addUtilities` and `addComponents` are always-emit.
-- **The audit script can't see consumer code.** `scripts/audit-tokens.ts`
+- **The audit script can't see consumer code.** `tools/scripts/audit-tokens.ts`
   cross-checks Clay's own TSX. If a consumer references a token Clay
   doesn't ship, that's *their* dangling ref, not Clay's. The Tailwind
   scanner takes over once Clay is consumed downstream.

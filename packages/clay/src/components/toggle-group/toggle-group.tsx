@@ -20,20 +20,20 @@ const ToggleGroupContext = React.createContext<VariantProps<typeof toggleVariant
 // focus rings stay visible. Items keep their own `data-[state=on]` accent
 // fill for the selection affordance.
 const wrapperClasses = [
-  'isolate inline-flex w-fit rounded-toggle border border-input-border bg-input-container shadow-surface',
+  'isolate inline-flex w-fit rounded-toggle border border-toggle-group-frame-border bg-toggle-group-frame-container shadow-surface',
   '[&>*]:!rounded-none [&>*]:!border-0 [&>*]:!shadow-none [&>*]:relative',
   '[&>*]:focus-visible:z-10',
 ].join(' ');
 
 const horizontalClasses = [
   '[&>*:first-child]:!rounded-l-toggle [&>*:last-child]:!rounded-r-toggle',
-  '[&>*:not(:first-child)]:!border-l [&>*:not(:first-child)]:!border-l-input-border',
+  '[&>*:not(:first-child)]:!border-l [&>*:not(:first-child)]:!border-toggle-group-divider-color',
 ].join(' ');
 
 const verticalClasses = [
   'flex-col',
   '[&>*:first-child]:!rounded-t-toggle [&>*:last-child]:!rounded-b-toggle',
-  '[&>*:not(:first-child)]:!border-t [&>*:not(:first-child)]:!border-t-input-border',
+  '[&>*:not(:first-child)]:!border-t [&>*:not(:first-child)]:!border-toggle-group-divider-color',
 ].join(' ');
 
 function ToggleGroup({
