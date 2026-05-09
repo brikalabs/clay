@@ -89,60 +89,68 @@ export function extractComponentDocs(filePath: string): readonly AstComponentDoc
 function indexCvaCalls(sourceFile: ts.SourceFile): CvaIndex {
   const out = new Map<string, Map<string, string[]>>();
   for (const stmt of sourceFile.statements) {
-    if (!ts.isVariableStatement(stmt)) {
-      continue;
-    }
+    if (!ts.isVariableStatement(stmt)) continue;
     for (const decl of stmt.declarationList.declarations) {
-      if (!ts.isIdentifier(decl.name) || !decl.initializer) {
-        continue;
-      }
-      const call = decl.initializer;
-      if (!ts.isCallExpression(call)) {
-        continue;
-      }
-      if (!ts.isIdentifier(call.expression) || call.expression.text !== 'cva') {
-        continue;
-      }
-      const config = call.arguments[1];
-      if (!config || !ts.isObjectLiteralExpression(config)) {
-        continue;
-      }
-      const variantsProp = config.properties.find(
-        (p): p is ts.PropertyAssignment =>
-          ts.isPropertyAssignment(p) &&
-          ts.isIdentifier(p.name) &&
-          p.name.text === 'variants'
-      );
-      if (!variantsProp || !ts.isObjectLiteralExpression(variantsProp.initializer)) {
-        continue;
-      }
-      const keys = new Map<string, string[]>();
-      for (const variantEntry of variantsProp.initializer.properties) {
-        if (
-          !ts.isPropertyAssignment(variantEntry) ||
-          !ts.isObjectLiteralExpression(variantEntry.initializer)
-        ) {
-          continue;
-        }
-        const variantKey = staticPropertyName(variantEntry.name);
-        if (!variantKey) {
-          continue;
-        }
-        const optionNames: string[] = [];
-        for (const opt of variantEntry.initializer.properties) {
-          const optName = staticPropertyName(opt.name);
-          if (optName) {
-            optionNames.push(optName);
-          }
-        }
-        keys.set(variantKey, optionNames);
-      }
-      if (keys.size > 0) {
-        out.set(decl.name.text, keys);
+      const cvaEntry = readCvaDeclaration(decl);
+      if (cvaEntry) {
+        out.set(cvaEntry.name, cvaEntry.variants);
       }
     }
   }
   return out;
+}
+
+function readCvaDeclaration(
+  decl: ts.VariableDeclaration
+): { name: string; variants: Map<string, string[]> } | null {
+  if (!ts.isIdentifier(decl.name) || !decl.initializer) return null;
+  const call = decl.initializer;
+  if (!ts.isCallExpression(call)) return null;
+  if (!ts.isIdentifier(call.expression) || call.expression.text !== 'cva') return null;
+
+  const config = call.arguments[1];
+  if (!config || !ts.isObjectLiteralExpression(config)) return null;
+
+  const variantsObject = findVariantsObject(config);
+  if (!variantsObject) return null;
+
+  const variants = readVariantOptions(variantsObject);
+  if (variants.size === 0) return null;
+
+  return { name: decl.name.text, variants };
+}
+
+function findVariantsObject(
+  config: ts.ObjectLiteralExpression
+): ts.ObjectLiteralExpression | null {
+  const variantsProp = config.properties.find(
+    (p): p is ts.PropertyAssignment =>
+      ts.isPropertyAssignment(p) && ts.isIdentifier(p.name) && p.name.text === 'variants'
+  );
+  if (!variantsProp || !ts.isObjectLiteralExpression(variantsProp.initializer)) {
+    return null;
+  }
+  return variantsProp.initializer;
+}
+
+function readVariantOptions(
+  variants: ts.ObjectLiteralExpression
+): Map<string, string[]> {
+  const keys = new Map<string, string[]>();
+  for (const entry of variants.properties) {
+    if (!ts.isPropertyAssignment(entry) || !ts.isObjectLiteralExpression(entry.initializer)) {
+      continue;
+    }
+    const variantKey = staticPropertyName(entry.name);
+    if (!variantKey) continue;
+    const optionNames: string[] = [];
+    for (const opt of entry.initializer.properties) {
+      const optName = staticPropertyName(opt.name);
+      if (optName) optionNames.push(optName);
+    }
+    keys.set(variantKey, optionNames);
+  }
+  return keys;
 }
 
 function staticPropertyName(name: ts.PropertyName | undefined): string | null {
@@ -251,7 +259,7 @@ type FunctionLike = ts.FunctionDeclaration | ts.ArrowFunction | ts.FunctionExpre
 
 function extractPropsFromFunction(fn: FunctionLike, ctx: FileContext): AstPropDoc[] {
   const param = fn.parameters[0];
-  if (!param || !param.type) {
+  if (!param?.type) {
     return [];
   }
   const propsByName = new Map<string, AstPropDoc>();
@@ -330,66 +338,69 @@ function collectProps(
     collectProps(typeNode.type, out, ctx, visited);
     return;
   }
-
   if (ts.isIntersectionTypeNode(typeNode)) {
     for (const member of typeNode.types) {
       collectProps(member, out, ctx, visited);
     }
     return;
   }
-
   if (ts.isTypeLiteralNode(typeNode)) {
-    for (const member of typeNode.members) {
-      if (ts.isPropertySignature(member)) {
-        addProp(member, out, ctx);
-      }
-    }
+    addPropertySignatures(typeNode.members, out, ctx);
     return;
   }
-
   if (ts.isTypeReferenceNode(typeNode)) {
-    const name = typeReferenceName(typeNode.typeName);
-    if (!name) {
-      return;
-    }
+    collectPropsFromReference(typeNode, out, ctx, visited);
+  }
+  // Unions, function types, mapped types, etc. — not directly enumerable.
+}
 
-    if (TRANSPARENT_WRAPPERS.has(name)) {
-      const arg = typeNode.typeArguments?.[0];
-      if (arg) {
-        collectProps(arg, out, ctx, visited);
-      }
-      return;
-    }
+function collectPropsFromReference(
+  typeNode: ts.TypeReferenceNode,
+  out: Map<string, AstPropDoc>,
+  ctx: FileContext,
+  visited: Set<string>
+): void {
+  const name = typeReferenceName(typeNode.typeName);
+  if (!name) return;
 
-    // Local named type: drill into its body. Don't follow `extends`
-    // clauses — they're typically external (Radix, ComponentProps), and
-    // expanding them would require a full type checker. The runtime
-    // type still lets users pass those props; we just don't enumerate
-    // them in the table, matching the previous engine's filter behavior.
-    if (visited.has(name)) {
-      return;
-    }
-    const aliasDecl = ctx.namedTypes.aliases.get(name);
-    if (aliasDecl) {
-      visited.add(name);
-      collectProps(aliasDecl.type, out, ctx, visited);
-      return;
-    }
-    const interfaceDecl = ctx.namedTypes.interfaces.get(name);
-    if (interfaceDecl) {
-      visited.add(name);
-      for (const member of interfaceDecl.members) {
-        if (ts.isPropertySignature(member)) {
-          addProp(member, out, ctx);
-        }
-      }
-      return;
-    }
-    // External reference — silently skip.
+  if (TRANSPARENT_WRAPPERS.has(name)) {
+    const arg = typeNode.typeArguments?.[0];
+    if (arg) collectProps(arg, out, ctx, visited);
     return;
   }
 
-  // Unions, function types, mapped types, etc. — not directly enumerable.
+  // Local named type: drill into its body. Don't follow `extends`
+  // clauses — they're typically external (Radix, ComponentProps), and
+  // expanding them would require a full type checker. The runtime
+  // type still lets users pass those props; we just don't enumerate
+  // them in the table, matching the previous engine's filter behavior.
+  if (visited.has(name)) return;
+
+  const aliasDecl = ctx.namedTypes.aliases.get(name);
+  if (aliasDecl) {
+    visited.add(name);
+    collectProps(aliasDecl.type, out, ctx, visited);
+    return;
+  }
+
+  const interfaceDecl = ctx.namedTypes.interfaces.get(name);
+  if (interfaceDecl) {
+    visited.add(name);
+    addPropertySignatures(interfaceDecl.members, out, ctx);
+  }
+  // Otherwise: external reference — silently skip.
+}
+
+function addPropertySignatures(
+  members: ts.NodeArray<ts.TypeElement>,
+  out: Map<string, AstPropDoc>,
+  ctx: FileContext
+): void {
+  for (const member of members) {
+    if (ts.isPropertySignature(member)) {
+      addProp(member, out, ctx);
+    }
+  }
 }
 
 function typeReferenceName(name: ts.EntityName): string | null {
@@ -446,8 +457,8 @@ interface JSDocCarrier {
 
 function getJsDocSummary(node: ts.Node, source: string): string {
   const attached = (node as unknown as JSDocCarrier).jsDoc;
-  if (attached && attached.length > 0) {
-    const last = attached[attached.length - 1];
+  const last = attached?.at(-1);
+  if (last) {
     const text = jsDocCommentToText(last.comment);
     if (text) {
       return text;
