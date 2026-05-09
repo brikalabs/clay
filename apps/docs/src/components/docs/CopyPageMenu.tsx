@@ -32,14 +32,16 @@ export function CopyPageMenu({ pageUrl, markdownUrl }: CopyPageMenuProps) {
 
   useDismiss(open, rootRef, () => setOpen(false));
 
-  const copyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(pageUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1400);
-    } catch {
-      // Clipboard unavailable, drop silently.
-    }
+  const copyLink = (): void => {
+    navigator.clipboard.writeText(pageUrl).then(
+      () => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1400);
+      },
+      () => {
+        // Clipboard unavailable, drop silently.
+      }
+    );
   };
 
   return (

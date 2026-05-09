@@ -105,14 +105,16 @@ export function PackageManager(props: PackageManagerProps) {
 
   const command = buildCommand(manager, pkg, dev, isGlobal);
 
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(command);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1200);
-    } catch {
-      // Clipboard blocked, keep the visible command intact.
-    }
+  const copy = (): void => {
+    navigator.clipboard.writeText(command).then(
+      () => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1200);
+      },
+      () => {
+        // Clipboard blocked, keep the visible command intact.
+      }
+    );
   };
 
   return (
