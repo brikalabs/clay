@@ -38,7 +38,7 @@
 import plugin from 'tailwindcss/plugin';
 import { TOKEN_REGISTRY } from './tokens/registry';
 import { SHORTHAND_INDEX } from './tokens/shorthands';
-import type { ResolvedTokenSpec, TokenType } from './tokens/types';
+import type { ResolvedTokenSpec, TailwindNamespace, TokenType } from './tokens/types';
 
 // `:where(...)` collapses to specificity 0 so downstream consumers can
 // override either the dark block or the bare `border` reset with their
@@ -78,6 +78,35 @@ const TYPE_INFO: Readonly<
   opacity: { syntax: '<number>', bucket: 'opacity' },
   blur: { syntax: '<length>', bucket: 'blur' },
 };
+
+/**
+ * Per-token-type utilities registered through `matchUtilities` rather than
+ * `theme.extend`. These types either lack a native Tailwind theme bucket
+ * (`border-style`, `text-transform`, `corner-shape`) or own a bucket whose
+ * derived prefix would collide with another namespace (`fontWeight` vs.
+ * `fontFamily` both produce `font-<name>`). The `matchUtilities` path lets
+ * us pin an explicit, unambiguous prefix per type.
+ *
+ * Order is the registration order in the plugin handler. Each entry maps a
+ * `TailwindNamespace` to the utility prefix it generates and the CSS
+ * declaration property the value flows into.
+ */
+const MATCH_UTILITY_NAMESPACES: ReadonlyArray<{
+  readonly ns: TailwindNamespace;
+  readonly prefix: string;
+  readonly cssProp: string;
+}> = [
+  { ns: 'border-w', prefix: 'border-w', cssProp: 'border-width' },
+  { ns: 'border-style', prefix: 'border-style', cssProp: 'border-style' },
+  { ns: 'font-weight', prefix: 'font-weight', cssProp: 'font-weight' },
+  { ns: 'leading', prefix: 'leading', cssProp: 'line-height' },
+  { ns: 'tracking', prefix: 'tracking', cssProp: 'letter-spacing' },
+  { ns: 'case', prefix: 'case', cssProp: 'text-transform' },
+  { ns: 'corner', prefix: 'corner', cssProp: 'corner-shape' },
+];
+
+const MATCH_UTILITY_BY_NAMESPACE: Partial<Record<TailwindNamespace, (typeof MATCH_UTILITY_NAMESPACES)[number]>> =
+  Object.fromEntries(MATCH_UTILITY_NAMESPACES.map((cfg) => [cfg.ns, cfg]));
 
 /**
  * Per CSS spec, `@property`'s `initial-value` must be a *computed* value,
@@ -134,6 +163,15 @@ interface BaseRules {
 interface PluginContributions {
   readonly base: BaseRules;
   readonly themeExtend: Record<string, Record<string, string>>;
+  /**
+   * Per-namespace value map for the `matchUtilities`-driven utility
+   * families (`border-w-<name>`, `leading-<name>`, …). Outer key is the
+   * `TailwindNamespace`, inner key is the utility name (token's
+   * `utilityAlias` or full token name), inner value is the resolved CSS
+   * value (`var(--name)` for non-component tokens, `var(--name, <fallback>)`
+   * for component tokens so utilities still resolve when a slot is blank).
+   */
+  readonly matchValues: Record<string, Record<string, string>>;
   readonly rootMembership: ReadonlySet<string>;
 }
 
@@ -212,6 +250,27 @@ function emitThemeExtend(
 }
 
 /**
+ * Place the token's resolved CSS value under the per-namespace
+ * `matchUtilities` value map. Component tokens use a fallback chain so the
+ * utility renders even when the slot resolves through a `var(...)` chain
+ * with no `:root` declaration of its own.
+ */
+function emitMatchValue(
+  token: ResolvedTokenSpec,
+  matchValues: Record<string, Record<string, string>>
+): void {
+  const ns = token.tailwindNamespace;
+  if (!ns || !MATCH_UTILITY_BY_NAMESPACE[ns]) return;
+  const cssVar = `--${token.name}`;
+  const utilityName = token.utilityAlias ?? token.name;
+  matchValues[ns] ??= {};
+  matchValues[ns][utilityName] =
+    token.layer === 'component'
+      ? `var(${cssVar}, ${token.defaultLight})`
+      : `var(${cssVar})`;
+}
+
+/**
  * Single-pass walk over the registry that produces every artifact the
  * plugin needs. Replaces three separate walks (membership, base rules,
  * theme.extend) with one, on the live registry the combined cost is
@@ -235,6 +294,7 @@ function buildContributions(
   const root: Record<string, string> = {};
   const dark: Record<string, string> = {};
   const themeExtend: Record<string, Record<string, string>> = {};
+  const matchValues: Record<string, Record<string, string>> = {};
   const rootMembership = new Set<string>();
 
   // Pass 1: classify membership + emit theme.extend, properties, dark in one go.
@@ -258,6 +318,7 @@ function buildContributions(
     const info = TYPE_INFO[token.type];
     emitProperties(token, info, properties);
     emitThemeExtend(token, info, themeExtend);
+    emitMatchValue(token, matchValues);
   }
 
   // Pass 2: cascade scan, anything referenced from another spec's default
@@ -276,7 +337,7 @@ function buildContributions(
     }
   }
 
-  return { base: { properties, root, dark }, themeExtend, rootMembership };
+  return { base: { properties, root, dark }, themeExtend, matchValues, rootMembership };
 }
 
 /**
@@ -295,6 +356,7 @@ export const __internal = {
 const contributions = buildContributions(TOKEN_REGISTRY, SHORTHAND_INDEX.tokenRefs);
 const baseRules = contributions.base;
 const themeExtend = contributions.themeExtend;
+const matchValues = contributions.matchValues;
 
 // Pre-build the shorthand-utility map once so the plugin handler doesn't
 // allocate it on every Tailwind compile pass.
@@ -324,6 +386,19 @@ const clayTailwindPlugin: ReturnType<typeof plugin> = plugin(
     // value map so each entry behaves like a static utility but still
     // participates in v4's tree-shaking.
     matchUtilities(shorthandUtilities, { values: { DEFAULT: '' } });
+
+    // Per-namespace token utilities (`border-w-<name>`, `leading-<name>`, ...)
+    // for token types that don't fit cleanly into a `theme.extend` bucket.
+    // Same JIT path as the shorthand bundle: classes are only emitted when
+    // referenced from scanned source.
+    for (const cfg of MATCH_UTILITY_NAMESPACES) {
+      const values = matchValues[cfg.ns];
+      if (!values) continue;
+      matchUtilities(
+        { [cfg.prefix]: (value: string) => ({ [cfg.cssProp]: value }) },
+        { values }
+      );
+    }
   },
   { theme: { extend: themeExtend } }
 );

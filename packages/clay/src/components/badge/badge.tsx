@@ -5,18 +5,21 @@ import * as React from 'react';
 import { cn } from '../../primitives/cn';
 
 const badgeVariants = cva(
-  'badge corner-themed inline-flex w-fit shrink-0 items-center justify-center overflow-hidden whitespace-nowrap rounded-badge border border-transparent text-xs transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3',
+  'badge corner-themed inline-flex w-fit shrink-0 items-center justify-center overflow-hidden whitespace-nowrap rounded-badge border border-transparent text-xs transition-[color,box-shadow] focus-visible:border-badge-focus-border focus-visible:ring-[3px] focus-visible:ring-badge-focus-ring/50 aria-invalid:border-badge-invalid-border aria-invalid:ring-badge-invalid-ring/20 dark:aria-invalid:ring-badge-invalid-ring/40 [&>svg]:pointer-events-none [&>svg]:size-3',
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground [a&]:hover:bg-primary/90',
-        secondary: 'bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90',
+        default:
+          'bg-badge-filled-container text-badge-filled-label [a&]:hover:bg-badge-filled-container/90',
+        secondary:
+          'bg-badge-secondary-container text-badge-secondary-label [a&]:hover:bg-badge-secondary-container/90',
         destructive:
-          'bg-destructive text-white focus-visible:ring-destructive/20 dark:bg-destructive/60 dark:focus-visible:ring-destructive/40 [a&]:hover:bg-destructive/90',
+          'bg-badge-destructive-container text-badge-destructive-label focus-visible:ring-badge-destructive-focus/20 dark:bg-badge-destructive-container/60 dark:focus-visible:ring-badge-destructive-focus/40 [a&]:hover:bg-badge-destructive-container/90',
         outline:
-          'border-border text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground',
-        ghost: '[a&]:hover:bg-accent [a&]:hover:text-accent-foreground',
-        link: 'text-primary underline-offset-4 [a&]:hover:underline',
+          'border-badge-outline-border text-badge-outline-label [a&]:hover:bg-badge-ghost-hover-container [a&]:hover:text-badge-ghost-hover-label',
+        ghost:
+          '[a&]:hover:bg-badge-ghost-hover-container [a&]:hover:text-badge-ghost-hover-label',
+        link: 'text-badge-link-color underline-offset-4 [a&]:hover:underline',
       },
     },
     defaultVariants: {

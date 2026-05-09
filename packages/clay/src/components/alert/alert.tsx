@@ -9,14 +9,14 @@ const alertVariants = cva(
   {
     variants: {
       variant: {
-        default: 'border-border bg-background text-foreground',
+        default: 'border-alert-border-color bg-alert-background text-alert-foreground',
         destructive:
-          'bg-[color-mix(in_oklch,var(--destructive)_var(--alert-tint-bg-amount),var(--alert-tint-base))] border-[color-mix(in_oklch,var(--destructive)_var(--alert-tint-border-amount),var(--alert-tint-base))] text-foreground [--alert-accent:var(--destructive)]',
-        info: 'bg-[color-mix(in_oklch,var(--data-1)_var(--alert-tint-bg-amount),var(--alert-tint-base))] border-[color-mix(in_oklch,var(--data-1)_var(--alert-tint-border-amount),var(--alert-tint-base))] text-foreground [--alert-accent:var(--data-1)]',
+          'bg-[color-mix(in_oklch,var(--destructive)_var(--alert-tint-bg-amount),var(--alert-tint-base))] border-[color-mix(in_oklch,var(--destructive)_var(--alert-tint-border-amount),var(--alert-tint-base))] text-alert-foreground [--alert-accent:var(--destructive)]',
+        info: 'bg-[color-mix(in_oklch,var(--data-1)_var(--alert-tint-bg-amount),var(--alert-tint-base))] border-[color-mix(in_oklch,var(--data-1)_var(--alert-tint-border-amount),var(--alert-tint-base))] text-alert-foreground [--alert-accent:var(--data-1)]',
         warning:
-          'bg-[color-mix(in_oklch,var(--data-2)_var(--alert-tint-bg-amount),var(--alert-tint-base))] border-[color-mix(in_oklch,var(--data-2)_var(--alert-tint-border-amount),var(--alert-tint-base))] text-foreground [--alert-accent:var(--data-2)]',
+          'bg-[color-mix(in_oklch,var(--data-2)_var(--alert-tint-bg-amount),var(--alert-tint-base))] border-[color-mix(in_oklch,var(--data-2)_var(--alert-tint-border-amount),var(--alert-tint-base))] text-alert-foreground [--alert-accent:var(--data-2)]',
         success:
-          'bg-[color-mix(in_oklch,var(--data-3)_var(--alert-tint-bg-amount),var(--alert-tint-base))] border-[color-mix(in_oklch,var(--data-3)_var(--alert-tint-border-amount),var(--alert-tint-base))] text-foreground [--alert-accent:var(--data-3)]',
+          'bg-[color-mix(in_oklch,var(--data-3)_var(--alert-tint-bg-amount),var(--alert-tint-base))] border-[color-mix(in_oklch,var(--data-3)_var(--alert-tint-border-amount),var(--alert-tint-base))] text-alert-foreground [--alert-accent:var(--data-3)]',
       },
     },
     defaultVariants: {
@@ -64,7 +64,7 @@ function AlertTitle({ className, ...props }: Readonly<AlertTitleProps>) {
       data-slot="alert-title"
       className={cn(
         'col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight',
-        'group-data-[variant=destructive]/alert:text-destructive',
+        'group-data-[variant=destructive]/alert:text-alert-destructive-title',
         className
       )}
       {...props}
@@ -86,7 +86,7 @@ function AlertDescription({ className, ...props }: Readonly<AlertDescriptionProp
     <div
       data-slot="alert-description"
       className={cn(
-        'col-start-2 grid justify-items-start gap-1 text-muted-foreground text-sm [&_p]:leading-relaxed',
+        'col-start-2 grid justify-items-start gap-1 text-alert-description-foreground text-sm [&_p]:leading-relaxed',
         className
       )}
       {...props}
@@ -139,7 +139,7 @@ function AlertClose({ children, className, ...props }: Readonly<AlertCloseProps>
       data-slot="alert-close"
       aria-label="Dismiss"
       className={cn(
-        'col-start-3 row-start-1 flex size-5 shrink-0 items-center justify-center self-start rounded text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2',
+        'col-start-3 row-start-1 flex size-5 shrink-0 items-center justify-center self-start rounded text-alert-close-foreground transition-colors hover:bg-alert-close-bg-hover hover:text-alert-close-foreground-hover focus-visible:outline-2 focus-visible:outline-alert-close-ring focus-visible:outline-offset-2',
         className
       )}
       {...props}

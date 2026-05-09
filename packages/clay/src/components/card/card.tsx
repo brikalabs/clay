@@ -7,7 +7,7 @@ const cardVariants = cva(
   {
     variants: {
       accent: {
-        none: 'border-border',
+        none: 'border-card-border-color',
         // Using theme data-* colors for consistent theming
         blue: 'border-transparent [--accent-bg-hover:color-mix(in_oklch,var(--data-1),transparent_90%)] [--accent-bg:color-mix(in_oklch,var(--data-1),transparent_95%)] [--accent-border:color-mix(in_oklch,var(--data-1),transparent_70%)] [--accent:var(--data-1)]',
         emerald:
@@ -30,7 +30,8 @@ const cardVariants = cva(
       {
         accent: 'none',
         interactive: true,
-        className: 'border-foreground/10 hover:border-foreground/20 hover:shadow-overlay',
+        className:
+          'border-card-interactive-border-rest hover:border-card-interactive-border-hover hover:shadow-overlay',
       },
       {
         accent: ['blue', 'emerald', 'violet', 'orange', 'purple', 'amber'],
@@ -113,7 +114,7 @@ function CardDescription({ className, ...props }: React.ComponentProps<'p'>) {
   return (
     <p
       data-slot="card-description"
-      className={cn('text-muted-foreground text-sm', className)}
+      className={cn('text-card-description-color text-sm', className)}
       {...props}
     />
   );

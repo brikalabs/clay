@@ -27,5 +27,21 @@ registerComponent(meta, {
       default: 'var(--muted-foreground)',
       description: 'Input placeholder text color.',
     },
+    'invalid-border': {
+      default: 'var(--destructive)',
+      description: 'Border color drawn when the input is in an invalid state (`aria-invalid=true`).',
+    },
+    'selection-container': {
+      default: 'var(--primary)',
+      description: 'Background color of selected text inside the input.',
+    },
+    'selection-label': {
+      default: 'var(--primary-foreground)',
+      description: 'Foreground color of selected text inside the input.',
+    },
+    'file-label': {
+      default: 'var(--foreground)',
+      description: 'Foreground color of the inline file picker button rendered for `type="file"` inputs.',
+    },
   },
 });

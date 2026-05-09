@@ -2,29 +2,27 @@ import { registerComponent } from '../../tokens/define';
 import { SPACING_1, SPACING_2, SPACING_4 } from '../../tokens/spacing';
 import { meta } from './meta';
 
+// Calendar renders inside a `card`-shorthand surface, so the `surface`
+// bundle (border + motion) and the `gap` geometry slot would never reach
+// any element. Only the tokens actually consumed by `calendar.tsx`
+// utility classes are registered.
 registerComponent(meta, {
   radius: {
     default: 'var(--radius-control)',
     description: 'Calendar day button corner radius.',
   },
-  surface: true,
   backdropBlur: {
     default: '0px',
     description:
       'Backdrop blur applied to the calendar surface. Set non-zero for a frosted-glass treatment.',
   },
-  geometry: { paddingX: SPACING_4, paddingY: SPACING_4, gap: SPACING_1 },
+  geometry: { paddingX: SPACING_4, paddingY: SPACING_4 },
   slots: {
     'range-margin-y': {
       default: SPACING_1,
       description:
         'Vertical margin between the range highlight bar and the cell edges. Increase to leave more breathing room above and below the bar.',
       type: 'size',
-    },
-    'range-height': {
-      default: 'calc(100% - calc(var(--calendar-range-margin-y) * 2))',
-      description:
-        'Height of the range highlight bar between the start and end days. Defaults to fill the cell minus the margin on each side; override for an explicit pill height.',
     },
     'range-backdrop-blur': {
       default: '0px',
@@ -91,6 +89,26 @@ registerComponent(meta, {
       default: 'var(--muted-foreground)',
       description:
         'Text color of days that fall outside the visible month (the leading/trailing greyed-out dates).',
+    },
+    'surface-container': {
+      default: 'var(--card)',
+      description:
+        'Background color of the calendar surface. Defaults to the theme `--card` so the calendar reads as a card-shorthand surface.',
+    },
+    'surface-label': {
+      default: 'var(--card-foreground)',
+      description:
+        'Default text color of the calendar surface (caption, day numbers). Defaults to the theme `--card-foreground`.',
+    },
+    'surface-border': {
+      default: 'var(--border)',
+      description:
+        'Border color drawn around the calendar surface. Defaults to the theme `--border`.',
+    },
+    'range-middle-foreground': {
+      default: 'var(--foreground)',
+      description:
+        'Text color of day numbers inside a selected range (excluding the start/end pills). Defaults to the theme `--foreground`.',
     },
   },
 });

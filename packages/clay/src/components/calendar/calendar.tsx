@@ -39,7 +39,7 @@ function Calendar({
       showOutsideDays={showOutsideDays}
       captionLayout={captionLayout}
       className={cn(
-        'not-prose card corner-themed w-fit rounded-card border-border bg-card-container text-card-label shadow-card backdrop-blur-calendar',
+        'not-prose card corner-themed w-fit rounded-card border-calendar-surface-border bg-calendar-surface-container text-calendar-surface-label shadow-card backdrop-blur-calendar',
         'px-calendar-padding-x py-calendar-padding-y',
         className
       )}
@@ -169,7 +169,7 @@ function CalendarDayButton({
           !modifiers.range_middle &&
           'bg-calendar-pill text-calendar-pill-foreground font-semibold hover:bg-calendar-pill hover:text-calendar-pill-foreground',
         modifiers.range_middle &&
-          'bg-transparent text-foreground hover:bg-calendar-range-bar-hover',
+          'bg-transparent text-calendar-range-middle-foreground hover:bg-calendar-range-bar-hover',
         modifiers.outside && 'text-calendar-outside-foreground',
         className
       )}

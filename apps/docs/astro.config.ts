@@ -32,7 +32,13 @@ function loadDotenv(filename: string): void {
 loadDotenv('.env.local');
 loadDotenv('.env');
 
-const SITE = process.env.SITE;
+const isDev = process.argv.includes('dev');
+const isBuild = process.argv.includes('build');
+
+// SITE is required for canonical / OG meta. Production builds must set it
+// explicitly via .env or the deploy environment; dev gets a localhost
+// fallback so a fresh clone runs without first copying .env.example.
+const SITE = process.env.SITE ?? (isDev ? 'http://localhost:4321' : undefined);
 
 function safeGit(args: string): string {
   try {
@@ -47,11 +53,10 @@ function safeGit(args: string): string {
 const buildCommit = safeGit('rev-parse --short HEAD') || 'dev';
 const buildDate = safeGit('log -1 --format=%cI') || new Date().toISOString();
 
-const isDev = process.argv.includes('dev');
-const isBuild = process.argv.includes('build');
-
 if (isBuild && !SITE) {
-  throw new Error('SITE env var is required for production builds (set in .env or your deploy environment)');
+  throw new Error(
+    'SITE env var is required for production builds (set in .env or your deploy environment)'
+  );
 }
 
 // Resolve all @brika/clay/* imports directly to source.
@@ -107,6 +112,12 @@ const clayAliases = [
   { find: '@brika/clay/styles', replacement: resolve(claySrc, 'styles/clay.css') },
   // Catch-all root export.
   { find: '@brika/clay', replacement: resolve(claySrc, 'index.ts') },
+  // Internal docs-side alias for raw access into the Clay source tree
+  // (used by `import.meta.glob` to discover meta + demos files). Mirrors
+  // the `~clay/*` mapping in `tsconfig.json`. Trailing slashes on both
+  // sides so Vite treats it as a prefix (`~clay/components/...` →
+  // `<absolute>/components/...`).
+  { find: /^~clay\//, replacement: `${claySrc}/` },
 ];
 
 export default defineConfig({

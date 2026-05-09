@@ -23,4 +23,20 @@ registerComponent(meta, {
   motion: true,
   geometry: { paddingX: SPACING_2, paddingY: SPACING_1 },
   typography: { fontSize: 'var(--text-label-md)', fontWeight: '500' },
+  slots: {
+    'surface-container': {
+      default: 'var(--foreground)',
+      description:
+        'Background of the tooltip body. Defaults to the inverted page foreground for the conventional dark-on-light tooltip.',
+    },
+    'surface-label': {
+      default: 'var(--background)',
+      description: 'Foreground color of the tooltip body. Defaults to the inverted page background.',
+    },
+    'arrow-color': {
+      default: 'var(--foreground)',
+      description:
+        'Fill of the small arrow that points from the tooltip body towards the trigger. Override jointly with `surface-container` to keep the arrow flush.',
+    },
+  },
 });

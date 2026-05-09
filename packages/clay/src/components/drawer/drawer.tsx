@@ -17,7 +17,7 @@ function DrawerOverlay({
   return (
     <DrawerPrimitive.Overlay
       data-slot="drawer-overlay"
-      className={cn('fixed inset-0 z-50 bg-black/50', className)}
+      className={cn('fixed inset-0 z-50 bg-drawer-overlay-color', className)}
       {...props}
     />
   );
@@ -34,12 +34,12 @@ function DrawerContent({
       <DrawerPrimitive.Content
         data-slot="drawer-content"
         className={cn(
-          'drawer corner-themed fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-drawer border-b-0 bg-popover pt-4 shadow-drawer backdrop-blur-drawer',
+          'drawer corner-themed fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-drawer border-b-0 bg-drawer-surface-container pt-4 shadow-drawer backdrop-blur-drawer',
           className
         )}
         {...props}
       >
-        <div className="mx-auto mb-4 h-1.5 w-12 shrink-0 rounded-full bg-muted" />
+        <div className="mx-auto mb-4 h-1.5 w-12 shrink-0 rounded-full bg-drawer-handle-color" />
         {children}
       </DrawerPrimitive.Content>
     </DrawerPortal>
@@ -86,7 +86,7 @@ function DrawerDescription({
   return (
     <DrawerPrimitive.Description
       data-slot="drawer-description"
-      className={cn('text-muted-foreground text-sm', className)}
+      className={cn('text-drawer-description-color text-sm', className)}
       {...props}
     />
   );

@@ -44,7 +44,7 @@ function SheetContent({
       <SheetPrimitive.Content
         data-slot="sheet-content"
         className={cn(
-          'sheet fixed z-50 flex flex-col bg-popover text-popover-foreground shadow-sheet backdrop-blur-sheet transition ease-in-out data-[state=closed]:animate-out data-[state=open]:animate-in data-[state=closed]:duration-300 data-[state=open]:duration-500',
+          'sheet fixed z-50 flex flex-col bg-sheet-surface-container text-sheet-surface-label shadow-sheet backdrop-blur-sheet transition ease-in-out data-[state=closed]:animate-out data-[state=open]:animate-in data-[state=closed]:duration-300 data-[state=open]:duration-500',
           side === 'right' &&
             'data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right inset-y-0 right-0 h-full w-3/4 border-l sm:max-w-sm',
           side === 'left' &&
@@ -59,7 +59,7 @@ function SheetContent({
       >
         {children}
         {showCloseButton && (
-          <SheetPrimitive.Close className="absolute top-4 right-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
+          <SheetPrimitive.Close className="absolute top-4 right-4 rounded-xs opacity-70 ring-offset-sheet-close-ring-offset-color transition-opacity hover:opacity-100 focus:outline-hidden focus:ring-2 focus:ring-sheet-close-ring-color focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-sheet-close-active-container">
             <XIcon className="size-4" />
             <span className="sr-only">Close</span>
           </SheetPrimitive.Close>
@@ -93,7 +93,7 @@ function SheetTitle({ className, ...props }: React.ComponentProps<typeof SheetPr
   return (
     <SheetPrimitive.Title
       data-slot="sheet-title"
-      className={cn('font-semibold text-foreground', className)}
+      className={cn('font-semibold text-sheet-title-color', className)}
       {...props}
     />
   );
@@ -106,7 +106,7 @@ function SheetDescription({
   return (
     <SheetPrimitive.Description
       data-slot="sheet-description"
-      className={cn('text-muted-foreground text-sm', className)}
+      className={cn('text-sheet-description-color text-sm', className)}
       {...props}
     />
   );

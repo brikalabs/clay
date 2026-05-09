@@ -223,7 +223,7 @@ export function SliderValue({
   return (
     <div
       className={cn(
-        'flex items-center gap-0.5 rounded-control border border-input-border bg-input-container px-1.5 py-0.5 font-mono text-[10px] text-input-label has-[input:focus-visible]:border-ring',
+        'flex items-center gap-0.5 rounded-control border border-slider-value-border bg-slider-value-container px-1.5 py-0.5 font-mono text-[10px] text-slider-value-label has-[input:focus-visible]:border-slider-value-ring',
         className
       )}
     >
@@ -239,7 +239,7 @@ export function SliderValue({
           'bg-transparent text-right outline-none [-moz-appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none'
         )}
       />
-      {unit && <span className="text-muted-foreground">{unit}</span>}
+      {unit && <span className="text-slider-value-unit">{unit}</span>}
     </div>
   );
 }

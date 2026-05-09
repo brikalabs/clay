@@ -35,7 +35,7 @@ const ResizableHandle = ({
   <Separator
     data-slot="resizable-handle"
     className={cn(
-      'relative shrink-0 bg-resizable-handle-color outline-none transition-colors hover:bg-resizable-handle-hover/40 focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1',
+      'relative shrink-0 bg-resizable-handle-color outline-none transition-colors hover:bg-resizable-handle-hover/40 focus-visible:ring-1 focus-visible:ring-resizable-handle-ring focus-visible:ring-offset-1',
       // Vertical bar (horizontal group)
       '[&[aria-orientation=vertical]]:flex [&[aria-orientation=vertical]]:w-resizable-handle-size [&[aria-orientation=vertical]]:cursor-col-resize [&[aria-orientation=vertical]]:items-center [&[aria-orientation=vertical]]:justify-center',
       // Horizontal bar (vertical group)
@@ -45,8 +45,8 @@ const ResizableHandle = ({
     {...props}
   >
     {withHandle && (
-      <div className="z-10 flex h-4 w-3 items-center justify-center rounded-sm border border-border bg-background shadow-sm">
-        <GripVerticalIcon className="size-2.5 text-muted-foreground" />
+      <div className="z-10 flex h-4 w-3 items-center justify-center rounded-sm border border-resizable-grip-border bg-resizable-grip-container shadow-sm">
+        <GripVerticalIcon className="size-2.5 text-resizable-grip-icon" />
       </div>
     )}
   </Separator>

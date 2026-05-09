@@ -33,5 +33,28 @@ registerComponent(meta, {
         'Backdrop blur applied to the modal scrim. Set non-zero so the page content behind the dialog is frosted by the overlay itself.',
       type: 'blur',
     },
+    'description-color': {
+      default: 'var(--muted-foreground)',
+      description:
+        'Foreground color of `<DialogDescription>` text rendered beneath the dialog title.',
+    },
+    'close-active-container': {
+      default: 'var(--accent)',
+      description: 'Background of the built-in close-X button when its data-state is open.',
+    },
+    'close-active-label': {
+      default: 'var(--muted-foreground)',
+      description: 'Glyph color of the built-in close-X button when its data-state is open.',
+    },
+    'close-focus-ring-color': {
+      default: 'var(--ring)',
+      description:
+        'Focus ring color of the built-in close-X button when keyboard-focused. Defaults to the theme ring color.',
+    },
+    'close-focus-ring-offset-color': {
+      default: 'var(--background)',
+      description:
+        'Color drawn between the close-X button and its focus ring (the ring offset). Should match the page background so the offset reads as a gap.',
+    },
   },
 });

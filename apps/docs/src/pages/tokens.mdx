@@ -148,11 +148,29 @@ import CodeSource from "~/components/docs/CodeSource.astro";
     | `color` | `bg-…`, `text-…`, `border-…`, `ring-…`, `fill-…`, `stroke-…`, `outline-…`, `decoration-…`, `from-…`/`via-…`/`to-…`, `accent-…`, `caret-…`, `placeholder-…` | `--calendar-pill` | `bg-calendar-pill`, `text-calendar-pill`, … |
     | `radius` | `rounded-…` | `--card-radius` (alias `card`) | `rounded-card` |
     | `shadow` | `shadow-…` | `--card-shadow` (alias `card`) | `shadow-card` |
+    | `size` | `w-…`, `h-…`, `p-…`, `m-…`, `gap-…`, … | `--switch-track-width` | `w-switch-track-width`, … |
+    | `font-family` | `font-…` | `--button-font-family` (alias `button`) | `font-button` |
+    | `font-size` | `text-…` | `--button-font-size` (alias `button`) | `text-button` |
+    | `motion` (`duration`) | `duration-…` | `--card-duration` (alias `card`) | `duration-card` |
+    | `motion` (`easing`) | `ease-…` | `--card-easing` (alias `card`) | `ease-card` |
+    | `opacity` | `opacity-…` | `--button-disabled-opacity` (alias `button`) | `opacity-button` |
+    | `blur` | `blur-…`, `backdrop-blur-…` | `--card-backdrop-blur` (alias `card`) | `backdrop-blur-card`, `blur-card` |
+    | `border-width` | `border-w-…` | `--card-border-width` (alias `card`) | `border-w-card` |
+    | `border-style` | `border-style-…` | `--card-border-style` (alias `card`) | `border-style-card` |
+    | `font-weight` | `font-weight-…` | `--button-font-weight` (alias `button`) | `font-weight-button` |
+    | `line-height` | `leading-…` | `--button-line-height` (alias `button`) | `leading-button` |
+    | `letter-spacing` | `tracking-…` | `--button-letter-spacing` (alias `button`) | `tracking-button` |
+    | `text-transform` | `case-…` | `--button-text-transform` (alias `button`) | `case-button` |
+    | `corner-shape` | `corner-…` | `--card-corner-shape` (alias `card`) | `corner-card` |
 
-    `border-width`, `size`, and other scalar token types do **not**
-    generate utilities, write them inline with the existing arbitrary
-    syntax (`size-(--token)`, `border-(length:--token)`). Only the three
-    types above carry a `tailwindNamespace`.
+    Every Layer-2 token type now carries a `tailwindNamespace` that maps
+    to a utility prefix. The seven longer-form prefixes (`border-w`,
+    `border-style`, `font-weight`, `leading`, `tracking`, `case`,
+    `corner`) are registered through `matchUtilities` rather than the
+    standard `theme.extend` path, either because the underlying CSS
+    property has no native Tailwind theme bucket or because the bucket's
+    derived prefix would collide with an existing namespace
+    (`fontWeight` and `fontFamily` both produce `font-…`).
   </div>
 
   <h3 id="utilities-naming" class="mt-8 mb-2 font-display text-xl text-clay-strong">
