@@ -95,7 +95,7 @@ function listAllComponentSourceFiles(componentsDir: string): string[] {
     }
   };
   walk(componentsDir);
-  return out.sort();
+  return out.sort((a, b) => a.localeCompare(b));
 }
 
 // Bump when the cache file shape or generation logic changes so old

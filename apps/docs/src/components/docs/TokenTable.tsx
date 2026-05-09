@@ -173,7 +173,9 @@ export function TokenTable(props: TokenTableProps) {
     return <p className="not-prose font-mono text-clay-subtle text-sm">No tokens match these filters yet.</p>;
   }
 
-  const countLabel = `${filtered.length}${filtered.length !== all.length ? ` of ${all.length}` : ''} token${all.length === 1 ? '' : 's'}`;
+  const totalSuffix = filtered.length === all.length ? '' : ` of ${all.length}`;
+  const pluralSuffix = all.length === 1 ? '' : 's';
+  const countLabel = `${filtered.length}${totalSuffix} token${pluralSuffix}`;
 
   return (
     <section className="not-prose flex flex-col gap-6">
