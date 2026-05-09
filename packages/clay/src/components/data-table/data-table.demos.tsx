@@ -38,10 +38,10 @@ const methodLabel: Record<Payment['method'], string> = {
 };
 
 const basicData: Payment[] = [
-  { id: 'INV-001', status: 'paid', method: 'credit_card', amount: 129.0, email: 'lena@acme.io' },
+  { id: 'INV-001', status: 'paid', method: 'credit_card', amount: 129, email: 'lena@acme.io' },
   { id: 'INV-002', status: 'pending', method: 'paypal', amount: 42.5, email: 'mateo@northwind.dev' },
   { id: 'INV-003', status: 'failed', method: 'credit_card', amount: 980.75, email: 'priya@globex.com' },
-  { id: 'INV-004', status: 'paid', method: 'bank_transfer', amount: 2450.0, email: 'jonas@hooli.io' },
+  { id: 'INV-004', status: 'paid', method: 'bank_transfer', amount: 2450, email: 'jonas@hooli.io' },
   { id: 'INV-005', status: 'paid', method: 'paypal', amount: 18.99, email: 'aiko@initech.jp' },
   { id: 'INV-006', status: 'pending', method: 'credit_card', amount: 312.4, email: 'sam@umbrella.co' },
 ];
@@ -49,11 +49,11 @@ const basicData: Payment[] = [
 const sortableData: Payment[] = [
   ...basicData,
   { id: 'INV-007', status: 'paid', method: 'credit_card', amount: 76.2, email: 'dani@stark.io' },
-  { id: 'INV-008', status: 'failed', method: 'bank_transfer', amount: 540.0, email: 'oksana@tessier.fr' },
+  { id: 'INV-008', status: 'failed', method: 'bank_transfer', amount: 540, email: 'oksana@tessier.fr' },
   { id: 'INV-009', status: 'paid', method: 'paypal', amount: 219.99, email: 'bea@aperture.dev' },
-  { id: 'INV-010', status: 'pending', method: 'bank_transfer', amount: 88.0, email: 'ravi@blackmesa.org' },
-  { id: 'INV-011', status: 'paid', method: 'credit_card', amount: 1499.0, email: 'noor@cyberdyne.ai' },
-  { id: 'INV-012', status: 'failed', method: 'paypal', amount: 12.0, email: 'yuki@pied-piper.io' },
+  { id: 'INV-010', status: 'pending', method: 'bank_transfer', amount: 88, email: 'ravi@blackmesa.org' },
+  { id: 'INV-011', status: 'paid', method: 'credit_card', amount: 1499, email: 'noor@cyberdyne.ai' },
+  { id: 'INV-012', status: 'failed', method: 'paypal', amount: 12, email: 'yuki@pied-piper.io' },
 ];
 
 const paginatedData: Payment[] = Array.from({ length: 25 }, (_, i) => {

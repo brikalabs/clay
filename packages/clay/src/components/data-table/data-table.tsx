@@ -91,7 +91,7 @@ function DataTable<TData, TValue = unknown>({
   onRowClick,
   emptyMessage = 'No results.',
   className,
-}: DataTableProps<TData, TValue>) {
+}: Readonly<DataTableProps<TData, TValue>>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [rowSelection, setRowSelection] = React.useState({});
 
@@ -198,7 +198,7 @@ function DataTableColumnHeader<TData, TValue>({
   children,
   className,
   ...props
-}: DataTableColumnHeaderProps<TData, TValue>) {
+}: Readonly<DataTableColumnHeaderProps<TData, TValue>>) {
   if (!column.getCanSort()) {
     return <span className={cn('font-medium', className)}>{children}</span>;
   }
