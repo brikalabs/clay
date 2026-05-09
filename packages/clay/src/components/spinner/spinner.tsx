@@ -29,8 +29,8 @@ export interface SpinnerProps extends Omit<React.SVGProps<SVGSVGElement>, 'ref'>
   size?: SpinnerSize;
   /**
    * Optional accessible label announcing the loading state. When
-   * provided, the spinner is wrapped in a `role="status"` element with
-   * an sr-only label so assistive tech announces it. When omitted, the
+   * provided, the spinner is wrapped in an `<output>` element with an
+   * sr-only label so assistive tech announces it. When omitted, the
    * spinner is treated as decorative and marked `aria-hidden`.
    */
   label?: string;
@@ -50,8 +50,8 @@ export interface SpinnerProps extends Omit<React.SVGProps<SVGSVGElement>, 'ref'>
  * track the local text tone.
  *
  * Decorative by default, when no `label` is provided the icon is
- * marked `aria-hidden="true"`. Pass a `label` to render a
- * `role="status"` wrapper with an sr-only string for screen readers.
+ * marked `aria-hidden="true"`. Pass a `label` to render an `<output>`
+ * wrapper with an sr-only string for screen readers.
  */
 function Spinner({
   size = 'default',
@@ -61,14 +61,14 @@ function Spinner({
 }: Readonly<SpinnerProps>) {
   if (label !== undefined) {
     return (
-      <span data-slot="spinner" role="status" className="inline-flex items-center">
+      <output data-slot="spinner" className="inline-flex items-center">
         <Loader2Icon
           aria-hidden="true"
           className={cn(spinnerVariants({ size }), className)}
           {...props}
         />
         <span className="sr-only">{label}</span>
-      </span>
+      </output>
     );
   }
 

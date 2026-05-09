@@ -105,7 +105,7 @@ function DatePicker({
         align="start"
         className="w-auto p-0"
       >
-        <Calendar mode="single" selected={value} onSelect={handleSelect} initialFocus />
+        <Calendar mode="single" selected={value} onSelect={handleSelect} autoFocus />
       </PopoverContent>
     </Popover>
   );
@@ -213,7 +213,7 @@ function DateRangePicker({
           selected={value}
           onSelect={handleSelect}
           numberOfMonths={numberOfMonths}
-          initialFocus
+          autoFocus
         />
       </PopoverContent>
     </Popover>
