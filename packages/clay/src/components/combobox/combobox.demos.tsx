@@ -57,7 +57,8 @@ export function ComboboxFormDemo() {
       onSubmit={(event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        globalThis.alert(`framework=${data.get('framework') ?? ''}`);
+        const value = data.get('framework');
+        globalThis.alert(`framework=${typeof value === 'string' ? value : ''}`);
       }}
     >
       <Combobox

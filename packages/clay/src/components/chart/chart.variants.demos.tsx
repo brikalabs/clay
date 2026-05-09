@@ -208,8 +208,9 @@ const DONUT_CONFIG: ChartConfig = {
  */
 function DonutCenterLabel(props: Readonly<{ viewBox?: unknown }>) {
   const viewBox = props.viewBox as { cx?: number; cy?: number } | undefined;
-  if (!viewBox || viewBox.cx === undefined || viewBox.cy === undefined) return null;
-  const { cx, cy } = viewBox;
+  const cx = viewBox?.cx;
+  const cy = viewBox?.cy;
+  if (cx === undefined || cy === undefined) return null;
   return (
     <text x={cx} y={cy} textAnchor="middle" dominantBaseline="middle">
       <tspan x={cx} y={cy} className="fill-foreground font-semibold text-3xl">

@@ -36,7 +36,7 @@ const CLAY_COMPONENTS: readonly ComponentMeta[] = Object.values(metaModules)
   .map((m) => m.meta)
   .sort((a, b) => a.name.localeCompare(b.name));
 
-// ─── Demo modules (functions + demoMeta) ──────────────────────────────────────
+// ─── Demo modules (functions + demoMeta) ──────────────────────────────────
 
 interface DemosModule {
   readonly demoMeta?: readonly DemoInput[];
@@ -89,7 +89,7 @@ const FILES_BY_SLUG = (() => {
 
 function ownerFile(slug: string, fn: unknown): DemoFile | undefined {
   return FILES_BY_SLUG.get(slug)?.find((file) =>
-    Object.values(file.mod).some((value) => value === fn)
+    Object.values(file.mod).includes(fn)
   );
 }
 
@@ -97,7 +97,7 @@ function demoMetaFor(slug: string): readonly DemoInput[] {
   return (FILES_BY_SLUG.get(slug) ?? []).flatMap((file) => file.mod.demoMeta ?? []);
 }
 
-// ─── Source code extraction ────────────────────────────────────────────────────
+// ─── Source code extraction ───────────────────────────────────────────
 // Lives in `./extract-demo-code.ts` so it's testable under Bun without
 // pulling in the Vite-only `import.meta.glob` calls that this module makes.
 
@@ -129,7 +129,7 @@ function resolveDemo(slug: string, input: DemoInput): ComponentDemo {
   };
 }
 
-// ─── Public types ─────────────────────────────────────────────────────────────
+// ─── Public types ────────────────────────────────────────────────
 
 export interface ComponentDocs {
   readonly demos: readonly ComponentDemo[];
@@ -143,7 +143,7 @@ export interface ComponentEntry extends ComponentMeta, ComponentDocs {
   readonly externalDocs: readonly ExternalDoc[];
 }
 
-// ─── Composed entries ─────────────────────────────────────────────────────────
+// ─── Composed entries ─────────────────────────────────────────────
 
 const ENTRIES: readonly ComponentEntry[] = CLAY_COMPONENTS.map((meta) => ({
   slug: meta.name,

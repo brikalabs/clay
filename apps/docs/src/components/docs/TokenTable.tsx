@@ -71,7 +71,9 @@ function deriveTitle(p: TokenTableProps): string {
   const cat = p.category && CATEGORY_META[p.category].label;
   const layer = p.layer && LAYER_LABEL[p.layer];
   if (cat && layer) return `${layer} · ${cat}`;
-  return cat ? `${cat} tokens` : layer ? `${layer} tokens` : 'All tokens';
+  if (cat) return `${cat} tokens`;
+  if (layer) return `${layer} tokens`;
+  return 'All tokens';
 }
 
 function CopyButton({ text, label }: { readonly text: string; readonly label: string }) {
