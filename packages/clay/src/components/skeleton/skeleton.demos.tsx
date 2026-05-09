@@ -23,8 +23,8 @@ export function SkeletonCardDemo() {
 export function SkeletonTableDemo() {
   return (
     <div className="flex flex-col gap-2 w-full max-w-md">
-      {[1, 2, 3].map((i) => (
-        <div key={i} className="flex items-center gap-4">
+      {['row-a', 'row-b', 'row-c'].map((row) => (
+        <div key={row} className="flex items-center gap-4">
           <Skeleton className="h-4 w-28" />
           <Skeleton className="h-4 w-40" />
           <Skeleton className="h-4 w-16" />
