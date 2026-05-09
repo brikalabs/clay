@@ -5,18 +5,21 @@ import * as React from 'react';
 import { cn } from '../../primitives/cn';
 
 const buttonVariants = cva(
-  "button corner-themed inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-button text-sm outline-none transition-all focus-visible:ring-themed disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  "button corner-themed inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-button text-sm outline-none transition-all focus-visible:ring-themed disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-button-invalid-border [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default:
           'bg-button-filled-container text-button-filled-label hover:bg-button-filled-container/90',
-        destructive: 'bg-destructive text-white hover:bg-destructive/90',
+        destructive:
+          'bg-button-destructive-container text-button-destructive-label hover:bg-button-destructive-container/90 focus-visible:ring-button-destructive-focus/20 dark:focus-visible:ring-button-destructive-focus/40',
         outline:
-          'border-button-outline-border bg-background text-button-outline-label shadow-button hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:hover:bg-input/50',
-        secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-        ghost: 'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50',
-        link: 'text-primary underline-offset-4 hover:underline',
+          'border-button-outline-border bg-button-outline-container text-button-outline-label shadow-button hover:bg-accent hover:text-accent-foreground dark:bg-button-outline-dark-container/30 dark:hover:bg-button-outline-dark-container/50',
+        secondary:
+          'bg-button-secondary-container text-button-secondary-label hover:bg-button-secondary-container/80',
+        ghost:
+          'hover:bg-button-ghost-hover-container hover:text-button-ghost-hover-label dark:hover:bg-button-ghost-hover-container/50',
+        link: 'text-button-link-color underline-offset-4 hover:underline',
       },
       size: {
         default: 'has-[>svg]:px-3',
