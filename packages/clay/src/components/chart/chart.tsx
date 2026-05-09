@@ -255,21 +255,12 @@ function useChartContext(component: string): ChartContextValue {
   return ctx;
 }
 
-function buildChartCss(id: string, config: ChartConfig): string {
-  const declarations = Object.entries(config)
-    .filter(([, value]) => Boolean(value.color))
-    .map(([key, value]) => `  --color-${key}: ${value.color};`)
-    .join('\n');
-  if (!declarations) return '';
-  return `[data-clay-chart="${id}"] {\n${declarations}\n}`;
-}
-
-function ChartStyle({ id, css }: Readonly<{ id: string; css: string }>) {
-  if (!css) return null;
-  // The CSS is built from author-provided color strings; injecting via
-  // dangerouslySetInnerHTML is safe here because authors are the same
-  // trust boundary as the rest of the React tree.
-  return <style dangerouslySetInnerHTML={{ __html: css }} />;
+function buildChartCssVars(config: ChartConfig): React.CSSProperties {
+  const vars: Record<string, string> = {};
+  for (const [key, value] of Object.entries(config)) {
+    if (value.color) vars[`--color-${key}`] = value.color;
+  }
+  return vars as React.CSSProperties;
 }
 
 interface ChartContainerProps extends React.ComponentProps<'div'> {
@@ -292,17 +283,19 @@ export function ChartContainer({
   config,
   className,
   children,
+  style,
   ...props
 }: Readonly<ChartContainerProps>) {
   const reactId = useId().replaceAll(/[^a-zA-Z0-9]/g, '');
   const chartId = `clay-${reactId}`;
-  const css = useMemo(() => buildChartCss(chartId, config), [chartId, config]);
+  const cssVars = useMemo(() => buildChartCssVars(config), [config]);
   const value = useMemo<ChartContextValue>(() => ({ config }), [config]);
 
   return (
     <ChartContext.Provider value={value}>
       <div
         data-clay-chart={chartId}
+        style={{ ...cssVars, ...style }}
         className={cn(
           // Block-level wrapper that fully fills its parent. Consumers must
           // give the parent (or pass via `className`) an explicit width AND
@@ -327,7 +320,6 @@ export function ChartContainer({
         )}
         {...props}
       >
-        <ChartStyle id={chartId} css={css} />
         <ResponsiveContainer width="100%" height="100%">
           {children}
         </ResponsiveContainer>
@@ -416,20 +408,20 @@ export function ChartTooltipContent({
         <div className="mb-1 font-medium text-foreground">{headingValue}</div>
       ) : null}
       <div className="grid gap-1.5">
-        {payload.map((item, index) => {
-          const key = (nameKey && item.payload?.[nameKey]) ?? item.dataKey ?? item.name ?? `item-${index}`;
+        {payload.map((item) => {
+          const key = (nameKey && item.payload?.[nameKey]) ?? item.dataKey ?? item.name;
           const cfgKey = String(key);
           const cfgEntry = config[cfgKey];
           const swatchColor = cfgEntry?.color ?? item.color ?? `var(--color-${cfgKey})`;
           const rowName = cfgEntry?.label ?? item.name ?? cfgKey;
           const rawValue = item.value;
+          const formattedNumber =
+            typeof rawValue === 'number' ? DEFAULT_NUMBER_FORMAT.format(rawValue) : String(rawValue ?? '');
           const renderedValue = formatter
             ? formatter(rawValue ?? '', String(item.name ?? cfgKey), item)
-            : typeof rawValue === 'number'
-              ? DEFAULT_NUMBER_FORMAT.format(rawValue)
-              : String(rawValue ?? '');
+            : formattedNumber;
           return (
-            <div key={cfgKey + '-' + index} className="flex items-center justify-between gap-3">
+            <div key={cfgKey} className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-2">
                 {!hideIndicator && (
                   <span
@@ -489,14 +481,14 @@ export function ChartLegendContent({
 
   return (
     <ul className={cn('flex flex-wrap items-center justify-center gap-x-4 gap-y-1 pt-3', className)}>
-      {payload.map((item, index) => {
-        const key = (nameKey && (item as Record<string, unknown>)[nameKey]) ?? item.dataKey ?? item.value ?? `item-${index}`;
+      {payload.map((item) => {
+        const key = (nameKey && (item as Record<string, unknown>)[nameKey]) ?? item.dataKey ?? item.value;
         const cfgKey = String(key);
         const cfgEntry = config[cfgKey];
         const swatchColor = cfgEntry?.color ?? item.color ?? `var(--color-${cfgKey})`;
         const label = cfgEntry?.label ?? item.value ?? cfgKey;
         return (
-          <li key={cfgKey + '-' + index} className="flex items-center gap-1.5 text-muted-foreground text-xs">
+          <li key={cfgKey} className="flex items-center gap-1.5 text-muted-foreground text-xs">
             {!hideIcon && (
               <span
                 aria-hidden

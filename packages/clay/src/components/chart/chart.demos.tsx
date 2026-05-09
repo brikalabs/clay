@@ -22,9 +22,14 @@ function generate(
 const hourly = generate(24, HOUR, 3, 18, 1.5);
 const weekly = generate(7, DAY, 1.2, 12, 4);
 const monthly = generate(30, DAY, 4, 22, 0.4);
+// Pseudo-random but deterministic so the demo renders identically every reload.
 const volatile = Array.from({ length: 48 }, (_, index) => ({
   ts: Date.now() - (47 - index) * 30 * 60_000,
-  value: 50 + (Math.random() - 0.5) * 60,
+  value:
+    50 +
+    (Math.sin(index * 0.91) * 18 +
+      Math.sin(index * 0.37 + 1.3) * 10 +
+      Math.cos(index * 1.7) * 6),
 }));
 
 const currency = new Intl.NumberFormat('en-US', {

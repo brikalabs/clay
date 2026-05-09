@@ -48,6 +48,21 @@ import {
   TableRow,
 } from '../table/table';
 
+type AriaSort = 'ascending' | 'descending' | 'none' | undefined;
+
+function resolveAriaSort(sortable: boolean, sortDir: false | 'asc' | 'desc'): AriaSort {
+  if (!sortable) return undefined;
+  if (sortDir === 'asc') return 'ascending';
+  if (sortDir === 'desc') return 'descending';
+  return 'none';
+}
+
+function pickSortIcon(sortDir: false | 'asc' | 'desc') {
+  if (sortDir === 'asc') return ChevronUp;
+  if (sortDir === 'desc') return ChevronDown;
+  return ChevronsUpDown;
+}
+
 export interface DataTableProps<TData, TValue = unknown> {
   /** TanStack column definitions. Use `accessorKey`, `accessorFn`, or `id`. */
   columns: ColumnDef<TData, TValue>[];
@@ -112,23 +127,14 @@ function DataTable<TData, TValue = unknown>({
           <TableRow key={headerGroup.id}>
             {headerGroup.headers.map((header) => {
               const sortDir = header.column.getIsSorted();
+              const sortable = enableSorting && header.column.getCanSort();
+              const ariaSort = resolveAriaSort(sortable, sortDir);
+              const headerContent = header.isPlaceholder
+                ? null
+                : flexRender(header.column.columnDef.header, header.getContext());
               return (
-                <TableHead
-                  key={header.id}
-                  colSpan={header.colSpan}
-                  aria-sort={
-                    !enableSorting || !header.column.getCanSort()
-                      ? undefined
-                      : sortDir === 'asc'
-                        ? 'ascending'
-                        : sortDir === 'desc'
-                          ? 'descending'
-                          : 'none'
-                  }
-                >
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(header.column.columnDef.header, header.getContext())}
+                <TableHead key={header.id} colSpan={header.colSpan} aria-sort={ariaSort}>
+                  {headerContent}
                 </TableHead>
               );
             })}
@@ -198,7 +204,7 @@ function DataTableColumnHeader<TData, TValue>({
   }
 
   const sorted = column.getIsSorted();
-  const Icon = sorted === 'asc' ? ChevronUp : sorted === 'desc' ? ChevronDown : ChevronsUpDown;
+  const Icon = pickSortIcon(sorted);
 
   return (
     <button

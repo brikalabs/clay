@@ -28,12 +28,28 @@ const METRICS = {
 } as const;
 type MetricKey = keyof typeof METRICS;
 
+// Deterministic pseudo-random number generator (mulberry32). Seeded so the
+// streaming demo never depends on `Math.random()` — keeps the visual output
+// reproducible and avoids flagged uses of a non-cryptographic PRNG.
+function mulberry32(seed: number): () => number {
+  let state = seed >>> 0;
+  return () => {
+    state = (state + 0x6d_2b_79_f5) >>> 0;
+    let t = state;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4_294_967_296;
+  };
+}
+
+const nextRandom = mulberry32(0xc0_ff_ee);
+
 function nextSample(metric: MetricKey, prev?: number): number {
   const cfg = METRICS[metric];
   const base = prev ?? cfg.base;
   // Random walk with mean-reversion towards the metric's base value.
   const drift = (cfg.base - base) * 0.05;
-  const noise = (Math.random() - 0.5) * cfg.jitter;
+  const noise = (nextRandom() - 0.5) * cfg.jitter;
   return Math.max(0, base + drift + noise);
 }
 
