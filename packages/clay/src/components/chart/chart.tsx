@@ -7,7 +7,6 @@ import {
   AreaChart,
   CartesianGrid,
   Label,
-  Legend,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -256,11 +255,11 @@ function useChartContext(component: string): ChartContextValue {
 }
 
 function buildChartCssVars(config: ChartConfig): React.CSSProperties {
-  const vars: Record<string, string> = {};
+  const vars: Record<`--${string}`, string> = {};
   for (const [key, value] of Object.entries(config)) {
     if (value.color) vars[`--color-${key}`] = value.color;
   }
-  return vars as React.CSSProperties;
+  return vars;
 }
 
 interface ChartContainerProps extends React.ComponentProps<'div'> {
@@ -328,11 +327,11 @@ export function ChartContainer({
   );
 }
 
-/** Re-export of recharts `Tooltip` so consumers don't need a second import. */
-export const ChartTooltip = Tooltip;
-
-/** Re-export of recharts `Legend` so consumers don't need a second import. */
-export const ChartLegend = Legend;
+/**
+ * Re-exports of recharts `Tooltip` and `Legend` so consumers don't need a
+ * second import.
+ */
+export { Tooltip as ChartTooltip, Legend as ChartLegend } from 'recharts';
 
 interface ChartTooltipPayloadItem {
   readonly value?: number | string;
@@ -364,6 +363,16 @@ interface ChartTooltipContentProps {
 }
 
 const DEFAULT_NUMBER_FORMAT = new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 });
+
+// Coerce a recharts payload key to a string without leaning on
+// `Object.prototype.toString` for non-primitive values. Recharts sometimes
+// surfaces `payload[nameKey]` as `unknown`; we only treat strings and finite
+// numbers as legitimate keys, anything else collapses to an empty string.
+function stringKey(value: unknown): string {
+  if (typeof value === 'string') return value;
+  if (typeof value === 'number') return String(value);
+  return '';
+}
 
 /**
  * Themed tooltip body for use as `<ChartTooltip content={<ChartTooltipContent />} />`.
@@ -410,7 +419,7 @@ export function ChartTooltipContent({
       <div className="grid gap-1.5">
         {payload.map((item) => {
           const key = (nameKey && item.payload?.[nameKey]) ?? item.dataKey ?? item.name;
-          const cfgKey = String(key);
+          const cfgKey = stringKey(key);
           const cfgEntry = config[cfgKey];
           const swatchColor = cfgEntry?.color ?? item.color ?? `var(--color-${cfgKey})`;
           const rowName = cfgEntry?.label ?? item.name ?? cfgKey;
@@ -483,7 +492,7 @@ export function ChartLegendContent({
     <ul className={cn('flex flex-wrap items-center justify-center gap-x-4 gap-y-1 pt-3', className)}>
       {payload.map((item) => {
         const key = (nameKey && (item as Record<string, unknown>)[nameKey]) ?? item.dataKey ?? item.value;
-        const cfgKey = String(key);
+        const cfgKey = stringKey(key);
         const cfgEntry = config[cfgKey];
         const swatchColor = cfgEntry?.color ?? item.color ?? `var(--color-${cfgKey})`;
         const label = cfgEntry?.label ?? item.value ?? cfgKey;
