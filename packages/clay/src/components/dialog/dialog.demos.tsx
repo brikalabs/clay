@@ -13,6 +13,19 @@ import { Input } from '@brika/clay/components/input';
 import { Label } from '@brika/clay/components/label';
 import { defineDemos } from '../../component-registry';
 
+const TERMS_SECTIONS = [
+  'general',
+  'account',
+  'payments',
+  'content',
+  'privacy',
+  'security',
+  'liability',
+  'termination',
+  'disputes',
+  'changes',
+] as const;
+
 /** Clean modal with a title, description, and two footer actions. */
 export function DialogDefaultDemo() {
   return (
@@ -87,9 +100,9 @@ export function DialogScrollableDemo() {
           <DialogDescription>Last updated January 2025.</DialogDescription>
         </DialogHeader>
         <div className="space-y-3 py-2 text-muted-foreground text-sm">
-          {Array.from({ length: 10 }, (_, i) => (
-            <p key={i}>
-              Section {i + 1}: Lorem ipsum dolor sit amet, consectetur
+          {TERMS_SECTIONS.map((section, idx) => (
+            <p key={section}>
+              Section {idx + 1}: Lorem ipsum dolor sit amet, consectetur
               adipiscing elit. Sed do eiusmod tempor incididunt ut labore et
               dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
               exercitation ullamco laboris nisi ut aliquip ex ea commodo

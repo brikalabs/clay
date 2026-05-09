@@ -21,5 +21,15 @@ registerComponent(meta, {
       default: '18rem',
       description: 'Sidebar width when shown as a mobile sheet.',
     },
+    'inset-container': {
+      default: 'var(--background)',
+      description:
+        'Background of the `<SidebarInset>` main content panel that sits next to the sidebar.',
+    },
+    'input-container': {
+      default: 'var(--background)',
+      description:
+        'Background of the `<SidebarInput>` text field nested inside a sidebar header / footer.',
+    },
   },
 });

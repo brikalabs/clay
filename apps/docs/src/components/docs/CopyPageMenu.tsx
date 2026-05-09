@@ -15,9 +15,8 @@ function buildLlmPrompt(markdownUrl: string): string {
 
 /**
  * "Copy page" split-button with a dropdown of LLM-friendly and clipboard
- * actions. Mirrors the pattern shadcn and kumo use, gives readers who want
- * to dump the page into an AI a one-click path instead of fiddling with
- * select + copy + context-switch.
+ * actions. Gives readers who want to dump the page into an AI a one-click
+ * path instead of fiddling with select + copy + context-switch.
  */
 export function CopyPageMenu({ pageUrl, markdownUrl }: CopyPageMenuProps) {
   const [open, setOpen] = useState(false);
@@ -33,14 +32,16 @@ export function CopyPageMenu({ pageUrl, markdownUrl }: CopyPageMenuProps) {
 
   useDismiss(open, rootRef, () => setOpen(false));
 
-  const copyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(pageUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1400);
-    } catch {
-      // Clipboard unavailable, drop silently.
-    }
+  const copyLink = (): void => {
+    navigator.clipboard.writeText(pageUrl).then(
+      () => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1400);
+      },
+      () => {
+        // Clipboard unavailable, drop silently.
+      }
+    );
   };
 
   return (

@@ -23,7 +23,7 @@ import { Separator } from '../separator';
 // same specificity as our `[&>*]:` arbitrary variant; `!` keeps the
 // strip declarations winning regardless of source order.
 const wrapperClasses = [
-  'isolate inline-flex w-fit rounded-button border border-input-border bg-input-container shadow-surface',
+  'isolate inline-flex w-fit rounded-button border border-button-group-frame-border bg-button-group-frame-container shadow-surface',
   '[&>*]:!rounded-none [&>*]:!border-0 [&>*]:!shadow-none [&>*]:relative',
   '[&>*]:focus-visible:z-10',
   // SelectTrigger inside a group: never let the implicit hidden select
@@ -36,13 +36,13 @@ const horizontalClasses = [
   // Outer corners round to match the wrapper. Inner dividers are a
   // 1px left border on every non-first child.
   '[&>*:first-child]:!rounded-l-button [&>*:last-child]:!rounded-r-button',
-  '[&>*:not(:first-child)]:!border-l [&>*:not(:first-child)]:!border-l-input-border',
+  '[&>*:not(:first-child)]:!border-l [&>*:not(:first-child)]:!border-button-group-divider-color',
 ].join(' ');
 
 const verticalClasses = [
   'flex-col',
   '[&>*:first-child]:!rounded-t-button [&>*:last-child]:!rounded-b-button',
-  '[&>*:not(:first-child)]:!border-t [&>*:not(:first-child)]:!border-t-input-border',
+  '[&>*:not(:first-child)]:!border-t [&>*:not(:first-child)]:!border-button-group-divider-color',
 ].join(' ');
 
 const buttonGroupVariants = cva(wrapperClasses, {
@@ -94,7 +94,7 @@ function ButtonGroupText({
   return (
     <Comp
       className={cn(
-        "flex items-center gap-2 px-4 font-medium text-muted-foreground text-sm [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none",
+        "flex items-center gap-2 px-4 font-medium text-button-group-text-color text-sm [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none",
         className
       )}
       {...props}
@@ -112,7 +112,7 @@ function ButtonGroupSeparator({
       data-slot="button-group-separator"
       orientation={orientation}
       className={cn(
-        '!m-0 relative self-stretch bg-input-border data-[orientation=vertical]:h-auto',
+        '!m-0 relative self-stretch bg-button-group-divider-color data-[orientation=vertical]:h-auto',
         className
       )}
       {...props}

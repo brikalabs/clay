@@ -4,16 +4,28 @@ type DemoModule = Readonly<Record<string, ComponentType<Record<string, never>>>>
 
 // Discover all *.demos.tsx files co-located with their components in the Clay package.
 const demoModules = import.meta.glob<DemoModule>(
-  '../../../../packages/clay/src/components/*/*.demos.tsx',
+  '~clay/components/*/*.demos.tsx',
   { eager: true }
 );
 
-const demosBySlug: ReadonlyMap<string, DemoModule> = new Map(
-  Object.entries(demoModules).map(([path, mod]) => {
+/**
+ * Multiple `*.demos.tsx` files per component folder are supported, the
+ * map merges every module's exports so a demo function is resolvable
+ * regardless of which file declares it. Naming conflicts across files
+ * for the same slug are resolved alphabetically by path (last wins),
+ * which matches the order `component-registry.ts` uses for `demoMeta`.
+ */
+const demosBySlug: ReadonlyMap<string, DemoModule> = (() => {
+  const out = new Map<string, Record<string, ComponentType<Record<string, never>>>>();
+  const sortedEntries = Object.entries(demoModules).sort(([a], [b]) => a.localeCompare(b));
+  for (const [path, mod] of sortedEntries) {
     const slug = /\/components\/([a-z0-9-]+)\/[^/]+\.demos\.tsx$/.exec(path)?.[1] ?? path;
-    return [slug, mod];
-  })
-);
+    const merged = out.get(slug) ?? {};
+    Object.assign(merged, mod);
+    out.set(slug, merged);
+  }
+  return out;
+})();
 
 interface DemoRendererProps {
   readonly slug: string;

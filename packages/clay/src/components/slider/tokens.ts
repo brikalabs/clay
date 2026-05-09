@@ -51,5 +51,29 @@ registerComponent(meta, {
       default: 'var(--foreground)',
       description: 'Tick label color when its value matches the current slider value.',
     },
+    'value-container': {
+      default: 'var(--input-container)',
+      description:
+        'Background color of the boxed numeric `<SliderValue>` readout/input. Defaults to the input-component fill so the readout matches sibling inputs.',
+    },
+    'value-border': {
+      default: 'var(--input-border)',
+      description:
+        'Border color of the `<SliderValue>` input box. Defaults to the input-component border.',
+    },
+    'value-label': {
+      default: 'var(--input-label)',
+      description:
+        'Numeric text color inside `<SliderValue>`. Defaults to the input-component label color.',
+    },
+    'value-ring': {
+      default: 'var(--ring)',
+      description:
+        'Border color of `<SliderValue>` when its inner input is focus-visible.',
+    },
+    'value-unit': {
+      default: 'var(--muted-foreground)',
+      description: 'Color of the optional unit suffix rendered next to the value (e.g. "%", "px").',
+    },
   },
 });

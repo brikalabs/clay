@@ -127,11 +127,7 @@
     },
     "calendar": {
       "radius": "0px",
-      "borderWidth": "2px",
-      "borderStyle": "solid",
-      "duration": "0ms",
       "rangeMarginY": "0px",
-      "rangeHeight": "100%",
       "weekMarginY": "0px",
       "weekSeparatorWidth": "0px"
     }

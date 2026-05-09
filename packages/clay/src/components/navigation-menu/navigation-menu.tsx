@@ -46,7 +46,7 @@ function NavigationMenuList({
 const NavigationMenuItem = withSlot(NavigationMenuPrimitive.Item, 'navigation-menu-item');
 
 const navigationMenuTriggerStyle = cva(
-  "navigation-menu corner-themed group inline-flex w-max items-center justify-center gap-1 rounded-navigation-menu bg-background text-sm outline-none transition-[color,background-color] hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 focus-visible:ring-themed"
+  "navigation-menu corner-themed group inline-flex w-max items-center justify-center gap-1 rounded-navigation-menu bg-navigation-menu-container text-sm outline-none transition-[color,background-color] hover:bg-navigation-menu-focus-container hover:text-navigation-menu-focus-label focus:bg-navigation-menu-focus-container focus:text-navigation-menu-focus-label disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-navigation-menu-focus-container/50 data-[state=open]:bg-navigation-menu-focus-container/50 focus-visible:ring-themed"
 );
 
 function NavigationMenuTrigger({
@@ -96,7 +96,7 @@ function NavigationMenuViewport({
       <NavigationMenuPrimitive.Viewport
         data-slot="navigation-menu-viewport"
         className={cn(
-          'navigation-menu-viewport data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90 corner-themed relative mt-1.5 h-(--radix-navigation-menu-viewport-height) w-full overflow-hidden rounded-navigation-menu-viewport bg-popover text-popover-foreground shadow-navigation-menu-viewport backdrop-blur-navigation-menu-viewport data-[state=closed]:animate-out data-[state=open]:animate-in md:w-(--radix-navigation-menu-viewport-width)',
+          'navigation-menu-viewport data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90 corner-themed relative mt-1.5 h-(--radix-navigation-menu-viewport-height) w-full overflow-hidden rounded-navigation-menu-viewport bg-navigation-menu-viewport-surface-container text-navigation-menu-viewport-surface-label shadow-navigation-menu-viewport backdrop-blur-navigation-menu-viewport data-[state=closed]:animate-out data-[state=open]:animate-in md:w-(--radix-navigation-menu-viewport-width)',
           className
         )}
         {...props}
@@ -118,7 +118,7 @@ function NavigationMenuIndicator({
       )}
       {...props}
     >
-      <div className="relative top-[60%] size-2 rotate-45 rounded-tl-sm bg-border shadow-md" />
+      <div className="relative top-[60%] size-2 rotate-45 rounded-tl-sm bg-navigation-menu-indicator-color shadow-md" />
     </NavigationMenuPrimitive.Indicator>
   );
 }

@@ -1,7 +1,7 @@
 /**
  * PageHeader, unified page-level heading.
  *
- * Composable primitives following the shadcn pattern.
+ * Composable primitives, no content props, pure composition.
  *
  * Usage:
  *   <PageHeader>
@@ -51,7 +51,7 @@ function PageHeaderDescription({ className, ...props }: React.ComponentProps<'p'
   return (
     <p
       data-slot="page-header-description"
-      className={cn('mt-1 text-muted-foreground text-sm', className)}
+      className={cn('mt-1 text-page-header-description-color text-sm', className)}
       {...props}
     />
   );

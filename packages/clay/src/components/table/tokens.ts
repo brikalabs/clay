@@ -16,5 +16,13 @@ registerComponent(meta, {
       description:
         'Background for hovered and selected rows; the hover state applies it at 50% opacity.',
     },
+    'head-color': {
+      default: 'var(--foreground)',
+      description: 'Foreground color of `<TableHead>` cells.',
+    },
+    'caption-color': {
+      default: 'var(--muted-foreground)',
+      description: 'Foreground color of the `<TableCaption>` rendered beneath the table.',
+    },
   },
 });

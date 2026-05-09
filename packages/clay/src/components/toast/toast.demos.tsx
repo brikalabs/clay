@@ -68,13 +68,18 @@ export function ToastVariantsDemo() {
   );
 }
 
+// Counter-driven so the demo alternates between success and failure
+// deterministically (every fourth attempt fails). Avoids `Math.random()`
+// for predictable demo behaviour.
+let uploadAttempt = 0;
 function fakeUpload(): Promise<{ filename: string }> {
   return new Promise((resolve, reject) =>
     setTimeout(() => {
-      if (Math.random() > 0.3) {
-        resolve({ filename: 'report-2026.pdf' });
-      } else {
+      uploadAttempt += 1;
+      if (uploadAttempt % 4 === 0) {
         reject(new Error('Network timeout'));
+      } else {
+        resolve({ filename: 'report-2026.pdf' });
       }
     }, 2000)
   );

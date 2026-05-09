@@ -101,13 +101,14 @@ function PropRow({ prop }: { readonly prop: ClayPropDoc }) {
       <div className="wrap-break-word mb-2 font-mono text-[0.8125rem] leading-5">
         <TypeSignature {...parsed} />
       </div>
-      {/* Description */}
+      {/* Description, `div` wrapper because Markdown can emit block-level
+          children (lists, code blocks) that aren't legal inside <p>. */}
       {prop.description ? (
-        <p className="text-clay-default text-sm leading-relaxed">
+        <div className="text-clay-default text-sm leading-relaxed">
           <ReactMarkdown remarkPlugins={[remarkGfm]} components={propMarkdownComponents}>
             {prop.description}
           </ReactMarkdown>
-        </p>
+        </div>
       ) : (
         <p className="text-clay-inactive text-sm italic leading-relaxed">No description.</p>
       )}

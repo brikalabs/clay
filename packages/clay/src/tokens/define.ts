@@ -121,6 +121,13 @@ const NAMESPACE_USES_BARE_ALIAS: ReadonlySet<TailwindNamespace | undefined> = ne
   'font',
   'text',
   'opacity',
+  'border-w',
+  'border-style',
+  'font-weight',
+  'leading',
+  'tracking',
+  'case',
+  'corner',
 ]);
 
 // ─── Token families ──────────────────────────────────────────────────────────
@@ -282,6 +289,13 @@ const TYPE_TO_NAMESPACE: Partial<Record<TokenType, TailwindNamespace>> = {
   opacity: 'opacity',
   'font-family': 'font',
   'font-size': 'text',
+  'border-width': 'border-w',
+  'border-style': 'border-style',
+  'font-weight': 'font-weight',
+  'line-height': 'leading',
+  'letter-spacing': 'tracking',
+  'text-transform': 'case',
+  'corner-shape': 'corner',
 };
 
 /**
