@@ -103,10 +103,10 @@ export function setInput(el: HTMLInputElement, value: string): void {
   // the original `onChange` directly with a minimal synthetic-event
   // shape. This is the same trick `@testing-library/react` falls back
   // to when `fireEvent` can't drive a controlled input cleanly.
-  type WithFiberProps = HTMLElement & Record<string, unknown>;
-  const propsKey = Object.keys(el as WithFiberProps).find((k) => k.startsWith('__reactProps$'));
+  const fiberBag = el as unknown as Record<string, unknown>;
+  const propsKey = Object.keys(fiberBag).find((k) => k.startsWith('__reactProps$'));
   const props = propsKey
-    ? ((el as WithFiberProps)[propsKey] as { onChange?: (e: unknown) => void } | undefined)
+    ? (fiberBag[propsKey] as { onChange?: (e: unknown) => void } | undefined)
     : undefined;
   // Mirror the value into the DOM so subsequent reads see it.
   const proto =
