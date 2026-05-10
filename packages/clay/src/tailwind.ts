@@ -20,22 +20,31 @@
  *      via `matchUtilities` so v4's JIT prunes the unused ones.
  *
  * Non-default built-in themes (`dracula`, `brutalist`, ...) are NOT baked
- * into CSS. They live as plain `ThemeConfig` JSON exports and activate
- * through the same runtime path as user-authored themes (`applyTheme(theme)`
- * injects a `<style>` tag, or `<ThemeScope theme>` scopes via inline-style).
- * This keeps the bundle small AND makes user-built custom themes a first-class
- * peer of the built-ins.
+ * into CSS by default. They live as plain `ThemeConfig` JSON exports and
+ * activate through the runtime path (`applyTheme(theme)` injects a `<style>`
+ * tag, or `<ThemeScope theme>` scopes via inline-style). Consumers that
+ * commit to a single non-default theme can also bake it at build time via
+ * the plugin's `theme` option, see `ClayTailwindOptions` below.
  *
  * Usage from a consumer's CSS entry:
  *
  *   @import "tailwindcss";
- *   @plugin "@brika/clay/tailwind";
+ *   @plugin "@brika/clay/tailwind";              // default Clay theme
+ *   @plugin "@brika/clay/tailwind" {             // bake "ocean" at build time
+ *     theme: ocean;
+ *   }
  *
  * Or via Clay's bundled stylesheet (`@import "@brika/clay/styles"`), which
  * pulls this plugin in for you.
  */
 
+import { readFileSync } from 'node:fs';
+import { isAbsolute, resolve as resolvePath } from 'node:path';
+
 import plugin from 'tailwindcss/plugin';
+import * as PRESETS from './themes/presets';
+import { flattenTheme } from './themes/flatten';
+import type { ThemeConfig } from './themes/types';
 import { TOKEN_REGISTRY } from './tokens/registry';
 import { SHORTHAND_INDEX } from './tokens/shorthands';
 import type { ResolvedTokenSpec, TailwindNamespace, TokenType } from './tokens/types';
@@ -365,42 +374,172 @@ for (const [name, declarations] of Object.entries(SHORTHAND_INDEX.rules)) {
   shorthandUtilities[name] = () => declarations;
 }
 
-const clayTailwindPlugin: ReturnType<typeof plugin> = plugin(
-  ({ addBase, matchUtilities }) => {
-    // Combine `:root` defaults with the bare `border` reset into a single
-    // `addBase` call so Tailwind builds one base-layer AST node. The
-    // border-color reset makes Tailwind v4's bare `border` utility
-    // resolve to `var(--border)` instead of `currentColor`, without
-    // this, components that use the bare `border` class render in the
-    // inherited text color rather than the themed border token.
-    addBase({
-      ...baseRules.properties,
-      '*, ::before, ::after': { 'border-color': 'var(--border)' },
-      [ROOT_SELECTOR]: baseRules.root,
-      ...(Object.keys(baseRules.dark).length > 0 ? { [DARK_SELECTOR]: baseRules.dark } : {}),
-    });
-    // Per-component shorthand utilities (`.button`, `.badge`, ...). The JS
-    // plugin API has two ways to emit utilities: `addUtilities` (always-emit,
-    // no JIT) and `matchUtilities` (JIT-aware, emits only when the class name
-    // appears in scanned source). We use the latter with a `DEFAULT`-only
-    // value map so each entry behaves like a static utility but still
-    // participates in v4's tree-shaking.
-    matchUtilities(shorthandUtilities, { values: { DEFAULT: '' } });
+/**
+ * Options for the Clay Tailwind plugin. Pass these via Tailwind v4's
+ * `@plugin "..." { ... }` block syntax, or by calling the exported plugin
+ * with an options object from a JS-side Tailwind config.
+ */
+export interface ClayTailwindOptions {
+  /**
+   * Bake a non-default theme into the consumer's CSS at build time. Three
+   * forms are accepted:
+   *
+   *   - **Preset name** (`"ocean"`, `"nord"`, ...): looks up one of the
+   *     bundled `ThemeConfig` exports from `@brika/clay/themes`.
+   *   - **JSON file path** (`"./themes/my-theme.json"`, absolute, or any
+   *     string ending in `.json`): the file is loaded and parsed at build
+   *     time, so consumers can author their own theme as a JSON document
+   *     in their project. Relative paths resolve from `process.cwd()`.
+   *   - **`ThemeConfig` object**: pass a config object directly, useful when
+   *     wiring the plugin from a JS-side Tailwind config or generating
+   *     themes at build time.
+   *
+   * The resolved theme's deltas are layered onto `:root` (and the dark-mode
+   * equivalent) so the cascade matches what `applyTheme(theme)` would inject
+   * at runtime, just produced statically with no `<style>` tag.
+   *
+   *   @plugin "@brika/clay/tailwind" {
+   *     theme: ocean;
+   *   }
+   *
+   *   @plugin "@brika/clay/tailwind" {
+   *     theme: "./themes/my-brand.json";
+   *   }
+   *
+   * Leave unset to ship the default Clay theme. The runtime
+   * `applyTheme(theme)` path is unaffected by this option and remains the
+   * right tool when consumers want to switch themes at runtime.
+   */
+  theme?: string | ThemeConfig;
+}
 
-    // Per-namespace token utilities (`border-w-<name>`, `leading-<name>`, ...)
-    // for token types that don't fit cleanly into a `theme.extend` bucket.
-    // Same JIT path as the shorthand bundle: classes are only emitted when
-    // referenced from scanned source.
-    for (const cfg of MATCH_UTILITY_NAMESPACES) {
-      const values = matchValues[cfg.ns];
-      if (!values) continue;
-      matchUtilities(
-        { [cfg.prefix]: (value: string) => ({ [cfg.cssProp]: value }) },
-        { values }
-      );
-    }
+/**
+ * `option` is treated as a JSON-file path when it ends in `.json` or
+ * starts with a path-ish prefix; everything else is interpreted as a
+ * bundled-preset name. The two namespaces don't overlap (preset names
+ * match `[a-z]+`), so a single string lets the CSS-first `@plugin`
+ * options syntax express both authoring modes.
+ */
+function looksLikePath(option: string): boolean {
+  return (
+    option.endsWith('.json') ||
+    option.startsWith('./') ||
+    option.startsWith('../') ||
+    isAbsolute(option)
+  );
+}
+
+function loadThemeFromFile(filePath: string): ThemeConfig {
+  const absolute = isAbsolute(filePath) ? filePath : resolvePath(process.cwd(), filePath);
+  let contents: string;
+  try {
+    contents = readFileSync(absolute, 'utf8');
+  } catch (cause) {
+    throw new Error(
+      `@brika/clay: failed to read theme file "${filePath}" (resolved to "${absolute}"): ${(cause as Error).message}`
+    );
+  }
+  try {
+    return JSON.parse(contents) as ThemeConfig;
+  } catch (cause) {
+    throw new Error(
+      `@brika/clay: theme file "${absolute}" is not valid JSON: ${(cause as Error).message}`
+    );
+  }
+}
+
+/**
+ * Resolve the `theme` option to a `ThemeConfig`. Strings are interpreted
+ * as a JSON-file path or a bundled-preset name (via `looksLikePath`);
+ * objects pass through unchanged. Throws on an unknown preset name or an
+ * unreadable / malformed JSON file so misconfiguration fails fast at
+ * build time.
+ */
+function resolveThemeOption(
+  option: string | ThemeConfig | undefined
+): ThemeConfig | undefined {
+  if (!option) return undefined;
+  if (typeof option !== 'string') return option;
+  if (looksLikePath(option)) {
+    return loadThemeFromFile(option);
+  }
+  const presets = PRESETS as unknown as Readonly<Record<string, ThemeConfig>>;
+  const preset = presets[option];
+  if (!preset) {
+    const known = Object.keys(presets).sort((a, b) => a.localeCompare(b)).join(', ');
+    throw new Error(
+      `@brika/clay: unknown theme preset "${option}". Known presets: ${known}. Pass a path ending in ".json" (or starting with "./", "../", or "/") to load your own theme file.`
+    );
+  }
+  return preset;
+}
+
+// Cascade-friendly selectors for the build-time theme bake. These match
+// exactly what `renderThemeStyleSheet` (the runtime path) emits, so a
+// later `applyTheme(other)` call still wins through later cascade order.
+const BAKED_THEME_ROOT_SELECTOR = ':root';
+const BAKED_THEME_DARK_SELECTOR = ':is(.dark, [data-mode="dark"]):root';
+
+const clayTailwindPlugin: ReturnType<typeof plugin.withOptions<ClayTailwindOptions>> = plugin.withOptions(
+  (options: ClayTailwindOptions = {}) => {
+    const theme = resolveThemeOption(options.theme);
+    const overrides = theme ? flattenTheme(theme) : null;
+    const hasRootOverrides = overrides
+      ? Object.keys(overrides.rootVars).length > 0
+      : false;
+    const hasDarkOverrides = overrides
+      ? Object.keys(overrides.darkVars).length > 0
+      : false;
+
+    return ({ addBase, matchUtilities }) => {
+      // Combine `:root` defaults with the bare `border` reset into a single
+      // `addBase` call so Tailwind builds one base-layer AST node. The
+      // border-color reset makes Tailwind v4's bare `border` utility
+      // resolve to `var(--border)` instead of `currentColor`, without
+      // this, components that use the bare `border` class render in the
+      // inherited text color rather than the themed border token.
+      //
+      // Theme-option overrides are appended *after* the registry defaults so
+      // the cascade resolves to the baked theme. Keys are inserted in order
+      // so iteration matches CSS output order.
+      const baseLayer: Record<string, Record<string, string>> = {
+        ...baseRules.properties,
+        '*, ::before, ::after': { 'border-color': 'var(--border)' },
+        [ROOT_SELECTOR]: baseRules.root,
+      };
+      if (Object.keys(baseRules.dark).length > 0) {
+        baseLayer[DARK_SELECTOR] = baseRules.dark;
+      }
+      if (overrides && hasRootOverrides) {
+        baseLayer[BAKED_THEME_ROOT_SELECTOR] = overrides.rootVars;
+      }
+      if (overrides && hasDarkOverrides) {
+        baseLayer[BAKED_THEME_DARK_SELECTOR] = overrides.darkVars;
+      }
+      addBase(baseLayer);
+      // Per-component shorthand utilities (`.button`, `.badge`, ...). The JS
+      // plugin API has two ways to emit utilities: `addUtilities` (always-emit,
+      // no JIT) and `matchUtilities` (JIT-aware, emits only when the class name
+      // appears in scanned source). We use the latter with a `DEFAULT`-only
+      // value map so each entry behaves like a static utility but still
+      // participates in v4's tree-shaking.
+      matchUtilities(shorthandUtilities, { values: { DEFAULT: '' } });
+
+      // Per-namespace token utilities (`border-w-<name>`, `leading-<name>`, ...)
+      // for token types that don't fit cleanly into a `theme.extend` bucket.
+      // Same JIT path as the shorthand bundle: classes are only emitted when
+      // referenced from scanned source.
+      for (const cfg of MATCH_UTILITY_NAMESPACES) {
+        const values = matchValues[cfg.ns];
+        if (!values) continue;
+        matchUtilities(
+          { [cfg.prefix]: (value: string) => ({ [cfg.cssProp]: value }) },
+          { values }
+        );
+      }
+    };
   },
-  { theme: { extend: themeExtend } }
+  () => ({ theme: { extend: themeExtend } })
 );
 
 export default clayTailwindPlugin;
