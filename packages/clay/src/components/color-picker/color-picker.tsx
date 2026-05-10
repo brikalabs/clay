@@ -185,7 +185,7 @@ export function ColorPicker({
                 variant="ghost"
                 onClick={handleEyedropper}
                 aria-label="Eyedropper"
-                className="size-6 rounded-full"
+                className="aspect-square size-6 shrink-0 rounded-full"
               >
                 <Pipette className="size-3" />
               </Button>
@@ -197,7 +197,7 @@ export function ColorPicker({
                 variant="ghost"
                 onClick={onClose}
                 aria-label="Close"
-                className="size-6 rounded-full"
+                className="aspect-square size-6 shrink-0 rounded-full"
               >
                 <X className="size-3" />
               </Button>
@@ -516,7 +516,7 @@ function ContrastBadge({
     <span className="flex items-center gap-1.5">
       <span
         aria-hidden
-        className="grid size-4 place-items-center rounded-full ring-1 ring-color-picker-border"
+        className="grid aspect-square size-4 shrink-0 place-items-center rounded-full ring-1 ring-color-picker-border"
         style={{ background: on, color: against }}
       >
         Aa
