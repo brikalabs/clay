@@ -34,5 +34,10 @@ registerComponent(meta, {
       description:
         'Color of the 2px ring drawn around the avatar badge and around grouped avatars to separate them from the surrounding surface.',
     },
+    'group-spacing': {
+      default: '0.5rem',
+      description:
+        'Negative inline overlap between adjacent avatars inside an `<AvatarGroup>`. Larger values pull stacked avatars further apart.',
+    },
   },
 });

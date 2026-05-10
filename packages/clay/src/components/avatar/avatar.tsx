@@ -16,7 +16,7 @@ function Avatar({
       data-slot="avatar"
       data-size={size}
       className={cn(
-        'group/avatar corner-themed relative flex size-avatar-size shrink-0 select-none overflow-hidden rounded-avatar data-[size=lg]:size-10 data-[size=sm]:size-6',
+        'group/avatar corner-themed relative flex size-avatar-size shrink-0 select-none rounded-avatar data-[size=lg]:size-10 data-[size=sm]:size-6',
         className
       )}
       {...props}
@@ -28,7 +28,7 @@ function AvatarImage({ className, ...props }: React.ComponentProps<typeof Avatar
   return (
     <AvatarPrimitive.Image
       data-slot="avatar-image"
-      className={cn('aspect-square size-full', className)}
+      className={cn('aspect-square size-full overflow-hidden rounded-avatar', className)}
       {...props}
     />
   );
@@ -71,7 +71,7 @@ function AvatarGroup({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="avatar-group"
       className={cn(
-        'group/avatar-group flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:ring-avatar-ring-color',
+        'group/avatar-group flex -space-x-avatar-group-spacing *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:ring-avatar-ring-color',
         className
       )}
       {...props}
