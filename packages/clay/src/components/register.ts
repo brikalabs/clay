@@ -32,6 +32,7 @@ import './data-table/tokens';
 import './date-picker/tokens';
 import './dialog/tokens';
 import './drawer/tokens';
+import './color-picker/tokens';
 import './dropdown-menu/tokens';
 import './empty-state/tokens';
 import './field/tokens';
