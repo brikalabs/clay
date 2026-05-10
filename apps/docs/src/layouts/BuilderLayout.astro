@@ -1,0 +1,28 @@
+---
+/**
+ * Full-page layout for the Theme Builder. Drops the docs site's
+ * SidebarNav and Footer so the builder owns the full viewport, but
+ * keeps the top Header (brand mark, ThemePicker, theme toggle,
+ * "Theme Builder" pill back-link) for orientation.
+ */
+import { CommandPalette } from '~/components/CommandPalette.tsx';
+import Header from '~/components/Header.astro';
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  readonly title: string;
+  readonly description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="isolate flex min-h-screen flex-col">
+    <Header />
+    <main class="flex grow flex-col">
+      <slot />
+    </main>
+  </div>
+  <CommandPalette client:only="react" />
+</BaseLayout>

@@ -2,6 +2,7 @@
 import { Toaster } from '@brika/clay/components/toast';
 import CodeBlockCopy from '~/components/docs/CodeBlockCopy.astro';
 import { CopyPageMenu } from '~/components/docs/CopyPageMenu.tsx';
+import InlineMarkdown from '~/components/docs/InlineMarkdown.astro';
 import { OnThisPage } from '~/components/OnThisPage.tsx';
 import { claySourceUrl } from '~/lib/github';
 import DocLayout from './DocLayout.astro';
@@ -87,7 +88,7 @@ const externalDocsWithFavicons = frontmatter.externalDocs
         {
           frontmatter.description && (
             <p class="mt-5 max-w-2xl text-clay-default text-lg leading-relaxed">
-              {frontmatter.description}
+              <InlineMarkdown text={frontmatter.description} />
             </p>
           )
         }

@@ -6,13 +6,31 @@ import { useEffect, useRef, useState } from 'react';
 import { useDismiss } from '~/lib/use-dismiss';
 
 const STORAGE_KEY = 'clay-theme';
+const CUSTOM_KEY = 'clay-custom-theme';
+const CUSTOM_SENTINEL = '__custom__';
 const THEME_EVENT = 'clay:theme-change';
+
+function readCustomTheme(): ThemeConfig | null {
+  if (globalThis.window === undefined) return null;
+  try {
+    const raw = localStorage.getItem(CUSTOM_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as unknown;
+    if (parsed && typeof parsed === 'object') return parsed as ThemeConfig;
+  } catch {
+    // corrupt or unavailable; fall through
+  }
+  return null;
+}
 
 function readInitialThemeId(): string {
   if (globalThis.window === undefined) {
     return 'clay';
   }
   const stored = localStorage.getItem(STORAGE_KEY);
+  if (stored === CUSTOM_SENTINEL && readCustomTheme()) {
+    return CUSTOM_SENTINEL;
+  }
   if (stored && builtInThemesById[stored]) {
     return stored;
   }
@@ -56,12 +74,14 @@ function SwatchStrip({ theme, count = 4, height = 14 }: SwatchStripProps) {
  */
 export function ThemePicker() {
   const [themeId, setThemeId] = useState<string>('clay');
+  const [customTheme, setCustomTheme] = useState<ThemeConfig | null>(null);
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const initialId = readInitialThemeId();
+    setCustomTheme(readCustomTheme());
     setThemeId(initialId);
     setMounted(true);
   }, []);
@@ -75,6 +95,14 @@ export function ThemePicker() {
     // `BaseLayout.astro` paints the same `<style id="clay-theme">` tag
     // before first paint to avoid a flash on hydration.
     document.documentElement.dataset.theme = themeId;
+    if (themeId === CUSTOM_SENTINEL) {
+      const live = readCustomTheme();
+      if (live) {
+        applyTheme(live);
+        setCustomTheme(live);
+      }
+      return;
+    }
     const chosen = builtInThemesById[themeId];
     if (chosen) {
       applyTheme(chosen);
@@ -82,14 +110,19 @@ export function ThemePicker() {
   }, [themeId, mounted]);
 
   useEffect(() => {
+    const refreshCustom = () => setCustomTheme(readCustomTheme());
     const onStorage = (event: StorageEvent) => {
       if (event.key === STORAGE_KEY && event.newValue) {
         setThemeId(event.newValue);
+      }
+      if (event.key === CUSTOM_KEY) {
+        refreshCustom();
       }
     };
     const onThemeChange = (event: Event) => {
       if (event instanceof CustomEvent && typeof event.detail === 'string') {
         setThemeId(event.detail);
+        if (event.detail === CUSTOM_SENTINEL) refreshCustom();
       }
     };
     globalThis.addEventListener('storage', onStorage);
@@ -113,7 +146,10 @@ export function ThemePicker() {
     globalThis.dispatchEvent(new CustomEvent(THEME_EVENT, { detail: theme.id }));
   };
 
-  const activeTheme = builtInThemesById[themeId] ?? builtInThemes[0];
+  const activeTheme: ThemeConfig =
+    themeId === CUSTOM_SENTINEL && customTheme
+      ? customTheme
+      : builtInThemesById[themeId] ?? builtInThemes[0];
   const activeLabel = mounted && activeTheme ? activeTheme.name : 'Theme';
 
   return (
@@ -159,6 +195,41 @@ export function ThemePicker() {
             </span>
           </div>
           <div className="max-h-[70vh] overflow-y-auto py-1.5">
+            {customTheme && (
+              <button
+                key="__custom__"
+                type="button"
+                role="menuitem"
+                onClick={() => select(customTheme)}
+                className={
+                  themeId === CUSTOM_SENTINEL
+                    ? 'flex w-full items-start gap-3 border-clay-strong border-l bg-clay-control/40 px-3 py-2.5 text-left'
+                    : 'flex w-full items-start gap-3 border-transparent border-l px-3 py-2.5 text-left transition-colors hover:border-clay-hairline hover:bg-clay-base'
+                }
+              >
+                <SwatchStrip theme={customTheme} count={6} height={28} />
+                <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+                  <span
+                    className="block text-base text-clay-strong leading-tight"
+                    style={{
+                      fontFamily: SERIF,
+                      fontStyle: 'italic',
+                      letterSpacing: '-0.02em',
+                    }}
+                  >
+                    {customTheme.name || 'Custom'}
+                  </span>
+                  <span className="block truncate font-mono text-[0.6875rem] text-clay-subtle leading-snug">
+                    Drafted by you · /theme-builder
+                  </span>
+                </span>
+                {themeId === CUSTOM_SENTINEL && (
+                  <span className="ml-auto flex shrink-0 items-center font-mono text-[0.625rem] text-clay-strong uppercase tracking-[0.12em]">
+                    Active
+                  </span>
+                )}
+              </button>
+            )}
             {builtInThemes.map((theme) => {
               const active = theme.id === themeId;
               return (
