@@ -110,15 +110,7 @@ export function hsvToRgba({ h, s, v }: HSV, alpha = 1): RGBA {
   const c = vN * sN;
   const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
   const m = vN - c;
-  let r = 0;
-  let g = 0;
-  let b = 0;
-  if (h < 60) [r, g, b] = [c, x, 0];
-  else if (h < 120) [r, g, b] = [x, c, 0];
-  else if (h < 180) [r, g, b] = [0, c, x];
-  else if (h < 240) [r, g, b] = [0, x, c];
-  else if (h < 300) [r, g, b] = [x, 0, c];
-  else [r, g, b] = [c, 0, x];
+  const [r, g, b] = hueSextant(h, c, x);
   return { r: (r + m) * 255, g: (g + m) * 255, b: (b + m) * 255, a: alpha };
 }
 
@@ -162,16 +154,22 @@ export function hslToRgba({ h, s, l }: HSL, alpha = 1): RGBA {
   const c = (1 - Math.abs(2 * lN - 1)) * sN;
   const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
   const m = lN - c / 2;
-  let r = 0;
-  let g = 0;
-  let b = 0;
-  if (h < 60) [r, g, b] = [c, x, 0];
-  else if (h < 120) [r, g, b] = [x, c, 0];
-  else if (h < 180) [r, g, b] = [0, c, x];
-  else if (h < 240) [r, g, b] = [0, x, c];
-  else if (h < 300) [r, g, b] = [x, 0, c];
-  else [r, g, b] = [c, 0, x];
+  const [r, g, b] = hueSextant(h, c, x);
   return { r: (r + m) * 255, g: (g + m) * 255, b: (b + m) * 255, a: alpha };
+}
+
+/**
+ * Pick the chroma triplet for the hue's 60° sextant. Shared by HSV
+ * and HSL, where the only difference is how chroma `c`, intermediate
+ * `x`, and offset `m` are computed.
+ */
+function hueSextant(h: number, c: number, x: number): readonly [number, number, number] {
+  if (h < 60) return [c, x, 0];
+  if (h < 120) return [x, c, 0];
+  if (h < 180) return [0, c, x];
+  if (h < 240) return [0, x, c];
+  if (h < 300) return [x, 0, c];
+  return [c, 0, x];
 }
 
 /**
