@@ -99,7 +99,13 @@ console.log(format(bench('plugin.handler(api)', () => {
       _ = utils;
     },
   };
-  (clayTailwindPlugin as { handler: (api: unknown) => void }).handler(api);
+  // `plugin.withOptions` returns an options-function: invoke with no
+  // overrides to get back the `{ handler, config }` pair, then run the
+  // handler against the mock API.
+  const { handler } = (clayTailwindPlugin as unknown as (
+    options?: Record<string, unknown>
+  ) => { handler: (api: unknown) => void })();
+  handler(api);
   void _;
 })));
 

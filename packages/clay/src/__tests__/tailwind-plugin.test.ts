@@ -3,7 +3,13 @@ import { dirname, resolve } from 'node:path';
 import { describe, expect, test } from 'bun:test';
 import { compile } from 'tailwindcss';
 
-import clayTailwindPlugin, { __internal } from '../tailwind';
+import clayTailwindPlugin, {
+  __internal,
+  type ClayTailwindOptions,
+} from '../tailwind';
+import * as PRESETS from '../themes/presets';
+import { flattenTheme } from '../themes/flatten';
+import type { ThemeConfig } from '../themes/types';
 import { TOKEN_REGISTRY, TOKENS_BY_NAME } from '../tokens/registry';
 import { SHORTHAND_INDEX } from '../tokens/shorthands';
 import type { ResolvedTokenSpec } from '../tokens/types';
@@ -46,7 +52,7 @@ interface AddBaseCall {
   readonly rules: Readonly<Record<string, unknown>>;
 }
 
-function runHandler(): {
+function runHandler(options: ClayTailwindOptions = {}): {
   readonly matchUtilitiesCalls: readonly MatchUtilitiesCall[];
   readonly addBaseCalls: readonly AddBaseCall[];
 } {
@@ -76,7 +82,12 @@ function runHandler(): {
       );
     },
   };
-  (clayTailwindPlugin as { handler: (api: unknown) => void }).handler(api);
+  // `plugin.withOptions` returns an options-function: call it with the
+  // options object to get back the `{ handler, config }` pair.
+  const { handler } = (clayTailwindPlugin as unknown as (
+    options: ClayTailwindOptions
+  ) => { handler: (api: unknown) => void })(options);
+  handler(api);
   return { matchUtilitiesCalls, addBaseCalls };
 }
 
@@ -301,6 +312,98 @@ describe('clayTailwindPlugin handler', () => {
       expect(block['initial-value']).not.toContain('var(');
     }
     expect(propertyKeys.length).toBeGreaterThan(0);
+  });
+});
+
+// ─── Theme option (build-time bake) ─────────────────────────────────────────
+
+describe('clayTailwindPlugin theme option', () => {
+  const BAKED_ROOT = ':root';
+  const BAKED_DARK = ':is(.dark, [data-mode="dark"]):root';
+
+  test('default invocation emits no extra `:root` or runtime-style dark block', () => {
+    const { addBaseCalls } = runHandler();
+    expect(maybeFindRule(addBaseCalls, BAKED_ROOT)).toBeUndefined();
+    expect(maybeFindRule(addBaseCalls, BAKED_DARK)).toBeUndefined();
+  });
+
+  test('preset name layers `flattenTheme(preset)` deltas onto :root after the registry defaults', () => {
+    const { addBaseCalls } = runHandler({ theme: 'ocean' });
+    const expected = flattenTheme(PRESETS.ocean as ThemeConfig);
+    if (Object.keys(expected.rootVars).length === 0) {
+      // Defensive guard, ocean always contributes overrides today.
+      throw new Error('expected ocean to contribute root-var overrides');
+    }
+    const baked = findRule(addBaseCalls, BAKED_ROOT);
+    for (const [k, v] of Object.entries(expected.rootVars)) {
+      expect(baked[k]).toBe(v);
+    }
+    // Cascade order check: the registry-defaults block must precede the
+    // baked overrides in the merged addBase payload so the override wins.
+    const merged = Object.assign({}, ...addBaseCalls.map((c) => c.rules));
+    const keys = Object.keys(merged);
+    const registryIdx = keys.indexOf(':root, [data-theme="clay"]');
+    const bakedIdx = keys.indexOf(BAKED_ROOT);
+    expect(registryIdx).toBeGreaterThanOrEqual(0);
+    expect(bakedIdx).toBeGreaterThan(registryIdx);
+  });
+
+  test('preset name with dark deltas emits the runtime-shaped dark selector', () => {
+    const { addBaseCalls } = runHandler({ theme: 'ocean' });
+    const expected = flattenTheme(PRESETS.ocean as ThemeConfig);
+    if (Object.keys(expected.darkVars).length === 0) {
+      // Theme has no dark deltas, plugin must NOT emit an empty block.
+      expect(maybeFindRule(addBaseCalls, BAKED_DARK)).toBeUndefined();
+      return;
+    }
+    const baked = findRule(addBaseCalls, BAKED_DARK);
+    for (const [k, v] of Object.entries(expected.darkVars)) {
+      expect(baked[k]).toBe(v);
+    }
+  });
+
+  test('ThemeConfig object is accepted directly (JS-config flow)', () => {
+    const inline: ThemeConfig = {
+      name: 'inline-test',
+      colors: { light: { primary: 'rebeccapurple' } },
+    };
+    const { addBaseCalls } = runHandler({ theme: inline });
+    const baked = findRule(addBaseCalls, BAKED_ROOT);
+    expect(baked['--primary']).toBe('rebeccapurple');
+    // flatten emits the `--color-*` alias too, so both forms must land.
+    expect(baked['--color-primary']).toBe('rebeccapurple');
+  });
+
+  test('JSON file path is loaded and parsed at build time', async () => {
+    const { mkdtempSync, writeFileSync } = await import('node:fs');
+    const { join } = await import('node:path');
+    const { tmpdir } = await import('node:os');
+    const dir = mkdtempSync(join(tmpdir(), 'clay-theme-'));
+    const file = join(dir, 'my-theme.json');
+    const config: ThemeConfig = {
+      name: 'file-test',
+      colors: { light: { primary: 'tomato' } },
+    };
+    writeFileSync(file, JSON.stringify(config), 'utf8');
+    const { addBaseCalls } = runHandler({ theme: file });
+    const baked = findRule(addBaseCalls, BAKED_ROOT);
+    expect(baked['--primary']).toBe('tomato');
+  });
+
+  test('unknown preset name throws a list of valid names', () => {
+    expect(() => runHandler({ theme: 'nope-not-a-preset' })).toThrow(/Known presets/);
+  });
+
+  test('unreadable JSON path throws a clear error mentioning the resolved path', () => {
+    expect(() => runHandler({ theme: './does-not-exist.json' })).toThrow(
+      /failed to read theme file/
+    );
+  });
+
+  test('does not interfere with the matchUtilities passes (utility coverage unchanged)', () => {
+    const baseline = runHandler();
+    const themed = runHandler({ theme: 'ocean' });
+    expect(themed.matchUtilitiesCalls.length).toBe(baseline.matchUtilitiesCalls.length);
   });
 });
 
@@ -889,15 +992,21 @@ describe('performance', () => {
     expect(scannerMs).toBeLessThan(regexMs);
   });
 
-  test('plugin imports without doing any disk I/O at module load', async () => {
+  test('plugin does no disk I/O at module load (lazy theme-file load is permitted)', async () => {
     // The previous implementation walked `styles/` and `components/<name>/<name>.tsx`
-    // synchronously at module load via fs.readdirSync / fs.readFileSync. The
-    // refactor removed that; this test guards against regressions by reading
-    // the bundled module text and asserting fs is no longer imported.
+    // synchronously at module load. The refactor removed that. The current
+    // plugin only touches the disk when a consumer passes `theme: '<path>.json'`,
+    // which happens at plugin-options time, not module load. This guard makes
+    // sure no future change reintroduces eager I/O.
     const path = resolve(SRC, 'tailwind.ts');
     const source = readFileSync(path, 'utf8');
+    // Directory walks are forbidden entirely.
     expect(source).not.toContain('readdirSync');
-    expect(source).not.toContain('readFileSync');
-    expect(source).not.toContain('node:fs');
+    // `readFileSync` is allowed exactly once, inside `loadThemeFromFile`.
+    const matches = [...source.matchAll(/readFileSync\(/g)];
+    expect(matches).toHaveLength(1);
+    const fnStart = source.indexOf('function loadThemeFromFile(');
+    expect(fnStart).toBeGreaterThan(0);
+    expect(matches[0].index).toBeGreaterThan(fnStart);
   });
 });
