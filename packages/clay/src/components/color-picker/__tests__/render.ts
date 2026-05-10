@@ -96,9 +96,23 @@ export function click(el: Element): void {
 }
 
 export function setInput(el: HTMLInputElement, value: string): void {
+  // React tracks input values on a private `_valueTracker` so it can
+  // diff the user-edited value against the last-committed prop. If we
+  // just write `el.value = ...`, the tracker still holds the old
+  // value, React thinks the input didn't change, and `onChange` is
+  // skipped. Explicitly resetting the tracker (the same trick
+  // @testing-library uses internally) restores the diff.
+  const proto =
+    el instanceof HTMLTextAreaElement ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype;
+  const setter = Object.getOwnPropertyDescriptor(proto, 'value')?.set;
+  type Tracked = HTMLInputElement & {
+    _valueTracker?: { setValue: (v: string) => void };
+  };
   act(() => {
-    el.value = value;
+    (el as Tracked)._valueTracker?.setValue(String(el.value));
+    setter?.call(el, value);
     el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
   });
 }
 
