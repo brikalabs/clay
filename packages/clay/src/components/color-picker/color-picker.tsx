@@ -181,25 +181,25 @@ export function ColorPicker({
             {eyedropperVisible && (
               <Button
                 type="button"
-                size="icon"
+                size="icon-xs"
                 variant="ghost"
                 onClick={handleEyedropper}
                 aria-label="Eyedropper"
-                className="aspect-square size-6 shrink-0 rounded-full"
+                className="rounded-full"
               >
-                <Pipette className="size-3" />
+                <Pipette />
               </Button>
             )}
             {onClose && (
               <Button
                 type="button"
-                size="icon"
+                size="icon-xs"
                 variant="ghost"
                 onClick={onClose}
                 aria-label="Close"
-                className="aspect-square size-6 shrink-0 rounded-full"
+                className="rounded-full"
               >
-                <X className="size-3" />
+                <X />
               </Button>
             )}
           </div>
@@ -231,7 +231,7 @@ export function ColorPicker({
             onClick={() => onAddRecent?.(currentHex)}
             disabled={!onAddRecent}
             aria-label="Save to recent"
-            className="aspect-square size-9 shrink-0 overflow-hidden p-0"
+            className="overflow-hidden"
             style={{ background: checkerboardBg(currentHex) }}
           />
           <ToggleGroup
