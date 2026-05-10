@@ -116,8 +116,15 @@ const CLASS_BOUNDARY_LEFT = String.raw`(^|[\s"'\`(\[:!])`;
 const CLASS_BOUNDARY_RIGHT = String.raw`($|[\s"'\`)\]/!])`;
 
 function refsViaUtility(src: string, token: ResolvedTokenSpec): boolean {
+  // Spacing/translate utilities accept Tailwind's negative-value prefix
+  // (`-space-x-foo`, `-mt-foo`), so allow an optional leading `-` after
+  // the boundary for those namespaces.
+  const allowNegative = token.tailwindNamespace === 'spacing';
+  const negPrefix = allowNegative ? '-?' : '';
   for (const cls of utilityClasses(token)) {
-    const re = new RegExp(`${CLASS_BOUNDARY_LEFT}${escapeRegExp(cls)}${CLASS_BOUNDARY_RIGHT}`);
+    const re = new RegExp(
+      `${CLASS_BOUNDARY_LEFT}${negPrefix}${escapeRegExp(cls)}${CLASS_BOUNDARY_RIGHT}`
+    );
     if (re.test(src)) return true;
   }
   return false;
