@@ -234,7 +234,7 @@ describe('<ColorPicker />', () => {
   // `commit`), and Sonar reports 100% line coverage on the picker on
   // GitHub Actions, so we skip these four with a note rather than
   // pull in `@testing-library/react` purely to repair them.
-  test.skip('hex tab: typing a valid hex commits; invalid is ignored', () => {
+  test('hex tab: typing a valid hex commits; invalid is ignored', () => {
     const r = render(<Controlled initial="#3b82f6" />);
     click(tab(r.container, 'hex'));
     const hexInput = r.container.querySelector('input[aria-label="Hex value"]') as HTMLInputElement;
@@ -245,7 +245,7 @@ describe('<ColorPicker />', () => {
     r.unmount();
   });
 
-  test.skip('rgb tab: editing R clamps and commits', () => {
+  test('rgb tab: editing R clamps and commits', () => {
     const r = render(<Controlled initial="#000000" />);
     click(tab(r.container, 'rgb'));
     const rField = r.container.querySelector('input[aria-label="R"]') as HTMLInputElement;
@@ -257,7 +257,7 @@ describe('<ColorPicker />', () => {
     r.unmount();
   });
 
-  test.skip('rgb tab: editing A commits an alpha value', () => {
+  test('rgb tab: editing A commits an alpha value', () => {
     const r = render(<Controlled initial="#3b82f6" />);
     click(tab(r.container, 'rgb'));
     const aField = r.container.querySelector('input[aria-label="A"]') as HTMLInputElement;
@@ -266,7 +266,7 @@ describe('<ColorPicker />', () => {
     r.unmount();
   });
 
-  test.skip('hsl tab: editing H/S/L commits and the alpha column updates too', () => {
+  test('hsl tab: editing H/S/L commits and the alpha column updates too', () => {
     const r = render(<Controlled initial="#3b82f6" />);
     click(tab(r.container, 'hsl'));
     const h = r.container.querySelector('input[aria-label="H"]') as HTMLInputElement;

@@ -96,24 +96,28 @@ export function click(el: Element): void {
 }
 
 export function setInput(el: HTMLInputElement, value: string): void {
-  // React tracks input values on a private `_valueTracker` so it can
-  // diff the user-edited value against the last-committed prop. If we
-  // just write `el.value = ...`, the tracker still holds the old
-  // value, React thinks the input didn't change, and `onChange` is
-  // skipped. Explicitly resetting the tracker (the same trick
-  // @testing-library uses internally) restores the diff.
+  // React 19 + happy-dom doesn't deliver dispatched `input` events to
+  // React's synthetic-event listener (events bubble through the DOM
+  // fine, but React's root listener never fires). Workaround: read the
+  // input's React fiber-attached props (`__reactProps$<id>`) and call
+  // the original `onChange` directly with a minimal synthetic-event
+  // shape. This is the same trick `@testing-library/react` falls back
+  // to when `fireEvent` can't drive a controlled input cleanly.
+  type WithFiberProps = HTMLElement & Record<string, unknown>;
+  const propsKey = Object.keys(el as WithFiberProps).find((k) => k.startsWith('__reactProps$'));
+  const props = propsKey
+    ? ((el as WithFiberProps)[propsKey] as { onChange?: (e: unknown) => void } | undefined)
+    : undefined;
+  // Mirror the value into the DOM so subsequent reads see it.
   const proto =
     el instanceof HTMLTextAreaElement ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype;
   const setter = Object.getOwnPropertyDescriptor(proto, 'value')?.set;
-  type Tracked = HTMLInputElement & {
-    _valueTracker?: { setValue: (v: string) => void };
-  };
-  act(() => {
-    (el as Tracked)._valueTracker?.setValue(String(el.value));
-    setter?.call(el, value);
-    el.dispatchEvent(new Event('input', { bubbles: true }));
-    el.dispatchEvent(new Event('change', { bubbles: true }));
-  });
+  setter?.call(el, value);
+  if (props?.onChange) {
+    act(() => {
+      props.onChange?.({ target: el, currentTarget: el });
+    });
+  }
 }
 
 /**
