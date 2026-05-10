@@ -1,0 +1,14 @@
+---
+import { ThemeBuilder as ThemeBuilderApp } from '~/components/theme-builder/ThemeBuilder';
+import BuilderLayout from '~/layouts/BuilderLayout.astro';
+
+const title = 'Theme Builder';
+const description =
+  "Personalize every Clay token live. Save your palette as a ThemeConfig JSON, load it back, or apply it across the docs site instantly.";
+---
+
+<BuilderLayout title={title} description={description}>
+  <div class="mx-auto w-full max-w-[1800px] px-4 py-6 md:px-8 md:py-8">
+    <ThemeBuilderApp client:only="react" />
+  </div>
+</BuilderLayout>

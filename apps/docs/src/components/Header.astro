@@ -12,8 +12,32 @@ const clayVersion = typeof __CLAY_VERSION__ === 'string' ? __CLAY_VERSION__ : 'd
   class="sticky top-0 z-20 hidden h-12 border-clay-hairline border-b bg-clay-canvas md:flex"
 >
   <div
-    class="flex min-w-0 flex-1 items-center justify-end gap-2 border-clay-hairline border-r px-4"
+    class="flex min-w-0 flex-1 items-center justify-end gap-3 border-clay-hairline border-r px-4"
   >
+    <a
+      href="/theme-builder"
+      class="group inline-flex items-center gap-1.5 rounded-full border border-clay-hairline bg-clay-elevated/60 px-2.5 py-0.5 font-medium text-clay-default text-xs transition-colors hover:border-clay-strong hover:bg-clay-control hover:text-clay-strong"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        width="11"
+        height="11"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        class="text-clay-subtle group-hover:text-clay-strong"
+      >
+        <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
+      </svg>
+      <span>Theme Builder</span>
+      <span class="rounded bg-primary/15 px-1 font-mono text-[0.5625rem] text-primary uppercase tracking-[0.12em]">
+        new
+      </span>
+    </a>
     <a
       href={repoUrl()}
       rel="noopener noreferrer"
