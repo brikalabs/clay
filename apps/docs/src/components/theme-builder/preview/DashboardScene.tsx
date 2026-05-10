@@ -9,17 +9,7 @@ import { Button } from '@brika/clay/components/button';
 import { Chart } from '@brika/clay/components/chart';
 import { Activity, ChevronRight, Folder, Home, Settings, Users } from 'lucide-react';
 import { useMemo } from 'react';
-
-function makeChartData(seed: number): { ts: number; value: number }[] {
-  const out: { ts: number; value: number }[] = [];
-  const start = Date.now() - 24 * 60 * 60 * 1000;
-  let v = 50;
-  for (let i = 0; i < 32; i++) {
-    v += (Math.sin(seed + i / 3) + Math.cos(seed * 0.7 + i / 5)) * 6;
-    out.push({ ts: start + i * 45 * 60 * 1000, value: Math.max(10, v) });
-  }
-  return out;
-}
+import { makeChartData } from './_chart-data';
 
 export function DashboardScene() {
   const chartData = useMemo(() => makeChartData(1.2), []);
