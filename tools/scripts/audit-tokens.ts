@@ -35,12 +35,27 @@ const cmp = (a: string, b: string) => a.localeCompare(b);
 
 function readComponentSource(folder: string): string {
   const parts: string[] = [];
-  for (const entry of readdirSync(folder)) {
-    if (!entry.endsWith('.tsx') && !entry.endsWith('.ts')) continue;
-    if (entry === 'tokens.ts' || entry === 'meta.ts' || entry === 'index.ts') continue;
-    parts.push(readFileSync(join(folder, entry), 'utf8'));
-  }
+  walk(folder);
   return parts.join('\n');
+
+  function walk(dir: string) {
+    for (const entry of readdirSync(dir)) {
+      const full = join(dir, entry);
+      const info = statSync(full);
+      if (info.isDirectory()) {
+        // Recurse so refactors that split a component into
+        // `internal/`, `parts/`, `pieces/` etc. don't hide tokens.
+        // The `__tests__` folder is excluded — test code references
+        // tokens for assertion purposes, not consumption.
+        if (entry === '__tests__') continue;
+        walk(full);
+        continue;
+      }
+      if (!entry.endsWith('.tsx') && !entry.endsWith('.ts')) continue;
+      if (entry === 'tokens.ts' || entry === 'meta.ts' || entry === 'index.ts') continue;
+      parts.push(readFileSync(full, 'utf8'));
+    }
+  }
 }
 
 function extractRawRefs(src: string): Set<string> {
