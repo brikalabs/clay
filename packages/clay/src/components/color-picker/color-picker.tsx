@@ -270,17 +270,16 @@ export function ColorPicker({
           </span>
           <div className="flex flex-wrap gap-1.5">
             {recentColors.slice(0, 12).map((c, i) => (
-              <Button
+              <button
                 key={`${c}-${i}`}
                 type="button"
-                size="icon"
-                variant="outline"
                 onClick={() => onChange(c)}
                 aria-label={`Use ${c}`}
                 title={c}
-                className="aspect-square size-5 overflow-hidden rounded-full p-0"
-                style={{ background: checkerboardBg(c) }}
-              />
+                className="inline-flex aspect-square size-5 shrink-0 cursor-pointer rounded-full border-0 bg-transparent p-0 transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-color-picker-marker"
+              >
+                <ColorPickerSwatch value={c} className="size-full rounded-full ring-0" />
+              </button>
             ))}
           </div>
         </div>
