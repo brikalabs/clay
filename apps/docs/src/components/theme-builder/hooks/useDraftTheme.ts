@@ -41,7 +41,7 @@ const INITIAL_IDENTITY: ThemeIdentity = {
 
 export function useDraftTheme(): UseDraftThemeResult {
   const [draft, setDraft] = useState<Draft>(() => new Map());
-  const [identity, setIdentityState] = useState<ThemeIdentity>(INITIAL_IDENTITY);
+  const [rawIdentity, setRawIdentity] = useState<ThemeIdentity>(INITIAL_IDENTITY);
   const hydrated = useRef(false);
 
   // One-shot hydration from localStorage on mount.
@@ -51,7 +51,7 @@ export function useDraftTheme(): UseDraftThemeResult {
     const stored = loadCustomTheme();
     if (stored) {
       setDraft(draftFromThemeConfig(stored));
-      setIdentityState({
+      setRawIdentity({
         id: stored.id || INITIAL_IDENTITY.id,
         name: stored.name || INITIAL_IDENTITY.name,
         description: stored.description || INITIAL_IDENTITY.description,
@@ -66,8 +66,8 @@ export function useDraftTheme(): UseDraftThemeResult {
   // Keep accent swatches synced with the live primary/feedback colors so
   // ThemePicker's swatch strip reflects the user's choices.
   const liveIdentity = useMemo<ThemeIdentity>(
-    () => ({ ...identity, accentSwatches: deriveAccentSwatches(draft) }),
-    [identity, draft]
+    () => ({ ...rawIdentity, accentSwatches: deriveAccentSwatches(draft) }),
+    [rawIdentity, draft]
   );
 
   // Persist the draft so cross-page navigation / reload restore work.
@@ -97,7 +97,7 @@ export function useDraftTheme(): UseDraftThemeResult {
   const replaceAll = useCallback(
     (next: Draft, patch?: Partial<ThemeIdentity>) => {
       setDraft(next);
-      if (patch) setIdentityState((prev) => ({ ...prev, ...patch }));
+      if (patch) setRawIdentity((prev) => ({ ...prev, ...patch }));
     },
     []
   );
@@ -107,7 +107,7 @@ export function useDraftTheme(): UseDraftThemeResult {
   }, []);
 
   const setIdentity = useCallback((patch: Partial<ThemeIdentity>) => {
-    setIdentityState((prev) => ({ ...prev, ...patch }));
+    setRawIdentity((prev) => ({ ...prev, ...patch }));
   }, []);
 
   return {

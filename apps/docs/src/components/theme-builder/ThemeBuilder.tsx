@@ -40,15 +40,16 @@ export function ThemeBuilder() {
 
   // Reflect tab + selectedComponent in the URL so the builder is shareable.
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const url = new URL(window.location.href);
+    if (globalThis.window === undefined) return;
+    const url = new URL(globalThis.location.href);
     if (tab === 'basic') url.searchParams.delete('tab');
     else url.searchParams.set('tab', tab);
     if (selectedComponent) url.searchParams.set('component', selectedComponent);
     else url.searchParams.delete('component');
     const next = `${url.pathname}${url.search}${url.hash}`;
-    if (next !== `${window.location.pathname}${window.location.search}${window.location.hash}`) {
-      window.history.replaceState({}, '', next);
+    const current = `${globalThis.location.pathname}${globalThis.location.search}${globalThis.location.hash}`;
+    if (next !== current) {
+      globalThis.history.replaceState({}, '', next);
     }
   }, [tab, selectedComponent]);
 
@@ -73,7 +74,6 @@ export function ThemeBuilder() {
             draft={draft.draft}
             setValue={draft.setValue}
             resetValue={draft.resetValue}
-            replaceAll={draft.replaceAll}
           />
         </div>
         <PreviewPanel
@@ -91,14 +91,14 @@ export function ThemeBuilder() {
 const VALID_TABS: ReadonlySet<EditorTab> = new Set(['basic', 'component']);
 
 function readTabParam(): EditorTab {
-  if (typeof window === 'undefined') return 'basic';
-  const value = new URLSearchParams(window.location.search).get('tab');
+  if (globalThis.window === undefined) return 'basic';
+  const value = new URLSearchParams(globalThis.location.search).get('tab');
   return value && (VALID_TABS as Set<string>).has(value) ? (value as EditorTab) : 'basic';
 }
 
 function readComponentParam(): string | null {
-  if (typeof window === 'undefined') return null;
-  const value = new URLSearchParams(window.location.search).get('component');
+  if (globalThis.window === undefined) return null;
+  const value = new URLSearchParams(globalThis.location.search).get('component');
   if (!value) return null;
   return /^[a-z][a-z0-9-]*$/.test(value) ? value : null;
 }

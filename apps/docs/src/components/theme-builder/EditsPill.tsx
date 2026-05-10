@@ -40,7 +40,7 @@ export function EditsPill({ draft, resetValue, clearAll, compact }: EditsPillPro
         }
       >
         <span aria-hidden className="size-1.5 rounded-full bg-clay-inactive" />
-        pristine
+        <span>pristine</span>
       </span>
     );
   }

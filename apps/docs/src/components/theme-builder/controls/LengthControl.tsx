@@ -108,6 +108,13 @@ function trim(n: number, decimals: number): string {
   return Number.parseFloat(n.toFixed(decimals)).toString();
 }
 
+/** The numeric magnitude carried by a parsed value, regardless of mode. */
+function currentMagnitude(parsed: ParsedValue): number | null {
+  if (!parsed) return null;
+  if (parsed.mode === 'literal') return parsed.amount;
+  return parsed.multiplier;
+}
+
 interface LengthControlProps extends TokenControlBaseProps {
   /** Token type, used to pick a sensible slider range. */
   readonly tokenType: string;
@@ -133,8 +140,8 @@ export function LengthControl({
   useEffect(() => {
     setPixels(computePixels(value));
     const handler = () => setPixels(computePixels(value));
-    window.addEventListener('clay:theme-change', handler);
-    return () => window.removeEventListener('clay:theme-change', handler);
+    globalThis.addEventListener('clay:theme-change', handler);
+    return () => globalThis.removeEventListener('clay:theme-change', handler);
   }, [value]);
 
   const handleRefSelect = (key: RefKey) => {
@@ -142,12 +149,7 @@ export function LengthControl({
       const unit = key.slice('unit:'.length) as 'px' | 'rem' | 'em';
       // Re-emit the current numeric magnitude in the new unit, or `1`
       // when leaving reference mode without a prior literal.
-      const next =
-        parsed?.mode === 'literal'
-          ? parsed.amount
-          : parsed?.mode === 'reference'
-          ? parsed.multiplier
-          : 1;
+      const next = currentMagnitude(parsed) ?? 1;
       onChange(`${trim(next, 2)}${unit}`);
     } else {
       const tokenName = key.slice('ref:'.length);

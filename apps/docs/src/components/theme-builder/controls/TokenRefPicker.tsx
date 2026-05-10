@@ -161,12 +161,10 @@ export function TokenRefPicker({ current, refs, tokenType, onSelect }: TokenRefP
   );
 }
 
-function renderTriggerLabel(current: RefKey, refs: readonly ResolvedTokenSpec[]): string {
+function renderTriggerLabel(current: RefKey, _refs: readonly ResolvedTokenSpec[]): string {
   if (current.startsWith('unit:')) return current.slice('unit:'.length);
   const name = current.slice('ref:'.length);
-  // Re-lookup the default for a one-glance hint in the trigger.
-  const token = refs.find((r) => r.name === name);
-  return token ? `var(--${name})` : `var(--${name})`;
+  return `var(--${name})`;
 }
 
 interface RefRowProps {

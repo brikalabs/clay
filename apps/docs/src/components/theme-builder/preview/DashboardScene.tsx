@@ -129,12 +129,7 @@ function StatCard({
   readonly delta: string;
   readonly tone: 'success' | 'warning' | 'destructive';
 }) {
-  const deltaClass =
-    tone === 'success'
-      ? 'text-success'
-      : tone === 'warning'
-      ? 'text-warning'
-      : 'text-destructive';
+  const deltaClass = deltaToneClass(tone);
   return (
     <div className="rounded-xl border border-border bg-card p-4">
       <div className="mb-1 text-muted-foreground text-xs">{label}</div>
@@ -153,14 +148,7 @@ function ActivityRow({
   readonly label: string;
   readonly meta: string;
 }) {
-  const dotClass =
-    tone === 'success'
-      ? 'bg-success'
-      : tone === 'warning'
-      ? 'bg-warning'
-      : tone === 'destructive'
-      ? 'bg-destructive'
-      : 'bg-info';
+  const dotClass = activityToneClass(tone);
   return (
     <li className="flex items-center gap-2 rounded-md px-1.5 py-1 hover:bg-accent">
       <span aria-hidden className={`size-2 shrink-0 rounded-full ${dotClass}`} />
@@ -168,4 +156,17 @@ function ActivityRow({
       <span className="text-muted-foreground text-xs">{meta}</span>
     </li>
   );
+}
+
+function deltaToneClass(tone: 'success' | 'warning' | 'destructive'): string {
+  if (tone === 'success') return 'text-success';
+  if (tone === 'warning') return 'text-warning';
+  return 'text-destructive';
+}
+
+function activityToneClass(tone: 'success' | 'warning' | 'destructive' | 'info'): string {
+  if (tone === 'success') return 'bg-success';
+  if (tone === 'warning') return 'bg-warning';
+  if (tone === 'destructive') return 'bg-destructive';
+  return 'bg-info';
 }

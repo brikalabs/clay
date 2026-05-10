@@ -46,7 +46,7 @@ const PORTAL_SELECTOR =
 const ALWAYS_TAG_SELECTOR = '[data-sonner-toaster]';
 
 export function PreviewScope({ theme, mode, className, style, children }: PreviewScopeProps) {
-  const vars = useMemo(() => themeToCssVars(theme, mode) as CSSProperties, [theme, mode]);
+  const vars = useMemo(() => themeToCssVars(theme, mode), [theme, mode]);
   const rootRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -72,11 +72,10 @@ export function PreviewScope({ theme, mode, className, style, children }: Previe
     };
 
     const consider = (el: HTMLElement) => {
-      if (el.matches(ALWAYS_TAG_SELECTOR)) {
-        paint(el);
-      } else if (el.matches(PORTAL_SELECTOR) && ownedBy(el, root)) {
-        paint(el);
-      }
+      const owns =
+        el.matches(ALWAYS_TAG_SELECTOR) ||
+        (el.matches(PORTAL_SELECTOR) && ownedBy(el, root));
+      if (owns) paint(el);
     };
 
     document.body.querySelectorAll<HTMLElement>(PORTAL_SELECTOR).forEach(consider);

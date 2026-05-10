@@ -130,7 +130,8 @@ export function themeConfigFromDraft(draft: Draft, identity: ThemeIdentity): The
         cursor = fresh;
       }
     }
-    cursor[segments[segments.length - 1]] = value;
+    const last = segments.at(-1);
+    if (last !== undefined) cursor[last] = value;
   }
   return root as unknown as ThemeConfig;
 }
@@ -153,7 +154,7 @@ export function draftFromThemeConfig(theme: ThemeConfig): Draft {
   if (theme.focus) writeRecord(out, 'focus', theme.focus as Record<string, unknown>);
   if (theme.components) {
     for (const [comp, props] of Object.entries(theme.components)) {
-      writeRecord(out, `components.${comp}`, props as Record<string, unknown>);
+      writeRecord(out, `components.${comp}`, props);
     }
   }
   return out;

@@ -26,9 +26,9 @@ const THEME_EVENT = 'clay:theme-change';
 const CUSTOM_SENTINEL = '__custom__';
 
 function ls(): Storage | null {
-  if (typeof window === 'undefined') return null;
+  if (globalThis.window === undefined) return null;
   try {
-    return window.localStorage;
+    return globalThis.localStorage;
   } catch {
     return null;
   }
@@ -66,9 +66,9 @@ export function saveDraftTheme(theme: ThemeConfig): void {
  */
 export function ensureDocsChromeUnscoped(): void {
   const storage = ls();
-  if (!storage || storage.getItem(ACTIVE_THEME_KEY) !== CUSTOM_SENTINEL) return;
+  if (storage?.getItem(ACTIVE_THEME_KEY) !== CUSTOM_SENTINEL) return;
   const previous = storage.getItem(PREVIOUS_THEME_KEY) ?? 'clay';
   storage.setItem(ACTIVE_THEME_KEY, previous);
   storage.removeItem(PREVIOUS_THEME_KEY);
-  window.dispatchEvent(new CustomEvent(THEME_EVENT, { detail: previous }));
+  globalThis.dispatchEvent(new CustomEvent(THEME_EVENT, { detail: previous }));
 }

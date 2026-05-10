@@ -153,18 +153,19 @@ function Stat({
   readonly value: string;
   readonly tone?: 'destructive' | 'success';
 }) {
-  const valueClass =
-    tone === 'destructive'
-      ? 'text-destructive'
-      : tone === 'success'
-      ? 'text-success'
-      : 'text-foreground';
+  const valueClass = toneClass(tone);
   return (
     <div className="flex flex-col items-center gap-0.5">
       <span className={`font-semibold text-2xl ${valueClass}`}>{value}</span>
       <span className="text-muted-foreground text-xs">{label}</span>
     </div>
   );
+}
+
+function toneClass(tone?: 'destructive' | 'success'): string {
+  if (tone === 'destructive') return 'text-destructive';
+  if (tone === 'success') return 'text-success';
+  return 'text-foreground';
 }
 
 function FormPanel() {

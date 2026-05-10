@@ -114,7 +114,7 @@ export function TokenVisual({ token, value }: TokenVisualProps) {
           <span
             aria-hidden
             className="absolute inset-1 rounded-sm bg-clay-strong"
-            style={{ opacity: parseFloat(value) || 0 }}
+            style={{ opacity: Number.parseFloat(value) || 0 }}
           />
         </span>
       );

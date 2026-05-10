@@ -11,7 +11,7 @@ import { ColorRow } from './ColorRow';
 import { ComponentTab } from './ComponentTab';
 import { TokenControl } from './TokenControl';
 import type { EditorTab } from './ThemeBuilder';
-import type { Draft, ThemeIdentity } from './state/draft';
+import type { Draft } from './state/draft';
 import { BASIC_GROUPS } from './state/tiers';
 
 interface EditorPanelProps {
@@ -22,7 +22,6 @@ interface EditorPanelProps {
   readonly draft: Draft;
   readonly setValue: (key: string, value: string) => void;
   readonly resetValue: (key: string) => void;
-  readonly replaceAll: (next: Draft, identity?: Partial<ThemeIdentity>) => void;
 }
 
 export function EditorPanel({
