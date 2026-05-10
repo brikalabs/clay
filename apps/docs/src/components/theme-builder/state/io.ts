@@ -110,25 +110,48 @@ function validateAccentSwatches(obj: Record<string, unknown>): string | null {
 }
 
 function validateSections(obj: Record<string, unknown>): string | null {
-  if (obj.colors !== undefined && !isStringRecordPair(obj.colors, 'light', 'dark')) {
+  return (
+    validateColorsSection(obj) ??
+    validateScalarSections(obj) ??
+    validateComponentsSection(obj) ??
+    validateEffectsSection(obj)
+  );
+}
+
+function validateColorsSection(obj: Record<string, unknown>): string | null {
+  if (obj.colors === undefined) return null;
+  if (!isStringRecordPair(obj.colors, 'light', 'dark')) {
     return 'colors must be { light?, dark? } records of strings.';
   }
-  for (const key of ['geometry', 'borders', 'motion', 'focus'] as const) {
+  return null;
+}
+
+const SCALAR_SECTION_KEYS = ['geometry', 'borders', 'motion', 'focus'] as const;
+
+function validateScalarSections(obj: Record<string, unknown>): string | null {
+  for (const key of SCALAR_SECTION_KEYS) {
     if (obj[key] !== undefined && !isStringRecord(obj[key])) {
       return `${key} must be a record of strings.`;
     }
   }
-  if (obj.components !== undefined) {
-    const components = obj.components;
-    if (!components || typeof components !== 'object' || Array.isArray(components)) {
-      return 'components must be a record of records.';
-    }
-    for (const [comp, props] of Object.entries(components as Record<string, unknown>)) {
-      if (!isStringRecord(props)) {
-        return `components.${comp} must be a record of strings.`;
-      }
+  return null;
+}
+
+function validateComponentsSection(obj: Record<string, unknown>): string | null {
+  const components = obj.components;
+  if (components === undefined) return null;
+  if (!components || typeof components !== 'object' || Array.isArray(components)) {
+    return 'components must be a record of records.';
+  }
+  for (const [comp, props] of Object.entries(components as Record<string, unknown>)) {
+    if (!isStringRecord(props)) {
+      return `components.${comp} must be a record of strings.`;
     }
   }
+  return null;
+}
+
+function validateEffectsSection(obj: Record<string, unknown>): string | null {
   if (obj.effects !== undefined && !Array.isArray(obj.effects)) {
     return 'effects must be an array of strings.';
   }
