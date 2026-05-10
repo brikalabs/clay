@@ -123,8 +123,117 @@ const THEME_DATA_JSON = JSON.stringify(THEME_DATA);
           root.dataset.mode = mode;
 
           const THEME_KEY = 'clay-theme';
+          const CUSTOM_KEY = 'clay-custom-theme';
+          const CUSTOM_SENTINEL = '__custom__';
           const themeMap = JSON.parse(THEME_DATA_JSON);
           const storedTheme = localStorage.getItem(THEME_KEY);
+
+          // The /theme-builder page deliberately renders its draft in
+          // a SCOPED preview only — the docs chrome around the builder
+          // (header, sidebar, the editor inputs themselves) must stay
+          // on a real preset. If `__custom__` is the active id when we
+          // land here, fall through to the preset branch so the chrome
+          // paints with `clay` (or any other valid preset) on first
+          // frame; the React-side `ensureDocsChromeUnscoped()` then
+          // commits the change to localStorage.
+          const onBuilder =
+            location.pathname === '/theme-builder' ||
+            location.pathname.startsWith('/theme-builder/');
+
+          // ── Custom-theme branch ──────────────────────────────────────
+          // When the user-authored theme is active, render an inline
+          // stylesheet from the JSON in localStorage. Mirrors the colour
+          // / section / component walks in `flattenTheme` so we paint
+          // the user's choices on first frame instead of flashing the
+          // default 'clay' palette.
+          if (storedTheme === CUSTOM_SENTINEL && !onBuilder) {
+            try {
+              const raw = localStorage.getItem(CUSTOM_KEY);
+              if (raw) {
+                const theme = JSON.parse(raw);
+                root.dataset.theme = CUSTOM_SENTINEL;
+                const sectionMap = {
+                  'geometry.radius': '--radius',
+                  'geometry.spacing': '--spacing',
+                  'geometry.textBase': '--text-base',
+                  'geometry.fontSans': '--font-sans',
+                  'geometry.fontMono': '--font-mono',
+                  'geometry.backdropBlur': '--backdrop-blur',
+                  'borders.width': '--border-width',
+                  'borders.style': '--border-style',
+                  'motion.duration': '--motion-duration',
+                  'motion.easing': '--motion-easing',
+                  'focus.width': '--ring-width',
+                  'focus.offset': '--ring-offset',
+                };
+                /** @type {(s: string) => string} */
+                const camelToKebab = (s) =>
+                  s.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+                /** @type {string[]} */
+                const lightVars = [];
+                /** @type {string[]} */
+                const darkVars = [];
+                /** @type {(target: string[], source: Record<string, unknown> | undefined) => void} */
+                const writeColors = (target, source) => {
+                  if (!source) return;
+                  for (const k in source) {
+                    const v = source[k];
+                    if (typeof v === 'string' && v) {
+                      target.push('--' + k + ': ' + v + ';');
+                      target.push('--color-' + k + ': ' + v + ';');
+                    }
+                  }
+                };
+                writeColors(lightVars, theme.colors && theme.colors.light);
+                writeColors(darkVars, theme.colors && theme.colors.dark);
+                /** @type {(section: string, source: Record<string, unknown> | undefined) => void} */
+                const writeSection = (section, source) => {
+                  if (!source) return;
+                  for (const prop in source) {
+                    const cssVar = sectionMap[section + '.' + prop];
+                    const v = source[prop];
+                    if (cssVar && typeof v === 'string' && v) {
+                      lightVars.push(cssVar + ': ' + v + ';');
+                    }
+                  }
+                };
+                writeSection('geometry', theme.geometry);
+                writeSection('borders', theme.borders);
+                writeSection('motion', theme.motion);
+                writeSection('focus', theme.focus);
+                if (theme.components) {
+                  for (const compName in theme.components) {
+                    const props = theme.components[compName];
+                    if (!props) continue;
+                    const kebabName = camelToKebab(compName);
+                    for (const prop in props) {
+                      const v = props[prop];
+                      if (typeof v === 'string' && v) {
+                        lightVars.push(
+                          '--' + kebabName + '-' + camelToKebab(prop) + ': ' + v + ';'
+                        );
+                      }
+                    }
+                  }
+                }
+                let css = '';
+                if (lightVars.length) css += ':root {\n' + lightVars.join('\n') + '\n}';
+                if (darkVars.length)
+                  css +=
+                    '\n:is(.dark, [data-mode="dark"]):root {\n' + darkVars.join('\n') + '\n}';
+                if (css) {
+                  const tag = document.createElement('style');
+                  tag.id = 'clay-theme';
+                  tag.textContent = css;
+                  document.head.appendChild(tag);
+                }
+                return;
+              }
+            } catch {
+              // fall through to preset path below
+            }
+          }
+
           const themeId = storedTheme && themeMap[storedTheme] ? storedTheme : 'clay';
           const entry = themeMap[themeId];
           if (!entry) {
