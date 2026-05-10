@@ -279,7 +279,7 @@ export interface ColorPickerSwatchProps extends Omit<ComponentProps<'span'>, 'ch
  * `inherit` resolves wherever inheritance lands). Empty values fall
  * back to a 45° stripe pattern so unset slots are obvious.
  */
-export function ColorPickerSwatch({ value, className, style, ...rest }: ColorPickerSwatchProps) {
+export function ColorPickerSwatch({ value, className, style, ...rest }: Readonly<ColorPickerSwatchProps>) {
   const v = value.trim();
   let resolvedStyle: CSSProperties;
   if (v.length === 0) {
@@ -313,11 +313,11 @@ function IconButton({
   children,
   label,
   onClick,
-}: {
+}: Readonly<{
   children: ReactNode;
   label: string;
   onClick: () => void;
-}) {
+}>) {
   return (
     <button
       type="button"
@@ -334,11 +334,11 @@ function SpecialPill({
   keyword,
   active,
   onPick,
-}: {
+}: Readonly<{
   keyword: SpecialKeyword;
   active: boolean;
   onPick: () => void;
-}) {
+}>) {
   return (
     <button
       type="button"
@@ -360,12 +360,12 @@ function SatValPad({
   s,
   v,
   onChange,
-}: {
+}: Readonly<{
   hue: number;
   s: number;
   v: number;
   onChange: (s: number, v: number) => void;
-}) {
+}>) {
   const padRef = useRef<HTMLDivElement | null>(null);
   const dragRef = useRef(false);
 
@@ -384,10 +384,11 @@ function SatValPad({
   return (
     <div
       ref={padRef}
-      role="slider"
-      aria-label="Saturation and value"
-      aria-valuetext={`saturation ${Math.round(s)}%, value ${Math.round(v)}%`}
-      tabIndex={0}
+      // 2D pad: pointer-only by design — drop `role`/`tabIndex` rather
+      // than claim a `role="slider"` contract that ARIA reserves for
+      // single-value widgets. Keyboard users edit through the H / S /
+      // L / RGB / hex numeric inputs below, which are fully labelled.
+      aria-label={`Saturation ${Math.round(s)}%, value ${Math.round(v)}%`}
       {...handlers}
       className="relative h-40 flex-1 cursor-crosshair touch-none rounded-lg ring-1 ring-color-picker-border"
       style={{
@@ -410,10 +411,10 @@ function SatValPad({
 function HueSlider({
   hue,
   onChange,
-}: {
+}: Readonly<{
   hue: number;
   onChange: (h: number) => void;
-}) {
+}>) {
   const ref = useRef<HTMLDivElement | null>(null);
   const dragRef = useRef(false);
 
@@ -455,11 +456,11 @@ function AlphaSlider({
   hsv,
   alpha,
   onChange,
-}: {
+}: Readonly<{
   hsv: HSV;
   alpha: number;
   onChange: (a: number) => void;
-}) {
+}>) {
   const ref = useRef<HTMLDivElement | null>(null);
   const dragRef = useRef(false);
 
@@ -499,7 +500,7 @@ function AlphaSlider({
   );
 }
 
-function ContrastRow({ hex }: { hex: string }) {
+function ContrastRow({ hex }: Readonly<{ hex: string }>) {
   const onWhite = contrastRatio(hex, '#ffffff');
   const onBlack = contrastRatio(hex, '#000000');
   if (onWhite === null && onBlack === null) return null;
@@ -516,14 +517,14 @@ function ContrastBadge({
   ratio,
   on,
   against,
-}: {
+}: Readonly<{
   label: string;
   ratio: number | null;
   on: string;
   against: string;
-}) {
+}>) {
   if (ratio === null) return <span className="opacity-40">{label}</span>;
-  const verdict = ratio >= 4.5 ? 'AA' : ratio >= 3 ? 'AA·lg' : '·';
+  const verdict = wcagVerdict(ratio);
   return (
     <span className="flex items-center gap-1.5">
       <span
@@ -620,14 +621,14 @@ function NumField({
   max,
   suffix,
   onChange,
-}: {
+}: Readonly<{
   label: string;
   value: number;
   min: number;
   max: number;
   suffix?: string;
   onChange: (n: number) => void;
-}) {
+}>) {
   return (
     <label className="flex flex-col gap-0.5">
       <span className="font-mono text-[0.5625rem] text-muted-foreground tracking-widest uppercase">
@@ -665,6 +666,12 @@ const CHECKERBOARD =
 
 function clamp(n: number, lo: number, hi: number): number {
   return Math.max(lo, Math.min(hi, n));
+}
+
+function wcagVerdict(ratio: number): string {
+  if (ratio >= 4.5) return 'AA';
+  if (ratio >= 3) return 'AA·lg';
+  return '·';
 }
 
 function clamp01(n: number): number {

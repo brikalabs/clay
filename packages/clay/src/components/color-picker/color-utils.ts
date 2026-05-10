@@ -203,18 +203,21 @@ export function contrastRatio(a: string, b: string): number | null {
 interface EyeDropperLike {
   open: () => Promise<{ sRGBHex: string }>;
 }
+type EyeDropperCtor = new () => EyeDropperLike;
 interface WindowWithEyeDropper {
-  EyeDropper?: { new (): EyeDropperLike };
+  EyeDropper?: EyeDropperCtor;
 }
 
 export function hasEyeDropper(): boolean {
-  if (typeof window === 'undefined') return false;
-  return typeof (window as unknown as WindowWithEyeDropper).EyeDropper === 'function';
+  if (globalThis.window === undefined) return false;
+  return (
+    typeof (globalThis as unknown as WindowWithEyeDropper).EyeDropper === 'function'
+  );
 }
 
 export async function pickWithEyeDropper(): Promise<string | null> {
-  if (typeof window === 'undefined') return null;
-  const Ctor = (window as unknown as WindowWithEyeDropper).EyeDropper;
+  if (globalThis.window === undefined) return null;
+  const Ctor = (globalThis as unknown as WindowWithEyeDropper).EyeDropper;
   if (!Ctor) return null;
   try {
     const dropper = new Ctor();
