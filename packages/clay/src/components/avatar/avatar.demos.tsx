@@ -39,7 +39,7 @@ export function AvatarFallbackDemo() {
 /** Three preset sizes, `sm` (24px), `default` (32px), and `lg` (40px). */
 export function AvatarSizesDemo() {
   return (
-    <div className="flex items-end gap-3">
+    <div className="flex items-center gap-3">
       <Avatar size="sm">
         <AvatarFallback>SM</AvatarFallback>
       </Avatar>
