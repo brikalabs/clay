@@ -4,10 +4,10 @@
  * click pills for `currentColor` / `transparent` / `inherit`, recent-
  * colors strip, and live WCAG contrast badges.
  *
- * The component is purely the picker UI — wrap it in `<Popover>` /
- * `<Dialog>` / your own trigger to handle open/close yourself. Pair
- * with `<ColorPickerSwatch value={value} />` for trigger faces that
- * paint the current value over a checkerboard so alpha is visible.
+ * Built from Clay primitives — every interactive control is a Clay
+ * component (`Button`, `ToggleGroup`, `Input`, `InputGroup`), so
+ * theming, focus rings, and disabled states match the rest of the
+ * library without re-implementing them.
  *
  * Controlled-only. `value` may be:
  *   - any 3 / 4 / 6 / 8-digit hex (alpha handled);
@@ -28,7 +28,6 @@ import {
   type ComponentProps,
   type CSSProperties,
   type PointerEvent as ReactPointerEvent,
-  type ReactNode,
   type RefObject,
   useCallback,
   useEffect,
@@ -37,6 +36,14 @@ import {
   useState,
 } from 'react';
 import { cn } from '../../primitives/cn';
+import { Button } from '../button';
+import { Input } from '../input';
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from '../input-group';
+import { ToggleGroup, ToggleGroupItem } from '../toggle-group';
 import {
   type HSL,
   type HSV,
@@ -157,24 +164,43 @@ export function ColorPicker({
         <div className="flex items-center justify-between gap-2 border-color-picker-border border-b bg-card/40 px-3 py-2">
           <div className="flex flex-wrap items-center gap-1">
             {specialKeywords.map((keyword) => (
-              <SpecialPill
+              <Button
                 key={keyword}
-                keyword={keyword}
-                active={activeSpecial === keyword.toLowerCase()}
-                onPick={() => togglePill(keyword)}
-              />
+                type="button"
+                size="sm"
+                variant={activeSpecial === keyword.toLowerCase() ? 'default' : 'outline'}
+                aria-pressed={activeSpecial === keyword.toLowerCase()}
+                onClick={() => togglePill(keyword)}
+                className="h-6 rounded-full px-2.5 font-mono text-[0.625rem] tracking-wide"
+              >
+                {keyword}
+              </Button>
             ))}
           </div>
           <div className="flex items-center gap-1">
             {eyedropperVisible && (
-              <IconButton onClick={handleEyedropper} label="Eyedropper">
-                <Pipette size={12} />
-              </IconButton>
+              <Button
+                type="button"
+                size="icon"
+                variant="ghost"
+                onClick={handleEyedropper}
+                aria-label="Eyedropper"
+                className="size-6 rounded-full"
+              >
+                <Pipette className="size-3" />
+              </Button>
             )}
             {onClose && (
-              <IconButton onClick={onClose} label="Close">
-                <X size={12} />
-              </IconButton>
+              <Button
+                type="button"
+                size="icon"
+                variant="ghost"
+                onClick={onClose}
+                aria-label="Close"
+                className="size-6 rounded-full"
+              >
+                <X className="size-3" />
+              </Button>
             )}
           </div>
         </div>
@@ -198,35 +224,35 @@ export function ColorPicker({
 
       <div className="flex flex-col gap-2 px-3 pb-3">
         <div className="flex items-center gap-2">
-          <button
+          <Button
             type="button"
+            size="icon"
+            variant="outline"
             onClick={() => onAddRecent?.(currentHex)}
             disabled={!onAddRecent}
             aria-label="Save to recent"
-            className="size-9 shrink-0 overflow-hidden rounded-control ring-1 ring-color-picker-border transition-shadow hover:enabled:ring-2 hover:enabled:ring-foreground disabled:cursor-default"
+            className="size-9 shrink-0 overflow-hidden p-0"
             style={{ background: checkerboardBg(currentHex) }}
           />
-          <div
-            role="tablist"
-            className="inline-flex flex-1 rounded-full border border-color-picker-border bg-card/40 p-0.5"
+          <ToggleGroup
+            type="single"
+            value={format}
+            onValueChange={(next) => {
+              if (next) setFormat(next as Format);
+            }}
+            className="flex-1"
           >
             {FORMATS.map((f) => (
-              <button
+              <ToggleGroupItem
                 key={f}
-                type="button"
-                role="tab"
-                aria-selected={format === f}
-                onClick={() => setFormat(f)}
-                className={
-                  format === f
-                    ? 'flex-1 rounded-full bg-color-picker-surface-container px-2 py-0.5 font-medium font-mono text-[0.625rem] tracking-widest uppercase shadow-sm'
-                    : 'flex-1 px-2 py-0.5 font-mono text-[0.625rem] text-muted-foreground tracking-widest uppercase hover:text-color-picker-surface-label'
-                }
+                value={f}
+                size="sm"
+                className="flex-1 font-mono text-[0.625rem] tracking-widest uppercase"
               >
                 {f}
-              </button>
+              </ToggleGroupItem>
             ))}
-          </div>
+          </ToggleGroup>
         </div>
         <FormatFields
           format={format}
@@ -244,13 +270,15 @@ export function ColorPicker({
           </span>
           <div className="flex flex-wrap gap-1.5">
             {recentColors.slice(0, 12).map((c, i) => (
-              <button
+              <Button
                 key={`${c}-${i}`}
                 type="button"
+                size="icon"
+                variant="outline"
                 onClick={() => onChange(c)}
                 aria-label={`Use ${c}`}
                 title={c}
-                className="size-5 overflow-hidden rounded-full ring-1 ring-color-picker-border transition-transform hover:scale-110"
+                className="size-5 overflow-hidden rounded-full p-0"
                 style={{ background: checkerboardBg(c) }}
               />
             ))}
@@ -306,54 +334,9 @@ export function ColorPickerSwatch({ value, className, style, ...rest }: Readonly
 }
 
 // ───────────────────────────────────────────────────────────────────────────
-// Pieces
+// 2D pad + 1D sliders (own pointer logic; no Clay primitive matches a
+// custom 2D / vertical-1D / alpha-track shape)
 // ───────────────────────────────────────────────────────────────────────────
-
-function IconButton({
-  children,
-  label,
-  onClick,
-}: Readonly<{
-  children: ReactNode;
-  label: string;
-  onClick: () => void;
-}>) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={label}
-      className="rounded-full border border-color-picker-border p-1 text-muted-foreground hover:border-color-picker-surface-label hover:text-color-picker-surface-label"
-    >
-      {children}
-    </button>
-  );
-}
-
-function SpecialPill({
-  keyword,
-  active,
-  onPick,
-}: Readonly<{
-  keyword: SpecialKeyword;
-  active: boolean;
-  onPick: () => void;
-}>) {
-  return (
-    <button
-      type="button"
-      onClick={onPick}
-      aria-pressed={active}
-      className={
-        active
-          ? 'rounded-full bg-accent px-2.5 py-0.5 font-medium font-mono text-[0.625rem] text-accent-foreground tracking-wide'
-          : 'rounded-full border border-color-picker-border px-2.5 py-0.5 font-mono text-[0.625rem] text-muted-foreground tracking-wide hover:border-color-picker-surface-label hover:text-color-picker-surface-label'
-      }
-    >
-      {keyword}
-    </button>
-  );
-}
 
 function SatValPad({
   hue,
@@ -500,6 +483,10 @@ function AlphaSlider({
   );
 }
 
+// ───────────────────────────────────────────────────────────────────────────
+// Contrast row
+// ───────────────────────────────────────────────────────────────────────────
+
 function ContrastRow({ hex }: Readonly<{ hex: string }>) {
   const onWhite = contrastRatio(hex, '#ffffff');
   const onBlack = contrastRatio(hex, '#000000');
@@ -542,7 +529,8 @@ function ContrastBadge({
 }
 
 // ───────────────────────────────────────────────────────────────────────────
-// Format-specific numeric inputs
+// Format-specific numeric inputs (use Clay Input + InputGroup so unit
+// suffixes render through the same addon machinery as PasswordInput, etc.)
 // ───────────────────────────────────────────────────────────────────────────
 
 interface FormatFieldsProps {
@@ -553,7 +541,7 @@ interface FormatFieldsProps {
   readonly onCommit: (next: HSV, alpha: number) => void;
 }
 
-function FormatFields({ format, hsv, alpha, showAlpha, onCommit }: FormatFieldsProps) {
+function FormatFields({ format, hsv, alpha, showAlpha, onCommit }: Readonly<FormatFieldsProps>) {
   const rgba = hsvToRgba(hsv, alpha);
   const hex = rgbaToHex(rgba);
   const hsl = rgbaToHsl(rgba);
@@ -561,7 +549,7 @@ function FormatFields({ format, hsv, alpha, showAlpha, onCommit }: FormatFieldsP
 
   if (format === 'hex') {
     return (
-      <input
+      <Input
         type="text"
         value={hex}
         spellCheck={false}
@@ -573,7 +561,7 @@ function FormatFields({ format, hsv, alpha, showAlpha, onCommit }: FormatFieldsP
             if (next) onCommit(next, showAlpha ? parsed.a : 1);
           }
         }}
-        className="rounded-control border border-color-picker-border bg-card/40 px-2 py-1 font-mono text-[0.75rem] outline-none focus:border-color-picker-surface-label"
+        className="h-8 font-mono text-[0.75rem]"
       />
     );
   }
@@ -634,8 +622,8 @@ function NumField({
       <span className="font-mono text-[0.5625rem] text-muted-foreground tracking-widest uppercase">
         {label}
       </span>
-      <div className="relative">
-        <input
+      <InputGroup className="h-8">
+        <InputGroupInput
           type="number"
           value={value}
           min={min}
@@ -645,14 +633,14 @@ function NumField({
             if (!Number.isNaN(n)) onChange(n);
           }}
           aria-label={label}
-          className="w-full rounded-control border border-color-picker-border bg-card/40 px-1.5 py-1 font-mono text-[0.6875rem] tabular-nums outline-none focus:border-color-picker-surface-label [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+          className="font-mono text-[0.6875rem] tabular-nums [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
         />
         {suffix && (
-          <span className="pointer-events-none absolute inset-y-0 right-1 flex items-center font-mono text-[0.5625rem] text-muted-foreground">
+          <InputGroupAddon align="inline-end" className="font-mono text-[0.5625rem]">
             {suffix}
-          </span>
+          </InputGroupAddon>
         )}
-      </div>
+      </InputGroup>
     </label>
   );
 }
