@@ -231,7 +231,7 @@ export function ColorPicker({
             onClick={() => onAddRecent?.(currentHex)}
             disabled={!onAddRecent}
             aria-label="Save to recent"
-            className="size-9 shrink-0 overflow-hidden p-0"
+            className="aspect-square size-9 shrink-0 overflow-hidden p-0"
             style={{ background: checkerboardBg(currentHex) }}
           />
           <ToggleGroup
@@ -278,7 +278,7 @@ export function ColorPicker({
                 onClick={() => onChange(c)}
                 aria-label={`Use ${c}`}
                 title={c}
-                className="size-5 overflow-hidden rounded-full p-0"
+                className="aspect-square size-5 overflow-hidden rounded-full p-0"
                 style={{ background: checkerboardBg(c) }}
               />
             ))}
@@ -324,7 +324,7 @@ export function ColorPickerSwatch({ value, className, style, ...rest }: Readonly
       data-slot="color-picker-swatch"
       aria-hidden
       className={cn(
-        'inline-block size-5 overflow-hidden rounded-control ring-1 ring-color-picker-border',
+        'inline-block aspect-square size-5 shrink-0 overflow-hidden rounded-control ring-1 ring-color-picker-border',
         className
       )}
       style={{ ...resolvedStyle, ...style }}
