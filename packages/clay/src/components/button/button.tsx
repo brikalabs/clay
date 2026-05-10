@@ -30,10 +30,18 @@ const buttonVariants = cva(
         xs: "h-6 gap-1 rounded-button px-2 py-0 text-xs has-[>svg]:px-1.5 [&_svg:not([class*='size-'])]:size-3",
         sm: 'h-8 gap-1.5 rounded-button px-3 py-0 has-[>svg]:px-2.5',
         lg: 'h-10 rounded-button px-6 py-0 has-[>svg]:px-4',
-        icon: 'h-9 w-9 px-0 py-0',
-        'icon-xs': "h-6 w-6 rounded-button px-0 py-0 [&_svg:not([class*='size-'])]:size-3",
-        'icon-sm': 'h-8 w-8 px-0 py-0',
-        'icon-lg': 'h-10 w-10 px-0 py-0',
+        // Icon variants: pin a 1:1 aspect ratio explicitly AND defeat
+        // the `.button` shorthand's `height: var(--button-height)`
+        // with `!important` (`h-N!` / `w-N!` / `py-0!` in Tailwind v4
+        // syntax). Without the `!`, the shorthand wins because it
+        // sorts after the size utilities in the utilities layer; the
+        // button renders 24×36 instead of 24×24. Custom overrides via
+        // `className="h-X! w-X!"` still work — same specificity, last
+        // one wins by source order.
+        icon: 'aspect-square h-9! w-9! px-0 py-0!',
+        'icon-xs': "aspect-square h-6! w-6! rounded-button px-0 py-0! [&_svg:not([class*='size-'])]:size-3",
+        'icon-sm': 'aspect-square h-8! w-8! px-0 py-0!',
+        'icon-lg': 'aspect-square h-10! w-10! px-0 py-0!',
       },
     },
     defaultVariants: {
