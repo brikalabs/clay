@@ -161,7 +161,7 @@ export async function buildCss(candidates: readonly string[]): Promise<string> {
     base: SRC,
     loadModule: async (id, base, type) => {
       if (type === 'plugin') {
-        return { module: clayTailwindPlugin, base };
+        return { module: clayTailwindPlugin, base, path: id };
       }
       throw new Error(`unexpected loadModule call: ${id} (${type})`);
     },

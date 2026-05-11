@@ -7,8 +7,7 @@
  */
 
 import './happydom';
-import { afterAll, beforeEach, describe, expect, test } from 'bun:test';
-import { GlobalRegistrator } from '@happy-dom/global-registrator';
+import { beforeEach, describe, expect, test } from 'bun:test';
 
 import { applyTheme, resetThemeVars, themeToCssVars } from '../apply';
 import type { ThemeConfig } from '../types';
@@ -34,10 +33,6 @@ beforeEach(() => {
   for (const cls of Array.from(document.documentElement.classList)) {
     if (cls.startsWith('fx-')) document.documentElement.classList.remove(cls);
   }
-});
-
-afterAll(() => {
-  GlobalRegistrator.unregister();
 });
 
 describe('applyTheme', () => {

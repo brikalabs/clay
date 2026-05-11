@@ -102,9 +102,11 @@ section('defineComponent');
 console.log(format(bench('defineComponent (small spec, 4 slots)', () => {
   defineComponent('bench-c', {
     radius: { default: '0.5rem', description: 'r' },
-    padding: { x: '0.5rem', y: '0.25rem' },
-    fill: { default: 'oklch(0.7 0.1 250)', description: 'f' },
-    label: { default: 'currentColor', description: 'l' },
+    geometry: { paddingX: '0.5rem', paddingY: '0.25rem' },
+    slots: {
+      fill: { default: 'oklch(0.7 0.1 250)', description: 'f' },
+      label: { default: 'currentColor', description: 'l' },
+    },
   });
 })));
 
