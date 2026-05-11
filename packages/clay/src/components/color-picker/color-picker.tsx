@@ -175,7 +175,7 @@ export function ColorPicker({
             disabled={!onAddRecent}
             aria-label="Save to recent"
             className="overflow-hidden"
-            style={{ background: checkerboardBg(currentHex) }}
+            style={checkerboardBg(currentHex)}
           />
           <ToggleGroup
             type="single"

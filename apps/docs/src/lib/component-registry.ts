@@ -19,7 +19,7 @@ import type {
   DemoInput,
   ExternalDoc,
 } from '@brika/clay';
-import { extractDemoCode } from './extract-demo-code';
+import { extractDemoCode } from '@brika/clay-docgen';
 
 // ─── Component meta (name, displayName, group, description, externalDocs) ────
 
@@ -98,8 +98,9 @@ function demoMetaFor(slug: string): readonly DemoInput[] {
 }
 
 // ─── Source code extraction ───────────────────────────────────────────
-// Lives in `./extract-demo-code.ts` so it's testable under Bun without
-// pulling in the Vite-only `import.meta.glob` calls that this module makes.
+// `extractDemoCode` lives in `@brika/clay-docgen` so it's testable
+// under Bun without pulling in the Vite-only `import.meta.glob` calls
+// that this module makes.
 
 /**
  * Recover the export-name string for a demo function by identity scan.

@@ -10,7 +10,7 @@
 import { type ComponentProps, type CSSProperties } from 'react';
 import { cn } from '../../primitives/cn';
 import { isSpecialKeyword } from './color-utils';
-import { CHECKERBOARD } from './internal/checkerboard';
+import { checkerboardBg } from './internal/checkerboard';
 
 export interface ColorPickerSwatchProps extends Omit<ComponentProps<'span'>, 'children'> {
   readonly value: string;
@@ -26,13 +26,13 @@ export function ColorPickerSwatch({
   let resolvedStyle: CSSProperties;
   if (v.length === 0) {
     resolvedStyle = {
-      background:
+      backgroundImage:
         'repeating-linear-gradient(45deg, color-mix(in oklch, currentColor 20%, transparent) 0 4px, transparent 4px 8px)',
     };
   } else if (isSpecialKeyword(v) && v.toLowerCase() !== 'transparent') {
-    resolvedStyle = { background: v };
+    resolvedStyle = { backgroundColor: v };
   } else {
-    resolvedStyle = { background: `linear-gradient(${v}, ${v}), ${CHECKERBOARD}` };
+    resolvedStyle = checkerboardBg(v);
   }
   return (
     <span

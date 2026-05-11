@@ -7,7 +7,7 @@ import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'astro/config';
 import clayPackageJson from '../../packages/clay/package.json' with { type: 'json' };
-import { clayDocgenPlugin } from './src/lib/vite-plugin-clay-docgen.ts';
+import { clayDocgenPlugin } from '@brika/clay-docgen/vite';
 
 const here = dirname(fileURLToPath(import.meta.url));
 
@@ -161,6 +161,12 @@ export default defineConfig({
       __BUILD_COMMIT__: JSON.stringify(buildCommit),
       __BUILD_DATE__: JSON.stringify(buildDate),
     },
-    plugins: [clayDocgenPlugin({ dev: isDev }), tailwindcss()],
+    plugins: [
+      clayDocgenPlugin({
+        dev: isDev,
+        componentsDir: resolve(claySrc, 'components'),
+      }),
+      tailwindcss(),
+    ],
   },
 });

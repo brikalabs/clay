@@ -6,10 +6,8 @@
  * SSR no-op branches by stubbing `document` to undefined.
  */
 
-import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'bun:test';
-import { GlobalRegistrator } from '@happy-dom/global-registrator';
-
-GlobalRegistrator.register();
+import './happydom';
+import { beforeEach, describe, expect, test } from 'bun:test';
 
 import { applyTheme, resetThemeVars, themeToCssVars } from '../apply';
 import type { ThemeConfig } from '../types';
@@ -30,10 +28,11 @@ const baseTheme: ThemeConfig = {
 beforeEach(() => {
   document.head.innerHTML = '';
   document.body.innerHTML = '';
-});
-
-afterAll(() => {
-  GlobalRegistrator.unregister();
+  // Reset documentElement effect classes between tests so prior runs
+  // can't pollute the next assertion.
+  for (const cls of Array.from(document.documentElement.classList)) {
+    if (cls.startsWith('fx-')) document.documentElement.classList.remove(cls);
+  }
 });
 
 describe('applyTheme', () => {
@@ -78,6 +77,23 @@ describe('applyTheme', () => {
     expect(cleanup).toBeInstanceOf(Function);
     // Calling cleanup is idempotent and does not throw.
     cleanup();
+  });
+
+  test('applies and clears fx-* effect classes on <html>', () => {
+    const themed: ThemeConfig = { ...baseTheme, effects: ['neon', 'glow'] };
+    const cleanup = applyTheme(themed);
+    expect(document.documentElement.classList.contains('fx-neon')).toBe(true);
+    expect(document.documentElement.classList.contains('fx-glow')).toBe(true);
+    cleanup();
+    expect(document.documentElement.classList.contains('fx-neon')).toBe(false);
+    expect(document.documentElement.classList.contains('fx-glow')).toBe(false);
+  });
+
+  test('removes stale fx-* classes when switching themes', () => {
+    document.documentElement.classList.add('fx-leftover');
+    applyTheme({ ...baseTheme, effects: ['neon'] });
+    expect(document.documentElement.classList.contains('fx-leftover')).toBe(false);
+    expect(document.documentElement.classList.contains('fx-neon')).toBe(true);
   });
 });
 
