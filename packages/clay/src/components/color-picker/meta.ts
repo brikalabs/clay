@@ -9,10 +9,10 @@ import type { ComponentMeta } from '../../component-registry';
 
 export const meta: ComponentMeta = {
   name: 'color-picker',
-  displayName: 'ColorPicker',
+  displayName: 'Color Picker',
   group: 'Forms',
   description:
-    'Designer-grade color picker. Saturation × value pad, hue slider, alpha track with checkerboard, format tabs (hex / rgb / hsl), one-click pills for `currentColor` / `transparent` / `inherit`, recent-colors strip, and live WCAG contrast badges. Controlled — emits a CSS color string (`#rrggbb`, `#rrggbbaa`, or one of the special keywords).',
+    'Designer-grade color picker. Saturation × value pad, hue slider, alpha track with checkerboard, format tabs for hex, rgb, and hsl, one-click pills for `currentColor`, `transparent`, and `inherit`, recent-colors strip, and live WCAG contrast badges. Controlled. Emits a CSS color string: `#rrggbb`, `#rrggbbaa`, or one of the special keywords.',
   accessibility: [
     'The saturation/value pad and hue slider expose `role="slider"` with `aria-valuetext` so screen readers announce the current position; both also accept arrow-key navigation.',
     'Each numeric input field is labelled (R / G / B / A or H / S / L / A) and reflects the current value; editing one commits to the same color and updates the others.',

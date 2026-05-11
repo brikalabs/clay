@@ -47,14 +47,14 @@ export function SatValPad({
       // L / RGB / hex numeric inputs below.
       aria-label={`Saturation ${Math.round(s)}%, value ${Math.round(v)}%`}
       {...handlers}
-      className="relative h-40 flex-1 cursor-crosshair touch-none rounded-lg ring-1 ring-color-picker-border"
+      className="relative h-40 flex-1 cursor-crosshair touch-none rounded-color-picker-pad ring-1 ring-color-picker-border"
       style={{
         background: `linear-gradient(to top, #000 0%, transparent 100%), linear-gradient(to right, #fff 0%, hsl(${hue}, 100%, 50%) 100%)`,
       }}
     >
       <span
         aria-hidden
-        className="-translate-x-1/2 -translate-y-1/2 absolute size-4 rounded-full border-2 border-color-picker-marker shadow-md"
+        className="-translate-x-1/2 -translate-y-1/2 absolute size-4 rounded-color-picker-track border-2 border-color-picker-marker shadow-md"
         style={{
           left: `${s}%`,
           top: `${100 - v}%`,
@@ -87,7 +87,7 @@ export function HueSlider({
       aria-valuenow={Math.round(hue)}
       tabIndex={0}
       {...handlers}
-      className="relative h-40 w-4 cursor-pointer touch-none rounded-full ring-1 ring-color-picker-border"
+      className="relative h-40 w-4 cursor-pointer touch-none rounded-color-picker-track ring-1 ring-color-picker-border"
       style={{
         background:
           'linear-gradient(to bottom, hsl(0 100% 50%), hsl(60 100% 50%), hsl(120 100% 50%), hsl(180 100% 50%), hsl(240 100% 50%), hsl(300 100% 50%), hsl(360 100% 50%))',
@@ -95,7 +95,7 @@ export function HueSlider({
     >
       <span
         aria-hidden
-        className="-translate-y-1/2 absolute inset-x-[-2px] h-2 rounded-full border-2 border-color-picker-marker shadow"
+        className="-translate-y-1/2 absolute inset-x-[-2px] h-2 rounded-color-picker-track border-2 border-color-picker-marker shadow"
         style={{ top: `${(hue / 360) * 100}%`, background: `hsl(${hue}, 100%, 50%)` }}
       />
     </div>
@@ -131,12 +131,12 @@ export function AlphaSlider({
       aria-valuenow={Math.round(alpha * 100)}
       tabIndex={0}
       {...handlers}
-      className="relative h-3 w-full cursor-pointer touch-none rounded-full ring-1 ring-color-picker-border"
+      className="relative h-3 w-full cursor-pointer touch-none rounded-color-picker-track ring-1 ring-color-picker-border"
       style={{ backgroundImage: trackBg, backgroundSize: `auto, ${CHECKERBOARD_SIZE}` }}
     >
       <span
         aria-hidden
-        className="-translate-x-1/2 absolute inset-y-[-2px] w-2 rounded-full border-2 border-color-picker-marker shadow"
+        className="-translate-x-1/2 absolute inset-y-[-2px] w-2 rounded-color-picker-track border-2 border-color-picker-marker shadow"
         style={{ left: `${alpha * 100}%`, background: rgbaToHex(hsvToRgba(hsv, alpha)) }}
       />
     </div>
