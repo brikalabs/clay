@@ -14,25 +14,25 @@
  * patterns.
  *
  * Internals are split across:
- *   - `clay-docgen-cva.ts`   : `cva(...)` index + VariantProps expand.
- *   - `clay-docgen-types.ts` : type-node walker + prop collection.
- *   - `clay-docgen-jsdoc.ts` : JSDoc extraction (attached + leading).
+ *   - `cva.ts`   : `cva(...)` index + VariantProps expand.
+ *   - `types.ts` : type-node walker + prop collection.
+ *   - `jsdoc.ts` : JSDoc extraction (attached + leading).
  */
 
 import { readFileSync } from 'node:fs';
 import * as ts from 'typescript';
 
-import { indexCvaCalls } from './clay-docgen-cva';
+import { indexCvaCalls } from './cva';
 import {
   type AstPropDoc,
   type FileContext,
   collectProps,
   indexNamedTypes,
-} from './clay-docgen-types';
-import { getJsDocSummary } from './clay-docgen-jsdoc';
-import { isHookName, isInternalProp } from './docgen-helpers';
+} from './types';
+import { getJsDocSummary } from './jsdoc';
+import { isHookName, isInternalProp } from './helpers';
 
-export type { AstPropDoc } from './clay-docgen-types';
+export type { AstPropDoc } from './types';
 
 export interface AstComponentDoc {
   readonly displayName: string;

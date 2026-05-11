@@ -1,6 +1,6 @@
 /**
- * Walks `src/components/<slug>/<slug>.tsx` with a parser-only AST visitor
- * (see `clay-docgen-ast.ts`) and exposes the result as a virtual module
+ * Walks `<componentsDir>/<slug>/<slug>.tsx` with a parser-only AST
+ * visitor (see `ast.ts`) and exposes the result as a virtual module
  * so the docs site can render per-component props tables without a
  * separate generation step.
  *
@@ -8,12 +8,11 @@
  * no type checker). A full cold parse of all entries is ~1s; the disk
  * cache keyed on a content hash skips even that on warm boot.
  *
- * Cache plumbing + AST normalisation lives in `clay-docgen-cache.ts`
- * so each module stays small.
+ * Cache plumbing + AST normalisation lives in `cache.ts` so each
+ * module stays small.
  */
 
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
 
 import {
   type ClayComponentDoc,
@@ -25,12 +24,25 @@ import {
   parseEntries,
   readDiskCache,
   writeDiskCache,
-} from './clay-docgen-cache';
+} from './cache';
 
-export type { ClayComponentDoc, ClayPropDoc } from './clay-docgen-cache';
+export type { ClayComponentDoc, ClayPropDoc } from './cache';
 
 export interface ClayDocgenPluginOptions {
+  /** Whether the host is running in dev mode (reserved for future use). */
   readonly dev: boolean;
+  /**
+   * Absolute path to the components root. The plugin reads
+   * `<componentsDir>/<slug>/<slug>.tsx` as each component's entry
+   * file. Required because the package is consumed from outside its
+   * own tree.
+   */
+  readonly componentsDir: string;
+  /**
+   * Optional directory to persist the content-hashed parse cache.
+   * Defaults to `<cwd>/node_modules/.cache/clay-docgen`.
+   */
+  readonly cacheDir?: string;
 }
 
 interface ClayDocgenPlugin {
@@ -65,11 +77,10 @@ function log(message: string): void {
 // affected, so those trigger a full reparse on next load.
 const ENTRY_FILE_RE = /^([^/]+)\/\1\.tsx$/;
 
-export function clayDocgenPlugin(_options: ClayDocgenPluginOptions): ClayDocgenPlugin {
-  const here = dirname(fileURLToPath(import.meta.url));
-  const claySrc = resolve(here, '../../../../packages/clay/src');
-  const componentsDir = resolve(claySrc, 'components');
-  const cacheDir = resolve(here, '../../node_modules/.cache/clay-docgen');
+export function clayDocgenPlugin(options: ClayDocgenPluginOptions): ClayDocgenPlugin {
+  const componentsDir = options.componentsDir;
+  const cacheDir =
+    options.cacheDir ?? resolve(process.cwd(), 'node_modules/.cache/clay-docgen');
   const cacheFile = resolve(cacheDir, 'cache.json');
 
   const watchedFiles = new Set<string>();

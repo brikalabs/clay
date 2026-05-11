@@ -1,15 +1,15 @@
 /**
  * Disk-cache + file-walker helpers used by the Vite docgen plugin.
- * Pulled out of `vite-plugin-clay-docgen.ts` so each module stays
- * under 300 lines.
+ * Pulled out of `vite-plugin.ts` so each module stays under 300
+ * lines.
  */
 
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-import { type AstComponentDoc, extractComponentDocs } from './clay-docgen-ast';
-import { slugFromPath, slugToPascalCase } from './docgen-helpers';
+import { type AstComponentDoc, extractComponentDocs } from './ast';
+import { slugFromPath, slugToPascalCase } from './helpers';
 
 export interface ClayPropDoc {
   readonly name: string;

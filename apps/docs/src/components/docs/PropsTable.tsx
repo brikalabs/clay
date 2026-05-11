@@ -1,7 +1,7 @@
 import docgen from 'virtual:clay-docgen';
 import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import type { ClayComponentDoc, ClayPropDoc } from '~/lib/vite-plugin-clay-docgen';
+import type { ClayComponentDoc, ClayPropDoc } from '@brika/clay-docgen';
 
 const propMarkdownComponents: Components = {
   p: ({ children }) => <span>{children}</span>,

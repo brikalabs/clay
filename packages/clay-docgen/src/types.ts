@@ -8,8 +8,8 @@
 
 import * as ts from 'typescript';
 
-import { type CvaIndex, expandVariantPropsType } from './clay-docgen-cva';
-import { getJsDocSummary } from './clay-docgen-jsdoc';
+import { type CvaIndex, expandVariantPropsType } from './cva';
+import { getJsDocSummary } from './jsdoc';
 
 export interface AstPropDoc {
   readonly name: string;

@@ -23,6 +23,7 @@
     "@astrojs/mdx": "5.0.4",
     "@astrojs/react": "5.0.4",
     "@brika/clay": "workspace:*",
+    "@brika/clay-docgen": "workspace:*",
     "@tailwindcss/typography": "^0.5.15",
     "@tailwindcss/vite": "4.2.1",
     "astro": "6.3.1",

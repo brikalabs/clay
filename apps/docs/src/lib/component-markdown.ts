@@ -7,7 +7,7 @@ import type { ComponentDemo } from '@brika/clay';
 import type { ResolvedTokenSpec } from '@brika/clay/tokens';
 import type { ComponentEntry } from './component-registry';
 import { componentSourceUrl } from './github';
-import type { ClayComponentDoc, ClayPropDoc } from './vite-plugin-clay-docgen';
+import type { ClayComponentDoc, ClayPropDoc } from '@brika/clay-docgen';
 
 interface RenderInput {
   readonly component: ComponentEntry;
