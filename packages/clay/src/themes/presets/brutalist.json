@@ -130,6 +130,11 @@
       "rangeMarginY": "0px",
       "weekMarginY": "0px",
       "weekSeparatorWidth": "0px"
+    },
+    "colorPicker": {
+      "radius": "0px",
+      "padRadius": "0px",
+      "trackRadius": "0px"
     }
   }
 }

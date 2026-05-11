@@ -21,6 +21,18 @@ registerComponent(meta, {
   border: '1px',
   motion: true,
   slots: {
+    'pad-radius': {
+      default: '0.5rem',
+      description:
+        'Corner radius of the saturation/value pad. Set to `0` for square / brutalist looks.',
+      alias: 'color-picker-pad',
+    },
+    'track-radius': {
+      default: '9999px',
+      description:
+        'Corner radius of the hue and alpha slider tracks and their markers. Defaults to a full pill; set lower for square / brutalist looks.',
+      alias: 'color-picker-track',
+    },
     'surface-container': {
       default: 'var(--popover)',
       description: 'Background of the picker panel.',
