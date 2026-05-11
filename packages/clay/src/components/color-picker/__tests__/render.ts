@@ -95,6 +95,12 @@ export function click(el: Element): void {
   });
 }
 
+export async function flush(): Promise<void> {
+  await act(async () => {
+    await new Promise<void>((resolve) => setTimeout(resolve, 0));
+  });
+}
+
 export function setInput(el: HTMLInputElement, value: string): void {
   // React 19 + happy-dom doesn't deliver dispatched `input` events to
   // React's synthetic-event listener (events bubble through the DOM
