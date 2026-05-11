@@ -37,9 +37,6 @@ jobs:
           node-version: '22'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Upgrade npm
-        run: npm install -g npm@latest
-
       - name: Publish
         working-directory: packages/clay
-        run: npm publish --access public --provenance
+        run: npx -y npm@latest publish --access public --provenance
