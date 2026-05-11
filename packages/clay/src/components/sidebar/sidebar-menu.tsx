@@ -165,10 +165,19 @@ export function SidebarMenuSkeleton({
   /** Include a placeholder icon in the skeleton row. */
   showIcon?: boolean;
 }) {
-  // Random width between 50 and 90%.
+  // Width between 50 and 90% so adjacent skeleton rows don't look
+  // mechanical. Derived from React's `useId` so the value is stable
+  // across SSR/CSR (no flicker on hydration) and avoids
+  // `Math.random()` — purely cosmetic, but Sonar flags any PRNG as a
+  // weak-crypto hotspot.
+  const reactId = React.useId();
   const width = React.useMemo(() => {
-    return `${Math.floor(Math.random() * 40) + 50}%`;
-  }, []);
+    let hash = 0;
+    for (let i = 0; i < reactId.length; i++) {
+      hash = (hash * 31 + reactId.charCodeAt(i)) | 0;
+    }
+    return `${50 + (Math.abs(hash) % 41)}%`;
+  }, [reactId]);
 
   return (
     <div
