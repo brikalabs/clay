@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.2.0](https://github.com/brikalabs/clay/compare/clay-v0.1.0...clay-v0.2.0) (2026-05-11)
+
+
+### Features
+
+* add 7 components, expand token coverage, refactor docs token UI ([#22](https://github.com/brikalabs/clay/issues/22)) ([6136777](https://github.com/brikalabs/clay/commit/6136777401da8201b6bb23bbaa11cfb1bbe33082))
+* **clay:** add ColorPicker component ([#25](https://github.com/brikalabs/clay/issues/25)) ([8146bba](https://github.com/brikalabs/clay/commit/8146bba6b3635134abb3e9182bccab3d5c4c05ea))
+* **clay:** build-time theme baking + publish-readiness fixes ([#23](https://github.com/brikalabs/clay/issues/23)) ([7dd7312](https://github.com/brikalabs/clay/commit/7dd73129974f969d8af972fec74cd11cf68508a8))
+
+
+### Bug Fixes
+
+* **clay:** apply publishConfig overrides at pack-time so npm publish works ([#21](https://github.com/brikalabs/clay/issues/21)) ([2b76e58](https://github.com/brikalabs/clay/commit/2b76e586d3381129b2cfa3c3b4cd80eaeb0d204a))
+* **clay:** color picker marker jiggle + brutalist-aware inner radii ([#28](https://github.com/brikalabs/clay/issues/28)) ([db1e30a](https://github.com/brikalabs/clay/commit/db1e30ab91c674470f1011666d5b266c438bc300))
+* **clay:** make package publishable and stamp 'use client' on every chunk ([#20](https://github.com/brikalabs/clay/issues/20)) ([00227b2](https://github.com/brikalabs/clay/commit/00227b2ee211dd8abb192b40c3ce3068e8001981))
+* **clay:** stop AvatarBadge clipping and add group-spacing token ([#24](https://github.com/brikalabs/clay/issues/24)) ([443a680](https://github.com/brikalabs/clay/commit/443a6801bcb638074dfd7e7b7cb580a506e01e84))
+
 ## [0.1.0](https://github.com/brikalabs/clay/compare/clay-v0.0.1...clay-v0.1.0) (2026-05-11)
 
 
