@@ -174,7 +174,7 @@ export function SidebarMenuSkeleton({
   const width = React.useMemo(() => {
     let hash = 0;
     for (let i = 0; i < reactId.length; i++) {
-      hash = (hash * 31 + reactId.charCodeAt(i)) | 0;
+      hash = Math.trunc(hash * 31 + (reactId.codePointAt(i) ?? 0)) % 0x7fffffff;
     }
     return `${50 + (Math.abs(hash) % 41)}%`;
   }, [reactId]);
