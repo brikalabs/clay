@@ -107,4 +107,18 @@ describe('extractDemoCode', () => {
     `;
     expect(extractDemoCode(source, 'Demo').trim()).toBe('<div>late</div>');
   });
+
+  test('falls through to the expression-return path when `return (` is unbalanced', () => {
+    // The parenthesized-return walker bails out (null) when it can't
+    // close the open-paren; the expression-return path then catches
+    // the same `return ` and returns the trailing text. This pins
+    // the null-return guard at the end of extractParenthesizedReturn.
+    const source = `
+      function Demo() {
+        const x = 1;
+        return (<div>{x}
+      }
+    `;
+    expect(extractDemoCode(source, 'Demo')).toContain('(<div>{x}');
+  });
 });

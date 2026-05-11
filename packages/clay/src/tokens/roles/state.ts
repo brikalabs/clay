@@ -7,7 +7,11 @@ import type { TokenSpec } from '../types';
 
 type StateEntry = readonly [name: string, defaultLight: string, description: string];
 
-function toStateRole([name, defaultLight, description]: StateEntry): TokenSpec {
+/**
+ * Exported so tests can pin the name → themePath / utilityAlias mapping
+ * (including multi-word state names that take the camelCase branch).
+ */
+export function toStateRole([name, defaultLight, description]: StateEntry): TokenSpec {
   // `state-hover-opacity` → themePath `state.hoverOpacity`, alias `state-hover`.
   const trimmed = name.replace(/^state-/, '').replace(/-opacity$/, '');
   const themeKey = `${trimmed.replaceAll(/-([a-z])/g, (_, c: string) => c.toUpperCase())}Opacity`;

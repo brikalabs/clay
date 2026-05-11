@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { isHookName, isInternalProp, slugFromPath, slugToPascalCase } from '../docgen-helpers';
+import { isHookName, isInternalProp, slugFromPath, slugToPascalCase } from '../helpers';
 
 describe('slugFromPath', () => {
   test('extracts slug from a unix component path', () => {

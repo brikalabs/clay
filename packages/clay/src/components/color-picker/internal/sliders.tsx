@@ -6,7 +6,7 @@
  */
 
 import { type HSV, type RGBA, hsvToRgba, rgbaToHex } from '../color-utils';
-import { CHECKERBOARD } from './checkerboard';
+import { CHECKERBOARD_IMAGE, CHECKERBOARD_SIZE } from './checkerboard';
 import { usePointerDrag } from './use-pointer-drag';
 import { useRef } from 'react';
 
@@ -119,7 +119,7 @@ export function AlphaSlider({
   const trackBg = `linear-gradient(to right, ${rgbaToCss({
     ...hsvToRgba(hsv),
     a: 0,
-  })}, ${opaque}), ${CHECKERBOARD}`;
+  })}, ${opaque}), ${CHECKERBOARD_IMAGE}`;
 
   return (
     <div
@@ -132,7 +132,7 @@ export function AlphaSlider({
       tabIndex={0}
       {...handlers}
       className="relative h-3 w-full cursor-pointer touch-none rounded-full ring-1 ring-color-picker-border"
-      style={{ background: trackBg, backgroundSize: 'auto, 8px 8px' }}
+      style={{ backgroundImage: trackBg, backgroundSize: `auto, ${CHECKERBOARD_SIZE}` }}
     >
       <span
         aria-hidden

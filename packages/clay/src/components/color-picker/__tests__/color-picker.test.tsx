@@ -1,89 +1,31 @@
 /**
  * Browser-side coverage for the ColorPicker UI. Renders the component
- * into happy-dom, exercises each branch (alpha on/off, contrast on/off,
- * special pills empty/full, eyedropper visible/hidden, format tabs,
- * pointer drags, hex/rgb/hsl numeric input, recent colors, close
- * callback) and asserts on the props the React tree commits via
+ * into happy-dom and exercises each branch (alpha on/off, contrast on/
+ * off, special pills empty/full, eyedropper visible/hidden, format
+ * tabs, pointer drags, hex/rgb/hsl numeric input, recent colors, close
+ * callback). Asserts on the props the React tree commits via
  * `onChange`.
+ *
+ * Companion file: `color-picker-swatch.test.tsx` covers the standalone
+ * swatch primitive.
  */
 
 import './happydom';
 import { describe, expect, test } from 'bun:test';
 import { useState } from 'react';
-import {
-  ColorPicker,
-  ColorPickerSwatch,
-} from '../color-picker';
+
+import { ColorPicker } from '../color-picker';
+import { Controlled, readValue, stubSliders, tab } from './fixtures';
 import {
   click,
+  flush,
   pointerCancel,
   pointerDown,
   pointerMove,
   pointerUp,
   render,
   setInput,
-  stubRect,
 } from './render';
-
-function Controlled({
-  initial,
-  showAlpha = true,
-  showContrast = true,
-  showEyedropper = true,
-  specialKeywords,
-  recentColors,
-  onAddRecent,
-  onClose,
-}: {
-  initial: string;
-  showAlpha?: boolean;
-  showContrast?: boolean;
-  showEyedropper?: boolean;
-  specialKeywords?: readonly ('currentColor' | 'transparent' | 'inherit')[];
-  recentColors?: readonly string[];
-  onAddRecent?: (v: string) => void;
-  onClose?: () => void;
-}) {
-  const [value, setValue] = useState(initial);
-  return (
-    <>
-      <ColorPicker
-        value={value}
-        onChange={setValue}
-        showAlpha={showAlpha}
-        showContrast={showContrast}
-        showEyedropper={showEyedropper}
-        specialKeywords={specialKeywords}
-        recentColors={recentColors}
-        onAddRecent={onAddRecent}
-        onClose={onClose}
-      />
-      <output data-testid="value">{value}</output>
-    </>
-  );
-}
-
-const readValue = (root: HTMLElement) =>
-  root.querySelector('[data-testid="value"]')?.textContent ?? '';
-
-const tab = (root: HTMLElement, name: 'hex' | 'rgb' | 'hsl') => {
-  const t = [...root.querySelectorAll('[data-slot="toggle-group-item"]')].find(
-    (el) => el.textContent?.trim() === name
-  );
-  if (!t) throw new Error(`tab ${name} not found`);
-  return t as HTMLElement;
-};
-
-const stubSliders = (root: HTMLElement) => {
-  for (const sel of [
-    '[aria-label^="Saturation"]',
-    '[aria-label="Hue"]',
-    '[aria-label="Alpha"]',
-  ]) {
-    const el = root.querySelector(sel);
-    if (el) stubRect(el);
-  }
-};
 
 describe('<ColorPicker />', () => {
   test('renders with default chrome and shows the contrast row', () => {
@@ -147,7 +89,7 @@ describe('<ColorPicker />', () => {
     expect(eye).toBeDefined();
     click(eye!);
     // Wait microtask for the async pickWithEyeDropper promise to settle.
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await flush();
     expect(readValue(r.container)).toBe('#abcdef');
     expect(recents).toContain('#abcdef');
     delete (globalThis as Stub).EyeDropper;
@@ -336,56 +278,6 @@ describe('<ColorPicker />', () => {
     // After external change, the hex field should reflect the new value
     const hexInput = r.container.querySelector('input[aria-label="Hex value"]') as HTMLInputElement;
     expect(hexInput.value.toLowerCase()).toBe('#10b981');
-    r.unmount();
-  });
-});
-
-describe('<ColorPickerSwatch />', () => {
-  // happy-dom normalises `style.background` differently than the
-  // string we set inline (lowercased keywords, dropped fallback
-  // hex values), so read the raw attribute instead.
-  const inline = (root: HTMLElement) =>
-    root
-      .querySelector('[data-slot="color-picker-swatch"]')!
-      .getAttribute('style') ?? '';
-
-  test('paints a hex value as a flat fill over the checkerboard', () => {
-    // happy-dom collapses `linear-gradient(#X, #X), <checker>` into
-    // just `<checker>` (it considers a gradient with two identical
-    // stops over a CSS image to be redundant). Verify the swatch
-    // STILL has the checkerboard and the React tree at least
-    // requested the layered background by reading `style.cssText` of
-    // an inert mirror — for the live element we just assert the
-    // checkerboard is there.
-    const r = render(<ColorPickerSwatch value="#3b82f6" />);
-    expect(inline(r.container)).toContain('repeating-conic-gradient');
-    r.unmount();
-  });
-
-  test('renders the diagonal stripe pattern when value is empty', () => {
-    const r = render(<ColorPickerSwatch value="" />);
-    expect(inline(r.container)).toContain('repeating-linear-gradient');
-    r.unmount();
-  });
-
-  test('paints a flat fill for currentColor and inherit', () => {
-    const r1 = render(<ColorPickerSwatch value="currentColor" />);
-    // happy-dom lowercases CSS keywords on serialise — match either.
-    expect(inline(r1.container).toLowerCase()).toContain('currentcolor');
-    r1.unmount();
-
-    const r2 = render(<ColorPickerSwatch value="inherit" />);
-    expect(inline(r2.container)).toContain('inherit');
-    r2.unmount();
-  });
-
-  test('paints transparent over the checkerboard so the cells show through', () => {
-    // happy-dom collapses `linear-gradient(transparent, transparent)`
-    // away (it's a no-op layer), leaving just the checkerboard — which
-    // is the right rendered result: the cells show through.
-    const r = render(<ColorPickerSwatch value="transparent" />);
-    const css = inline(r.container);
-    expect(css).toContain('repeating-conic-gradient');
     r.unmount();
   });
 });

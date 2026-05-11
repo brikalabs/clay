@@ -93,7 +93,11 @@
     "dev": "tsup --watch",
     "typecheck": "tsgo --noEmit",
     "test": "bun test",
-    "bench": "bun src/__tests__/tailwind-plugin.bench.ts",
+    "bench": "bun src/__tests__/tailwind-plugin.bench.ts && bun src/themes/__tests__/themes.bench.ts && bun src/tokens/__tests__/tokens.bench.ts && bun src/primitives/__tests__/cn.bench.ts",
+    "bench:tailwind": "bun src/__tests__/tailwind-plugin.bench.ts",
+    "bench:themes": "bun src/themes/__tests__/themes.bench.ts",
+    "bench:tokens": "bun src/tokens/__tests__/tokens.bench.ts",
+    "bench:cn": "bun src/primitives/__tests__/cn.bench.ts",
     "prepack": "bun run ./scripts/prepack.ts pre",
     "postpack": "bun run ./scripts/prepack.ts post",
     "prepublishOnly": "bun run build"
