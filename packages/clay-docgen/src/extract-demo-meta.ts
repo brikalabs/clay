@@ -26,6 +26,34 @@ export interface DemoMeta {
 const JSDOC_BEFORE_DEFAULT_EXPORT_RE = /\/\*\*([\s\S]*?)\*\/\s*export\s+default\b/;
 
 /**
+ * Split a trimmed JSDoc line into `@tag value`. Uses plain `indexOf` rather
+ * than a regex to keep the parser linear (no backtracking), which sidesteps
+ * the ReDoS class of bugs Sonar flags on `\w+\s+(.*)$` patterns.
+ */
+function parseJSDocTag(line: string): { readonly name: string; readonly value: string } | undefined {
+  if (line.length < 2 || line.codePointAt(0) !== 64 /* '@' */) return undefined;
+  const space = line.indexOf(' ');
+  const name = space === -1 ? line.slice(1) : line.slice(1, space);
+  if (!isWordOnly(name)) return undefined;
+  const value = space === -1 ? '' : line.slice(space + 1).trim();
+  return { name, value };
+}
+
+function isWordOnly(s: string): boolean {
+  if (s.length === 0) return false;
+  for (let i = 0; i < s.length; i++) {
+    const c = s.codePointAt(i);
+    if (c === undefined) return false;
+    const isDigit = c >= 48 && c <= 57;
+    const isUpper = c >= 65 && c <= 90;
+    const isLower = c >= 97 && c <= 122;
+    const isUnderscore = c === 95;
+    if (!isDigit && !isUpper && !isLower && !isUnderscore) return false;
+  }
+  return true;
+}
+
+/**
  * Strip JSDoc decoration from a captured block body.
  * Removes the leading `*` (and optional space) on every line, trims whitespace,
  * and collapses blank-only edges.
@@ -53,10 +81,9 @@ export function extractDemoMeta(source: string): DemoMeta {
   const descriptionLines: string[] = [];
 
   for (const line of body.split('\n')) {
-    const tagMatch = /^@(\w+)\s+(.*)$/.exec(line.trim());
-    if (tagMatch) {
-      const [, tag, value] = tagMatch;
-      if (tag === 'title') title = value?.trim();
+    const tag = parseJSDocTag(line.trim());
+    if (tag) {
+      if (tag.name === 'title') title = tag.value;
       // Unknown tags are silently dropped; they're not part of the description.
       continue;
     }
