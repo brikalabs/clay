@@ -14,7 +14,7 @@ const COMPONENTS_DIR = resolve(HERE, '..');
 interface ComponentFolder {
   readonly slug: string;
   readonly metaPath: string;
-  readonly demosPath: string | null;
+  readonly demoFiles: readonly string[];
 }
 
 function listComponentFolders(): ComponentFolder[] {
@@ -24,14 +24,16 @@ function listComponentFolders(): ComponentFolder[] {
     const full = join(COMPONENTS_DIR, name);
     if (!statSync(full).isDirectory()) continue;
     const metaPath = join(full, 'meta.ts');
-    const demosPath = join(full, `${name}.demos.tsx`);
-    let demosExists = true;
+    const demosDir = join(full, 'demos');
+    let demoFiles: readonly string[] = [];
     try {
-      statSync(demosPath);
+      demoFiles = readdirSync(demosDir)
+        .filter((entry) => entry.endsWith('.demos.tsx'))
+        .map((entry) => join(demosDir, entry));
     } catch {
-      demosExists = false;
+      // No demos/ folder — leave the list empty.
     }
-    out.push({ slug: name, metaPath, demosPath: demosExists ? demosPath : null });
+    out.push({ slug: name, metaPath, demoFiles });
   }
   return out;
 }
@@ -51,13 +53,14 @@ describe('component meta + demos co-location', () => {
     // can be imported without pulling in React, icons, and demo helpers.
     // This regression guard fires if anyone re-introduces the old pattern.
     for (const folder of FOLDERS) {
-      if (!folder.demosPath) continue;
-      const src = readFileSync(folder.demosPath, 'utf8');
-      expect(src).not.toMatch(/\bexport const accessibility\b/);
+      for (const demoPath of folder.demoFiles) {
+        const src = readFileSync(demoPath, 'utf8');
+        expect(src).not.toMatch(/\bexport const accessibility\b/);
+      }
     }
   });
 
-  test('every component that ships a *.demos.tsx also documents accessibility in meta.ts', () => {
+  test('every component that ships demos also documents accessibility in meta.ts', () => {
     // The inverse invariant: an interactive component without an `accessibility`
     // array on its meta is almost certainly an oversight. Allowlist anything
     // genuinely non-interactive (e.g. brand glyphs).
@@ -67,7 +70,7 @@ describe('component meta + demos co-location', () => {
       'clay-logo',
     ]);
     for (const folder of FOLDERS) {
-      if (!folder.demosPath || ALLOW_NO_A11Y.has(folder.slug)) continue;
+      if (folder.demoFiles.length === 0 || ALLOW_NO_A11Y.has(folder.slug)) continue;
       const meta = readFileSync(folder.metaPath, 'utf8');
       expect(meta).toMatch(/\baccessibility\s*:\s*\[/);
     }
@@ -100,15 +103,19 @@ describe('component meta + demos co-location', () => {
     }
   });
 
-  test('no demo description in *.demos.tsx escapes a backtick (use single-quoted strings)', () => {
-    // Same DX win as accessibility entries, applied to `description: \\\`...\\\``
-    // payloads inside `defineDemos([...])`. Authors should write
-    // `description: '...\\`code\\`...'` instead.
+  test('every demo file uses the convention: `export default function …Demo`', () => {
+    // The zero-boilerplate convention: each `<slug>/demos/<kebab>.demos.tsx`
+    // file exports exactly one demo as the default export, with no `demoMeta`
+    // / `defineDemos` boilerplate. Title comes from the filename, description
+    // from the leading JSDoc. This guard fires if anyone re-introduces the
+    // old `export const demoMeta = defineDemos([...])` pattern.
     for (const folder of FOLDERS) {
-      if (!folder.demosPath) continue;
-      const src = readFileSync(folder.demosPath, 'utf8');
-      // Match `description: \`...\\\`...\``, regardless of position in line.
-      expect(src).not.toMatch(/description:\s*`[^`]*\\`/);
+      for (const demoPath of folder.demoFiles) {
+        const src = readFileSync(demoPath, 'utf8');
+        expect(src).toMatch(/\bexport\s+default\s+function\b/);
+        expect(src).not.toMatch(/\bdefineDemos\b/);
+        expect(src).not.toMatch(/\bexport\s+const\s+demoMeta\b/);
+      }
     }
   });
 });

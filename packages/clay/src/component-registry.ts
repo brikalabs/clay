@@ -29,56 +29,14 @@ export interface ExternalDoc {
 
 /** Full resolved demo record as used by the docs renderer. */
 export interface ComponentDemo {
-  /** Exported function name in the `.demos.tsx` file. */
+  /** Kebab filename of the demo file (e.g. `default`, `code-editor`). */
   readonly name: string;
   /** Short heading shown above the live demo. */
   readonly title: string;
   /** One-sentence explanation rendered between the heading and the demo. */
   readonly description?: string;
-  /** Minimal JSX snippet shown in the code panel, auto-extracted if omitted. */
+  /** Full file source, shown verbatim in the docs code block. */
   readonly code: string;
-}
-
-type DemoFn = (...args: never[]) => unknown;
-
-/**
- * What you write in a `.demos.tsx` file. The docs registry resolves `fn`
- * back to its export name via the module namespace at build time.
- */
-export interface DemoInput {
-  readonly fn: DemoFn;
-  readonly title: string;
-  readonly description?: string;
-}
-
-/**
- * Type-safe, concise way to declare demos inside a `.demos.tsx` file.
- *
- * Pass the actual function references (not strings!), TypeScript catches
- * undefined names at compile time, and the docs registry recovers the
- * export-name string at build time by identity-matching against the
- * module namespace. This avoids `Function.prototype.name`, which the
- * minifier mangles for module-internal bindings.
- *
- * @example
- * ```ts
- * export const demoMeta = defineDemos([
- *   [ButtonDefaultDemo, 'Default'],
- *   [ButtonVariantsDemo, 'Variants', { description: 'Six emphasis tiers.' }],
- * ]);
- * ```
- */
-export function defineDemos(
-  entries: ReadonlyArray<
-    | readonly [fn: DemoFn, title: string]
-    | readonly [fn: DemoFn, title: string, extra: { description?: string }]
-  >
-): readonly DemoInput[] {
-  return entries.map(([fn, title, extra]) => ({
-    fn,
-    title,
-    description: extra?.description,
-  }));
 }
 
 export interface ComponentMeta {

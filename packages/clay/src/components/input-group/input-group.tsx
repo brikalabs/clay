@@ -66,6 +66,7 @@ const inputGroupAddonVariants = cva(
 function InputGroupAddon({
   className,
   align = 'inline-start',
+  onClick,
   ...props
 }: React.ComponentProps<'div'> &
   VariantProps<typeof inputGroupAddonVariants> & {
@@ -76,12 +77,27 @@ function InputGroupAddon({
     <div
       data-slot="input-group-addon"
       data-align={align}
+      role="group"
       className={cn(
         inputGroupAddonVariants({
           align,
         }),
         className
       )}
+      onClick={(e) => {
+        onClick?.(e);
+        if (e.defaultPrevented) return;
+        // Let interactive children (buttons, links, controls) keep their
+        // own click behavior; otherwise forward focus to the sibling
+        // input/textarea so clicks on a prefix label feel like the field
+        // itself was clicked.
+        if ((e.target as HTMLElement).closest('button, a, input, textarea, [role="button"]')) {
+          return;
+        }
+        e.currentTarget.parentElement
+          ?.querySelector<HTMLElement>('[data-slot="input-group-control"]')
+          ?.focus();
+      }}
       {...props}
     />
   );

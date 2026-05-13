@@ -3,23 +3,23 @@
  *
  * Everything is auto-discovered via import.meta.glob, no hardcoded lists:
  *
- *   src/components/<slug>/meta.ts          → identity, group, description,
- *                                            externalDocs, accessibility
- *   src/components/<slug>/<slug>.demos.tsx → runnable demos + demoMeta
+ *   src/components/<slug>/meta.ts                  → identity, group, description,
+ *                                                    externalDocs, accessibility
+ *   src/components/<slug>/demos/<kebab>.demos.tsx  → one demo per file. Authors
+ *                                                    write only imports + a JSDoc +
+ *                                                    `export default function`.
  *
- * Adding a new component requires zero edits here. Drop a folder with
- * `meta.ts` and optionally a `*.demos.tsx` and both are picked up at
- * the next build.
+ * Per-demo conventions (zero-boilerplate):
+ *   - Filename (kebab-case) → demo title via `titleFromKebab`. `default.demos.tsx`
+ *     always sorts first; everything else is alphabetical.
+ *   - Leading JSDoc → description shown in the docs page.
+ *   - Optional `@title …` JSDoc tag overrides the auto-generated title
+ *     for cases like `url` → "URL", `otp` → "OTP".
  */
 
-import type {
-  ComponentDemo,
-  ComponentGroup,
-  ComponentMeta,
-  DemoInput,
-  ExternalDoc,
-} from '@brika/clay';
-import { extractDemoCode } from '@brika/clay-docgen';
+import type { ComponentDemo, ComponentGroup, ComponentMeta, ExternalDoc } from '@brika/clay';
+import { extractDemoMeta, titleFromKebab } from '@brika/clay-docgen';
+import type { ComponentType } from 'react';
 
 // ─── Component meta (name, displayName, group, description, externalDocs) ────
 
@@ -36,97 +36,64 @@ const CLAY_COMPONENTS: readonly ComponentMeta[] = Object.values(metaModules)
   .map((m) => m.meta)
   .sort((a, b) => a.name.localeCompare(b.name));
 
-// ─── Demo modules (functions + demoMeta) ──────────────────────────────────
+// ─── Demo modules (default export per file) ──────────────────────────
 
 interface DemosModule {
-  readonly demoMeta?: readonly DemoInput[];
-  readonly [exportName: string]: unknown;
+  readonly default?: ComponentType<Record<string, never>>;
 }
 
 const demosModules = import.meta.glob<DemosModule>(
-  '~clay/components/*/*.demos.tsx',
+  '~clay/components/*/demos/*.demos.tsx',
   { eager: true }
 );
 
-// Raw source text for code-snippet auto-extraction.
+// Raw source text — shown verbatim in the docs code block.
 const demoSources = import.meta.glob<string>(
-  '~clay/components/*/*.demos.tsx',
+  '~clay/components/*/demos/*.demos.tsx',
   { eager: true, query: '?raw', import: 'default' }
 );
 
-function slugFromPath(path: string): string {
-  return /\/components\/([a-z0-9-]+)\/[^/]+\.demos\.tsx$/.exec(path)?.[1] ?? '';
-}
+const DEMO_PATH_RE = /\/components\/([a-z0-9-]+)\/demos\/([a-z0-9-]+)\.demos\.tsx$/;
 
 interface DemoFile {
   readonly path: string;
+  readonly slug: string;
+  readonly kebab: string;
   readonly mod: DemosModule;
   readonly source: string;
 }
 
-/**
- * Multiple `*.demos.tsx` files per component folder are supported, the
- * registry concatenates their `demoMeta` arrays in glob (alphabetical) order.
- * Splitting demos lets a component grow past one file (Chart's variants,
- * for example) without forcing every demo into a single 500+ line module.
- */
 const FILES_BY_SLUG = (() => {
   const out = new Map<string, DemoFile[]>();
   for (const [path, mod] of Object.entries(demosModules)) {
-    const slug = slugFromPath(path);
-    if (!slug) continue;
+    const match = DEMO_PATH_RE.exec(path);
+    if (!match) continue;
+    const [, slug, kebab] = match;
+    if (!slug || !kebab) continue;
     const files = out.get(slug) ?? [];
-    files.push({ path, mod, source: demoSources[path] ?? '' });
+    files.push({ path, slug, kebab, mod, source: demoSources[path] ?? '' });
     out.set(slug, files);
   }
-  // Stable order: alphabetical by path so the resulting demo list is
-  // deterministic regardless of glob iteration order.
   for (const [slug, files] of out) {
-    out.set(slug, [...files].sort((a, b) => a.path.localeCompare(b.path)));
+    out.set(slug, [...files].sort(compareDemoFiles));
   }
   return out;
 })();
 
-function ownerFile(slug: string, fn: unknown): DemoFile | undefined {
-  return FILES_BY_SLUG.get(slug)?.find((file) =>
-    Object.values(file.mod).includes(fn)
-  );
+/** `default.demos.tsx` always wins; rest is alphabetical by kebab name. */
+function compareDemoFiles(a: DemoFile, b: DemoFile): number {
+  if (a.kebab === 'default' && b.kebab !== 'default') return -1;
+  if (b.kebab === 'default' && a.kebab !== 'default') return 1;
+  return a.kebab.localeCompare(b.kebab);
 }
 
-function demoMetaFor(slug: string): readonly DemoInput[] {
-  return (FILES_BY_SLUG.get(slug) ?? []).flatMap((file) => file.mod.demoMeta ?? []);
-}
-
-// ─── Source code extraction ───────────────────────────────────────────
-// `extractDemoCode` lives in `@brika/clay-docgen` so it's testable
-// under Bun without pulling in the Vite-only `import.meta.glob` calls
-// that this module makes.
-
-/**
- * Recover the export-name string for a demo function by identity scan.
- *
- * `Function.prototype.name` reflects the module-internal binding, which
- * a minifier rewrites to a short alias (e.g. "eA"). Export-name strings
- * on the module namespace are preserved by the ES module contract, so
- * this scan is the source-of-truth for both runtime lookup and the
- * source-text parser used by `extractDemoCode`.
- */
-function exportNameOf(mod: DemosModule, fn: unknown): string {
-  for (const [key, value] of Object.entries(mod)) {
-    if (value === fn) return key;
-  }
-  return '';
-}
-
-/** Resolve a DemoInput to a full ComponentDemo, with code auto-extracted from source. */
-function resolveDemo(slug: string, input: DemoInput): ComponentDemo {
-  const file = ownerFile(slug, input.fn);
-  const name = file ? exportNameOf(file.mod, input.fn) : '';
+function resolveDemo(file: DemoFile): ComponentDemo {
+  const meta = extractDemoMeta(file.source);
   return {
-    name,
-    title: input.title,
-    description: input.description,
-    code: file ? extractDemoCode(file.source, name) : '',
+    name: file.kebab,
+    title: meta.title ?? titleFromKebab(file.kebab),
+    description: meta.description,
+    code: file.source.trimEnd(),
   };
 }
 
@@ -152,7 +119,7 @@ const ENTRIES: readonly ComponentEntry[] = CLAY_COMPONENTS.map((meta) => ({
   displayName: meta.displayName,
   description: meta.description,
   group: meta.group,
-  demos: demoMetaFor(meta.name).map((d) => resolveDemo(meta.name, d)),
+  demos: (FILES_BY_SLUG.get(meta.name) ?? []).map(resolveDemo),
   accessibility: meta.accessibility,
   externalDocs: meta.externalDocs ?? [],
 }));
