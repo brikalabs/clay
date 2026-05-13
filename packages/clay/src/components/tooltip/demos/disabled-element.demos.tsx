@@ -5,18 +5,25 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@brika/clay/components/tooltip';
-/** Wrap a disabled button in a focusable span so hover events reach the tooltip. */
+
+/**
+ * Disabled buttons don't fire pointer or focus events, so tooltips never
+ * trigger. Use `aria-disabled` instead — the button stays focusable and
+ * keyboard-reachable, the tooltip works, and the click handler guards
+ * against the disabled action.
+ */
 export default function TooltipDisabledElementDemo() {
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          {/* NOSONAR: disabled buttons don't fire pointer/focus events in any browser, so the
-              W3C-recommended tooltip workaround wraps them in a focusable span. S6845 doesn't
-              recognize this pattern; switching to a real button or role=button breaks it. */}
-          <span tabIndex={0} className="inline-block">
-            <Button disabled>Publish</Button>
-          </span>
+          <Button
+            aria-disabled="true"
+            className="opacity-50"
+            onClick={(event) => event.preventDefault()}
+          >
+            Publish
+          </Button>
         </TooltipTrigger>
         <TooltipContent>You need editor permissions to publish.</TooltipContent>
       </Tooltip>

@@ -8,6 +8,14 @@ import { Input } from '../input';
 import { Textarea } from '../textarea';
 
 /**
+ * Shares an auto-generated `id` with the inner control + every addon so the
+ * addons can render as `<label htmlFor={id}>`. Clicking a prefix label
+ * (e.g. "https://") then focuses the input via native browser behaviour —
+ * no JS click handler, no a11y hole.
+ */
+const InputGroupControlIdContext = React.createContext<string | undefined>(undefined);
+
+/**
  * Wrapper for compound input controls (PasswordInput, search bars, fields
  * with prefix/suffix addons). Mirrors the standalone Input's token surface
  * exactly, `rounded-input`, `h-input-height`, `bg-input-container`,
@@ -17,30 +25,33 @@ import { Textarea } from '../textarea';
  * PasswordInput to match without any extra theming work.
  */
 function InputGroup({ className, ...props }: React.ComponentProps<'div'>) {
+  const controlId = React.useId();
   return (
-    <div
-      data-slot="input"
-      data-input-variant="group"
-      className={cn(
-        'group/input-group corner-themed relative flex w-full items-center rounded-input border border-input-group-border bg-input-group-container text-input-group-label shadow-surface outline-none transition-[color,box-shadow] backdrop-blur-input-group',
-        'h-input-height min-w-0 has-[>textarea]:h-auto',
+    <InputGroupControlIdContext.Provider value={controlId}>
+      <div
+        data-slot="input"
+        data-input-variant="group"
+        className={cn(
+          'group/input-group corner-themed relative flex w-full items-center rounded-input border border-input-group-border bg-input-group-container text-input-group-label shadow-surface outline-none transition-[color,box-shadow] backdrop-blur-input-group',
+          'h-input-height min-w-0 has-[>textarea]:h-auto',
 
-        // Variants based on alignment.
-        'has-[>[data-align=inline-start]]:[&>input]:pl-2',
-        'has-[>[data-align=inline-end]]:[&>input]:pr-2',
-        'has-[>[data-align=block-start]]:h-auto has-[>[data-align=block-start]]:flex-col has-[>[data-align=block-start]]:[&>input]:pb-3',
-        'has-[>[data-align=block-end]]:h-auto has-[>[data-align=block-end]]:flex-col has-[>[data-align=block-end]]:[&>input]:pt-3',
+          // Variants based on alignment.
+          'has-[>[data-align=inline-start]]:[&>input]:pl-2',
+          'has-[>[data-align=inline-end]]:[&>input]:pr-2',
+          'has-[>[data-align=block-start]]:h-auto has-[>[data-align=block-start]]:flex-col has-[>[data-align=block-start]]:[&>input]:pb-3',
+          'has-[>[data-align=block-end]]:h-auto has-[>[data-align=block-end]]:flex-col has-[>[data-align=block-end]]:[&>input]:pt-3',
 
-        // Focus state.
-        'has-[[data-slot=input-group-control]:focus-visible]:border-input-group-focus-border has-[[data-slot=input-group-control]:focus-visible]:ring-[3px] has-[[data-slot=input-group-control]:focus-visible]:ring-input-group-focus-ring/50',
+          // Focus state.
+          'has-[[data-slot=input-group-control]:focus-visible]:border-input-group-focus-border has-[[data-slot=input-group-control]:focus-visible]:ring-[3px] has-[[data-slot=input-group-control]:focus-visible]:ring-input-group-focus-ring/50',
 
-        // Error state.
-        'has-[[data-slot][aria-invalid=true]]:border-input-group-invalid-ring has-[[data-slot][aria-invalid=true]]:ring-input-group-invalid-ring/20 dark:has-[[data-slot][aria-invalid=true]]:ring-input-group-invalid-ring/40',
+          // Error state.
+          'has-[[data-slot][aria-invalid=true]]:border-input-group-invalid-ring has-[[data-slot][aria-invalid=true]]:ring-input-group-invalid-ring/20 dark:has-[[data-slot][aria-invalid=true]]:ring-input-group-invalid-ring/40',
 
-        className
-      )}
-      {...props}
-    />
+          className
+        )}
+        {...props}
+      />
+    </InputGroupControlIdContext.Provider>
   );
 }
 
@@ -63,41 +74,34 @@ const inputGroupAddonVariants = cva(
   }
 );
 
+/**
+ * Renders as `<label htmlFor={controlId}>` so clicking the addon natively
+ * focuses the InputGroup's inner control. Buttons placed inside the addon
+ * keep their own click behaviour — browsers correctly skip the label's
+ * auto-focus when the click target is interactive.
+ */
 function InputGroupAddon({
   className,
   align = 'inline-start',
-  onClick,
+  htmlFor,
   ...props
-}: React.ComponentProps<'div'> &
+}: React.ComponentProps<'label'> &
   VariantProps<typeof inputGroupAddonVariants> & {
     /** Which edge the addon docks against. */
     align?: VariantProps<typeof inputGroupAddonVariants>['align'];
   }) {
+  const controlId = React.useContext(InputGroupControlIdContext);
   return (
-    <div
+    <label
       data-slot="input-group-addon"
       data-align={align}
-      role="group"
+      htmlFor={htmlFor ?? controlId}
       className={cn(
         inputGroupAddonVariants({
           align,
         }),
         className
       )}
-      onClick={(e) => {
-        onClick?.(e);
-        if (e.defaultPrevented) return;
-        // Let interactive children (buttons, links, controls) keep their
-        // own click behavior; otherwise forward focus to the sibling
-        // input/textarea so clicks on a prefix label feel like the field
-        // itself was clicked.
-        if ((e.target as HTMLElement).closest('button, a, input, textarea, [role="button"]')) {
-          return;
-        }
-        e.currentTarget.parentElement
-          ?.querySelector<HTMLElement>('[data-slot="input-group-control"]')
-          ?.focus();
-      }}
       {...props}
     />
   );
@@ -168,11 +172,14 @@ function InputGroupText({ className, ...props }: React.ComponentProps<'span'>) {
  * the wrapper's `--input-height` (minus the wrapper's border) drives the
  * rendered height; without that, theming `--input-border-width` to a
  * thicker value would push the inner control past the wrapper's content
- * area.
+ * area. Picks up the auto-generated `id` from the InputGroup context so
+ * addon `<label htmlFor>` associations resolve automatically.
  */
-function InputGroupInput({ className, ...props }: React.ComponentProps<'input'>) {
+function InputGroupInput({ id, className, ...props }: React.ComponentProps<'input'>) {
+  const controlId = React.useContext(InputGroupControlIdContext);
   return (
     <Input
+      id={id ?? controlId}
       data-slot="input-group-control"
       className={cn(
         'h-full flex-1 rounded-none border-0 bg-transparent shadow-none',
@@ -187,9 +194,11 @@ function InputGroupInput({ className, ...props }: React.ComponentProps<'input'>)
   );
 }
 
-function InputGroupTextarea({ className, ...props }: React.ComponentProps<'textarea'>) {
+function InputGroupTextarea({ id, className, ...props }: React.ComponentProps<'textarea'>) {
+  const controlId = React.useContext(InputGroupControlIdContext);
   return (
     <Textarea
+      id={id ?? controlId}
       data-slot="input-group-control"
       className={cn(
         'flex-1 resize-none rounded-none border-0 bg-transparent py-3 shadow-none',
