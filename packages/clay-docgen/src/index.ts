@@ -21,6 +21,7 @@
  */
 
 export { extractDemoCode, dedent } from './extract-demo-code';
+export { extractDemoMeta, titleFromKebab, type DemoMeta } from './extract-demo-meta';
 
 export { isHookName, isInternalProp, slugFromPath, slugToPascalCase } from './helpers';
 

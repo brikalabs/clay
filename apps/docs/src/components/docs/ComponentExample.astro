@@ -34,22 +34,21 @@ function pad(n: number) {
 ---
 
 <div
-  id={anchorId}
   class="component-example not-prose scroll-mt-24 overflow-hidden rounded-lg border border-clay-hairline bg-clay-elevated"
   data-component-example
 >
   {title ? (
     <div class="flex items-start justify-between gap-4 border-clay-hairline border-b px-4 py-3">
       <div class="min-w-0 flex-1">
-        <p class="mb-0.5 flex items-baseline gap-2 font-mono text-xs text-clay-subtle">
+        <div class="mb-0.5 flex items-baseline gap-2 font-mono text-xs text-clay-subtle">
           {index !== undefined && (
             <>
-              <span class="tabular-nums text-clay-inactive">{pad(index)}</span>
-              <span class="hairline w-4 shrink-0" />
+              <span class="tabular-nums text-clay-inactive" aria-hidden="true">{pad(index)}</span>
+              <span class="hairline w-4 shrink-0" aria-hidden="true" />
             </>
           )}
-          <span class="font-medium text-clay-strong">{title}</span>
-        </p>
+          <h3 id={anchorId} class="scroll-mt-24 font-medium text-clay-strong text-xs">{title}</h3>
+        </div>
         {description && (
           <p class="mt-1 max-w-2xl text-clay-default text-sm leading-relaxed">{description}</p>
         )}
