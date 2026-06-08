@@ -207,62 +207,51 @@ interface TreeKeyHandlers {
  * Keyboard model for a single tree node. Extracted from `TreeItem` so the
  * component stays under Sonar's cognitive-complexity budget.
  */
-function handleTreeItemKeyDown(
-  event: React.KeyboardEvent<HTMLDivElement>,
-  { nodeId, isBranch, open, setExpanded, activate }: TreeKeyHandlers
-) {
+type TreeKeyHandler = (event: React.KeyboardEvent<HTMLDivElement>, opts: TreeKeyHandlers) => void;
+
+function handleArrowRight(event: React.KeyboardEvent<HTMLDivElement>, opts: TreeKeyHandlers) {
+  if (!opts.isBranch) {
+    return;
+  }
+  if (opts.open) {
+    focusRelative(event.currentTarget, 1);
+  } else {
+    opts.setExpanded(opts.nodeId, true);
+  }
+}
+
+function handleArrowLeft(event: React.KeyboardEvent<HTMLDivElement>, opts: TreeKeyHandlers) {
+  if (opts.isBranch && opts.open) {
+    opts.setExpanded(opts.nodeId, false);
+    return;
+  }
+  event.currentTarget.parentElement?.closest<HTMLElement>(TREEITEM_SELECTOR)?.focus();
+}
+
+// One small handler per key keeps each function — and the dispatcher — well
+// under Sonar's cognitive-complexity budget (no nested switch).
+const TREE_KEY_HANDLERS: Readonly<Record<string, TreeKeyHandler>> = {
+  ArrowDown: (event) => focusRelative(event.currentTarget, 1),
+  ArrowUp: (event) => focusRelative(event.currentTarget, -1),
+  Home: (event) => rowsOf(event.currentTarget)[0]?.focus(),
+  End: (event) => rowsOf(event.currentTarget).at(-1)?.focus(),
+  ArrowRight: handleArrowRight,
+  ArrowLeft: handleArrowLeft,
+  Enter: (event, opts) => opts.activate(event.metaKey || event.ctrlKey),
+  ' ': (event, opts) => opts.activate(event.metaKey || event.ctrlKey),
+};
+
+function handleTreeItemKeyDown(event: React.KeyboardEvent<HTMLDivElement>, opts: TreeKeyHandlers) {
   // Ignore key events that bubbled up from a nested row.
   if (event.target !== event.currentTarget) {
     return;
   }
-  const el = event.currentTarget;
-  switch (event.key) {
-    case 'ArrowDown':
-      event.preventDefault();
-      focusRelative(el, 1);
-      break;
-    case 'ArrowUp':
-      event.preventDefault();
-      focusRelative(el, -1);
-      break;
-    case 'Home':
-      event.preventDefault();
-      rowsOf(el)[0]?.focus();
-      break;
-    case 'End':
-      event.preventDefault();
-      rowsOf(el).at(-1)?.focus();
-      break;
-    case 'ArrowRight':
-      if (isBranch && !open) {
-        event.preventDefault();
-        setExpanded(nodeId, true);
-      } else if (isBranch && open) {
-        event.preventDefault();
-        focusRelative(el, 1);
-      }
-      break;
-    case 'ArrowLeft': {
-      if (isBranch && open) {
-        event.preventDefault();
-        setExpanded(nodeId, false);
-        break;
-      }
-      const parent = el.parentElement?.closest<HTMLElement>(TREEITEM_SELECTOR);
-      if (parent) {
-        event.preventDefault();
-        parent.focus();
-      }
-      break;
-    }
-    case 'Enter':
-    case ' ':
-      event.preventDefault();
-      activate(event.metaKey || event.ctrlKey);
-      break;
-    default:
-      break;
+  const handler = TREE_KEY_HANDLERS[event.key];
+  if (!handler) {
+    return;
   }
+  event.preventDefault();
+  handler(event, opts);
 }
 
 interface TreeItemProps extends Omit<React.ComponentProps<'div'>, 'id' | 'onSelect'> {
