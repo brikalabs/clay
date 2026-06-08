@@ -52,7 +52,7 @@ function useControllableSet(
   return [value, setValue];
 }
 
-interface TreeProps extends Omit<React.ComponentProps<'ul'>, 'onSelect'> {
+interface TreeProps extends Omit<React.ComponentProps<'div'>, 'onSelect'> {
   /** Folder ids open on first render (uncontrolled). */
   readonly defaultExpandedIds?: readonly string[];
   /** Open folder ids (controlled). Pair with `onExpandedChange`. */
@@ -94,7 +94,7 @@ function Tree({
   className,
   children,
   ...props
-}: TreeProps) {
+}: Readonly<TreeProps>) {
   const [expanded, writeExpanded] = useControllableSet(
     expandedIds,
     defaultExpandedIds,
@@ -164,8 +164,8 @@ function Tree({
 
   return (
     <TreeContext value={ctx}>
-      <ul
-        // biome-ignore lint/a11y/useSemanticElements: ARIA tree pattern requires role="tree" on the list.
+      <div
+        // biome-ignore lint/a11y/useSemanticElements: ARIA tree pattern requires role="tree".
         role="tree"
         aria-multiselectable={multiSelect || undefined}
         data-slot="tree"
@@ -173,12 +173,13 @@ function Tree({
         {...props}
       >
         {children}
-      </ul>
+      </div>
     </TreeContext>
   );
 }
 
 const TREEITEM_SELECTOR = '[role="treeitem"]';
+const ROW_SELECTOR = '[data-slot="tree-item-row"]';
 
 function rowsOf(el: HTMLElement): HTMLElement[] {
   const root = el.closest<HTMLElement>('[role="tree"]');
@@ -191,11 +192,80 @@ function rowsOf(el: HTMLElement): HTMLElement[] {
 function focusRelative(el: HTMLElement, delta: number) {
   const rows = rowsOf(el);
   const index = rows.indexOf(el);
-  const next = rows[index + delta];
-  next?.focus();
+  rows[index + delta]?.focus();
 }
 
-interface TreeItemProps extends Omit<React.ComponentProps<'li'>, 'id' | 'onSelect'> {
+interface TreeKeyHandlers {
+  readonly nodeId: string;
+  readonly isBranch: boolean;
+  readonly open: boolean;
+  readonly setExpanded: (id: string, open: boolean) => void;
+  readonly activate: (additive: boolean) => void;
+}
+
+/**
+ * Keyboard model for a single tree node. Extracted from `TreeItem` so the
+ * component stays under Sonar's cognitive-complexity budget.
+ */
+function handleTreeItemKeyDown(
+  event: React.KeyboardEvent<HTMLDivElement>,
+  { nodeId, isBranch, open, setExpanded, activate }: TreeKeyHandlers
+) {
+  // Ignore key events that bubbled up from a nested row.
+  if (event.target !== event.currentTarget) {
+    return;
+  }
+  const el = event.currentTarget;
+  switch (event.key) {
+    case 'ArrowDown':
+      event.preventDefault();
+      focusRelative(el, 1);
+      break;
+    case 'ArrowUp':
+      event.preventDefault();
+      focusRelative(el, -1);
+      break;
+    case 'Home':
+      event.preventDefault();
+      rowsOf(el)[0]?.focus();
+      break;
+    case 'End':
+      event.preventDefault();
+      rowsOf(el).at(-1)?.focus();
+      break;
+    case 'ArrowRight':
+      if (isBranch && !open) {
+        event.preventDefault();
+        setExpanded(nodeId, true);
+      } else if (isBranch && open) {
+        event.preventDefault();
+        focusRelative(el, 1);
+      }
+      break;
+    case 'ArrowLeft': {
+      if (isBranch && open) {
+        event.preventDefault();
+        setExpanded(nodeId, false);
+        break;
+      }
+      const parent = el.parentElement?.closest<HTMLElement>(TREEITEM_SELECTOR);
+      if (parent) {
+        event.preventDefault();
+        parent.focus();
+      }
+      break;
+    }
+    case 'Enter':
+    case ' ':
+      event.preventDefault();
+      activate(event.metaKey || event.ctrlKey);
+      break;
+    default:
+      break;
+  }
+}
+
+interface TreeItemProps extends Omit<React.ComponentProps<'div'>, 'id' | 'onSelect'> {
   /** Stable identifier used for expansion and selection state. */
   readonly nodeId: string;
   /** Row label. */
@@ -227,7 +297,7 @@ function TreeItem({
   className,
   children,
   ...props
-}: TreeItemProps) {
+}: Readonly<TreeItemProps>) {
   const { expanded, toggleExpanded, setExpanded, selected, select, showIcons, showLines } =
     useTree();
 
@@ -249,83 +319,48 @@ function TreeItem({
     }
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLLIElement>) => {
-    // Ignore key events that bubbled up from a nested row.
-    if (event.target !== event.currentTarget) {
-      return;
-    }
-    switch (event.key) {
-      case 'ArrowDown':
-        event.preventDefault();
-        focusRelative(event.currentTarget, 1);
-        break;
-      case 'ArrowUp':
-        event.preventDefault();
-        focusRelative(event.currentTarget, -1);
-        break;
-      case 'Home':
-        event.preventDefault();
-        rowsOf(event.currentTarget)[0]?.focus();
-        break;
-      case 'End':
-        event.preventDefault();
-        rowsOf(event.currentTarget).at(-1)?.focus();
-        break;
-      case 'ArrowRight':
-        if (isBranch && !open) {
-          event.preventDefault();
-          setExpanded(nodeId, true);
-        } else if (isBranch && open) {
-          event.preventDefault();
-          focusRelative(event.currentTarget, 1);
-        }
-        break;
-      case 'ArrowLeft':
-        if (isBranch && open) {
-          event.preventDefault();
-          setExpanded(nodeId, false);
-        } else {
-          const parent = event.currentTarget.parentElement?.closest<HTMLElement>(TREEITEM_SELECTOR);
-          if (parent) {
-            event.preventDefault();
-            parent.focus();
-          }
-        }
-        break;
-      case 'Enter':
-      case ' ':
-        event.preventDefault();
-        activate(event.metaKey || event.ctrlKey);
-        break;
-      default:
-        break;
-    }
-  };
-
-  const DefaultIcon = isBranch ? (open ? FolderOpen : Folder) : FileIcon;
+  // Expanded/collapsed state and the default glyph, kept as flat branches so
+  // there are no nested ternaries (Sonar S3358).
+  let dataState: 'open' | 'closed' | undefined;
+  if (isBranch) {
+    dataState = open ? 'open' : 'closed';
+  }
+  let DefaultIcon = FileIcon;
+  if (isBranch) {
+    DefaultIcon = open ? FolderOpen : Folder;
+  }
 
   return (
-    <li
+    <div
       // biome-ignore lint/a11y/useSemanticElements: ARIA tree pattern requires role="treeitem".
       role="treeitem"
       aria-expanded={isBranch ? open : undefined}
       aria-selected={isSelected}
       aria-disabled={disabled || undefined}
       aria-busy={(open && loading) || undefined}
-      data-state={isBranch ? (open ? 'open' : 'closed') : undefined}
+      data-state={dataState}
       data-selected={isSelected || undefined}
       tabIndex={disabled ? -1 : 0}
-      onKeyDown={handleKeyDown}
+      onKeyDown={(event) =>
+        handleTreeItemKeyDown(event, { nodeId, isBranch, open, setExpanded, activate })
+      }
+      onClick={(event) => {
+        // Only act on clicks within this node's own row, not ones bubbling up
+        // from a nested treeitem.
+        const target = event.target;
+        if (
+          target instanceof Element &&
+          target.closest(ROW_SELECTOR)?.parentElement === event.currentTarget
+        ) {
+          event.currentTarget.focus();
+          activate(event.metaKey || event.ctrlKey);
+        }
+      }}
       className={cn('group/treeitem block outline-none', className)}
       {...props}
     >
-      {/** biome-ignore lint/a11y/useKeyWithClickEvents: keyboard handling lives on the treeitem above. */}
       <div
-        data-slot="tree-item"
-        onClick={(event) => {
-          event.currentTarget.closest<HTMLElement>(TREEITEM_SELECTOR)?.focus();
-          activate(event.metaKey || event.ctrlKey);
-        }}
+        data-slot="tree-item-row"
         className={cn(
           'tree corner-themed flex select-none items-center rounded-tree transition-colors group-focus-visible/treeitem:ring-themed',
           "[&_svg]:size-4 [&_svg]:shrink-0",
@@ -343,29 +378,30 @@ function TreeItem({
         ) : (
           <span className="size-4 shrink-0" aria-hidden />
         )}
-        {showIcons ? (
-          icon ?? <DefaultIcon className="shrink-0 text-tree-icon" aria-hidden />
-        ) : null}
+        {showIcons ? icon ?? <DefaultIcon className="shrink-0 text-tree-icon" aria-hidden /> : null}
         <span className="truncate">{label}</span>
       </div>
       {isBranch && open ? (
-        <ul
-          // biome-ignore lint/a11y/useSemanticElements: ARIA tree pattern requires role="group" on nested lists.
-          role="group"
-          className={cn('mt-0.5 space-y-0.5', showLines && 'border-tree-guide border-s ps-2')}
+        // A <fieldset> carries an implicit role="group" — exactly the ARIA tree
+        // pattern for a node's children — without a literal interactive role.
+        <fieldset
+          className={cn(
+            'm-0 min-w-0 space-y-0.5 border-0 p-0',
+            showLines && 'border-tree-guide border-s ps-2'
+          )}
           style={{ marginInlineStart: 'var(--tree-indent)' }}
         >
           {loading && !hasChildren ? (
-            <li role="none" className="tree flex select-none items-center text-tree-icon">
+            <div className="tree flex select-none items-center text-tree-icon">
               <Loader2 className="size-4 shrink-0 animate-spin" aria-hidden />
               <span className="truncate text-sm">Loading…</span>
-            </li>
+            </div>
           ) : (
             children
           )}
-        </ul>
+        </fieldset>
       ) : null}
-    </li>
+    </div>
   );
 }
 

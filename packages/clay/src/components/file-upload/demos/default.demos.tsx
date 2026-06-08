@@ -21,6 +21,10 @@ interface PickedFile {
   readonly size: number;
 }
 
+function toPicked(file: File): PickedFile {
+  return { id: `${file.name}-${file.size}`, name: file.name, size: file.size };
+}
+
 /** Pick files, then list each with its name, size, and a remove button. */
 export default function FileUploadDefaultDemo() {
   const [files, setFiles] = useState<PickedFile[]>([
@@ -28,21 +32,11 @@ export default function FileUploadDefaultDemo() {
     { id: 'b', name: 'cover-photo.jpg', size: 845_120 },
   ]);
 
+  const addFiles = (selected: File[]) => setFiles((prev) => [...prev, ...selected.map(toPicked)]);
+  const removeFile = (id: string) => setFiles((prev) => prev.filter((f) => f.id !== id));
+
   return (
-    <FileUpload
-      className="w-full max-w-md"
-      multiple
-      onFilesSelected={(selected) =>
-        setFiles((prev) => [
-          ...prev,
-          ...selected.map((file) => ({
-            id: `${file.name}-${file.size}`,
-            name: file.name,
-            size: file.size,
-          })),
-        ])
-      }
-    >
+    <FileUpload className="w-full max-w-md" multiple onFilesSelected={addFiles}>
       <FileUploadTrigger asChild>
         <Button variant="outline">
           <Upload aria-hidden />
@@ -60,9 +54,7 @@ export default function FileUploadDefaultDemo() {
                 <FileUploadItemName>{file.name}</FileUploadItemName>
                 <FileUploadItemSize bytes={file.size} />
               </FileUploadItemContent>
-              <FileUploadItemRemove
-                onClick={() => setFiles((prev) => prev.filter((f) => f.id !== file.id))}
-              />
+              <FileUploadItemRemove onClick={() => removeFile(file.id)} />
             </FileUploadItem>
           ))}
         </FileUploadList>

@@ -57,7 +57,7 @@ function FileUpload({
   className,
   children,
   ...props
-}: FileUploadProps) {
+}: Readonly<FileUploadProps>) {
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const openFileDialog = React.useCallback(() => {
@@ -102,7 +102,7 @@ interface FileUploadTriggerProps extends React.ComponentProps<'button'> {
   readonly asChild?: boolean;
 }
 
-function FileUploadTrigger({ asChild = false, onClick, ...props }: FileUploadTriggerProps) {
+function FileUploadTrigger({ asChild = false, onClick, ...props }: Readonly<FileUploadTriggerProps>) {
   const { openFileDialog, disabled } = useFileUpload();
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     onClick?.(event);
@@ -186,7 +186,12 @@ interface FileUploadItemSizeProps extends React.ComponentProps<'p'> {
   readonly bytes?: number;
 }
 
-function FileUploadItemSize({ bytes, className, children, ...props }: FileUploadItemSizeProps) {
+function FileUploadItemSize({
+  bytes,
+  className,
+  children,
+  ...props
+}: Readonly<FileUploadItemSizeProps>) {
   return (
     <p
       data-slot="file-upload-item-size"
@@ -220,7 +225,7 @@ function FileUploadItemRemove({
   children,
   'aria-label': ariaLabel = 'Remove file',
   ...props
-}: FileUploadItemRemoveProps) {
+}: Readonly<FileUploadItemRemoveProps>) {
   return (
     <Button
       type="button"

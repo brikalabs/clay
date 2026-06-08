@@ -12,7 +12,7 @@ interface StatusProps extends React.ComponentProps<'span'> {
   readonly variant?: StatusVariant;
 }
 
-function Status({ variant = 'neutral', className, ...props }: StatusProps) {
+function Status({ variant = 'neutral', className, ...props }: Readonly<StatusProps>) {
   return (
     <span
       data-slot="status"
@@ -31,7 +31,7 @@ interface StatusIndicatorProps extends React.ComponentProps<'span'> {
   readonly pulse?: boolean;
 }
 
-function StatusIndicator({ pulse = true, className, ...props }: StatusIndicatorProps) {
+function StatusIndicator({ pulse = true, className, ...props }: Readonly<StatusIndicatorProps>) {
   // Tone follows the parent <Status variant>: the wrapper carries the color as
   // `currentColor`, and both dots paint with `bg-current`.
   return (
@@ -52,7 +52,7 @@ function StatusIndicator({ pulse = true, className, ...props }: StatusIndicatorP
   );
 }
 
-function StatusLabel({ className, ...props }: React.ComponentProps<'span'>) {
+function StatusLabel({ className, ...props }: Readonly<React.ComponentProps<'span'>>) {
   return <span data-slot="status-label" className={cn(className)} {...props} />;
 }
 

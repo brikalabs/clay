@@ -26,7 +26,7 @@ function useDropzone(): DropzoneContextValue {
   return ctx;
 }
 
-interface DropzoneProps extends Omit<React.ComponentProps<'div'>, 'onDrop'> {
+interface DropzoneProps extends Omit<React.ComponentProps<'button'>, 'onDrop' | 'type'> {
   /** Comma-separated list of accepted types, forwarded to the native input. */
   readonly accept?: string;
   /** Allow dropping or selecting more than one file. */
@@ -51,7 +51,7 @@ function Dropzone({
   className,
   children,
   ...props
-}: DropzoneProps) {
+}: Readonly<DropzoneProps>) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const dragDepth = React.useRef(0);
   const [isDragActive, setDragActive] = React.useState(false);
@@ -89,28 +89,14 @@ function Dropzone({
 
   return (
     <DropzoneContext value={ctx}>
-      {/** biome-ignore lint/a11y/useSemanticElements: a drag-and-drop surface is a custom button, not a native one. */}
-      <div
-        role="button"
-        tabIndex={disabled ? -1 : 0}
-        aria-disabled={disabled || undefined}
+      <button
+        type="button"
+        disabled={disabled}
         data-slot="dropzone"
         data-drag-active={isDragActive || undefined}
-        data-disabled={disabled || undefined}
-        onClick={(event) => {
-          if (event.target === inputRef.current) {
-            return;
-          }
+        onClick={() => {
           if (!disabled) {
             inputRef.current?.click();
-          }
-        }}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            if (!disabled) {
-              inputRef.current?.click();
-            }
           }
         }}
         onDragEnter={(event) => {
@@ -144,29 +130,29 @@ function Dropzone({
           }
         }}
         className={cn(
-          'dropzone corner-themed flex flex-col items-center justify-center rounded-dropzone border-2 border-dropzone-border border-dashed bg-dropzone-container text-center outline-none transition-colors',
+          'dropzone corner-themed flex w-full flex-col items-center justify-center rounded-dropzone border-2 border-dropzone-border border-dashed bg-dropzone-container text-center outline-none transition-colors',
           'hover:bg-dropzone-active-container/60 focus-visible:ring-themed',
           'data-[drag-active]:border-dropzone-active-border data-[drag-active]:bg-dropzone-active-container',
-          'data-[disabled]:pointer-events-none data-[disabled]:opacity-60',
+          'disabled:pointer-events-none disabled:opacity-60',
           className
         )}
         {...props}
       >
         {children}
-        <input
-          ref={inputRef}
-          type="file"
-          accept={accept}
-          multiple={multiple}
-          disabled={disabled}
-          tabIndex={-1}
-          className="sr-only"
-          onChange={(event) => {
-            processFiles(event.target.files);
-            event.target.value = '';
-          }}
-        />
-      </div>
+      </button>
+      <input
+        ref={inputRef}
+        type="file"
+        accept={accept}
+        multiple={multiple}
+        disabled={disabled}
+        tabIndex={-1}
+        className="sr-only"
+        onChange={(event) => {
+          processFiles(event.target.files);
+          event.target.value = '';
+        }}
+      />
     </DropzoneContext>
   );
 }

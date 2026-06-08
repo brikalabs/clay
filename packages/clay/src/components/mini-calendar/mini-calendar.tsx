@@ -72,7 +72,7 @@ function useMiniCalendar(): MiniCalendarContextValue {
 }
 
 interface MiniCalendarProps
-  extends Omit<React.ComponentProps<'div'>, 'onChange' | 'defaultValue'> {
+  extends Omit<React.ComponentProps<'fieldset'>, 'onChange' | 'defaultValue'> {
   /** Selected date (controlled). Pair with `onValueChange`. */
   readonly value?: Date;
   /** Selected date on first render (uncontrolled). */
@@ -106,7 +106,7 @@ function MiniCalendar({
   className,
   children,
   ...props
-}: MiniCalendarProps) {
+}: Readonly<MiniCalendarProps>) {
   const [selected, setSelected] = useControllableState<Date | undefined>(value, defaultValue);
   const [defaultStart] = React.useState(() =>
     startOfDay(defaultStartDate ?? defaultValue ?? value ?? new Date())
@@ -151,15 +151,15 @@ function MiniCalendar({
 
   return (
     <MiniCalendarContext value={ctx}>
-      <div
-        role="group"
+      {/* A <fieldset> carries an implicit role="group" for this set of day controls. */}
+      <fieldset
         aria-label={props['aria-label'] ?? 'Mini calendar'}
         data-slot="mini-calendar"
-        className={cn('inline-flex items-center gap-1', className)}
+        className={cn('m-0 inline-flex min-w-0 items-center gap-1 border-0 p-0', className)}
         {...props}
       >
         {children}
-      </div>
+      </fieldset>
     </MiniCalendarContext>
   );
 }
@@ -174,7 +174,7 @@ function MiniCalendarNavigation({
   className,
   onClick,
   ...props
-}: MiniCalendarNavigationProps) {
+}: Readonly<MiniCalendarNavigationProps>) {
   const { shift } = useMiniCalendar();
   const Icon = direction === 'prev' ? ChevronLeft : ChevronRight;
   return (
@@ -204,7 +204,7 @@ interface MiniCalendarDaysProps {
   readonly className?: string;
 }
 
-function MiniCalendarDays({ children, className }: MiniCalendarDaysProps) {
+function MiniCalendarDays({ children, className }: Readonly<MiniCalendarDaysProps>) {
   const { startDate, days } = useMiniCalendar();
   const dates = Array.from({ length: days }, (_, index) => addDays(startDate, index));
   return (
@@ -221,7 +221,7 @@ interface MiniCalendarDayProps extends Omit<React.ComponentProps<'button'>, 'val
   readonly date: Date;
 }
 
-function MiniCalendarDay({ date, className, onClick, ...props }: MiniCalendarDayProps) {
+function MiniCalendarDay({ date, className, onClick, ...props }: Readonly<MiniCalendarDayProps>) {
   const { selected, onSelect, formatters } = useMiniCalendar();
   const isSelected = selected ? isSameDay(date, selected) : false;
   return (
