@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.0](https://github.com/brikalabs/clay/compare/clay-v0.1.0...clay-v0.2.0) (2026-06-08)
+
+
+### Features
+
+* add tree, file-upload, dropzone, mini-calendar, and status components ([#35](https://github.com/brikalabs/clay/issues/35)) ([f37cd68](https://github.com/brikalabs/clay/commit/f37cd68546d1d0655038df37c16a2e8b1312ade9))
+* **clay:** one-per-file demos + zero-boilerplate convention ([#33](https://github.com/brikalabs/clay/issues/33)) ([6c4de0f](https://github.com/brikalabs/clay/commit/6c4de0f887646426f3435ec9ad175794e7d2b6f5))
+
 ## [0.1.0](https://github.com/brikalabs/clay/compare/clay-v0.0.1...clay-v0.1.0) (2026-05-11)
 
 
