@@ -13,7 +13,7 @@ export const meta: ComponentMeta = {
   group: 'Data',
   description:
     'A hierarchical list for browsing nested data such as file systems, with expandable folders, optional guide lines, lazy-loaded children, and single or multi selection.',
-  added: '2026-06-08',
+  badge: 'New',
   accessibility: [
     'Root carries `role="tree"`; each node is a `role="treeitem"` with `aria-expanded` on folders and `aria-selected` on selectable nodes.',
     'Nested groups use `role="group"` so assistive tech announces nesting depth.',

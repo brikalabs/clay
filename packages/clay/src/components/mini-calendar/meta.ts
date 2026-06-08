@@ -13,7 +13,7 @@ export const meta: ComponentMeta = {
   group: 'Forms',
   description:
     'A compact horizontal strip of selectable days with previous/next navigation — a space-efficient date picker for toolbars, popovers, and inline forms.',
-  added: '2026-06-08',
+  badge: 'New',
   externalDocs: [
     {
       label: 'Intl.DateTimeFormat',

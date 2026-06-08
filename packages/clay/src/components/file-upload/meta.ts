@@ -13,7 +13,7 @@ export const meta: ComponentMeta = {
   group: 'Forms',
   description:
     'A button-triggered file picker paired with a list of selected files, each showing its name, size, upload progress, and a remove control.',
-  added: '2026-06-08',
+  badge: 'New',
   accessibility: [
     'The native file `<input>` is visually hidden but stays in the DOM, so the trigger and assistive tech reach the OS file picker.',
     '`FileUploadTrigger` renders a real `<button>` (or your own element via `asChild`) and forwards focus and keyboard activation.',

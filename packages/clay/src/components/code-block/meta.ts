@@ -13,6 +13,7 @@ export const meta: ComponentMeta = {
   group: 'Data',
   description:
     'Syntax-highlighted code with a copy button and optional line numbers. Switch between multiple files via a header tab bar or a dropdown (each with optional file-type icons), or drop the header entirely. Powered by Shiki.',
+  badge: 'Updated',
   externalDocs: [{ label: "Shiki", url: "https://shiki.style" }],
   accessibility: [
     'Code blocks are non-interactive regions; Tab moves through the copy button, not character by character.',

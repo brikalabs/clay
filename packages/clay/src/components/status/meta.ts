@@ -13,7 +13,7 @@ export const meta: ComponentMeta = {
   group: 'Feedback',
   description:
     'A compact pill that pairs a colored, optionally pulsing dot with a label. Choose a semantic tone (success, warning, info, destructive, or neutral) and supply your own text.',
-  added: '2026-06-08',
+  badge: 'New',
   accessibility: [
     'The colored dot is `aria-hidden`; the `StatusLabel` text carries the meaning, so state is never conveyed by color alone.',
     'Always provide a `StatusLabel` — color-blind and assistive-tech users rely on the text, not the dot.',

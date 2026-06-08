@@ -49,11 +49,11 @@ export interface ComponentMeta {
   /** One-paragraph blurb shown at the top of the component's docs page. */
   readonly description: string;
   /**
-   * ISO date (`YYYY-MM-DD`) the component was added. Set this when shipping
-   * a new component and the docs site shows a self-expiring "New" badge in
-   * the sidebar for a window after this date, no manual cleanup needed.
+   * Short label shown as a pill next to the component in the docs sidebar
+   * (e.g. `'New'`, `'Beta'`). Set it to flag the component; remove it when it
+   * no longer applies. Omit for no badge.
    */
-  readonly added?: string;
+  readonly badge?: string;
   /** Links to external libraries or specifications this component wraps or depends on. */
   readonly externalDocs?: readonly ExternalDoc[];
   /**

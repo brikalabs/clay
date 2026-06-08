@@ -13,7 +13,7 @@ export const meta: ComponentMeta = {
   group: 'Forms',
   description:
     'A drag-and-drop file surface that also opens the native picker on click, with a dashed border that highlights while a file is dragged over it.',
-  added: '2026-06-08',
+  badge: 'New',
   accessibility: [
     'The surface is a `role="button"` with `tabIndex={0}`; Enter or Space opens the OS file picker.',
     'A visually hidden native `<input type="file">` performs the actual selection so keyboard and assistive-tech users are never blocked.',

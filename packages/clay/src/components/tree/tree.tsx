@@ -276,6 +276,111 @@ interface TreeItemProps extends Omit<React.ComponentProps<'div'>, 'id' | 'onSele
   readonly loading?: boolean;
 }
 
+function handleTreeItemClick(
+  event: React.MouseEvent<HTMLDivElement>,
+  activate: (additive: boolean) => void
+) {
+  // Only act on clicks within this node's own row, not ones bubbling up from a
+  // nested treeitem.
+  const target = event.target;
+  if (
+    target instanceof Element &&
+    target.closest(ROW_SELECTOR)?.parentElement === event.currentTarget
+  ) {
+    event.currentTarget.focus();
+    activate(event.metaKey || event.ctrlKey);
+  }
+}
+
+/** The clickable row: chevron / glyph / label. Presentational only. */
+function TreeRow({
+  isBranch,
+  open,
+  isSelected,
+  disabled,
+  showIcons,
+  icon,
+  label,
+}: Readonly<{
+  isBranch: boolean;
+  open: boolean;
+  isSelected: boolean;
+  disabled: boolean;
+  showIcons: boolean;
+  icon: React.ReactNode;
+  label: React.ReactNode;
+}>) {
+  let DefaultIcon = FileIcon;
+  if (isBranch) {
+    DefaultIcon = open ? FolderOpen : Folder;
+  }
+  return (
+    <div
+      data-slot="tree-item-row"
+      className={cn(
+        'tree corner-themed flex select-none items-center rounded-tree transition-colors group-focus-visible/treeitem:ring-themed',
+        "[&_svg]:size-4 [&_svg]:shrink-0",
+        disabled ? 'pointer-events-none opacity-50' : 'cursor-pointer',
+        isSelected
+          ? 'bg-tree-selected text-tree-selected-label'
+          : 'text-tree-label hover:bg-tree-item-hover'
+      )}
+    >
+      {isBranch ? (
+        <ChevronRight
+          className={cn('shrink-0 text-tree-icon transition-transform', open && 'rotate-90')}
+          aria-hidden
+        />
+      ) : (
+        <span className="size-4 shrink-0" aria-hidden />
+      )}
+      {showIcons ? icon ?? <DefaultIcon className="shrink-0 text-tree-icon" aria-hidden /> : null}
+      <span className="truncate">{label}</span>
+    </div>
+  );
+}
+
+/** The nested children container, or a loading spinner while they fetch. */
+function TreeItemGroup({
+  isBranch,
+  open,
+  loading,
+  hasChildren,
+  showLines,
+  children,
+}: Readonly<{
+  isBranch: boolean;
+  open: boolean;
+  loading: boolean;
+  hasChildren: boolean;
+  showLines: boolean;
+  children: React.ReactNode;
+}>) {
+  if (!isBranch || !open) {
+    return null;
+  }
+  // A <fieldset> carries an implicit role="group" — exactly the ARIA tree
+  // pattern for a node's children — without a literal interactive role.
+  return (
+    <fieldset
+      className={cn(
+        'm-0 min-w-0 space-y-0.5 border-0 p-0',
+        showLines && 'border-tree-guide border-s ps-2'
+      )}
+      style={{ marginInlineStart: 'var(--tree-indent)' }}
+    >
+      {loading && !hasChildren ? (
+        <div className="tree flex select-none items-center text-tree-icon">
+          <Loader2 className="size-4 shrink-0 animate-spin" aria-hidden />
+          <span className="truncate text-sm">Loading…</span>
+        </div>
+      ) : (
+        children
+      )}
+    </fieldset>
+  );
+}
+
 function TreeItem({
   nodeId,
   label,
@@ -290,8 +395,7 @@ function TreeItem({
   const { expanded, toggleExpanded, setExpanded, selected, select, showIcons, showLines } =
     useTree();
 
-  const childNodes = React.Children.toArray(children);
-  const hasChildren = childNodes.length > 0;
+  const hasChildren = React.Children.toArray(children).length > 0;
   // A "branch" is anything that can expand: it has children now, or it's a
   // lazy node whose children will be loaded on first open.
   const isBranch = hasChildren || lazy;
@@ -308,15 +412,9 @@ function TreeItem({
     }
   };
 
-  // Expanded/collapsed state and the default glyph, kept as flat branches so
-  // there are no nested ternaries (Sonar S3358).
   let dataState: 'open' | 'closed' | undefined;
   if (isBranch) {
     dataState = open ? 'open' : 'closed';
-  }
-  let DefaultIcon = FileIcon;
-  if (isBranch) {
-    DefaultIcon = open ? FolderOpen : Folder;
   }
 
   return (
@@ -333,63 +431,28 @@ function TreeItem({
       onKeyDown={(event) =>
         handleTreeItemKeyDown(event, { nodeId, isBranch, open, setExpanded, activate })
       }
-      onClick={(event) => {
-        // Only act on clicks within this node's own row, not ones bubbling up
-        // from a nested treeitem.
-        const target = event.target;
-        if (
-          target instanceof Element &&
-          target.closest(ROW_SELECTOR)?.parentElement === event.currentTarget
-        ) {
-          event.currentTarget.focus();
-          activate(event.metaKey || event.ctrlKey);
-        }
-      }}
+      onClick={(event) => handleTreeItemClick(event, activate)}
       className={cn('group/treeitem block outline-none', className)}
       {...props}
     >
-      <div
-        data-slot="tree-item-row"
-        className={cn(
-          'tree corner-themed flex select-none items-center rounded-tree transition-colors group-focus-visible/treeitem:ring-themed',
-          "[&_svg]:size-4 [&_svg]:shrink-0",
-          disabled ? 'pointer-events-none opacity-50' : 'cursor-pointer',
-          isSelected
-            ? 'bg-tree-selected text-tree-selected-label'
-            : 'text-tree-label hover:bg-tree-item-hover'
-        )}
+      <TreeRow
+        isBranch={isBranch}
+        open={open}
+        isSelected={isSelected}
+        disabled={disabled}
+        showIcons={showIcons}
+        icon={icon}
+        label={label}
+      />
+      <TreeItemGroup
+        isBranch={isBranch}
+        open={open}
+        loading={loading}
+        hasChildren={hasChildren}
+        showLines={showLines}
       >
-        {isBranch ? (
-          <ChevronRight
-            className={cn('shrink-0 text-tree-icon transition-transform', open && 'rotate-90')}
-            aria-hidden
-          />
-        ) : (
-          <span className="size-4 shrink-0" aria-hidden />
-        )}
-        {showIcons ? icon ?? <DefaultIcon className="shrink-0 text-tree-icon" aria-hidden /> : null}
-        <span className="truncate">{label}</span>
-      </div>
-      {isBranch && open ? (
-        // A <fieldset> carries an implicit role="group" — exactly the ARIA tree
-        // pattern for a node's children — without a literal interactive role.
-        <fieldset
-          className={cn(
-            'm-0 min-w-0 space-y-0.5 border-0 p-0',
-            showLines && 'border-tree-guide border-s ps-2'
-          )}
-          style={{ marginInlineStart: 'var(--tree-indent)' }}
-        >
-          {loading && !hasChildren ? (
-            <div className="tree flex select-none items-center text-tree-icon">
-              <Loader2 className="size-4 shrink-0 animate-spin" aria-hidden />
-              <span className="truncate text-sm">Loading…</span>
-            </div>
-          ) : (
-            children
-          )}
-        </fieldset>
-      ) : null}
+        {children}
+      </TreeItemGroup>
     </div>
   );
 }

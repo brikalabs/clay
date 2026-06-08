@@ -1,5 +1,13 @@
 import type { ComponentGroup } from '@brika/clay';
-import { ChevronDown, ChevronLeft, ChevronRight, Search } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  type LucideIcon,
+  RefreshCw,
+  Search,
+  Sparkles,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import {
   COMPONENT_GROUPS,
@@ -8,6 +16,37 @@ import {
 } from '~/lib/component-registry';
 import { sitePages } from '~/lib/site-pages';
 import { ClayMenuIcon } from './ClayMenuIcon';
+
+/**
+ * Per-label badge styling: a soft tinted pill (background + matching text +
+ * inset ring) and an optional glyph. Unknown labels fall back to a neutral
+ * pill with no icon.
+ */
+interface BadgeStyle {
+  readonly icon?: LucideIcon;
+  readonly className: string;
+}
+
+const BADGE_STYLES: Readonly<Record<string, BadgeStyle>> = {
+  New: { icon: Sparkles, className: 'bg-success/10 text-success ring-success/25' },
+  Updated: { icon: RefreshCw, className: 'bg-clay-brand/10 text-clay-brand ring-clay-brand/25' },
+};
+
+const NEUTRAL_BADGE: BadgeStyle = {
+  className: 'bg-clay-control text-clay-subtle ring-clay-hairline',
+};
+
+function ComponentBadge({ label }: { readonly label: string }) {
+  const { icon: Icon, className } = BADGE_STYLES[label] ?? NEUTRAL_BADGE;
+  return (
+    <span
+      className={`inline-flex shrink-0 items-center gap-0.5 rounded-full px-1.5 py-0.5 font-medium font-mono text-[0.5rem] uppercase leading-none tracking-wide ring-1 ring-inset ${className}`}
+    >
+      {Icon && <Icon size={9} strokeWidth={2.5} aria-hidden="true" />}
+      {label}
+    </span>
+  );
+}
 
 const STORAGE_KEY = 'clay-sidebar-open';
 const COLLAPSED_GROUPS_KEY = 'clay-sidebar-collapsed-groups';
@@ -236,11 +275,7 @@ export function SidebarNav({ currentPath }: { readonly currentPath: string }) {
                           >
                             <span className="flex items-center justify-between gap-2">
                               <span className="truncate">{component.name}</span>
-                              {component.isNew && (
-                                <span className="shrink-0 rounded-full bg-clay-brand px-1.5 py-px font-medium font-mono text-[0.5rem] text-clay-canvas uppercase leading-tight tracking-wide">
-                                  New
-                                </span>
-                              )}
+                              {component.badge && <ComponentBadge label={component.badge} />}
                             </span>
                           </a>
                         </li>
