@@ -119,6 +119,7 @@ const ENTRIES: readonly ComponentEntry[] = CLAY_COMPONENTS.map((meta) => ({
   displayName: meta.displayName,
   description: meta.description,
   group: meta.group,
+  badge: meta.badge,
   demos: (FILES_BY_SLUG.get(meta.name) ?? []).map(resolveDemo),
   accessibility: meta.accessibility,
   externalDocs: meta.externalDocs ?? [],

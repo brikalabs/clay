@@ -8,7 +8,7 @@ import { PropsTable } from '~/components/docs/PropsTable.tsx';
 import { TokenTable } from '~/components/docs/TokenTable.tsx';
 import MdxDocLayout from '~/layouts/MdxDocLayout.astro';
 import { adjacentComponents, COMPONENTS, type ComponentEntry } from '~/lib/component-registry';
-import { componentSourceUrl } from '~/lib/github';
+import { componentSourceUrl, demoSourceUrl } from '~/lib/github';
 
 interface Props {
   readonly component: ComponentEntry;
@@ -91,7 +91,10 @@ const apiNum = nextSection();
   {
     heroDemo && (
       <section class="mb-16">
-        <ComponentExample code={heroDemo.code}>
+        <ComponentExample
+          code={heroDemo.code}
+          sourceUrl={demoSourceUrl(component.slug, heroDemo.name)}
+        >
           <DemoRenderer slug={component.slug} demoName={heroDemo.name} client:only="react" />
         </ComponentExample>
       </section>
@@ -159,6 +162,7 @@ const apiNum = nextSection();
               description={demo.description}
               index={index + 1}
               anchorId={slugifyTitle(demo.title)}
+              sourceUrl={demoSourceUrl(component.slug, demo.name)}
             >
               <DemoRenderer slug={component.slug} demoName={demo.name} client:only="react" />
             </ComponentExample>

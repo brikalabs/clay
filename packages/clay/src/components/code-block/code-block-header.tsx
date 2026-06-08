@@ -4,7 +4,6 @@ import { type VariantProps } from 'class-variance-authority';
 
 import { cn } from '../../primitives/cn';
 import { Button } from '../button';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../tooltip';
 import {
   codeBlockHeaderVariants,
   useCodeBlockContext,
@@ -122,22 +121,17 @@ export function CodeBlockCopyButton({
   const label = copied ? copiedLabel : copyLabel;
 
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Button
-          data-slot="code-block-copy"
-          variant={variant}
-          size={size}
-          className={cn('size-8', className)}
-          onClick={handleCopy}
-          aria-label={props['aria-label'] ?? label}
-          type="button"
-          {...props}
-        >
-          {copied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
-        </Button>
-      </TooltipTrigger>
-      <TooltipContent>{label}</TooltipContent>
-    </Tooltip>
+    <Button
+      data-slot="code-block-copy"
+      variant={variant}
+      size={size}
+      className={cn('size-8', className)}
+      onClick={handleCopy}
+      aria-label={props['aria-label'] ?? label}
+      type="button"
+      {...props}
+    >
+      {copied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
+    </Button>
   );
 }

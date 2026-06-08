@@ -4,7 +4,7 @@ import * as React from 'react';
 // --- Variants ---
 
 export const codeBlockVariants = cva(
-  'code-block overflow-hidden rounded-code-block border border-code-block-border-color bg-code-block-bg backdrop-blur-code-block',
+  'code-block relative overflow-hidden rounded-code-block border border-code-block-border-color bg-code-block-bg backdrop-blur-code-block',
   {
     variants: {
       variant: {
@@ -100,6 +100,9 @@ export type CodeBlockContextValue = {
   setCodeInfo: (code: string, lineCount: number) => void;
   setLanguage: (language: string | null) => void;
   setFilename: (filename: string | null) => void;
+  /** Active file value when using `CodeBlockTabs` / `CodeBlockPanel`; `null` for single-file blocks. */
+  activeValue: string | null;
+  setActiveValue: (value: string) => void;
 };
 
 export const CodeBlockContext = React.createContext<CodeBlockContextValue | null>(null);

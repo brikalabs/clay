@@ -48,6 +48,12 @@ export interface ComponentMeta {
   readonly group: ComponentGroup;
   /** One-paragraph blurb shown at the top of the component's docs page. */
   readonly description: string;
+  /**
+   * Short label shown as a pill next to the component in the docs sidebar
+   * (e.g. `'New'`, `'Beta'`). Set it to flag the component; remove it when it
+   * no longer applies. Omit for no badge.
+   */
+  readonly badge?: string;
   /** Links to external libraries or specifications this component wraps or depends on. */
   readonly externalDocs?: readonly ExternalDoc[];
   /**
