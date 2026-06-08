@@ -47,5 +47,13 @@ registerComponent(meta, {
       default: 'var(--muted-foreground)',
       description: 'Text color of the line numbers in the gutter.',
     },
+    'tab-label': {
+      default: 'var(--muted-foreground)',
+      description: 'Text color of an inactive file tab in the header (multi-file blocks).',
+    },
+    'tab-active-label': {
+      default: 'var(--foreground)',
+      description: 'Text color of the active file tab in the header (multi-file blocks).',
+    },
   },
 });

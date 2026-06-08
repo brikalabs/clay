@@ -48,6 +48,12 @@ export interface ComponentMeta {
   readonly group: ComponentGroup;
   /** One-paragraph blurb shown at the top of the component's docs page. */
   readonly description: string;
+  /**
+   * ISO date (`YYYY-MM-DD`) the component was added. Set this when shipping
+   * a new component and the docs site shows a self-expiring "New" badge in
+   * the sidebar for a window after this date, no manual cleanup needed.
+   */
+  readonly added?: string;
   /** Links to external libraries or specifications this component wraps or depends on. */
   readonly externalDocs?: readonly ExternalDoc[];
   /**

@@ -234,7 +234,14 @@ export function SidebarNav({ currentPath }: { readonly currentPath: string }) {
                             href={`/components/${component.slug}`}
                             className={navItemClass(`/components/${component.slug}`)}
                           >
-                            {component.name}
+                            <span className="flex items-center justify-between gap-2">
+                              <span className="truncate">{component.name}</span>
+                              {component.isNew && (
+                                <span className="shrink-0 rounded-full bg-clay-brand px-1.5 py-px font-medium font-mono text-[0.5rem] text-clay-canvas uppercase leading-tight tracking-wide">
+                                  New
+                                </span>
+                              )}
+                            </span>
                           </a>
                         </li>
                       ))}

@@ -109,6 +109,28 @@ export interface ComponentEntry extends ComponentMeta, ComponentDocs {
   readonly slug: string;
   readonly name: string;
   readonly externalDocs: readonly ExternalDoc[];
+  /** True while the component is within the "New" badge window (see below). */
+  readonly isNew: boolean;
+}
+
+/**
+ * How long after a component's `added` date the sidebar keeps showing its
+ * "New" badge. The window is evaluated at build time, so the badge appears
+ * and disappears on its own as the site is rebuilt, no manual toggling.
+ */
+const NEW_BADGE_WINDOW_DAYS = 30;
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+function isRecentlyAdded(added: string | undefined): boolean {
+  if (!added) {
+    return false;
+  }
+  const addedAt = Date.parse(added);
+  if (Number.isNaN(addedAt)) {
+    return false;
+  }
+  const ageDays = (Date.now() - addedAt) / DAY_MS;
+  return ageDays >= 0 && ageDays <= NEW_BADGE_WINDOW_DAYS;
 }
 
 // ─── Composed entries ─────────────────────────────────────────────
@@ -119,6 +141,8 @@ const ENTRIES: readonly ComponentEntry[] = CLAY_COMPONENTS.map((meta) => ({
   displayName: meta.displayName,
   description: meta.description,
   group: meta.group,
+  added: meta.added,
+  isNew: isRecentlyAdded(meta.added),
   demos: (FILES_BY_SLUG.get(meta.name) ?? []).map(resolveDemo),
   accessibility: meta.accessibility,
   externalDocs: meta.externalDocs ?? [],
