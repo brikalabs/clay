@@ -808,6 +808,77 @@ function CropperReset({
 }
 
 // ---------------------------------------------------------------------------
+// CropperCancel — button that resets the transform and fires an optional callback
+// ---------------------------------------------------------------------------
+
+/**
+ * A button that calls `reset()` from CropperContext (returning the image to its
+ * initial transform) and fires an optional `onCancel` callback so the consumer
+ * can close their Dialog or otherwise dismiss the cropper.
+ *
+ * Symmetric with `CropperApply`. Renders as a Clay `outline` Button by default;
+ * pass `variant`, `size`, and `children` to customise. Supports `asChild` to
+ * merge the behaviour into any custom trigger.
+ *
+ * Usage:
+ * ```tsx
+ * <CropperCancel onCancel={() => setOpen(false)}>Cancel</CropperCancel>
+ * ```
+ */
+function CropperCancel({
+  onCancel,
+  asChild = false,
+  children,
+  className,
+  variant = 'outline',
+  size,
+  ...props
+}: React.ComponentProps<'button'> &
+  VariantProps<typeof buttonVariants> & {
+    /** Called after the transform is reset, e.g. to close a Dialog. */
+    onCancel?: () => void;
+    /**
+     * When true, merges the cancel behaviour into the single child element
+     * (Slot pattern). The child receives the `onClick` prop.
+     */
+    asChild?: boolean;
+  }) {
+  const { reset } = useCropper();
+
+  function handleClick() {
+    reset();
+    onCancel?.();
+  }
+
+  if (asChild) {
+    return (
+      <Slot.Root
+        data-slot="cropper-cancel"
+        {...props}
+        className={className}
+        onClick={handleClick}
+      >
+        {children}
+      </Slot.Root>
+    );
+  }
+
+  return (
+    <Button
+      type="button"
+      data-slot="cropper-cancel"
+      variant={variant}
+      size={size}
+      {...props}
+      className={className}
+      onClick={handleClick}
+    >
+      {children}
+    </Button>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // CropperApply — button that exports the crop and fires a callback
 // ---------------------------------------------------------------------------
 
@@ -883,6 +954,7 @@ function CropperApply({
 export {
   Cropper,
   CropperApply,
+  CropperCancel,
   CropperCanvas,
   CropperInput,
   CropperOverlay,

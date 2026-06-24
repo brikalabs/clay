@@ -3,11 +3,12 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@brika/clay/components/avatar';
-import { Button } from '@brika/clay/components/button';
 import {
   Cropper,
   CropperApply,
+  CropperCancel,
   CropperFlip,
+  CropperInput,
   CropperReset,
   CropperRotate,
   CropperViewport,
@@ -21,12 +22,23 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@brika/clay/components/dialog';
-import { FlipHorizontal2, FlipVertical2, RotateCcw, RotateCw, RotateCcwSquare, ZoomIn, ZoomOut } from 'lucide-react';
+import {
+  FlipHorizontal2,
+  FlipVertical2,
+  RotateCcw,
+  RotateCcwSquare,
+  RotateCw,
+  Upload,
+  ZoomIn,
+  ZoomOut,
+} from 'lucide-react';
 
 /**
  * Avatar-upload flow: click the avatar to open the file browser, then crop in
- * a Dialog with a zoom slider, a bordered toolbar of rotate/flip/reset actions,
- * and Cancel / Apply footer buttons.
+ * a Dialog composed entirely from public Cropper parts. Toolbar icon buttons
+ * now show a visible border (outline variant). CropperCancel resets the
+ * transform and closes the dialog; CropperApply exports the crop and closes.
+ * CropperInput replaces the loaded image without leaving the dialog.
  */
 export default function CropperModalDemo() {
   const [file, setFile] = useState<File | null>(null);
@@ -41,10 +53,6 @@ export default function CropperModalDemo() {
   function handleCrop(blob: Blob) {
     if (avatarSrc != null) URL.revokeObjectURL(avatarSrc);
     setAvatarSrc(URL.createObjectURL(blob));
-    setFile(null);
-  }
-
-  function handleCancel() {
     setFile(null);
   }
 
@@ -66,7 +74,7 @@ export default function CropperModalDemo() {
       <p className="text-xs text-muted-foreground">Click avatar to change</p>
 
       <Cropper image={file} shape="circle">
-        <Dialog open={file !== null} onOpenChange={(open) => { if (!open) handleCancel(); }}>
+        <Dialog open={file !== null} onOpenChange={(open) => { if (!open) setFile(null); }}>
           <DialogContent className="w-[380px] max-w-[calc(100vw-2rem)] gap-4">
             <DialogHeader>
               <DialogTitle>Crop your photo</DialogTitle>
@@ -84,29 +92,32 @@ export default function CropperModalDemo() {
               <ZoomIn className="size-4 shrink-0 text-muted-foreground" />
             </div>
 
-            {/* Toolbar: 5 bordered icon buttons for rotate, flip, reset */}
+            {/* Toolbar: bordered outline icon buttons for rotate, flip, reset, and upload */}
             <div className="flex items-center gap-2">
-              <CropperRotate direction="left" variant="outline" size="icon-sm" aria-label="Rotate left" className="flex-1">
+              <CropperRotate direction="left" aria-label="Rotate left" className="flex-1">
                 <RotateCcw className="size-4" />
               </CropperRotate>
-              <CropperRotate direction="right" variant="outline" size="icon-sm" aria-label="Rotate right" className="flex-1">
+              <CropperRotate direction="right" aria-label="Rotate right" className="flex-1">
                 <RotateCw className="size-4" />
               </CropperRotate>
-              <CropperFlip axis="h" variant="outline" size="icon-sm" aria-label="Flip horizontal" className="flex-1">
+              <CropperFlip axis="h" aria-label="Flip horizontal" className="flex-1">
                 <FlipHorizontal2 className="size-4" />
               </CropperFlip>
-              <CropperFlip axis="v" variant="outline" size="icon-sm" aria-label="Flip vertical" className="flex-1">
+              <CropperFlip axis="v" aria-label="Flip vertical" className="flex-1">
                 <FlipVertical2 className="size-4" />
               </CropperFlip>
-              <CropperReset variant="outline" size="icon-sm" aria-label="Reset" className="flex-1">
+              <CropperReset aria-label="Reset" className="flex-1">
                 <RotateCcwSquare className="size-4" />
               </CropperReset>
+              <CropperInput variant="outline" size="icon-sm" aria-label="Replace image" className="flex-1">
+                <Upload className="size-4" />
+              </CropperInput>
             </div>
 
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={handleCancel} className="flex-1">
+              <CropperCancel onCancel={() => setFile(null)} className="flex-1">
                 Cancel
-              </Button>
+              </CropperCancel>
               <CropperApply onCrop={handleCrop} className="flex-1">
                 Apply
               </CropperApply>
