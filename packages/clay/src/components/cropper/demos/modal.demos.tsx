@@ -73,7 +73,7 @@ export default function CropperModalDemo() {
       </button>
       <p className="text-xs text-muted-foreground">Click avatar to change</p>
 
-      <Cropper image={file} shape="circle">
+      <Cropper image={file} onImageChange={setFile} shape="circle">
         <Dialog open={file !== null} onOpenChange={(open) => { if (!open) setFile(null); }}>
           <DialogContent className="w-[380px] max-w-[calc(100vw-2rem)] gap-4">
             <DialogHeader>

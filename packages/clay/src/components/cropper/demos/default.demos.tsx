@@ -2,19 +2,42 @@
 
 import * as React from 'react';
 import { useState } from 'react';
+import { Card, CardContent } from '@brika/clay/components/card';
 import {
   Cropper,
   CropperApply,
+  CropperCancel,
+  CropperFlip,
   CropperInput,
+  CropperReset,
+  CropperRotate,
   CropperViewport,
   CropperZoom,
 } from '@brika/clay/components/cropper';
+import {
+  FlipHorizontal2,
+  FlipVertical2,
+  RotateCcw,
+  RotateCcwSquare,
+  RotateCw,
+  Upload,
+  ZoomIn,
+  ZoomOut,
+} from 'lucide-react';
 import { makeSampleImageFile } from './sample-image';
 
 // Created once at module scope; null on SSR runtimes that lack the File global.
 const sampleFile = makeSampleImageFile();
 
-/** Minimal usage: pre-loaded with a synthetic gradient image. Picking a new file or dropping one onto the viewport replaces the current image — no consumer state required. */
+/**
+ * Comprehensive showcase of all Cropper features in uncontrolled mode, framed
+ * in a Card. Includes: CropperViewport (drag-drop), a zoom row (ZoomOut +
+ * CropperZoom + ZoomIn), the full toolbar (CropperRotate left/right,
+ * CropperFlip h/v, CropperReset, and a CropperInput Upload icon button), and
+ * CropperApply + CropperCancel. Pre-loaded with a synthetic gradient image;
+ * picking a new file or dropping one onto the viewport replaces the current
+ * image without any consumer state.
+ */
 export default function CropperDefaultDemo() {
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -29,18 +52,48 @@ export default function CropperDefaultDemo() {
         <img src={preview} alt="Cropped result" className="size-20 rounded-full object-cover" />
       )}
 
-      <Cropper defaultImage={sampleFile ?? undefined}>
-        <CropperInput size="sm" variant="outline">
-          Choose photo
-        </CropperInput>
-        <CropperViewport className="mt-3" />
-        <CropperZoom className="mt-2 w-72" />
-        <div className="mt-2 flex justify-center">
-          <CropperApply size="sm" onCrop={onCrop}>
-            Apply
-          </CropperApply>
-        </div>
-      </Cropper>
+      <Card>
+        <CardContent className="flex flex-col items-center gap-3 pt-4">
+          <Cropper defaultImage={sampleFile ?? undefined}>
+            <CropperViewport />
+
+            {/* Zoom row: minus icon — slider — plus icon */}
+            <div className="flex w-full items-center gap-3">
+              <ZoomOut className="size-4 shrink-0 text-muted-foreground" />
+              <CropperZoom className="flex-1" />
+              <ZoomIn className="size-4 shrink-0 text-muted-foreground" />
+            </div>
+
+            {/* Toolbar: rotate, flip, reset, upload */}
+            <div className="flex w-full items-center gap-2">
+              <CropperRotate direction="left" aria-label="Rotate left" className="flex-1">
+                <RotateCcw className="size-4" />
+              </CropperRotate>
+              <CropperRotate direction="right" aria-label="Rotate right" className="flex-1">
+                <RotateCw className="size-4" />
+              </CropperRotate>
+              <CropperFlip axis="h" aria-label="Flip horizontal" className="flex-1">
+                <FlipHorizontal2 className="size-4" />
+              </CropperFlip>
+              <CropperFlip axis="v" aria-label="Flip vertical" className="flex-1">
+                <FlipVertical2 className="size-4" />
+              </CropperFlip>
+              <CropperReset aria-label="Reset" className="flex-1">
+                <RotateCcwSquare className="size-4" />
+              </CropperReset>
+              <CropperInput variant="outline" size="icon-sm" aria-label="Upload image" className="flex-1">
+                <Upload className="size-4" />
+              </CropperInput>
+            </div>
+
+            {/* Action row */}
+            <div className="flex w-full gap-2">
+              <CropperCancel className="flex-1">Cancel</CropperCancel>
+              <CropperApply onCrop={onCrop} className="flex-1">Apply</CropperApply>
+            </div>
+          </Cropper>
+        </CardContent>
+      </Card>
     </div>
   );
 }

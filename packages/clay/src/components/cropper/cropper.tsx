@@ -164,6 +164,19 @@ export interface CropperProps {
    * drag-drops still work without any additional wiring.
    */
   defaultImage?: File | null;
+  /**
+   * Called whenever a new file is loaded via `CropperInput` pick or
+   * drag-drop on `CropperViewport`, in both controlled and uncontrolled mode.
+   *
+   * In **controlled mode** (`image` prop provided) this is the primary wiring
+   * point: wire `onImageChange={setFile}` so picks and drops actually replace
+   * the displayed image (without it, controlled mode ignores new files because
+   * the consumer owns `image`).
+   *
+   * In **uncontrolled mode** this is an optional notification callback; the
+   * cropper already updates its internal state automatically.
+   */
+  onImageChange?: (file: File) => void;
   /** Mask shape rendered by CropperOverlay: `'circle'` or `'rounded'`. Defaults to `'circle'`. */
   shape?: 'circle' | 'rounded';
   /** On-screen stage size in px. Defaults to 288. */
@@ -184,7 +197,7 @@ export interface CropperProps {
  *   Dialog that resets on cancel).
  */
 const Cropper = React.forwardRef<CropperHandle, CropperProps>(function Cropper(
-  { image, defaultImage, shape = 'circle', stageSize = DEFAULT_STAGE, children },
+  { image, defaultImage, onImageChange, shape = 'circle', stageSize = DEFAULT_STAGE, children },
   ref,
 ) {
   // Uncontrolled internal file state. Only used when `image` prop is omitted.
@@ -256,14 +269,17 @@ const Cropper = React.forwardRef<CropperHandle, CropperProps>(function Cropper(
     [getCroppedBlob, reset, transform.zoom, setZoom],
   );
 
-  // In uncontrolled mode, loadFile updates internal state. In controlled mode
-  // the consumer owns the image prop, so this is a no-op (they wire their own
-  // file handler, e.g. via CropperViewport's onImageDrop).
+  // Always notify the consumer via onImageChange so both CropperInput picks and
+  // drag-drop fire the same callback regardless of mode. Additionally, in
+  // uncontrolled mode update internal state so the image renders without any
+  // consumer wiring. In controlled mode the consumer owns `image`, so they must
+  // wire onImageChange={setFile} to actually replace the displayed image.
   const loadFile = useCallback(
     (file: File) => {
+      onImageChange?.(file);
       if (!isControlled) setInternalFile(file);
     },
-    [isControlled],
+    [isControlled, onImageChange],
   );
 
   const contextValue: CropperContextValue = {
@@ -466,23 +482,17 @@ function useCropperTransform(): {
  * Use the lower-level `CropperCanvas` + `CropperOverlay` directly when you
  * need to place the overlay independently or apply a custom clip.
  *
- * Drag-and-drop is always active. In uncontrolled mode (no `image` prop on the
- * parent `<Cropper>`) dropped files are loaded automatically. In controlled mode
- * pass `onImageDrop` to handle the dropped `File` yourself. Non-image files are
- * silently ignored. The drop-active visual is keyed off the
+ * Drag-and-drop is always active. Dropped files are forwarded to the context
+ * `loadFile`, which fires `onImageChange` on the root `<Cropper>` and, in
+ * uncontrolled mode, also updates internal state. In controlled mode wire
+ * `onImageChange` on `<Cropper>` to handle the dropped file. Non-image files
+ * are silently ignored. The drop-active visual is keyed off the
  * `--cropper-drop-active-ring` token.
  */
 function CropperViewport({
   className,
-  onImageDrop,
   ...props
-}: Omit<React.ComponentProps<'div'>, 'children'> & {
-  /**
-   * Called with the dropped image File in controlled mode. In uncontrolled
-   * mode you can omit this; the file is loaded into the cropper automatically.
-   */
-  readonly onImageDrop?: (file: File) => void;
-}) {
+}: Omit<React.ComponentProps<'div'>, 'children'>) {
   const { loadFile, img, stageSize } = useCropper();
   const dragDepth = useRef(0);
   const [isDragActive, setDragActive] = useState(false);
@@ -515,13 +525,9 @@ function CropperViewport({
     setDragActive(false);
     const file = [...event.dataTransfer.files].find((f) => f.type.startsWith('image/'));
     if (!file) return;
-    // Consumer callback takes priority (controlled mode); fall back to context
-    // loadFile (uncontrolled mode — no-op when controlled).
-    if (onImageDrop) {
-      onImageDrop(file);
-    } else {
-      loadFile(file);
-    }
+    // Route through loadFile so onImageChange always fires on the root Cropper,
+    // and internal state is updated in uncontrolled mode.
+    loadFile(file);
   }
 
   const wrapperClass = cn(
@@ -586,10 +592,10 @@ function CropperViewport({
  * loaded into the cropper automatically — no consumer state required.
  *
  * In uncontrolled mode (default) the file is stored inside `<Cropper>`.
- * In controlled mode (when `image` is passed to `<Cropper>`) the picked file
- * is still forwarded to the internal `loadFile` callback, which is a no-op for
- * the transform; consumers in controlled mode should also wire their own
- * `onChange` on the underlying `<input>` via the `asChild` pattern.
+ * In controlled mode (when `image` is passed to `<Cropper>`) wire
+ * `onImageChange` on the root `<Cropper>` so the picked file updates the
+ * controlled image state; without it the pick fires `onImageChange` but the
+ * displayed image will not change because the consumer owns `image`.
  *
  * Usage — default (renders a Clay Button):
  * ```tsx
