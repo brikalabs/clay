@@ -39,22 +39,22 @@ function load(id: string) {
   return pending;
 }
 
-function renderNodes(list: readonly FsNode[]) {
-  return list.map((node) => (
-    <TreeItem key={node.id} nodeId={node.id} label={node.name}>
+function Node({ node }: { node: FsNode }) {
+  return (
+    <TreeItem nodeId={node.id} label={node.name}>
       {node.type === 'folder' && (
         <Suspense fallback={<TreeLoading />}>
-          <LazyChildren id={node.id} />
+          <Children id={node.id} />
         </Suspense>
       )}
     </TreeItem>
-  ));
+  );
 }
 
 // Suspends on first open; renders <TreeError/> when the load resolves to an error.
-function LazyChildren({ id }: { id: string }) {
+function Children({ id }: { id: string }) {
   const result = use(load(id));
-  return result === 'error' ? <TreeError /> : renderNodes(result);
+  return result === 'error' ? <TreeError /> : result.map((node) => <Node key={node.id} node={node} />);
 }
 
 /**
@@ -64,7 +64,9 @@ function LazyChildren({ id }: { id: string }) {
 export default function TreeErrorDemo() {
   return (
     <Tree className="w-full max-w-xs" showLines defaultExpandedIds={['src', 'restricted']}>
-      {renderNodes(FS.root)}
+      {FS.root.map((node) => (
+        <Node key={node.id} node={node} />
+      ))}
     </Tree>
   );
 }

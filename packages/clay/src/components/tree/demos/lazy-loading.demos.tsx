@@ -48,22 +48,22 @@ function load(id: string): Promise<readonly FsNode[]> {
   return pending;
 }
 
-function renderNodes(list: readonly FsNode[]) {
-  return list.map((node) => (
-    <TreeItem key={node.id} nodeId={node.id} label={node.name}>
+function Node({ node }: { node: FsNode }) {
+  return (
+    <TreeItem nodeId={node.id} label={node.name}>
       {node.type === 'folder' && (
         <Suspense fallback={<TreeLoading />}>
-          <LazyChildren id={node.id} />
+          <Children id={node.id} />
         </Suspense>
       )}
     </TreeItem>
-  ));
+  );
 }
 
 // Mounted only when its folder opens (the Tree skips closed branches), so `use`
 // suspends on first open until the folder's children resolve.
-function LazyChildren({ id }: { id: string }) {
-  return renderNodes(use(load(id)));
+function Children({ id }: { id: string }) {
+  return use(load(id)).map((node) => <Node key={node.id} node={node} />);
 }
 
 /**
@@ -73,7 +73,9 @@ function LazyChildren({ id }: { id: string }) {
 export default function TreeLazyLoadingDemo() {
   return (
     <Tree className="w-full max-w-xs" showLines>
-      {renderNodes(FS.root)}
+      {FS.root.map((node) => (
+        <Node key={node.id} node={node} />
+      ))}
     </Tree>
   );
 }
