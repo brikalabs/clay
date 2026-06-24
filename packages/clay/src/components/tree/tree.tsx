@@ -1,6 +1,13 @@
 'use client';
 
-import { ChevronRight, File as FileIcon, Folder, FolderOpen, Loader2 } from 'lucide-react';
+import {
+  ChevronRight,
+  File as FileIcon,
+  Folder,
+  FolderOpen,
+  Loader2,
+  TriangleAlert,
+} from 'lucide-react';
 import * as React from 'react';
 
 import { cn } from '../../primitives/cn';
@@ -477,6 +484,33 @@ function TreeLoading({ children, className, ...props }: React.ComponentProps<'di
   );
 }
 
+/**
+ * Error placeholder for a lazy node whose load failed, indented to the children's
+ * depth. Use it as the fallback of an error boundary around a lazy `TreeItem`'s
+ * children; put whatever you want inside, or leave it empty for the default row.
+ */
+function TreeError({ children, className, ...props }: React.ComponentProps<'div'>) {
+  const depth = React.use(DepthContext);
+  return (
+    <div
+      data-slot="tree-error"
+      className={cn(
+        'tree flex select-none items-center gap-1.5 py-[var(--tree-padding-y)] text-destructive',
+        className
+      )}
+      style={{ paddingInlineStart: `calc(var(--tree-indent) * ${depth} + var(--tree-padding-x))` }}
+      {...props}
+    >
+      {children ?? (
+        <>
+          <TriangleAlert className="size-4 shrink-0" aria-hidden />
+          <span className="truncate text-sm">Failed to load</span>
+        </>
+      )}
+    </div>
+  );
+}
+
 /** The nested children container. */
 function TreeItemGroup({
   isBranch,
@@ -583,4 +617,4 @@ function TreeItem({
   );
 }
 
-export { Tree, TreeItem, TreeLoading };
+export { Tree, TreeItem, TreeLoading, TreeError };
