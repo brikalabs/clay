@@ -198,8 +198,42 @@ function rowsOf(el: HTMLElement): HTMLElement[] {
 
 function focusRelative(el: HTMLElement, delta: number) {
   const rows = rowsOf(el);
+  if (rows.length === 0) {
+    return;
+  }
   const index = rows.indexOf(el);
-  rows[index + delta]?.focus();
+  // Wrap around: ArrowDown past the last row focuses the first, and vice versa.
+  rows[(index + delta + rows.length) % rows.length]?.focus();
+}
+
+// Type-ahead: typing jumps to the next node whose label starts with the buffer,
+// which clears after a short pause; repeating one key cycles items starting with it.
+// ponytail: one shared buffer module-wide, fine since two trees are never typed
+// into at the same instant; scope per-tree only if that ever happens.
+let typeahead = '';
+let typeaheadTimer: ReturnType<typeof setTimeout> | undefined;
+
+function rowLabel(el: HTMLElement): string {
+  return el.querySelector(ROW_SELECTOR)?.textContent?.trim().toLowerCase() ?? '';
+}
+
+function handleTypeahead(el: HTMLElement, char: string) {
+  clearTimeout(typeaheadTimer);
+  typeahead += char.toLowerCase();
+  typeaheadTimer = setTimeout(() => {
+    typeahead = '';
+  }, 500);
+  // A run of the same key cycles by that single letter instead of narrowing.
+  const query = [...typeahead].every((c) => c === typeahead[0]) ? typeahead.slice(0, 1) : typeahead;
+  const rows = rowsOf(el);
+  const start = Math.max(0, rows.indexOf(el));
+  for (let i = 1; i <= rows.length; i += 1) {
+    const row = rows[(start + i) % rows.length];
+    if (row && rowLabel(row).startsWith(query)) {
+      row.focus();
+      return;
+    }
+  }
 }
 
 interface TreeKeyHandlers {
@@ -254,11 +288,16 @@ function handleTreeItemKeyDown(event: React.KeyboardEvent<HTMLDivElement>, opts:
     return;
   }
   const handler = TREE_KEY_HANDLERS[event.key];
-  if (!handler) {
+  if (handler) {
+    event.preventDefault();
+    handler(event, opts);
     return;
   }
-  event.preventDefault();
-  handler(event, opts);
+  // Type-ahead: a printable single character jumps to the next matching label.
+  if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
+    event.preventDefault();
+    handleTypeahead(event.currentTarget, event.key);
+  }
 }
 
 interface TreeItemProps extends Omit<React.ComponentProps<'div'>, 'id' | 'onSelect'> {
@@ -507,6 +546,9 @@ function TreeItem({
         // to the direct-child row so focusing a folder does not ring every nested
         // descendant (a named group would, since they share the name).
         '[&:focus-visible>[data-slot=tree-item-row]]:ring-2 [&:focus-visible>[data-slot=tree-item-row]]:ring-ring [&:focus-visible>[data-slot=tree-item-row]]:ring-offset-2 [&:focus-visible>[data-slot=tree-item-row]]:ring-offset-background',
+        // cmdk-style active highlight: a background on the focused row, unselected
+        // rows only so it never clobbers the selection color.
+        '[&:not([data-selected]):focus-visible>[data-slot=tree-item-row]]:bg-tree-item-hover',
         className
       )}
       {...props}
