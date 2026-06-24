@@ -14,7 +14,9 @@ jobs:
   release-please:
     runs-on: ubuntu-latest
     outputs:
-      release_created: ${{ steps.release.outputs.release_created }}
+      # Manifest-mode release-please exposes `releases_created` (plural); the
+      # singular `release_created` is only set in legacy single-package mode.
+      release_created: ${{ steps.release.outputs.releases_created }}
     steps:
       - uses: googleapis/release-please-action@v4
         id: release
