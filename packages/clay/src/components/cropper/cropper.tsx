@@ -349,14 +349,13 @@ function CropperCanvas({ className, ...props }: Omit<React.ComponentProps<'div'>
 }
 
 // ---------------------------------------------------------------------------
-// CropperOverlay — the vignette mask drawn over CropperCanvas
+// CropperOverlay — the crop boundary ring drawn over CropperCanvas
 // ---------------------------------------------------------------------------
 
 /**
- * The crop mask overlay (vignette + border ring) drawn on top of CropperCanvas.
- * Shape is read from CropperContext; override by passing `shape` explicitly.
- * Typically rendered as an absolute sibling inside the same relative container
- * as CropperCanvas, or stacked via CSS.
+ * The crop boundary ring drawn on top of CropperCanvas: just an outline marking
+ * the crop area, with NO dimming/vignette over the image. Shape is read from
+ * CropperContext; override by passing `shape` explicitly.
  */
 function CropperOverlay({
   shape: shapeProp,
@@ -371,25 +370,15 @@ function CropperOverlay({
   const shapeClass = shape === 'circle' ? 'rounded-full' : 'rounded-2xl';
 
   return (
-    <>
-      <div
-        data-slot="cropper-overlay"
-        className={cn(
-          'pointer-events-none absolute inset-0',
-          shapeClass,
-          'shadow-[0_0_0_9999px_var(--cropper-overlay-color)]',
-          className,
-        )}
-        {...props}
-      />
-      <div
-        data-slot="cropper-overlay-border"
-        className={cn(
-          'pointer-events-none absolute inset-0 border border-[color:var(--cropper-overlay-border)]',
-          shapeClass,
-        )}
-      />
-    </>
+    <div
+      data-slot="cropper-overlay-border"
+      className={cn(
+        'pointer-events-none absolute inset-0 border border-[color:var(--cropper-overlay-border)]',
+        shapeClass,
+        className,
+      )}
+      {...props}
+    />
   );
 }
 
