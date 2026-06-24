@@ -1,6 +1,13 @@
 'use client';
 
-import { ChevronRight, File as FileIcon, Folder, FolderOpen, Loader2 } from 'lucide-react';
+import {
+  ChevronRight,
+  File as FileIcon,
+  Folder,
+  FolderOpen,
+  Loader2,
+  TriangleAlert,
+} from 'lucide-react';
 import * as React from 'react';
 
 import { cn } from '../../primitives/cn';
@@ -25,6 +32,13 @@ function useTree(): TreeContextValue {
   }
   return ctx;
 }
+
+/**
+ * Tracks nesting depth so each row can indent its content and draw guide
+ * lines at the correct horizontal positions without relying on nested margin
+ * wrappers.
+ */
+const DepthContext = React.createContext<number>(0);
 
 /**
  * Small controllable-set helper: uncontrolled by default, but yields to a
@@ -73,7 +87,7 @@ interface TreeProps extends Omit<React.ComponentProps<'div'>, 'onSelect'> {
   readonly showLines?: boolean;
   /**
    * Fires once with a node's id the first time it expands (the open transition).
-   * Use it to lazy-load that node's children from an API — mark the node `lazy`
+   * Use it to lazy-load that node's children from an API: mark the node `lazy`
    * so it shows a chevron before its children exist, and toggle its `loading`
    * prop while the request is in flight.
    */
@@ -191,8 +205,42 @@ function rowsOf(el: HTMLElement): HTMLElement[] {
 
 function focusRelative(el: HTMLElement, delta: number) {
   const rows = rowsOf(el);
+  if (rows.length === 0) {
+    return;
+  }
   const index = rows.indexOf(el);
-  rows[index + delta]?.focus();
+  // Wrap around: ArrowDown past the last row focuses the first, and vice versa.
+  rows[(index + delta + rows.length) % rows.length]?.focus();
+}
+
+// Type-ahead: typing jumps to the next node whose label starts with the buffer,
+// which clears after a short pause; repeating one key cycles items starting with it.
+// ponytail: one shared buffer module-wide, fine since two trees are never typed
+// into at the same instant; scope per-tree only if that ever happens.
+let typeahead = '';
+let typeaheadTimer: ReturnType<typeof setTimeout> | undefined;
+
+function rowLabel(el: HTMLElement): string {
+  return el.querySelector(ROW_SELECTOR)?.textContent?.trim().toLowerCase() ?? '';
+}
+
+function handleTypeahead(el: HTMLElement, char: string) {
+  clearTimeout(typeaheadTimer);
+  typeahead += char.toLowerCase();
+  typeaheadTimer = setTimeout(() => {
+    typeahead = '';
+  }, 500);
+  // A run of the same key cycles by that single letter instead of narrowing.
+  const query = [...typeahead].every((c) => c === typeahead[0]) ? typeahead.slice(0, 1) : typeahead;
+  const rows = rowsOf(el);
+  const start = Math.max(0, rows.indexOf(el));
+  for (let i = 1; i <= rows.length; i += 1) {
+    const row = rows[(start + i) % rows.length];
+    if (row && rowLabel(row).startsWith(query)) {
+      row.focus();
+      return;
+    }
+  }
 }
 
 interface TreeKeyHandlers {
@@ -228,7 +276,7 @@ function handleArrowLeft(event: React.KeyboardEvent<HTMLDivElement>, opts: TreeK
   event.currentTarget.parentElement?.closest<HTMLElement>(TREEITEM_SELECTOR)?.focus();
 }
 
-// One small handler per key keeps each function — and the dispatcher — well
+// One small handler per key keeps each function (and the dispatcher) well
 // under Sonar's cognitive-complexity budget (no nested switch).
 const TREE_KEY_HANDLERS: Readonly<Record<string, TreeKeyHandler>> = {
   ArrowDown: (event) => focusRelative(event.currentTarget, 1),
@@ -247,11 +295,16 @@ function handleTreeItemKeyDown(event: React.KeyboardEvent<HTMLDivElement>, opts:
     return;
   }
   const handler = TREE_KEY_HANDLERS[event.key];
-  if (!handler) {
+  if (handler) {
+    event.preventDefault();
+    handler(event, opts);
     return;
   }
-  event.preventDefault();
-  handler(event, opts);
+  // Type-ahead: a printable single character jumps to the next matching label.
+  if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
+    event.preventDefault();
+    handleTypeahead(event.currentTarget, event.key);
+  }
 }
 
 interface TreeItemProps extends Omit<React.ComponentProps<'div'>, 'id' | 'onSelect'> {
@@ -292,6 +345,29 @@ function handleTreeItemClick(
   }
 }
 
+/**
+ * Vertical guide lines drawn as absolutely-positioned hairlines at each
+ * ancestor depth level. Because every row is full-width and stacked, lines
+ * at the same x position across consecutive rows visually merge into a
+ * single continuous vertical guide (no SVG or DOM spanning required).
+ */
+function GuideLines({ depth }: Readonly<{ depth: number }>) {
+  return (
+    <>
+      {Array.from({ length: depth }, (_, k) => (
+        <span
+          key={k}
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 w-px bg-tree-guide"
+          // Each guide sits at the right side of the indent band for ancestor k,
+          // aligned with the chevron column of that ancestor row above.
+          style={{ left: `calc(var(--tree-indent) * ${k + 1} + var(--tree-padding-x) - 1px)` }}
+        />
+      ))}
+    </>
+  );
+}
+
 /** The clickable row: chevron / glyph / label. Presentational only. */
 function TreeRow({
   isBranch,
@@ -299,6 +375,8 @@ function TreeRow({
   isSelected,
   disabled,
   showIcons,
+  showLines,
+  depth,
   icon,
   label,
 }: Readonly<{
@@ -307,25 +385,40 @@ function TreeRow({
   isSelected: boolean;
   disabled: boolean;
   showIcons: boolean;
+  showLines: boolean;
+  depth: number;
   icon: React.ReactNode;
   label: React.ReactNode;
 }>) {
-  let DefaultIcon = FileIcon;
-  if (isBranch) {
-    DefaultIcon = open ? FolderOpen : Folder;
-  }
+  const FolderIcon = open ? FolderOpen : Folder;
   return (
     <div
       data-slot="tree-item-row"
       className={cn(
-        'tree corner-themed flex select-none items-center rounded-tree transition-colors group-focus-visible/treeitem:ring-themed',
-        "[&_svg]:size-4 [&_svg]:shrink-0",
+        // Full-width row, no rounding; selection highlight spans edge to edge.
+        'tree relative flex select-none items-center py-[var(--tree-padding-y)] transition-colors',
+        '[&_svg]:size-4 [&_svg]:shrink-0',
         disabled ? 'pointer-events-none opacity-50' : 'cursor-pointer',
         isSelected
           ? 'bg-tree-selected text-tree-selected-label'
           : 'text-tree-label hover:bg-tree-item-hover'
       )}
+      // Content indents by depth via padding; the row itself stays full-width so
+      // the selection background and accent bar reach the tree's left edge.
+      style={{
+        paddingInlineStart: `calc(var(--tree-indent) * ${depth} + var(--tree-padding-x))`,
+        paddingInlineEnd: `var(--tree-padding-x)`,
+      }}
     >
+      {/* Accent bar: 3 px wide, square, flush at the tree's left edge regardless of depth. */}
+      {isSelected && (
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 left-0 w-[3px] bg-tree-selected-accent"
+        />
+      )}
+      {/* Guide lines per ancestor depth level; same x across rows creates continuous verticals. */}
+      {showLines && depth > 0 && <GuideLines depth={depth} />}
       {isBranch ? (
         <ChevronRight
           className={cn('shrink-0 text-tree-icon transition-transform', open && 'rotate-90')}
@@ -334,51 +427,109 @@ function TreeRow({
       ) : (
         <span className="size-4 shrink-0" aria-hidden />
       )}
-      {showIcons ? icon ?? <DefaultIcon className="shrink-0 text-tree-icon" aria-hidden /> : null}
-      <span className="truncate">{label}</span>
+      {showIcons
+        ? (icon ?? (isBranch
+            ? (
+              <FolderIcon
+                className={cn(
+                  'shrink-0',
+                  isSelected ? 'text-tree-selected-label' : 'text-tree-folder-icon'
+                )}
+                aria-hidden
+              />
+            )
+            : <FileIcon className="shrink-0 text-tree-icon" aria-hidden />))
+        : null}
+      <span
+        className={cn(
+          'truncate',
+          isBranch && 'font-semibold',
+          // Unselected file labels are muted; folder labels stay bold via font-semibold.
+          !isSelected && !isBranch && 'text-tree-icon'
+        )}
+      >
+        {label}
+      </span>
     </div>
   );
 }
 
-/** The nested children container, or a loading spinner while they fetch. */
+/**
+ * Loading placeholder for a lazy node, indented to the children's depth. Compose
+ * it as the child of a lazy `TreeItem` while its children are in flight; put
+ * whatever you want inside (a skeleton, custom text), or leave it empty for the
+ * default spinner + "Loading..." row.
+ */
+// Shared indented row for the lazy-node placeholders below. Rendered inside the
+// parent's <DepthContext value={depth + 1}>, so it indents to the children's depth.
+function TreePlaceholder({
+  dataSlot,
+  tone,
+  className,
+  ...props
+}: React.ComponentProps<'div'> & { dataSlot: string; tone: string }) {
+  const depth = React.use(DepthContext);
+  return (
+    <div
+      data-slot={dataSlot}
+      className={cn(
+        'tree flex select-none items-center gap-1.5 py-[var(--tree-padding-y)]',
+        tone,
+        className
+      )}
+      style={{ paddingInlineStart: `calc(var(--tree-indent) * ${depth} + var(--tree-padding-x))` }}
+      {...props}
+    />
+  );
+}
+
+function TreeLoading({ children, ...props }: React.ComponentProps<'div'>) {
+  return (
+    <TreePlaceholder dataSlot="tree-loading" tone="text-tree-icon" {...props}>
+      {children ?? (
+        <>
+          <Loader2 className="size-4 shrink-0 animate-spin" aria-hidden />
+          <span className="truncate text-sm">Loading...</span>
+        </>
+      )}
+    </TreePlaceholder>
+  );
+}
+
+/**
+ * Error placeholder for a lazy node whose load failed, indented to the children's
+ * depth. Use it as the fallback of an error boundary around a lazy `TreeItem`'s
+ * children; put whatever you want inside, or leave it empty for the default row.
+ */
+function TreeError({ children, ...props }: React.ComponentProps<'div'>) {
+  return (
+    <TreePlaceholder dataSlot="tree-error" tone="text-destructive" {...props}>
+      {children ?? (
+        <>
+          <TriangleAlert className="size-4 shrink-0" aria-hidden />
+          <span className="truncate text-sm">Failed to load</span>
+        </>
+      )}
+    </TreePlaceholder>
+  );
+}
+
+/** The nested children container. */
 function TreeItemGroup({
   isBranch,
   open,
-  loading,
-  hasChildren,
-  showLines,
   children,
 }: Readonly<{
   isBranch: boolean;
   open: boolean;
-  loading: boolean;
-  hasChildren: boolean;
-  showLines: boolean;
   children: React.ReactNode;
 }>) {
   if (!isBranch || !open) {
     return null;
   }
-  // A <fieldset> carries an implicit role="group" — exactly the ARIA tree
-  // pattern for a node's children — without a literal interactive role.
-  return (
-    <fieldset
-      className={cn(
-        'm-0 min-w-0 space-y-0.5 border-0 p-0',
-        showLines && 'border-tree-guide border-s ps-2'
-      )}
-      style={{ marginInlineStart: 'var(--tree-indent)' }}
-    >
-      {loading && !hasChildren ? (
-        <div className="tree flex select-none items-center text-tree-icon">
-          <Loader2 className="size-4 shrink-0 animate-spin" aria-hidden />
-          <span className="truncate text-sm">Loading…</span>
-        </div>
-      ) : (
-        children
-      )}
-    </fieldset>
-  );
+  // A <fieldset> carries an implicit role="group", which is exactly the ARIA tree
+  // pattern for a node's children, without a literal interactive role.
+  return <fieldset className="m-0 min-w-0 space-y-0.5 border-0 p-0">{children}</fieldset>;
 }
 
 function TreeItem({
@@ -394,6 +545,7 @@ function TreeItem({
 }: Readonly<TreeItemProps>) {
   const { expanded, toggleExpanded, setExpanded, selected, select, showIcons, showLines } =
     useTree();
+  const depth = React.use(DepthContext);
 
   const hasChildren = React.Children.toArray(children).length > 0;
   // A "branch" is anything that can expand: it has children now, or it's a
@@ -432,7 +584,19 @@ function TreeItem({
         handleTreeItemKeyDown(event, { nodeId, isBranch, open, setExpanded, activate })
       }
       onClick={(event) => handleTreeItemClick(event, activate)}
-      className={cn('group/treeitem block outline-none', className)}
+      className={cn(
+        'block outline-none',
+        // Keyboard focus: a subtle inset ring on THIS item's own row only. Scoped
+        // to the direct-child row so focusing a folder does not ring every nested
+        // descendant (a named group would, since they share the name).
+        // Bigger ring, but INSET: an offset ring overflows the tree edges and
+        // overlaps neighbouring rows on a full-bleed stacked list.
+        '[&:focus-visible>[data-slot=tree-item-row]]:ring-2 [&:focus-visible>[data-slot=tree-item-row]]:ring-inset [&:focus-visible>[data-slot=tree-item-row]]:ring-ring',
+        // cmdk-style active highlight: a background on the focused row, unselected
+        // rows only so it never clobbers the selection color.
+        '[&:not([data-selected]):focus-visible>[data-slot=tree-item-row]]:bg-tree-item-hover',
+        className
+      )}
       {...props}
     >
       <TreeRow
@@ -441,20 +605,19 @@ function TreeItem({
         isSelected={isSelected}
         disabled={disabled}
         showIcons={showIcons}
+        showLines={showLines}
+        depth={depth}
         icon={icon}
         label={label}
       />
-      <TreeItemGroup
-        isBranch={isBranch}
-        open={open}
-        loading={loading}
-        hasChildren={hasChildren}
-        showLines={showLines}
-      >
-        {children}
-      </TreeItemGroup>
+      {/* Children render at depth + 1 so they indent one level further. */}
+      <DepthContext value={depth + 1}>
+        <TreeItemGroup isBranch={isBranch} open={open}>
+          {children}
+        </TreeItemGroup>
+      </DepthContext>
     </div>
   );
 }
 
-export { Tree, TreeItem };
+export { Tree, TreeItem, TreeLoading, TreeError };

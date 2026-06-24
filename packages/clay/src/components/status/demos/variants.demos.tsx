@@ -2,7 +2,7 @@
 
 import { Status, StatusIndicator, StatusLabel } from '@brika/clay/components/status';
 
-/** Pick a semantic tone — success, warning, info, destructive, or neutral — and label it yourself. */
+/** All five semantic tones (success, warning, info, destructive, neutral) shown side by side with a label. */
 export default function StatusVariantsDemo() {
   return (
     <div className="flex flex-wrap items-center gap-3">

@@ -1,7 +1,8 @@
 'use client';
 
-import { Tree, TreeItem } from '@brika/clay/components/tree';
-import { useState } from 'react';
+import { Suspense, use } from 'react';
+
+import { Tree, TreeError, TreeItem, TreeLoading } from '@brika/clay/components/tree';
 
 interface FsNode {
   readonly id: string;
@@ -9,95 +10,76 @@ interface FsNode {
   readonly type: 'file' | 'folder';
 }
 
-/** Shape of the entries returned by the GitHub Contents API for a directory. */
-interface GitHubEntry {
-  readonly name: string;
-  readonly path: string;
-  readonly type: string;
-}
+// Mock file system: folder id -> children list. `restricted` has no entry; it
+// resolves to the 'error' sentinel below (a real loader would .catch() into it).
+const FS: Record<string, readonly FsNode[]> = {
+  root: [
+    { id: 'src', name: 'src', type: 'folder' },
+    { id: 'restricted', name: 'restricted', type: 'folder' },
+    { id: 'package.json', name: 'package.json', type: 'file' },
+  ],
+  src: [
+    { id: 'src/bricks', name: 'bricks', type: 'folder' },
+    { id: 'src/index.ts', name: 'index.ts', type: 'file' },
+  ],
+  'src/bricks': [
+    { id: 'src/bricks/checkout', name: 'checkout', type: 'folder' },
+    { id: 'src/bricks/index.ts', name: 'index.ts', type: 'file' },
+  ],
+  'src/bricks/checkout': [
+    { id: 'src/bricks/checkout/handlers', name: 'handlers', type: 'folder' },
+    { id: 'src/bricks/checkout/CheckoutBrick.ts', name: 'CheckoutBrick.ts', type: 'file' },
+  ],
+  'src/bricks/checkout/handlers': [
+    { id: 'src/bricks/checkout/handlers/session.ts', name: 'session.ts', type: 'file' },
+    { id: 'src/bricks/checkout/handlers/webhook.ts', name: 'webhook.ts', type: 'file' },
+  ],
+};
+const DENIED = new Set(['restricted']);
 
-const REPO = 'brikalabs/clay';
-
-function toNode(entry: GitHubEntry): FsNode {
-  return { id: entry.path, name: entry.name, type: entry.type === 'dir' ? 'folder' : 'file' };
-}
-
-/** Folders first, then alphabetical, the usual file-explorer ordering. */
-function compareNodes(a: FsNode, b: FsNode): number {
-  if (a.type !== b.type) {
-    return a.type === 'folder' ? -1 : 1;
+// One cached promise per folder so `use` reads a stable promise; resolves after a delay.
+const cache = new Map<string, Promise<readonly FsNode[] | 'error'>>();
+function load(id: string) {
+  const cached = cache.get(id);
+  if (cached) {
+    return cached;
   }
-  return a.name.localeCompare(b.name);
+  const pending = new Promise<readonly FsNode[] | 'error'>((resolve) =>
+    setTimeout(() => resolve(DENIED.has(id) ? 'error' : (FS[id] ?? [])), 600)
+  );
+  cache.set(id, pending);
+  return pending;
 }
 
-/** Real network call: list a directory's contents from the GitHub API. */
-async function fetchDir(path: string): Promise<FsNode[]> {
-  const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`);
-  if (!res.ok) {
-    throw new Error(`GitHub API responded ${res.status}`);
-  }
-  const entries: GitHubEntry[] = await res.json();
-  return entries.map(toNode).sort(compareNodes);
+function Node({ node }: { node: FsNode }) {
+  return (
+    <TreeItem nodeId={node.id} label={node.name}>
+      {node.type === 'folder' && (
+        <Suspense fallback={<TreeLoading />}>
+          <Children id={node.id} />
+        </Suspense>
+      )}
+    </TreeItem>
+  );
+}
+
+// Mounted only when its folder opens; suspends until the load resolves, then renders
+// the children, or <TreeError/> when the load resolved to an error.
+function Children({ id }: { id: string }) {
+  const result = use(load(id));
+  return result === 'error' ? <TreeError /> : result.map((node) => <Node key={node.id} node={node} />);
 }
 
 /**
  * @title Lazy loading
- * Browse the real `brikalabs/clay` repository: each folder fetches its contents
- * from the GitHub Contents API the first time it's expanded. Mark a node `lazy`
- * so it shows a chevron before its children exist, pass `loading` while the
- * request is in flight, then feed the resolved entries back in as children.
+ * Folders fetch their children on first expand (Suspense + use) with a spinner while in flight; a failed load (the restricted folder) renders <TreeError/> instead.
  */
 export default function TreeLazyLoadingDemo() {
-  const [children, setChildren] = useState<Record<string, readonly FsNode[]>>({});
-  const [loading, setLoading] = useState<ReadonlySet<string>>(new Set());
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const loadChildren = async (id: string) => {
-    // Load each folder once; skip if already loaded or in flight.
-    if (children[id] || loading.has(id)) {
-      return;
-    }
-    setLoading((prev) => new Set(prev).add(id));
-    try {
-      const nodes = await fetchDir(id === 'root' ? '' : id);
-      setChildren((prev) => ({ ...prev, [id]: nodes }));
-    } catch {
-      setErrors((prev) => ({ ...prev, [id]: 'Could not load (GitHub API rate limit?)' }));
-    } finally {
-      setLoading((prev) => {
-        const next = new Set(prev);
-        next.delete(id);
-        return next;
-      });
-    }
-  };
-
-  const renderChildren = (id: string) => {
-    if (errors[id]) {
-      return (
-        <TreeItem
-          nodeId={`${id}:error`}
-          label={<span className="text-destructive">{errors[id]}</span>}
-          disabled
-        />
-      );
-    }
-    return (children[id] ?? []).map((node) =>
-      node.type === 'file' ? (
-        <TreeItem key={node.id} nodeId={node.id} label={node.name} />
-      ) : (
-        <TreeItem key={node.id} nodeId={node.id} label={node.name} lazy loading={loading.has(node.id)}>
-          {renderChildren(node.id)}
-        </TreeItem>
-      )
-    );
-  };
-
   return (
-    <Tree className="w-full max-w-xs" onExpand={loadChildren}>
-      <TreeItem nodeId="root" label={REPO} lazy loading={loading.has('root')}>
-        {renderChildren('root')}
-      </TreeItem>
+    <Tree className="w-full max-w-xs" showLines defaultExpandedIds={['src']}>
+      {FS.root.map((node) => (
+        <Node key={node.id} node={node} />
+      ))}
     </Tree>
   );
 }
