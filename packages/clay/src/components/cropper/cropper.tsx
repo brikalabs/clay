@@ -89,9 +89,9 @@ function clampOffset(
 // ---------------------------------------------------------------------------
 
 interface CropperContextValue {
-  /** Current zoom level (1 = fit, 3 = max). */
+  /** Current zoom level (minZoom = fit, maxZoom = max). */
   zoom: number;
-  /** Update zoom. */
+  /** Update zoom, clamped to [minZoom, maxZoom]. */
   setZoom: (zoom: number) => void;
   /** Current transform (internal; exposed for advanced consumers). */
   transform: Transform;
@@ -107,6 +107,10 @@ interface CropperContextValue {
   hasImage: boolean;
   /** Crop shape, forwarded to CropperOverlay. */
   shape: 'circle' | 'rounded';
+  /** Minimum zoom level. Defaults to 1. */
+  minZoom: number;
+  /** Maximum zoom level. Defaults to 3. */
+  maxZoom: number;
   /** Ref to the canvas element, used by getCroppedBlob. */
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
   /** Export the current crop as a Blob. Returns null if no image is loaded. */
@@ -180,6 +184,16 @@ export interface CropperProps {
   shape?: 'circle' | 'rounded';
   /** On-screen stage size in px. Defaults to 288. */
   stageSize?: number;
+  /**
+   * Minimum zoom level. Defaults to 1 (image just covers the stage).
+   * CropperZoom's Slider min defaults to this value.
+   */
+  minZoom?: number;
+  /**
+   * Maximum zoom level. Defaults to 3.
+   * CropperZoom's Slider max defaults to this value.
+   */
+  maxZoom?: number;
   children: React.ReactNode;
 }
 
@@ -196,7 +210,16 @@ export interface CropperProps {
  *   Dialog that resets on cancel).
  */
 const Cropper = React.forwardRef<CropperHandle, CropperProps>(function Cropper(
-  { image, defaultImage, onImageChange, shape = 'circle', stageSize = DEFAULT_STAGE, children },
+  {
+    image,
+    defaultImage,
+    onImageChange,
+    shape = 'circle',
+    stageSize = DEFAULT_STAGE,
+    minZoom = 1,
+    maxZoom = 3,
+    children,
+  },
   ref,
 ) {
   // Uncontrolled internal file state. Only used when `image` prop is omitted.
@@ -242,8 +265,8 @@ const Cropper = React.forwardRef<CropperHandle, CropperProps>(function Cropper(
   const reset = useCallback(() => setTransform(IDENTITY), []);
 
   const setZoom = useCallback(
-    (zoom: number) => update({ zoom: Math.min(3, Math.max(1, zoom)) }),
-    [update],
+    (zoom: number) => update({ zoom: Math.min(maxZoom, Math.max(minZoom, zoom)) }),
+    [update, minZoom, maxZoom],
   );
 
   const getCroppedBlob = useCallback(
@@ -291,6 +314,8 @@ const Cropper = React.forwardRef<CropperHandle, CropperProps>(function Cropper(
     img,
     hasImage: img !== null,
     shape,
+    minZoom,
+    maxZoom,
     canvasRef,
     getCroppedBlob,
     loadFile,
@@ -309,7 +334,7 @@ const Cropper = React.forwardRef<CropperHandle, CropperProps>(function Cropper(
  * inside a `<Cropper>`.
  */
 function CropperCanvas({ className, ...props }: Omit<React.ComponentProps<'div'>, 'children'>) {
-  const { img, transform, update, stageSize, canvasRef } = useCropper();
+  const { img, transform, update, stageSize, canvasRef, minZoom, maxZoom } = useCropper();
   const drag = useRef<{ x: number; y: number } | null>(null);
   const stageRef = useRef<HTMLDivElement>(null);
 
@@ -330,11 +355,13 @@ function CropperCanvas({ className, ...props }: Omit<React.ComponentProps<'div'>
     const onWheel = (event: WheelEvent) => {
       event.preventDefault();
       event.stopPropagation();
-      update((prev) => ({ zoom: Math.min(3, Math.max(1, prev.zoom - event.deltaY * 0.001)) }));
+      update((prev) => ({
+        zoom: Math.min(maxZoom, Math.max(minZoom, prev.zoom - event.deltaY * 0.001)),
+      }));
     };
     el.addEventListener('wheel', onWheel, { passive: false });
     return () => el.removeEventListener('wheel', onWheel);
-  }, [update]);
+  }, [update, minZoom, maxZoom]);
 
   function onPointerDown(event: ReactPointerEvent) {
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -704,24 +731,40 @@ function CropperInput({
 // CropperZoom — a Clay Slider pre-bound to the cropper's zoom context
 // ---------------------------------------------------------------------------
 
+// Slider props that CropperZoom exposes as optional (context provides defaults).
+type CropperZoomProps = Omit<React.ComponentProps<typeof Slider>, 'value' | 'onChange' | 'min' | 'max' | 'step'> & {
+  /** Minimum zoom value. Defaults to the cropper's `minZoom` (1). */
+  min?: number;
+  /** Maximum zoom value. Defaults to the cropper's `maxZoom` (3). */
+  max?: number;
+  /** Slider step. Defaults to 0.01. Override with e.g. `step={0.1}`. */
+  step?: number;
+};
+
 /**
  * A Clay Slider pre-wired to the zoom state from the nearest CropperContext.
  * Drop it anywhere inside a `<Cropper>` to get zoom control without manually
  * calling useCropperZoom and threading props through a Slider.
  *
- * Accepts `className` for layout; other Slider props are fixed to the crop
- * range (min=1, max=3, step=0.01).
+ * Defaults: `step={0.01}`, `min` from `<Cropper minZoom>` (default 1),
+ * `max` from `<Cropper maxZoom>` (default 3). All can be overridden:
+ * `<CropperZoom step={0.1} />` or `<CropperZoom max={5} />`.
  */
-function CropperZoom({ className }: { className?: string }) {
-  const { zoom, setZoom } = useCropper();
+function CropperZoom({
+  min,
+  max,
+  step = 0.01,
+  ...props
+}: CropperZoomProps) {
+  const { zoom, setZoom, minZoom, maxZoom } = useCropper();
   return (
     <Slider
-      min={1}
-      max={3}
-      step={0.01}
+      min={min ?? minZoom}
+      max={max ?? maxZoom}
+      step={step}
+      {...props}
       value={zoom}
       onChange={setZoom}
-      className={className}
     />
   );
 }
