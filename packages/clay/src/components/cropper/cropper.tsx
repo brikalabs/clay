@@ -296,6 +296,7 @@ const Cropper = React.forwardRef<CropperHandle, CropperProps>(function Cropper(
 function CropperCanvas({ className, ...props }: Omit<React.ComponentProps<'div'>, 'children'>) {
   const { img, transform, update, stageSize, canvasRef } = useCropper();
   const drag = useRef<{ x: number; y: number } | null>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
 
   // Repaint whenever the loaded image or transform changes.
   const redraw = useCallback(() => {
@@ -305,6 +306,20 @@ function CropperCanvas({ className, ...props }: Omit<React.ComponentProps<'div'>
     if (ctx !== null) paint(ctx, img, transform, stageSize, stageSize);
   }, [canvasRef, img, transform, stageSize]);
   useEffect(redraw, [redraw]);
+
+  // Scroll-to-zoom as a NON-passive native listener so we can preventDefault the
+  // page scroll (React's onWheel is passive and cannot) and stop it bubbling.
+  useEffect(() => {
+    const el = stageRef.current;
+    if (el === null) return;
+    const onWheel = (event: WheelEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
+      update((prev) => ({ zoom: Math.min(3, Math.max(1, prev.zoom - event.deltaY * 0.001)) }));
+    };
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
+  }, [update]);
 
   function onPointerDown(event: ReactPointerEvent) {
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -323,14 +338,12 @@ function CropperCanvas({ className, ...props }: Omit<React.ComponentProps<'div'>
 
   return (
     <div
+      ref={stageRef}
       data-slot="cropper-canvas"
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
       onPointerLeave={onPointerUp}
-      onWheel={(e) =>
-        update((prev) => ({ zoom: Math.min(3, Math.max(1, prev.zoom - e.deltaY * 0.001)) }))
-      }
       className={cn(
         'relative cursor-grab touch-none select-none overflow-hidden rounded-2xl bg-cropper-stage-bg active:cursor-grabbing',
         className,
@@ -694,6 +707,8 @@ function CropperZoom({ className }: { className?: string }) {
  */
 function CropperRotate({
   direction = 'left',
+  variant = 'outline',
+  size = 'icon-sm',
   children,
   className,
   ...props
@@ -706,8 +721,8 @@ function CropperRotate({
   return (
     <Button
       type="button"
-      variant="ghost"
-      size="icon-sm"
+      variant={variant}
+      size={size}
       data-slot="cropper-rotate"
       data-direction={direction}
       {...props}
@@ -731,6 +746,8 @@ function CropperRotate({
  */
 function CropperFlip({
   axis = 'h',
+  variant = 'outline',
+  size = 'icon-sm',
   children,
   className,
   ...props
@@ -744,8 +761,8 @@ function CropperFlip({
   return (
     <Button
       type="button"
-      variant="ghost"
-      size="icon-sm"
+      variant={variant}
+      size={size}
       data-slot="cropper-flip"
       data-axis={axis}
       data-active={active || undefined}
@@ -768,6 +785,8 @@ function CropperFlip({
  * icon button.
  */
 function CropperReset({
+  variant = 'outline',
+  size = 'icon-sm',
   children,
   className,
   ...props
@@ -776,8 +795,8 @@ function CropperReset({
   return (
     <Button
       type="button"
-      variant="ghost"
-      size="icon-sm"
+      variant={variant}
+      size={size}
       data-slot="cropper-reset"
       {...props}
       onClick={reset}
