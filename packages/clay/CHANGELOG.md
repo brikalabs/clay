@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.0](https://github.com/brikalabs/clay/compare/clay-v0.2.0...clay-v0.3.0) (2026-06-24)
+
+
+### Features
+
+* **clay:** port store components (Rating, Image, Tree, Cropper, Status, MiniCalendar) + brika-store theme ([#36](https://github.com/brikalabs/clay/issues/36)) ([ed9aba7](https://github.com/brikalabs/clay/commit/ed9aba7e8923f3c2aa73f917ea0bfabbca42e54d))
+* **clay:** useModifier hook for platform-aware shortcut keys ([#37](https://github.com/brikalabs/clay/issues/37)) ([e7f4102](https://github.com/brikalabs/clay/commit/e7f410242b65ae93b0ba74e71ea3b5a3eff140ca))
+
 ## [0.2.0](https://github.com/brikalabs/clay/compare/clay-v0.1.0...clay-v0.2.0) (2026-06-08)
 
 
