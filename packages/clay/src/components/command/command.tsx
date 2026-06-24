@@ -6,7 +6,6 @@ import * as React from 'react';
 
 import { cn } from '../../primitives/cn';
 import { Dialog, DialogContent } from '../dialog';
-import { InputGroupControlIdContext } from '../input-group/input-group';
 
 function Command({
   className,
@@ -69,17 +68,11 @@ function CommandInput({
  * parent `InputGroup` focus halo fires on keyboard focus.
  */
 function CommandInputControl({
-  id,
   className,
   ...props
 }: React.ComponentProps<typeof CommandPrimitive.Input>) {
-  // Adopt the wrapping InputGroup's control id (when present) so a prefix
-  // InputGroupAddon's `<label htmlFor>` focuses this input on click, exactly
-  // like InputGroupInput. Falls back to an explicit id, or none when standalone.
-  const controlId = React.useContext(InputGroupControlIdContext);
   return (
     <CommandPrimitive.Input
-      id={id ?? controlId}
       data-slot="input-group-control"
       className={cn(
         'h-full min-w-0 flex-1 bg-transparent text-sm outline-none',
