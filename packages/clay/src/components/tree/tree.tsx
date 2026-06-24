@@ -27,6 +27,13 @@ function useTree(): TreeContextValue {
 }
 
 /**
+ * Tracks nesting depth so each row can indent its content and draw guide
+ * lines at the correct horizontal positions without relying on nested margin
+ * wrappers.
+ */
+const DepthContext = React.createContext<number>(0);
+
+/**
  * Small controllable-set helper: uncontrolled by default, but yields to a
  * caller-provided `controlled` value + `onChange` when present.
  */
@@ -292,6 +299,29 @@ function handleTreeItemClick(
   }
 }
 
+/**
+ * Vertical guide lines drawn as absolutely-positioned hairlines at each
+ * ancestor depth level. Because every row is full-width and stacked, lines
+ * at the same x position across consecutive rows visually merge into a
+ * single continuous vertical guide — no SVG or DOM spanning required.
+ */
+function GuideLines({ depth }: Readonly<{ depth: number }>) {
+  return (
+    <>
+      {Array.from({ length: depth }, (_, k) => (
+        <span
+          key={k}
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 w-px bg-tree-guide"
+          // Each guide sits at the right side of the indent band for ancestor k,
+          // aligned with the chevron column of that ancestor row above.
+          style={{ left: `calc(var(--tree-indent) * ${k + 1} + var(--tree-padding-x) - 1px)` }}
+        />
+      ))}
+    </>
+  );
+}
+
 /** The clickable row: chevron / glyph / label. Presentational only. */
 function TreeRow({
   isBranch,
@@ -299,6 +329,8 @@ function TreeRow({
   isSelected,
   disabled,
   showIcons,
+  showLines,
+  depth,
   icon,
   label,
 }: Readonly<{
@@ -307,6 +339,8 @@ function TreeRow({
   isSelected: boolean;
   disabled: boolean;
   showIcons: boolean;
+  showLines: boolean;
+  depth: number;
   icon: React.ReactNode;
   label: React.ReactNode;
 }>) {
@@ -315,14 +349,30 @@ function TreeRow({
     <div
       data-slot="tree-item-row"
       className={cn(
-        'tree corner-themed flex select-none items-center rounded-tree transition-colors group-focus-visible/treeitem:ring-themed',
-        "[&_svg]:size-4 [&_svg]:shrink-0",
+        // Full-width row, no rounding — selection highlight spans edge to edge.
+        'tree relative flex select-none items-center py-[var(--tree-padding-y)] transition-colors group-focus-visible/treeitem:ring-themed',
+        '[&_svg]:size-4 [&_svg]:shrink-0',
         disabled ? 'pointer-events-none opacity-50' : 'cursor-pointer',
         isSelected
-          ? 'border-s-2 border-tree-selected-accent bg-tree-selected text-tree-selected-label'
-          : 'border-s-2 border-transparent text-tree-label hover:bg-tree-item-hover'
+          ? 'bg-tree-selected text-tree-selected-label'
+          : 'text-tree-label hover:bg-tree-item-hover'
       )}
+      // Content indents by depth via padding; the row itself stays full-width so
+      // the selection background and accent bar reach the tree's left edge.
+      style={{
+        paddingInlineStart: `calc(var(--tree-indent) * ${depth} + var(--tree-padding-x))`,
+        paddingInlineEnd: `var(--tree-padding-x)`,
+      }}
     >
+      {/* Accent bar: 3 px wide, square, flush at the tree's left edge regardless of depth. */}
+      {isSelected && (
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 left-0 w-[3px] bg-tree-selected-accent"
+        />
+      )}
+      {/* Guide lines per ancestor depth level; same x across rows creates continuous verticals. */}
+      {showLines && depth > 0 && <GuideLines depth={depth} />}
       {isBranch ? (
         <ChevronRight
           className={cn('shrink-0 text-tree-icon transition-transform', open && 'rotate-90')}
@@ -333,10 +383,27 @@ function TreeRow({
       )}
       {showIcons
         ? (icon ?? (isBranch
-            ? <FolderIcon className="shrink-0 text-tree-folder-icon" aria-hidden />
+            ? (
+              <FolderIcon
+                className={cn(
+                  'shrink-0',
+                  isSelected ? 'text-tree-selected-label' : 'text-tree-folder-icon'
+                )}
+                aria-hidden
+              />
+            )
             : <FileIcon className="shrink-0 text-tree-icon" aria-hidden />))
         : null}
-      <span className={cn('truncate', isBranch && 'font-semibold')}>{label}</span>
+      <span
+        className={cn(
+          'truncate',
+          isBranch && 'font-semibold',
+          // Unselected file labels are muted; folder labels stay bold via font-semibold.
+          !isSelected && !isBranch && 'text-tree-icon'
+        )}
+      >
+        {label}
+      </span>
     </div>
   );
 }
@@ -347,14 +414,12 @@ function TreeItemGroup({
   open,
   loading,
   hasChildren,
-  showLines,
   children,
 }: Readonly<{
   isBranch: boolean;
   open: boolean;
   loading: boolean;
   hasChildren: boolean;
-  showLines: boolean;
   children: React.ReactNode;
 }>) {
   if (!isBranch || !open) {
@@ -363,13 +428,7 @@ function TreeItemGroup({
   // A <fieldset> carries an implicit role="group" — exactly the ARIA tree
   // pattern for a node's children — without a literal interactive role.
   return (
-    <fieldset
-      className={cn(
-        'm-0 min-w-0 space-y-0.5 border-0 p-0',
-        showLines && 'border-tree-guide border-s ps-2'
-      )}
-      style={{ marginInlineStart: 'var(--tree-indent)' }}
-    >
+    <fieldset className="m-0 min-w-0 space-y-0.5 border-0 p-0">
       {loading && !hasChildren ? (
         <div className="tree flex select-none items-center text-tree-icon">
           <Loader2 className="size-4 shrink-0 animate-spin" aria-hidden />
@@ -395,6 +454,7 @@ function TreeItem({
 }: Readonly<TreeItemProps>) {
   const { expanded, toggleExpanded, setExpanded, selected, select, showIcons, showLines } =
     useTree();
+  const depth = React.use(DepthContext);
 
   const hasChildren = React.Children.toArray(children).length > 0;
   // A "branch" is anything that can expand: it has children now, or it's a
@@ -442,18 +502,22 @@ function TreeItem({
         isSelected={isSelected}
         disabled={disabled}
         showIcons={showIcons}
+        showLines={showLines}
+        depth={depth}
         icon={icon}
         label={label}
       />
-      <TreeItemGroup
-        isBranch={isBranch}
-        open={open}
-        loading={loading}
-        hasChildren={hasChildren}
-        showLines={showLines}
-      >
-        {children}
-      </TreeItemGroup>
+      {/* Children render at depth + 1 so they indent one level further. */}
+      <DepthContext value={depth + 1}>
+        <TreeItemGroup
+          isBranch={isBranch}
+          open={open}
+          loading={loading}
+          hasChildren={hasChildren}
+        >
+          {children}
+        </TreeItemGroup>
+      </DepthContext>
     </div>
   );
 }

@@ -7,10 +7,8 @@ import { SPACING_1_5, SPACING_2 } from '../../tokens/spacing';
 import { meta } from './meta';
 
 registerComponent(meta, {
-  radius: {
-    default: 'var(--radius-control)',
-    description: 'Corner radius of a tree row.',
-  },
+  // Tree rows are full-width square highlights (VSCode/GitHub file-explorer style), so no radius
+  // token is registered. The selected background spans edge-to-edge without rounding.
   motion: true,
   geometry: { paddingX: SPACING_2, paddingY: SPACING_1_5, gap: SPACING_2 },
   slots: {
