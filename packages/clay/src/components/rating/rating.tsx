@@ -59,23 +59,10 @@ function useControllableState<T>(
  * overflow-hidden wrapper whose width is set to `fill * 100%`, clipping
  * the filled layer to exactly that fraction without rounding.
  */
-function FractionalStar({
-  fill,
-  interactive,
-}: {
-  fill: number;
-  interactive: boolean;
-}) {
+function FractionalStar({ fill }: { fill: number }) {
   const pct = `${Math.max(0, Math.min(1, fill)) * 100}%`;
   return (
-    <span
-      data-slot="rating-star"
-      aria-hidden
-      className={cn(
-        'relative inline-flex shrink-0',
-        interactive && 'transition-transform active:scale-90',
-      )}
-    >
+    <span data-slot="rating-star" aria-hidden className="relative inline-flex shrink-0">
       {/* Empty star: always full-width underneath */}
       <Star
         className="fill-transparent"
@@ -240,24 +227,22 @@ const Rating = React.forwardRef<HTMLSpanElement, RatingProps>(function Rating(
   }
 
   /**
-   * Compute the snapped value from a pointer event over the row.
-   *
-   * Algorithm:
-   * 1. Measure the bounding rect of the row element.
-   * 2. Compute `relativeX = clientX - rect.left`, clamped to [0, rect.width].
-   * 3. `rawValue = (relativeX / rect.width) * max` gives a float in [0, max].
-   * 4. `snap(rawValue)` rounds to the nearest `step` and clamps to [step, max].
-   *
-   * This means for step=0.5 on a 5-star row, moving the cursor to the midpoint
-   * of the third star gives rawValue ≈ 2.5, snapped to 2.5 exactly.
+   * Snapped value from a pointer's x, by HIT-TESTING each star element so the gap
+   * between stars never offsets the value (a plain relativeX/width mapping drifts
+   * right as the gaps accumulate). Before star i = i filled; inside star i =
+   * i + the fraction across it; past the last star = max.
    */
   function valueFromPointer(clientX: number): number {
     const row = rowRef.current;
     if (!row) return snap(max);
-    const rect = row.getBoundingClientRect();
-    const relativeX = Math.max(0, Math.min(clientX - rect.left, rect.width));
-    const raw = (relativeX / rect.width) * max;
-    return snap(raw);
+    const stars = Array.from(row.children);
+    for (let i = 0; i < stars.length; i += 1) {
+      const r = stars[i]?.getBoundingClientRect();
+      if (!r) continue;
+      if (clientX < r.left) return snap(i);
+      if (clientX <= r.right) return snap(i + (clientX - r.left) / r.width);
+    }
+    return snap(max);
   }
 
   function handlePointerMove(event: React.PointerEvent<HTMLSpanElement>) {
@@ -344,7 +329,7 @@ const Rating = React.forwardRef<HTMLSpanElement, RatingProps>(function Rating(
       className={cn(
         ratingVariants({ size }),
         isInteractive &&
-          'cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1',
+          'w-fit cursor-pointer touch-none select-none rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
         disabled && 'cursor-not-allowed opacity-50',
         className,
       )}
@@ -352,11 +337,7 @@ const Rating = React.forwardRef<HTMLSpanElement, RatingProps>(function Rating(
       {...interactiveRootProps}
     >
       {starFills.map((fill, index) => (
-        <FractionalStar
-          key={index}
-          fill={fill}
-          interactive={isInteractive}
-        />
+        <FractionalStar key={index} fill={fill} />
       ))}
     </span>
   );
