@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@brika/clay/components/avatar';
 import { Button } from '@brika/clay/components/button';
 import {
@@ -21,13 +21,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@brika/clay/components/dialog';
-import { FlipHorizontal2, FlipVertical2, RotateCcw, RotateCw, Undo2 } from 'lucide-react';
+import { FlipHorizontal2, FlipVertical2, RotateCcw, RotateCw, RotateCcwSquare, ZoomIn, ZoomOut } from 'lucide-react';
 
-/** Avatar-upload flow: click the avatar to open the file browser, then crop in a Dialog with zoom, rotate, flip, and reset controls. */
+/**
+ * Avatar-upload flow: click the avatar to open the file browser, then crop in
+ * a Dialog with a zoom slider, a bordered toolbar of rotate/flip/reset actions,
+ * and Cancel / Apply footer buttons.
+ */
 export default function CropperModalDemo() {
   const [file, setFile] = useState<File | null>(null);
   const [avatarSrc, setAvatarSrc] = useState<string | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   function pick(e: React.ChangeEvent<HTMLInputElement>) {
     setFile(e.target.files?.[0] ?? null);
@@ -65,30 +69,37 @@ export default function CropperModalDemo() {
         <Dialog open={file !== null} onOpenChange={(open) => { if (!open) handleCancel(); }}>
           <DialogContent className="w-[380px] max-w-[calc(100vw-2rem)] gap-4">
             <DialogHeader>
-              <DialogTitle>Crop your avatar</DialogTitle>
-              <DialogDescription>Drag to reposition, scroll or slide to zoom.</DialogDescription>
+              <DialogTitle>Crop your photo</DialogTitle>
+              <DialogDescription>Drag to reposition · scroll or slide to zoom</DialogDescription>
             </DialogHeader>
 
             <div className="flex justify-center">
               <CropperViewport />
             </div>
-            <CropperZoom className="mt-2" />
 
-            <div className="flex items-center justify-center gap-1">
-              <CropperRotate direction="left" aria-label="Rotate left">
+            {/* Zoom row: minus icon — slider — plus icon */}
+            <div className="flex items-center gap-3">
+              <ZoomOut className="size-4 shrink-0 text-muted-foreground" />
+              <CropperZoom className="flex-1" />
+              <ZoomIn className="size-4 shrink-0 text-muted-foreground" />
+            </div>
+
+            {/* Toolbar: 5 bordered icon buttons for rotate, flip, reset */}
+            <div className="flex items-center gap-2">
+              <CropperRotate direction="left" variant="outline" size="icon-sm" aria-label="Rotate left" className="flex-1">
                 <RotateCcw className="size-4" />
               </CropperRotate>
-              <CropperRotate direction="right" aria-label="Rotate right">
+              <CropperRotate direction="right" variant="outline" size="icon-sm" aria-label="Rotate right" className="flex-1">
                 <RotateCw className="size-4" />
               </CropperRotate>
-              <CropperFlip axis="h" aria-label="Flip horizontal">
+              <CropperFlip axis="h" variant="outline" size="icon-sm" aria-label="Flip horizontal" className="flex-1">
                 <FlipHorizontal2 className="size-4" />
               </CropperFlip>
-              <CropperFlip axis="v" aria-label="Flip vertical">
+              <CropperFlip axis="v" variant="outline" size="icon-sm" aria-label="Flip vertical" className="flex-1">
                 <FlipVertical2 className="size-4" />
               </CropperFlip>
-              <CropperReset aria-label="Reset">
-                <Undo2 className="size-4" />
+              <CropperReset variant="outline" size="icon-sm" aria-label="Reset" className="flex-1">
+                <RotateCcwSquare className="size-4" />
               </CropperReset>
             </div>
 

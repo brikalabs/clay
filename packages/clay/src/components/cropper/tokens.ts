@@ -12,6 +12,11 @@ registerComponent(meta, {
       description:
         'Background fill of the crop canvas stage, visible as letterboxing when the image does not cover the full square.',
     },
+    'overlay-color': {
+      default: 'oklch(0.08 0.01 60 / 0.42)',
+      description:
+        'Dim color applied outside the crop area via a large box-shadow on the crop mask. Defaults to a near-black at ~42% opacity so the outside of the circle is visibly darkened.',
+    },
     'overlay-border': {
       default: 'oklch(1 0 0 / 0.45)',
       description:

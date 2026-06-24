@@ -353,9 +353,13 @@ function CropperCanvas({ className, ...props }: Omit<React.ComponentProps<'div'>
 // ---------------------------------------------------------------------------
 
 /**
- * The crop boundary ring drawn on top of CropperCanvas: just an outline marking
- * the crop area, with NO dimming/vignette over the image. Shape is read from
- * CropperContext; override by passing `shape` explicitly.
+ * The crop mask rendered on top of CropperCanvas. Dims the area OUTSIDE the
+ * crop circle/rectangle via a large box-shadow (scrim), then draws a thin ring
+ * on the inner edge of the crop area. Shape is read from CropperContext;
+ * override by passing `shape` explicitly.
+ *
+ * The parent stage wrapper must be `overflow-hidden` so the 9999px box-shadow
+ * is clipped to the stage bounds and does not bleed onto the page.
  */
 function CropperOverlay({
   shape: shapeProp,
@@ -370,15 +374,26 @@ function CropperOverlay({
   const shapeClass = shape === 'circle' ? 'rounded-full' : 'rounded-2xl';
 
   return (
-    <div
-      data-slot="cropper-overlay-border"
-      className={cn(
-        'pointer-events-none absolute inset-0 border border-[color:var(--cropper-overlay-border)]',
-        shapeClass,
-        className,
-      )}
-      {...props}
-    />
+    <>
+      {/* Scrim: large box-shadow dims everything outside the crop area */}
+      <div
+        data-slot="cropper-overlay-scrim"
+        className={cn(
+          'pointer-events-none absolute inset-0 shadow-[0_0_0_9999px_var(--cropper-overlay-color)]',
+          shapeClass,
+        )}
+        {...props}
+      />
+      {/* Ring: thin border on the inner edge of the crop area */}
+      <div
+        data-slot="cropper-overlay-border"
+        className={cn(
+          'pointer-events-none absolute inset-0 border border-[color:var(--cropper-overlay-border)]',
+          shapeClass,
+          className,
+        )}
+      />
+    </>
   );
 }
 
@@ -497,7 +512,8 @@ function CropperViewport({
   }
 
   const wrapperClass = cn(
-    'relative inline-flex rounded-2xl transition-[outline]',
+    // overflow-hidden clips the 9999px CropperOverlay box-shadow to the stage bounds.
+    'relative inline-flex overflow-hidden rounded-2xl transition-[outline]',
     isDragActive && 'outline-2 outline-offset-2 outline-(--cropper-drop-active-ring)',
     className,
   );
