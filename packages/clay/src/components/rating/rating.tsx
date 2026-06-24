@@ -5,6 +5,7 @@ import { Star } from 'lucide-react';
 import * as React from 'react';
 
 import { cn } from '../../primitives/cn';
+import { cssVars } from '../../primitives/cssVars';
 
 const ratingVariants = cva('inline-flex items-center', {
   variants: {
@@ -88,6 +89,13 @@ interface RatingBaseProps extends VariantProps<typeof ratingVariants> {
   readonly className?: string;
   /** Override the default aria-label ("Rated {value} out of {max}"). */
   readonly 'aria-label'?: string;
+  /**
+   * Shortcut to set the filled-star color without a CSS override. Accepts any
+   * CSS color value (`"var(--primary)"`, `"#f00"`, `"oklch(60% 0.2 30)"`, etc.).
+   * Sets `--rating-filled-color` inline on the root element; the token default
+   * (`--warning`) still applies when this prop is omitted.
+   */
+  readonly color?: string;
 }
 
 /** Display mode: no `onValueChange`, fully read-only. */
@@ -146,6 +154,7 @@ const Rating = React.forwardRef<HTMLSpanElement, RatingProps>(function Rating(
     max = 5,
     size = 'default',
     className,
+    color,
     onValueChange,
     disabled,
     step = 1,
@@ -233,6 +242,7 @@ const Rating = React.forwardRef<HTMLSpanElement, RatingProps>(function Rating(
         disabled && 'cursor-not-allowed opacity-50',
         className,
       )}
+      style={color ? cssVars({ 'rating-filled-color': color }) : undefined}
       {...interactiveRootProps}
     >
       {starFills.map((fill, index) => (
