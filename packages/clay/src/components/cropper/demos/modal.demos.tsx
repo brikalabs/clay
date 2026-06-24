@@ -8,8 +8,6 @@ import {
   CropperApply,
   CropperCancel,
   CropperFallback,
-  CropperFlip,
-  CropperInput,
   CropperReset,
   CropperRotate,
   CropperViewport,
@@ -23,17 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@brika/clay/components/dialog';
-import {
-  FlipHorizontal2,
-  FlipVertical2,
-  ImageUp,
-  RotateCcw,
-  RotateCcwSquare,
-  RotateCw,
-  Upload,
-  ZoomIn,
-  ZoomOut,
-} from 'lucide-react';
+import { ImageUp, RotateCcw, RotateCcwSquare, RotateCw, ZoomIn, ZoomOut } from 'lucide-react';
 
 /**
  * Avatar-upload flow: clicking the avatar opens the file browser, then the crop UI appears inside a Dialog composed from public Cropper parts with a full rotate/flip/zoom toolbar.
@@ -95,26 +83,17 @@ export default function CropperModalDemo() {
               <ZoomIn className="size-4 shrink-0 text-muted-foreground" />
             </div>
 
-            {/* Toolbar: bordered outline icon buttons for rotate, flip, reset, and upload */}
+            {/* Focused rotate + reset controls for the modal */}
             <div className="flex items-center gap-2">
+              <CropperReset aria-label="Reset" className="flex-1">
+                <RotateCcwSquare className="size-4" />
+              </CropperReset>
               <CropperRotate direction="left" aria-label="Rotate left" className="flex-1">
                 <RotateCcw className="size-4" />
               </CropperRotate>
               <CropperRotate direction="right" aria-label="Rotate right" className="flex-1">
                 <RotateCw className="size-4" />
               </CropperRotate>
-              <CropperFlip axis="h" aria-label="Flip horizontal" className="flex-1">
-                <FlipHorizontal2 className="size-4" />
-              </CropperFlip>
-              <CropperFlip axis="v" aria-label="Flip vertical" className="flex-1">
-                <FlipVertical2 className="size-4" />
-              </CropperFlip>
-              <CropperReset aria-label="Reset" className="flex-1">
-                <RotateCcwSquare className="size-4" />
-              </CropperReset>
-              <CropperInput variant="outline" size="icon-sm" aria-label="Replace image" className="flex-1">
-                <Upload className="size-4" />
-              </CropperInput>
             </div>
 
             <DialogFooter>
