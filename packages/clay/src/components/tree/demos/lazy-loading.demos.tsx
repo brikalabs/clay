@@ -34,37 +34,33 @@ const FS: Record<string, readonly FsNode[]> = {
 };
 
 // Simulate an async API: resolve after a short delay.
-function fetchDir(id: string): Promise<readonly FsNode[]> {
-  return new Promise((resolve) => setTimeout(() => resolve(FS[id] ?? []), 600));
-}
+const fetchDir = (id: string) =>
+  new Promise<readonly FsNode[]>((resolve) => setTimeout(() => resolve(FS[id] ?? []), 600));
 
 /**
  * @title Lazy loading
  * Folders fetch their children the first time they expand, showing a spinner while the request is in flight.
  */
 export default function TreeLazyLoadingDemo() {
-  const [loaded, setLoaded] = useState<Record<string, readonly FsNode[]>>({});
-  const [inflight, setInflight] = useState<ReadonlySet<string>>(new Set());
+  // One entry per folder: null while loading, the children array once loaded.
+  const [dir, setDir] = useState<Record<string, readonly FsNode[] | null>>({});
 
   const onExpand = async (id: string) => {
-    if (loaded[id] ?? inflight.has(id)) return;
-    setInflight((s) => new Set(s).add(id));
+    if (id in dir) return;
+    setDir((d) => ({ ...d, [id]: null }));
     const nodes = await fetchDir(id);
-    setLoaded((s) => ({ ...s, [id]: nodes }));
-    setInflight((s) => { const n = new Set(s); n.delete(id); return n; });
+    setDir((d) => ({ ...d, [id]: nodes }));
   };
 
-  // Recursively render fs nodes; an in-flight folder shows <TreeLoading/>, a loaded
-  // one shows its children. Compose whatever you want inside TreeLoading.
   const render = (nodes: readonly FsNode[]) =>
     nodes.map((node) => {
       if (node.type === 'file') {
         return <TreeItem key={node.id} nodeId={node.id} label={node.name} />;
       }
-      const busy = inflight.has(node.id);
+      const entry = dir[node.id];
       return (
-        <TreeItem key={node.id} nodeId={node.id} label={node.name} lazy loading={busy}>
-          {busy ? <TreeLoading /> : render(loaded[node.id] ?? [])}
+        <TreeItem key={node.id} nodeId={node.id} label={node.name} lazy loading={entry === null}>
+          {entry === null ? <TreeLoading /> : render(entry ?? [])}
         </TreeItem>
       );
     });
