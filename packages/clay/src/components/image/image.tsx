@@ -113,7 +113,9 @@ function Image({
   }
 
   const transitionStyle: React.CSSProperties = {
-    transitionDuration: 'var(--image-transition-duration)',
+    // Fallback duration so the fade (and its transitionend) always runs: a missing
+    // token var resolves to 0s, which skips transitionend and breaks the crossfade.
+    transitionDuration: 'var(--image-transition-duration, 300ms)',
   };
 
   return (
@@ -149,6 +151,9 @@ function Image({
         {/* Current image: fades in once loaded, over the previous layer */}
         {src && status !== 'error' ? (
           <img
+            // Key on src: each new source is a fresh element starting at opacity-0,
+            // so the fade-in always replays over the retained previous layer.
+            key={src}
             src={src}
             alt={alt}
             loading={loading}

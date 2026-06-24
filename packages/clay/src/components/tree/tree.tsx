@@ -506,7 +506,7 @@ function TreeItem({
         // Keyboard focus: a subtle inset ring on THIS item's own row only. Scoped
         // to the direct-child row so focusing a folder does not ring every nested
         // descendant (a named group would, since they share the name).
-        '[&:focus-visible>[data-slot=tree-item-row]]:ring-1 [&:focus-visible>[data-slot=tree-item-row]]:ring-inset [&:focus-visible>[data-slot=tree-item-row]]:ring-ring',
+        '[&:focus-visible>[data-slot=tree-item-row]]:ring-2 [&:focus-visible>[data-slot=tree-item-row]]:ring-ring [&:focus-visible>[data-slot=tree-item-row]]:ring-offset-2 [&:focus-visible>[data-slot=tree-item-row]]:ring-offset-background',
         className
       )}
       {...props}
