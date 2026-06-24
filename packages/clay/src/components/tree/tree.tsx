@@ -460,27 +460,39 @@ function TreeRow({
  * whatever you want inside (a skeleton, custom text), or leave it empty for the
  * default spinner + "Loading..." row.
  */
-function TreeLoading({ children, className, ...props }: React.ComponentProps<'div'>) {
-  // Rendered inside the parent's <DepthContext value={depth + 1}>, so this is
-  // already the children's depth: indent the row to that level.
+// Shared indented row for the lazy-node placeholders below. Rendered inside the
+// parent's <DepthContext value={depth + 1}>, so it indents to the children's depth.
+function TreePlaceholder({
+  dataSlot,
+  tone,
+  className,
+  ...props
+}: React.ComponentProps<'div'> & { dataSlot: string; tone: string }) {
   const depth = React.use(DepthContext);
   return (
     <div
-      data-slot="tree-loading"
+      data-slot={dataSlot}
       className={cn(
-        'tree flex select-none items-center gap-1.5 py-[var(--tree-padding-y)] text-tree-icon',
+        'tree flex select-none items-center gap-1.5 py-[var(--tree-padding-y)]',
+        tone,
         className
       )}
       style={{ paddingInlineStart: `calc(var(--tree-indent) * ${depth} + var(--tree-padding-x))` }}
       {...props}
-    >
+    />
+  );
+}
+
+function TreeLoading({ children, ...props }: React.ComponentProps<'div'>) {
+  return (
+    <TreePlaceholder dataSlot="tree-loading" tone="text-tree-icon" {...props}>
       {children ?? (
         <>
           <Loader2 className="size-4 shrink-0 animate-spin" aria-hidden />
           <span className="truncate text-sm">Loading...</span>
         </>
       )}
-    </div>
+    </TreePlaceholder>
   );
 }
 
@@ -489,25 +501,16 @@ function TreeLoading({ children, className, ...props }: React.ComponentProps<'di
  * depth. Use it as the fallback of an error boundary around a lazy `TreeItem`'s
  * children; put whatever you want inside, or leave it empty for the default row.
  */
-function TreeError({ children, className, ...props }: React.ComponentProps<'div'>) {
-  const depth = React.use(DepthContext);
+function TreeError({ children, ...props }: React.ComponentProps<'div'>) {
   return (
-    <div
-      data-slot="tree-error"
-      className={cn(
-        'tree flex select-none items-center gap-1.5 py-[var(--tree-padding-y)] text-destructive',
-        className
-      )}
-      style={{ paddingInlineStart: `calc(var(--tree-indent) * ${depth} + var(--tree-padding-x))` }}
-      {...props}
-    >
+    <TreePlaceholder dataSlot="tree-error" tone="text-destructive" {...props}>
       {children ?? (
         <>
           <TriangleAlert className="size-4 shrink-0" aria-hidden />
           <span className="truncate text-sm">Failed to load</span>
         </>
       )}
-    </div>
+    </TreePlaceholder>
   );
 }
 
