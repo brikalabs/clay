@@ -40,17 +40,15 @@ function load(id: string) {
 }
 
 function renderNodes(list: readonly FsNode[]) {
-  return list.map((node) =>
-    node.type === 'file' ? (
-      <TreeItem key={node.id} nodeId={node.id} label={node.name} />
-    ) : (
-      <TreeItem key={node.id} nodeId={node.id} label={node.name}>
+  return list.map((node) => (
+    <TreeItem key={node.id} nodeId={node.id} label={node.name}>
+      {node.type === 'folder' && (
         <Suspense fallback={<TreeLoading />}>
           <LazyChildren id={node.id} />
         </Suspense>
-      </TreeItem>
-    )
-  );
+      )}
+    </TreeItem>
+  ));
 }
 
 // Suspends on first open; renders <TreeError/> when the load resolves to an error.
