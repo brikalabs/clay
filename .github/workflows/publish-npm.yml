@@ -1,8 +1,16 @@
 name: Publish to npm
 
 on:
-  release:
-    types: [published]
+  # Auto path: called by the Release Please workflow in the same run, right after it
+  # creates a release. A release made by the default GITHUB_TOKEN cannot trigger an
+  # `on: release` workflow (GitHub anti-recursion), so we are invoked directly.
+  workflow_call:
+    inputs:
+      tag:
+        description: 'Ref/tag to publish. Empty uses the caller ref (main at the release commit).'
+        required: false
+        type: string
+  # Manual fallback: re-publish a specific tag on demand.
   workflow_dispatch:
     inputs:
       tag:
