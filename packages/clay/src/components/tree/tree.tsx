@@ -14,6 +14,7 @@ interface TreeContextValue {
   readonly multiSelect: boolean;
   readonly showIcons: boolean;
   readonly showLines: boolean;
+  readonly loadingIndicator: React.ReactNode;
 }
 
 const TreeContext = React.createContext<TreeContextValue | null>(null);
@@ -85,7 +86,21 @@ interface TreeProps extends Omit<React.ComponentProps<'div'>, 'onSelect'> {
    * prop while the request is in flight.
    */
   readonly onExpand?: (id: string) => void;
+  /**
+   * Content rendered inside an open, loading node that has no children yet.
+   * Defaults to a spinner row with "Loading..." text. Override to supply a
+   * skeleton, a custom spinner, or any placeholder you need.
+   */
+  readonly loadingIndicator?: React.ReactNode;
 }
+
+// Default loading row: spinner + label, identical to the original hardcoded row.
+const DEFAULT_LOADING_INDICATOR = (
+  <>
+    <Loader2 className="size-4 shrink-0 animate-spin" aria-hidden />
+    <span className="truncate text-sm">Loading...</span>
+  </>
+);
 
 function Tree({
   defaultExpandedIds,
@@ -98,6 +113,7 @@ function Tree({
   showIcons = true,
   showLines = false,
   onExpand,
+  loadingIndicator = DEFAULT_LOADING_INDICATOR,
   className,
   children,
   ...props
@@ -165,8 +181,9 @@ function Tree({
       multiSelect,
       showIcons,
       showLines,
+      loadingIndicator,
     }),
-    [expanded, toggleExpanded, setExpanded, selected, select, multiSelect, showIcons, showLines]
+    [expanded, toggleExpanded, setExpanded, selected, select, multiSelect, showIcons, showLines, loadingIndicator]
   );
 
   return (
@@ -447,7 +464,7 @@ function TreeRow({
   );
 }
 
-/** The nested children container, or a loading spinner while they fetch. */
+/** The nested children container, or a loading placeholder while they fetch. */
 function TreeItemGroup({
   isBranch,
   open,
@@ -464,6 +481,7 @@ function TreeItemGroup({
   // Rendered inside the parent's <DepthContext value={depth + 1}>, so this is
   // already the children's depth: indent the loading row to that same level.
   const depth = React.use(DepthContext);
+  const { loadingIndicator } = useTree();
   if (!isBranch || !open) {
     return null;
   }
@@ -473,13 +491,12 @@ function TreeItemGroup({
     <fieldset className="m-0 min-w-0 space-y-0.5 border-0 p-0">
       {loading && !hasChildren ? (
         <div
-          className="tree flex select-none items-center py-[var(--tree-padding-y)] text-tree-icon"
+          className="tree flex select-none items-center gap-1.5 py-[var(--tree-padding-y)] text-tree-icon"
           style={{
             paddingInlineStart: `calc(var(--tree-indent) * ${depth} + var(--tree-padding-x))`,
           }}
         >
-          <Loader2 className="size-4 shrink-0 animate-spin" aria-hidden />
-          <span className="truncate text-sm">Loading…</span>
+          {loadingIndicator}
         </div>
       ) : (
         children

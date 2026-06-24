@@ -9,9 +9,8 @@ interface FsNode {
   readonly type: 'file' | 'folder';
 }
 
-// A mock file system: each folder id maps to its (already folder-first, sorted)
-// children. A real app would fetch these from an API instead.
-const TREE: Record<string, readonly FsNode[]> = {
+// Mock file system: folder id -> children list.
+const FS: Record<string, readonly FsNode[]> = {
   root: [
     { id: 'src', name: 'src', type: 'folder' },
     { id: 'locales', name: 'locales', type: 'folder' },
@@ -26,12 +25,7 @@ const TREE: Record<string, readonly FsNode[]> = {
     { id: 'src/bricks/index.ts', name: 'index.ts', type: 'file' },
   ],
   'src/bricks/checkout': [
-    { id: 'src/bricks/checkout/handlers', name: 'handlers', type: 'folder' },
     { id: 'src/bricks/checkout/CheckoutBrick.ts', name: 'CheckoutBrick.ts', type: 'file' },
-  ],
-  'src/bricks/checkout/handlers': [
-    { id: 'src/bricks/checkout/handlers/session.ts', name: 'session.ts', type: 'file' },
-    { id: 'src/bricks/checkout/handlers/webhook.ts', name: 'webhook.ts', type: 'file' },
   ],
   locales: [
     { id: 'locales/en.json', name: 'en.json', type: 'file' },
@@ -39,48 +33,42 @@ const TREE: Record<string, readonly FsNode[]> = {
   ],
 };
 
-// Simulate a slow API: resolve a folder's children after a short delay.
+// Simulate an async API: resolve after a short delay.
 function fetchDir(id: string): Promise<readonly FsNode[]> {
-  return new Promise((resolve) => setTimeout(() => resolve(TREE[id] ?? []), 600));
+  return new Promise((resolve) => setTimeout(() => resolve(FS[id] ?? []), 600));
 }
 
 /**
  * @title Lazy loading
- * Folders fetch their children the first time they expand (here from a mock file system with a simulated delay), showing a spinner while the request is in flight.
+ * Folders fetch their children the first time they expand, showing a spinner while the request is in flight.
  */
 export default function TreeLazyLoadingDemo() {
-  const [children, setChildren] = useState<Record<string, readonly FsNode[]>>({});
-  const [loading, setLoading] = useState<ReadonlySet<string>>(new Set());
+  const [loaded, setLoaded] = useState<Record<string, readonly FsNode[]>>({});
+  const [inflight, setInflight] = useState<ReadonlySet<string>>(new Set());
 
-  const loadChildren = async (id: string) => {
-    // Load each folder once; skip if already loaded or in flight.
-    if (children[id] || loading.has(id)) {
-      return;
-    }
-    setLoading((prev) => new Set(prev).add(id));
+  const onExpand = async (id: string) => {
+    if (loaded[id] ?? inflight.has(id)) return;
+    setInflight((s) => new Set(s).add(id));
     const nodes = await fetchDir(id);
-    setChildren((prev) => ({ ...prev, [id]: nodes }));
-    setLoading((prev) => {
-      const next = new Set(prev);
-      next.delete(id);
-      return next;
-    });
+    setLoaded((s) => ({ ...s, [id]: nodes }));
+    setInflight((s) => { const n = new Set(s); n.delete(id); return n; });
   };
 
-  const renderNodes = (nodes: readonly FsNode[]) =>
+  // Recursively render a list of fs nodes; folders show their loaded children.
+  const render = (nodes: readonly FsNode[]) =>
     nodes.map((node) =>
       node.type === 'file' ? (
         <TreeItem key={node.id} nodeId={node.id} label={node.name} />
       ) : (
-        <TreeItem key={node.id} nodeId={node.id} label={node.name} lazy loading={loading.has(node.id)}>
-          {renderNodes(children[node.id] ?? [])}
+        <TreeItem key={node.id} nodeId={node.id} label={node.name} lazy loading={inflight.has(node.id)}>
+          {render(loaded[node.id] ?? [])}
         </TreeItem>
       )
     );
 
   return (
-    <Tree className="w-full max-w-xs" showLines onExpand={loadChildren}>
-      {renderNodes(TREE.root)}
+    <Tree className="w-full max-w-xs" showLines onExpand={onExpand}>
+      {render(FS.root)}
     </Tree>
   );
 }
