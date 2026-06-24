@@ -21,6 +21,33 @@ const ratingVariants = cva('inline-flex items-center', {
 });
 
 // ---------------------------------------------------------------------------
+// useControllableState
+// Mirrors the pattern from mini-calendar: uncontrolled by default, yields to
+// caller-provided `controlled` value when present. The setter always fires
+// `onChange` so consumers can observe without owning state.
+// ---------------------------------------------------------------------------
+
+function useControllableState<T>(
+  controlled: T | undefined,
+  defaultValue: T,
+  onChange: ((value: T) => void) | undefined,
+): readonly [T, (next: T) => void] {
+  const [uncontrolled, setUncontrolled] = React.useState<T>(defaultValue);
+  const isControlled = controlled !== undefined;
+  const value = isControlled ? controlled : uncontrolled;
+  const setValue = React.useCallback(
+    (next: T) => {
+      if (!isControlled) {
+        setUncontrolled(next);
+      }
+      onChange?.(next);
+    },
+    [isControlled, onChange],
+  );
+  return [value, setValue];
+}
+
+// ---------------------------------------------------------------------------
 // FractionalStar
 // ---------------------------------------------------------------------------
 
@@ -35,15 +62,9 @@ const ratingVariants = cva('inline-flex items-center', {
 function FractionalStar({
   fill,
   interactive,
-  onClick,
-  onMouseEnter,
-  onMouseLeave,
 }: {
   fill: number;
   interactive: boolean;
-  onClick?: () => void;
-  onMouseEnter?: () => void;
-  onMouseLeave?: () => void;
 }) {
   const pct = `${Math.max(0, Math.min(1, fill)) * 100}%`;
   return (
@@ -52,11 +73,8 @@ function FractionalStar({
       aria-hidden
       className={cn(
         'relative inline-flex shrink-0',
-        interactive && 'cursor-pointer transition-transform active:scale-90',
+        interactive && 'transition-transform active:scale-90',
       )}
-      onClick={onClick}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
     >
       {/* Empty star: always full-width underneath */}
       <Star
@@ -81,8 +99,6 @@ function FractionalStar({
 // ---------------------------------------------------------------------------
 
 interface RatingBaseProps extends VariantProps<typeof ratingVariants> {
-  /** Numeric rating. Fractional values (e.g. 3.75) render partial stars with no rounding. */
-  readonly value: number;
   /** Total star count. Defaults to 5. */
   readonly max?: number;
   /** Extra Tailwind classes appended to the root element. */
@@ -96,36 +112,50 @@ interface RatingBaseProps extends VariantProps<typeof ratingVariants> {
    * (`--warning`) still applies when this prop is omitted.
    */
   readonly color?: string;
-}
-
-/** Display mode: no `onValueChange`, fully read-only. */
-interface RatingDisplayProps extends RatingBaseProps {
-  readonly onValueChange?: undefined;
-  readonly disabled?: undefined;
-  readonly step?: undefined;
+  /**
+   * Minimum increment for clicks, pointer moves, and keyboard steps.
+   * Defaults to 1 (whole-star steps). Use 0.5 for half-star input, 0.25 for
+   * quarter-star. Only meaningful in interactive mode.
+   */
+  readonly step?: number;
+  /**
+   * Force read-only display regardless of other props. Useful when you want to
+   * pass a static `value` without accidentally enabling interaction.
+   */
+  readonly readOnly?: boolean;
+  /** Disable all interaction while keeping the visual. Interactive mode only. */
+  readonly disabled?: boolean;
 }
 
 /**
- * Interactive input mode: clicking a star commits that integer (or
- * step-snapped) value via `onValueChange`.
+ * Controlled mode: the caller owns state via `value` + `onValueChange`.
+ * The component is interactive when `onValueChange` is provided (unless
+ * `readOnly` or `disabled` is set).
  */
-interface RatingInputProps extends RatingBaseProps {
+interface RatingControlledProps extends RatingBaseProps {
+  /** Current rating value (controlled). */
+  readonly value: number;
+  readonly defaultValue?: undefined;
   /**
-   * Called with the new value when the user clicks a star or uses
-   * keyboard controls. Providing this prop switches the component from
-   * display to input mode.
+   * Called with the new value when the user clicks or uses keyboard controls.
+   * Providing this prop makes the component interactive.
    */
-  readonly onValueChange: (value: number) => void;
-  /** Disable all interaction while keeping the visual. */
-  readonly disabled?: boolean;
-  /**
-   * Minimum increment for clicks and keyboard steps. Defaults to 1
-   * (whole-star steps). Use 0.5 for half-star input.
-   */
-  readonly step?: number;
+  readonly onValueChange?: (value: number) => void;
 }
 
-type RatingProps = RatingDisplayProps | RatingInputProps;
+/**
+ * Uncontrolled mode: the component holds its own state starting from
+ * `defaultValue`. Always interactive (unless `readOnly` or `disabled`).
+ */
+interface RatingUncontrolledProps extends RatingBaseProps {
+  readonly value?: undefined;
+  /** Initial rating value on first render (uncontrolled). Defaults to 0. */
+  readonly defaultValue?: number;
+  /** Called with the new value whenever the user changes the rating. */
+  readonly onValueChange?: (value: number) => void;
+}
+
+type RatingProps = RatingControlledProps | RatingUncontrolledProps;
 
 // ---------------------------------------------------------------------------
 // Rating
@@ -134,23 +164,35 @@ type RatingProps = RatingDisplayProps | RatingInputProps;
 /**
  * Star rating that works as both a fractional DISPLAY and an interactive INPUT.
  *
- * **Display mode** (omit `onValueChange`):
+ * **Read-only display** (`value` only, no `onValueChange`/`defaultValue`):
  *   Renders partial stars for non-integer values (3.75 fills the fourth star
  *   75%). Uses `role="img"` with a computed `aria-label` such as
- *   "Rated 3.75 out of 5". No rounding applied.
+ *   "Rated 3.75 out of 5". No rounding applied. Also forced by `readOnly`.
  *
- * **Interactive input mode** (provide `onValueChange`):
- *   Uses `role="slider"` with `aria-valuemin/max/now`. Click a star to commit
- *   that value; hover shows a live preview. Keyboard: ArrowRight/Up adds one
- *   step, ArrowLeft/Down subtracts one step, Home sets the minimum, End sets
- *   the maximum. The `step` prop (default 1) controls the click and keyboard
- *   increment; set `step={0.5}` for half-star input.
+ * **Uncontrolled input** (`defaultValue` or `onValueChange` provided):
+ *   The component holds its own state. `defaultValue` sets the initial value
+ *   (defaults to 0). `onValueChange` fires on every change for observation.
+ *   `<Rating defaultValue={3.5} step={0.5} onValueChange={console.log} />`
  *
- *   `disabled` renders the visual without any interaction, with reduced opacity.
+ * **Controlled input** (`value` + `onValueChange`):
+ *   Caller owns state. `onValueChange` must update `value` for the UI to reflect
+ *   changes. `<Rating value={v} onValueChange={setV} step={0.5} />`
+ *
+ * **Pointer interaction** (interactive modes):
+ *   Moving the pointer over the star row computes the value from the cursor's
+ *   horizontal position across the whole row (which star + fraction within it),
+ *   snapped to `step`. The partial-fill rendering follows the cursor as a live
+ *   preview. Click commits the previewed value.
+ *
+ * **Keyboard** (role=slider):
+ *   ArrowRight/Up += step, ArrowLeft/Down -= step, Home = step (min), End = max.
+ *
+ * `disabled` renders the visual without any interaction, with reduced opacity.
  */
 const Rating = React.forwardRef<HTMLSpanElement, RatingProps>(function Rating(
   {
-    value,
+    value: controlledValue,
+    defaultValue = 0,
     max = 5,
     size = 'default',
     className,
@@ -158,24 +200,82 @@ const Rating = React.forwardRef<HTMLSpanElement, RatingProps>(function Rating(
     onValueChange,
     disabled,
     step = 1,
+    readOnly,
     'aria-label': ariaLabel,
   },
   ref,
 ) {
-  const isInteractive = onValueChange !== undefined && disabled !== true;
+  // Mode decision:
+  // - Providing `defaultValue` (even 0 explicitly) or `onValueChange` with no
+  //   `value` signals uncontrolled-interactive intent.
+  // - Providing `value` + `onValueChange` is controlled-interactive.
+  // - Providing only `value` (no `onValueChange`, no `defaultValue`) is
+  //   read-only display.
+  // - `readOnly` overrides everything to display.
+  const isUncontrolled = controlledValue === undefined;
+  const isInteractiveIntent =
+    !readOnly &&
+    !disabled &&
+    (isUncontrolled || onValueChange !== undefined);
+
+  const [committedValue, setCommittedValue] = useControllableState(
+    controlledValue,
+    defaultValue,
+    onValueChange,
+  );
+
   const [hoverValue, setHoverValue] = React.useState<number | null>(null);
+  const rowRef = React.useRef<HTMLSpanElement | null>(null);
+
+  const isInteractive = isInteractiveIntent;
 
   // Hover preview takes over the displayed value in interactive mode.
-  const displayValue = isInteractive && hoverValue !== null ? hoverValue : value;
+  const displayValue = isInteractive && hoverValue !== null ? hoverValue : committedValue;
 
   // Snap `raw` to the nearest step within [step, max].
   function snap(raw: number): number {
-    return Math.max(step, Math.min(max, Math.round(raw / step) * step));
+    const snapped = Math.round(raw / step) * step;
+    // Clamp to [step, max] so 0 is never a valid click target.
+    return Math.max(step, Math.min(max, snapped));
   }
 
-  function handleStarClick(starIndex: number) {
+  /**
+   * Compute the snapped value from a pointer event over the row.
+   *
+   * Algorithm:
+   * 1. Measure the bounding rect of the row element.
+   * 2. Compute `relativeX = clientX - rect.left`, clamped to [0, rect.width].
+   * 3. `rawValue = (relativeX / rect.width) * max` gives a float in [0, max].
+   * 4. `snap(rawValue)` rounds to the nearest `step` and clamps to [step, max].
+   *
+   * This means for step=0.5 on a 5-star row, moving the cursor to the midpoint
+   * of the third star gives rawValue ≈ 2.5, snapped to 2.5 exactly.
+   */
+  function valueFromPointer(clientX: number): number {
+    const row = rowRef.current;
+    if (!row) return snap(max);
+    const rect = row.getBoundingClientRect();
+    const relativeX = Math.max(0, Math.min(clientX - rect.left, rect.width));
+    const raw = (relativeX / rect.width) * max;
+    return snap(raw);
+  }
+
+  function handlePointerMove(event: React.PointerEvent<HTMLSpanElement>) {
     if (!isInteractive) return;
-    onValueChange(snap(starIndex));
+    setHoverValue(valueFromPointer(event.clientX));
+  }
+
+  function handlePointerLeave() {
+    if (!isInteractive) return;
+    setHoverValue(null);
+  }
+
+  function handleClick(event: React.MouseEvent<HTMLSpanElement>) {
+    if (!isInteractive) return;
+    const clicked = valueFromPointer(event.clientX);
+    setCommittedValue(clicked);
+    // Clear hover so the committed value drives display immediately.
+    setHoverValue(null);
   }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLSpanElement>) {
@@ -184,11 +284,11 @@ const Rating = React.forwardRef<HTMLSpanElement, RatingProps>(function Rating(
     switch (event.key) {
       case 'ArrowRight':
       case 'ArrowUp':
-        next = Math.min(max, value + step);
+        next = Math.min(max, committedValue + step);
         break;
       case 'ArrowLeft':
       case 'ArrowDown':
-        next = Math.max(step, value - step);
+        next = Math.max(step, committedValue - step);
         break;
       case 'Home':
         next = step;
@@ -200,10 +300,10 @@ const Rating = React.forwardRef<HTMLSpanElement, RatingProps>(function Rating(
         return;
     }
     event.preventDefault();
-    onValueChange(snap(next));
+    setCommittedValue(snap(next));
   }
 
-  const defaultLabel = `Rated ${value} out of ${max}`;
+  const defaultLabel = `Rated ${committedValue} out of ${max}`;
 
   // Per-star fill fraction derived from displayValue.
   const starFills = Array.from({ length: max }, (_, i) => {
@@ -219,10 +319,12 @@ const Rating = React.forwardRef<HTMLSpanElement, RatingProps>(function Rating(
         tabIndex: 0,
         'aria-valuemin': 0,
         'aria-valuemax': max,
-        'aria-valuenow': value,
+        'aria-valuenow': committedValue,
         'aria-label': ariaLabel ?? defaultLabel,
+        onPointerMove: handlePointerMove,
+        onPointerLeave: handlePointerLeave,
+        onClick: handleClick,
         onKeyDown: handleKeyDown,
-        onMouseLeave: () => setHoverValue(null),
       }
     : {
         role: 'img',
@@ -231,7 +333,11 @@ const Rating = React.forwardRef<HTMLSpanElement, RatingProps>(function Rating(
 
   return (
     <span
-      ref={ref}
+      ref={(node) => {
+        rowRef.current = node;
+        if (typeof ref === 'function') ref(node);
+        else if (ref) ref.current = node;
+      }}
       data-slot="rating"
       data-interactive={isInteractive || undefined}
       data-disabled={disabled || undefined}
@@ -250,8 +356,6 @@ const Rating = React.forwardRef<HTMLSpanElement, RatingProps>(function Rating(
           key={index}
           fill={fill}
           interactive={isInteractive}
-          onClick={() => handleStarClick(index + 1)}
-          onMouseEnter={() => isInteractive && setHoverValue(snap(index + 1))}
         />
       ))}
     </span>
