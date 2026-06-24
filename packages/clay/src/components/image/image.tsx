@@ -57,24 +57,41 @@ function Image({
   // so there is no flash of skeleton between two images.
   const [prevSrc, setPrevSrc] = React.useState<string | undefined>(undefined);
 
-  // `src` is a dependency on purpose: switching the source resets the loader.
+  // The src whose load has finished, and the live timeout. Together they make the
+  // loader race-free: a load event that beats the effect (data-URIs decode
+  // instantly), a re-run, or StrictMode can no longer reset a completed load back
+  // to 'loading', and the timeout can never error an image that already loaded.
+  const loadedSrc = React.useRef<string | undefined>(undefined);
+  const timer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
   // biome-ignore lint/correctness/useExhaustiveDependencies: reset on src change
   React.useEffect(() => {
     if (!src) {
       setStatus('error');
       return;
     }
+    if (loadedSrc.current === src) {
+      setStatus('loaded'); // this src already loaded; do not re-arm the timeout
+      return;
+    }
     setStatus('loading');
-    const timer = setTimeout(() => {
+    timer.current = setTimeout(() => {
       setStatus((current) => (current === 'loading' ? 'error' : current));
     }, timeoutMs);
-    return () => clearTimeout(timer);
+    return () => clearTimeout(timer.current);
   }, [src, timeoutMs]);
 
   function handleLoad() {
+    loadedSrc.current = src;
+    clearTimeout(timer.current); // a completed load must never time out into the fallback
     setStatus('loaded');
     // Promote the current src to the retained layer once it is ready.
     setPrevSrc(src);
+  }
+
+  function handleError() {
+    clearTimeout(timer.current);
+    setStatus('error');
   }
 
   const transitionStyle: React.CSSProperties = {
@@ -117,7 +134,7 @@ function Image({
             loading={loading}
             decoding="async"
             onLoad={handleLoad}
-            onError={() => setStatus('error')}
+            onError={handleError}
             className={cn(
               'absolute inset-0 size-full object-cover transition-opacity',
               status === 'loaded' ? 'opacity-100' : 'opacity-0',
