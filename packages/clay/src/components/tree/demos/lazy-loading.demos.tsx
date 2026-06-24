@@ -1,7 +1,8 @@
 'use client';
 
+import { Suspense, use } from 'react';
+
 import { Tree, TreeItem, TreeLoading } from '@brika/clay/components/tree';
-import { useState } from 'react';
 
 interface FsNode {
   readonly id: string;
@@ -33,41 +34,48 @@ const FS: Record<string, readonly FsNode[]> = {
   ],
 };
 
-// Simulate an async API: resolve after a short delay.
-const fetchDir = (id: string) =>
-  new Promise<readonly FsNode[]>((resolve) => setTimeout(() => resolve(FS[id] ?? []), 600));
+// One cached promise per folder (so `use` reads a stable promise), resolving after a delay.
+const cache = new Map<string, Promise<readonly FsNode[]>>();
+function load(id: string): Promise<readonly FsNode[]> {
+  const cached = cache.get(id);
+  if (cached) {
+    return cached;
+  }
+  const pending = new Promise<readonly FsNode[]>((resolve) =>
+    setTimeout(() => resolve(FS[id] ?? []), 600)
+  );
+  cache.set(id, pending);
+  return pending;
+}
+
+function renderNodes(list: readonly FsNode[]) {
+  return list.map((node) =>
+    node.type === 'file' ? (
+      <TreeItem key={node.id} nodeId={node.id} label={node.name} />
+    ) : (
+      <TreeItem key={node.id} nodeId={node.id} label={node.name}>
+        <Suspense fallback={<TreeLoading />}>
+          <LazyChildren id={node.id} />
+        </Suspense>
+      </TreeItem>
+    )
+  );
+}
+
+// Mounted only when its folder opens (the Tree skips closed branches), so `use`
+// suspends on first open until the folder's children resolve.
+function LazyChildren({ id }: { id: string }) {
+  return renderNodes(use(load(id)));
+}
 
 /**
  * @title Lazy loading
- * Folders fetch their children the first time they expand, showing a spinner while the request is in flight.
+ * Folders load their children the first time they expand (React Suspense + use), showing a spinner while the request is in flight.
  */
 export default function TreeLazyLoadingDemo() {
-  // One entry per folder: null while loading, the children array once loaded.
-  const [dir, setDir] = useState<Record<string, readonly FsNode[] | null>>({});
-
-  const onExpand = async (id: string) => {
-    if (id in dir) return;
-    setDir((d) => ({ ...d, [id]: null }));
-    const nodes = await fetchDir(id);
-    setDir((d) => ({ ...d, [id]: nodes }));
-  };
-
-  const render = (nodes: readonly FsNode[]) =>
-    nodes.map((node) => {
-      if (node.type === 'file') {
-        return <TreeItem key={node.id} nodeId={node.id} label={node.name} />;
-      }
-      const entry = dir[node.id];
-      return (
-        <TreeItem key={node.id} nodeId={node.id} label={node.name} lazy loading={entry === null}>
-          {entry === null ? <TreeLoading /> : render(entry ?? [])}
-        </TreeItem>
-      );
-    });
-
   return (
-    <Tree className="w-full max-w-xs" showLines onExpand={onExpand}>
-      {render(FS.root)}
+    <Tree className="w-full max-w-xs" showLines>
+      {renderNodes(FS.root)}
     </Tree>
   );
 }
