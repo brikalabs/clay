@@ -78,3 +78,4 @@ export * from './components/tree';
 export { cn } from './primitives/cn';
 export { cssVars } from './primitives/cssVars';
 export { useIsMobile } from './primitives/use-mobile';
+export { type Modifier, useModifier } from './primitives/use-modifier';
