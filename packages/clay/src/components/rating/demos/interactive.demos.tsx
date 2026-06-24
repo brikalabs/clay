@@ -4,14 +4,9 @@ import { useState } from 'react';
 import { Rating } from '@brika/clay/components/rating';
 
 /**
- * Interactive input modes: uncontrolled (component holds state) and
- * controlled (caller holds state). Move the pointer across the stars
- * for a live fractional preview; click to commit.
- *
- * Uncontrolled: `defaultValue` + optional `onValueChange` to observe.
- * No consumer state required -- just pass `defaultValue` and go.
- *
- * Controlled: `value` + `onValueChange` -- caller owns state.
+ * Interactive input: whole-star selection via hover + click. Supports both
+ * uncontrolled (`defaultValue`) and controlled (`value` + `onValueChange`)
+ * modes. Keyboard: Arrow keys move between stars and commit the value.
  */
 export default function RatingInteractiveDemo() {
   const [controlled, setControlled] = useState(3);
@@ -20,11 +15,10 @@ export default function RatingInteractiveDemo() {
     <div className="flex flex-col items-start gap-5">
       <div className="flex flex-col gap-1">
         <span className="text-xs text-muted-foreground">
-          Uncontrolled — half stars (step=0.5, defaultValue=3.5)
+          Uncontrolled (defaultValue=3)
         </span>
         <Rating
-          defaultValue={3.5}
-          step={0.5}
+          defaultValue={3}
           size="lg"
           onValueChange={setObserved}
           aria-label="Rate this item"
@@ -36,7 +30,7 @@ export default function RatingInteractiveDemo() {
 
       <div className="flex flex-col gap-1">
         <span className="text-xs text-muted-foreground">
-          Controlled — whole stars (step=1)
+          Controlled (value={controlled})
         </span>
         <Rating
           value={controlled}
@@ -48,23 +42,9 @@ export default function RatingInteractiveDemo() {
       </div>
 
       <div className="flex flex-col gap-1">
-        <span className="text-xs text-muted-foreground">
-          Controlled — half stars (step=0.5), same state as above
-        </span>
-        <Rating
-          value={controlled}
-          onValueChange={setControlled}
-          step={0.5}
-          aria-label="Rate this item (half stars)"
-        />
-        <span className="text-xs tabular-nums text-muted-foreground">value={controlled}</span>
-      </div>
-
-      <div className="flex flex-col gap-1">
         <span className="text-xs text-muted-foreground">Disabled</span>
         <Rating
           value={controlled}
-          onValueChange={setControlled}
           disabled
           aria-label="Rating disabled"
         />

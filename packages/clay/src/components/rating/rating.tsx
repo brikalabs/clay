@@ -23,8 +23,7 @@ const ratingVariants = cva('inline-flex items-center', {
 // ---------------------------------------------------------------------------
 // useControllableState
 // Mirrors the pattern from mini-calendar: uncontrolled by default, yields to
-// caller-provided `controlled` value when present. The setter always fires
-// `onChange` so consumers can observe without owning state.
+// caller-provided `controlled` value when present.
 // ---------------------------------------------------------------------------
 
 function useControllableState<T>(
@@ -37,9 +36,7 @@ function useControllableState<T>(
   const value = isControlled ? controlled : uncontrolled;
   const setValue = React.useCallback(
     (next: T) => {
-      if (!isControlled) {
-        setUncontrolled(next);
-      }
+      if (!isControlled) setUncontrolled(next);
       onChange?.(next);
     },
     [isControlled, onChange],
@@ -49,40 +46,25 @@ function useControllableState<T>(
 
 // ---------------------------------------------------------------------------
 // FractionalStar
+// Two Star icons absolutely stacked. The empty icon sits underneath; the
+// filled icon is clipped to `fill * 100%` width so fractional values render
+// without rounding.
 // ---------------------------------------------------------------------------
 
-/**
- * Renders one star with `fill` fraction (0..1) of it filled.
- *
- * Technique: two Star icons are absolutely stacked. The empty-color icon
- * sits on the bottom. The filled-color icon is placed inside an
- * overflow-hidden wrapper whose width is set to `fill * 100%`, clipping
- * the filled layer to exactly that fraction without rounding.
- */
 function FractionalStar({ fill }: { fill: number }) {
   const pct = `${Math.max(0, Math.min(1, fill)) * 100}%`;
   return (
     <span data-slot="rating-star" aria-hidden className="relative inline-flex shrink-0">
-      {/* Empty star: always full-width underneath */}
-      <Star
-        className="fill-transparent"
-        style={{ color: 'var(--rating-empty-color)' }}
-      />
-      {/* Filled star: clipped by percentage width */}
-      <span
-        className="absolute inset-0 overflow-hidden"
-        style={{ width: pct }}
-      >
-        <Star
-          style={{ fill: 'var(--rating-filled-color)', color: 'var(--rating-filled-color)' }}
-        />
+      <Star className="fill-transparent" style={{ color: 'var(--rating-empty-color)' }} />
+      <span className="absolute inset-0 overflow-hidden" style={{ width: pct }}>
+        <Star style={{ fill: 'var(--rating-filled-color)', color: 'var(--rating-filled-color)' }} />
       </span>
     </span>
   );
 }
 
 // ---------------------------------------------------------------------------
-// Rating prop types
+// Prop types
 // ---------------------------------------------------------------------------
 
 interface RatingBaseProps extends VariantProps<typeof ratingVariants> {
@@ -90,55 +72,31 @@ interface RatingBaseProps extends VariantProps<typeof ratingVariants> {
   readonly max?: number;
   /** Extra Tailwind classes appended to the root element. */
   readonly className?: string;
-  /** Override the default aria-label ("Rated {value} out of {max}"). */
+  /** Override the default aria-label. */
   readonly 'aria-label'?: string;
   /**
-   * Shortcut to set the filled-star color without a CSS override. Accepts any
-   * CSS color value (`"var(--primary)"`, `"#f00"`, `"oklch(60% 0.2 30)"`, etc.).
-   * Sets `--rating-filled-color` inline on the root element; the token default
-   * (`--warning`) still applies when this prop is omitted.
+   * Sets `--rating-filled-color` inline. Accepts any CSS color value.
+   * Defaults to the `--warning` token when omitted.
    */
   readonly color?: string;
-  /**
-   * Minimum increment for clicks, pointer moves, and keyboard steps.
-   * Defaults to 1 (whole-star steps). Use 0.5 for half-star input, 0.25 for
-   * quarter-star. Only meaningful in interactive mode.
-   */
-  readonly step?: number;
-  /**
-   * Force read-only display regardless of other props. Useful when you want to
-   * pass a static `value` without accidentally enabling interaction.
-   */
+  /** Force read-only display regardless of other props. */
   readonly readOnly?: boolean;
-  /** Disable all interaction while keeping the visual. Interactive mode only. */
+  /** Disable all interaction while keeping the visual. */
   readonly disabled?: boolean;
 }
 
-/**
- * Controlled mode: the caller owns state via `value` + `onValueChange`.
- * The component is interactive when `onValueChange` is provided (unless
- * `readOnly` or `disabled` is set).
- */
+/** Controlled mode: caller owns state via `value` + `onValueChange`. */
 interface RatingControlledProps extends RatingBaseProps {
-  /** Current rating value (controlled). */
   readonly value: number;
   readonly defaultValue?: undefined;
-  /**
-   * Called with the new value when the user clicks or uses keyboard controls.
-   * Providing this prop makes the component interactive.
-   */
   readonly onValueChange?: (value: number) => void;
 }
 
-/**
- * Uncontrolled mode: the component holds its own state starting from
- * `defaultValue`. Always interactive (unless `readOnly` or `disabled`).
- */
+/** Uncontrolled mode: component holds its own state from `defaultValue`. */
 interface RatingUncontrolledProps extends RatingBaseProps {
   readonly value?: undefined;
-  /** Initial rating value on first render (uncontrolled). Defaults to 0. */
+  /** Initial value (uncontrolled). Defaults to 0. */
   readonly defaultValue?: number;
-  /** Called with the new value whenever the user changes the rating. */
   readonly onValueChange?: (value: number) => void;
 }
 
@@ -151,30 +109,14 @@ type RatingProps = RatingControlledProps | RatingUncontrolledProps;
 /**
  * Star rating that works as both a fractional DISPLAY and an interactive INPUT.
  *
- * **Read-only display** (`value` only, no `onValueChange`/`defaultValue`):
- *   Renders partial stars for non-integer values (3.75 fills the fourth star
- *   75%). Uses `role="img"` with a computed `aria-label` such as
- *   "Rated 3.75 out of 5". No rounding applied. Also forced by `readOnly`.
+ * **Read-only display** (`value` only, no handler / `readOnly` set):
+ *   Renders partial stars for non-integer values via a clip technique.
+ *   Uses `role="img"` with a computed aria-label.
  *
- * **Uncontrolled input** (`defaultValue` or `onValueChange` provided):
- *   The component holds its own state. `defaultValue` sets the initial value
- *   (defaults to 0). `onValueChange` fires on every change for observation.
- *   `<Rating defaultValue={3.5} step={0.5} onValueChange={console.log} />`
- *
- * **Controlled input** (`value` + `onValueChange`):
- *   Caller owns state. `onValueChange` must update `value` for the UI to reflect
- *   changes. `<Rating value={v} onValueChange={setV} step={0.5} />`
- *
- * **Pointer interaction** (interactive modes):
- *   Moving the pointer over the star row computes the value from the cursor's
- *   horizontal position across the whole row (which star + fraction within it),
- *   snapped to `step`. The partial-fill rendering follows the cursor as a live
- *   preview. Click commits the previewed value.
- *
- * **Keyboard** (role=slider):
- *   ArrowRight/Up += step, ArrowLeft/Down -= step, Home = step (min), End = max.
- *
- * `disabled` renders the visual without any interaction, with reduced opacity.
+ * **Interactive input** (`defaultValue` or `onValueChange` provided):
+ *   Whole-star selection only. Each star is a focusable `<button>` inside a
+ *   `role="radiogroup"`. Hover over star N previews N filled; click commits N.
+ *   Arrow keys (Left/Right) move focus between stars and also commit.
  */
 const Rating = React.forwardRef<HTMLSpanElement, RatingProps>(function Rating(
   {
@@ -186,24 +128,13 @@ const Rating = React.forwardRef<HTMLSpanElement, RatingProps>(function Rating(
     color,
     onValueChange,
     disabled,
-    step = 1,
     readOnly,
     'aria-label': ariaLabel,
   },
   ref,
 ) {
-  // Mode decision:
-  // - Providing `defaultValue` (even 0 explicitly) or `onValueChange` with no
-  //   `value` signals uncontrolled-interactive intent.
-  // - Providing `value` + `onValueChange` is controlled-interactive.
-  // - Providing only `value` (no `onValueChange`, no `defaultValue`) is
-  //   read-only display.
-  // - `readOnly` overrides everything to display.
-  const isUncontrolled = controlledValue === undefined;
-  const isInteractiveIntent =
-    !readOnly &&
-    !disabled &&
-    (isUncontrolled || onValueChange !== undefined);
+  const isInteractive =
+    !readOnly && !disabled && (controlledValue === undefined || onValueChange !== undefined);
 
   const [committedValue, setCommittedValue] = useControllableState(
     controlledValue,
@@ -211,86 +142,15 @@ const Rating = React.forwardRef<HTMLSpanElement, RatingProps>(function Rating(
     onValueChange,
   );
 
-  const [hoverValue, setHoverValue] = React.useState<number | null>(null);
-  const rowRef = React.useRef<HTMLSpanElement | null>(null);
+  // 1-based index of the star the pointer is over, or null.
+  const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);
 
-  const isInteractive = isInteractiveIntent;
-
-  // Hover preview takes over the displayed value in interactive mode.
-  const displayValue = isInteractive && hoverValue !== null ? hoverValue : committedValue;
-
-  // Snap `raw` to the nearest step within [step, max].
-  function snap(raw: number): number {
-    const snapped = Math.round(raw / step) * step;
-    // Clamp to [step, max] so 0 is never a valid click target.
-    return Math.max(step, Math.min(max, snapped));
-  }
-
-  /**
-   * Snapped value from a pointer's x, by HIT-TESTING each star element so the gap
-   * between stars never offsets the value (a plain relativeX/width mapping drifts
-   * right as the gaps accumulate). Before star i = i filled; inside star i =
-   * i + the fraction across it; past the last star = max.
-   */
-  function valueFromPointer(clientX: number): number {
-    const row = rowRef.current;
-    if (!row) return snap(max);
-    const stars = Array.from(row.children);
-    for (let i = 0; i < stars.length; i += 1) {
-      const r = stars[i]?.getBoundingClientRect();
-      if (!r) continue;
-      if (clientX < r.left) return snap(i);
-      if (clientX <= r.right) return snap(i + (clientX - r.left) / r.width);
-    }
-    return snap(max);
-  }
-
-  function handlePointerMove(event: React.PointerEvent<HTMLSpanElement>) {
-    if (!isInteractive) return;
-    setHoverValue(valueFromPointer(event.clientX));
-  }
-
-  function handlePointerLeave() {
-    if (!isInteractive) return;
-    setHoverValue(null);
-  }
-
-  function handleClick(event: React.MouseEvent<HTMLSpanElement>) {
-    if (!isInteractive) return;
-    const clicked = valueFromPointer(event.clientX);
-    setCommittedValue(clicked);
-    // Clear hover so the committed value drives display immediately.
-    setHoverValue(null);
-  }
-
-  function handleKeyDown(event: React.KeyboardEvent<HTMLSpanElement>) {
-    if (!isInteractive) return;
-    let next: number | null = null;
-    switch (event.key) {
-      case 'ArrowRight':
-      case 'ArrowUp':
-        next = Math.min(max, committedValue + step);
-        break;
-      case 'ArrowLeft':
-      case 'ArrowDown':
-        next = Math.max(step, committedValue - step);
-        break;
-      case 'Home':
-        next = step;
-        break;
-      case 'End':
-        next = max;
-        break;
-      default:
-        return;
-    }
-    event.preventDefault();
-    setCommittedValue(snap(next));
-  }
+  // Hover preview overrides committed value in interactive mode.
+  const displayValue = isInteractive && hoveredIndex !== null ? hoveredIndex : committedValue;
 
   const defaultLabel = `Rated ${committedValue} out of ${max}`;
 
-  // Per-star fill fraction derived from displayValue.
+  // Per-star fill fraction derived from displayValue (0..1 each).
   const starFills = Array.from({ length: max }, (_, i) => {
     const starN = i + 1;
     if (displayValue >= starN) return 1;
@@ -298,47 +158,81 @@ const Rating = React.forwardRef<HTMLSpanElement, RatingProps>(function Rating(
     return displayValue - (starN - 1);
   });
 
-  const interactiveRootProps: React.ComponentProps<'span'> = isInteractive
-    ? {
-        role: 'slider',
-        tabIndex: 0,
-        'aria-valuemin': 0,
-        'aria-valuemax': max,
-        'aria-valuenow': committedValue,
-        'aria-label': ariaLabel ?? defaultLabel,
-        onPointerMove: handlePointerMove,
-        onPointerLeave: handlePointerLeave,
-        onClick: handleClick,
-        onKeyDown: handleKeyDown,
-      }
-    : {
-        role: 'img',
-        'aria-label': ariaLabel ?? defaultLabel,
-      };
+  const colorStyle = color ? cssVars({ 'rating-filled-color': color }) : undefined;
+
+  // ---------------------------------------------------------------------------
+  // READ-ONLY display
+  // ---------------------------------------------------------------------------
+  if (!isInteractive) {
+    return (
+      <span
+        ref={ref}
+        data-slot="rating"
+        role="img"
+        aria-label={ariaLabel ?? defaultLabel}
+        className={cn(ratingVariants({ size }), disabled && 'opacity-50', className)}
+        style={colorStyle}
+      >
+        {starFills.map((fill, i) => (
+          <FractionalStar key={i} fill={fill} />
+        ))}
+      </span>
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // INTERACTIVE input: radiogroup of star buttons
+  // Roving tabIndex: the committed star (or star 1 if none) is the tab stop.
+  // ---------------------------------------------------------------------------
+
+  // The tab-stop is the committed star; fall back to the first star when value is 0.
+  const tabStopIndex = committedValue > 0 ? committedValue : 1;
+
+  function handleStarClick(index: number) {
+    setCommittedValue(index);
+    setHoveredIndex(null);
+  }
+
+  function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>, index: number) {
+    if (event.key === 'ArrowRight' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      setCommittedValue(Math.min(max, index + 1));
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') {
+      event.preventDefault();
+      setCommittedValue(Math.max(1, index - 1));
+    }
+  }
 
   return (
     <span
-      ref={(node) => {
-        rowRef.current = node;
-        if (typeof ref === 'function') ref(node);
-        else if (ref) ref.current = node;
-      }}
+      ref={ref}
       data-slot="rating"
-      data-interactive={isInteractive || undefined}
-      data-disabled={disabled || undefined}
-      className={cn(
-        ratingVariants({ size }),
-        isInteractive &&
-          'w-fit cursor-pointer touch-none select-none rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-        disabled && 'cursor-not-allowed opacity-50',
-        className,
-      )}
-      style={color ? cssVars({ 'rating-filled-color': color }) : undefined}
-      {...interactiveRootProps}
+      data-interactive
+      role="radiogroup"
+      aria-label={ariaLabel ?? defaultLabel}
+      className={cn(ratingVariants({ size }), 'w-fit', className)}
+      style={colorStyle}
+      onMouseLeave={() => setHoveredIndex(null)}
     >
-      {starFills.map((fill, index) => (
-        <FractionalStar key={index} fill={fill} />
-      ))}
+      {Array.from({ length: max }, (_, i) => {
+        const index = i + 1;
+        return (
+          <button
+            key={index}
+            type="button"
+            role="radio"
+            aria-checked={committedValue === index}
+            aria-label={`${index} out of ${max}`}
+            tabIndex={index === tabStopIndex ? 0 : -1}
+            className="relative inline-flex shrink-0 cursor-pointer touch-none select-none rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            onMouseEnter={() => setHoveredIndex(index)}
+            onClick={() => handleStarClick(index)}
+            onKeyDown={(e) => handleKeyDown(e, index)}
+          >
+            <FractionalStar fill={starFills[i] ?? 0} />
+          </button>
+        );
+      })}
     </span>
   );
 });
