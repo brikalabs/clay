@@ -19,6 +19,10 @@ function useImageContext() {
  * A load that neither succeeds nor errors within `timeoutMs` is treated as
  * failed, so a hanging image host still shows the fallback.
  *
+ * On `src` change a crossfade keeps the previously loaded image visible until
+ * the new source finishes loading, then fades the new one in over it.
+ * Duration is controlled by the `--image-transition-duration` token (default 300ms).
+ *
  * Compose with `ImageFallback` to provide custom error content:
  * ```tsx
  * <Image src={url} alt="...">
@@ -49,6 +53,10 @@ function Image({
 }) {
   const [status, setStatus] = React.useState<ImageStatus>(() => (src ? 'loading' : 'error'));
 
+  // The previously successfully loaded src: stays visible during the next load
+  // so there is no flash of skeleton between two images.
+  const [prevSrc, setPrevSrc] = React.useState<string | undefined>(undefined);
+
   // `src` is a dependency on purpose: switching the source resets the loader.
   // biome-ignore lint/correctness/useExhaustiveDependencies: reset on src change
   React.useEffect(() => {
@@ -63,6 +71,16 @@ function Image({
     return () => clearTimeout(timer);
   }, [src, timeoutMs]);
 
+  function handleLoad() {
+    setStatus('loaded');
+    // Promote the current src to the retained layer once it is ready.
+    setPrevSrc(src);
+  }
+
+  const transitionStyle: React.CSSProperties = {
+    transitionDuration: 'var(--image-transition-duration)',
+  };
+
   return (
     <ImageContext.Provider value={{ status }}>
       <div
@@ -71,7 +89,8 @@ function Image({
         className={cn('relative overflow-hidden bg-image-fallback-bg', className)}
         {...props}
       >
-        {status === 'loading' ? (
+        {/* Skeleton pulse: only while loading and no retained previous image */}
+        {status === 'loading' && !prevSrc ? (
           <div
             aria-hidden="true"
             className="absolute inset-0 animate-pulse bg-image-skeleton-color"
@@ -80,18 +99,30 @@ function Image({
 
         {children}
 
+        {/* Retained previous image: visible during the crossfade of the next src */}
+        {prevSrc && status === 'loading' ? (
+          <img
+            src={prevSrc}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 size-full object-cover"
+          />
+        ) : null}
+
+        {/* Current image: fades in once loaded */}
         {src && status !== 'error' ? (
           <img
             src={src}
             alt={alt}
             loading={loading}
             decoding="async"
-            onLoad={() => setStatus('loaded')}
+            onLoad={handleLoad}
             onError={() => setStatus('error')}
             className={cn(
-              'absolute inset-0 size-full object-cover transition-opacity duration-300',
-              status === 'loaded' ? 'opacity-100' : 'opacity-0'
+              'absolute inset-0 size-full object-cover transition-opacity',
+              status === 'loaded' ? 'opacity-100' : 'opacity-0',
             )}
+            style={transitionStyle}
           />
         ) : null}
       </div>
@@ -117,7 +148,7 @@ function ImageFallback({ className, ...props }: React.ComponentProps<'div'>) {
       aria-hidden="true"
       className={cn(
         'flex size-full items-center justify-center text-image-fallback-icon-color',
-        className
+        className,
       )}
       {...props}
     />

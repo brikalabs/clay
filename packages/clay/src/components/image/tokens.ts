@@ -22,5 +22,10 @@ registerComponent(meta, {
       description:
         'Color of the default `ImageOff` icon shown when the source fails and no custom `fallback` is provided.',
     },
+    'transition-duration': {
+      default: '300ms',
+      description:
+        'Duration of the fade-in transition when an image finishes loading and of the crossfade when the `src` changes. Set to `0ms` to disable animation.',
+    },
   },
 });
