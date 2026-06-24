@@ -8,13 +8,13 @@ import { Button, buttonVariants } from '../button/button';
 import { useCropper } from './internal/context';
 
 // ---------------------------------------------------------------------------
-// CropperInput — file picker wired to context
+// CropperInput: file picker wired to context
 // ---------------------------------------------------------------------------
 
 /**
  * A file-picker trigger wired to the nearest CropperContext. Clicking it opens
  * the OS file browser (filtered to images). When the user picks a file it is
- * loaded into the cropper automatically — no consumer state required.
+ * loaded into the cropper automatically; no consumer state required.
  *
  * In uncontrolled mode (default) the file is stored inside `<Cropper>`.
  * In controlled mode (when `image` is passed to `<Cropper>`) wire
@@ -22,12 +22,12 @@ import { useCropper } from './internal/context';
  * controlled image state; without it the pick fires `onImageChange` but the
  * displayed image will not change because the consumer owns `image`.
  *
- * Usage — default (renders a Clay Button):
+ * Usage (default, renders a Clay Button):
  * ```tsx
  * <CropperInput>Choose photo</CropperInput>
  * ```
  *
- * Usage — custom trigger via `asChild`:
+ * Usage (custom trigger via `asChild`):
  * ```tsx
  * <CropperInput asChild>
  *   <Avatar size="lg"><AvatarFallback>AB</AvatarFallback></Avatar>
@@ -102,7 +102,7 @@ export function CropperInput({
 }
 
 // ---------------------------------------------------------------------------
-// CropperCancel — button that resets the transform and fires an optional callback
+// CropperCancel: button that resets the transform and fires an optional callback
 // ---------------------------------------------------------------------------
 
 /**
@@ -173,7 +173,7 @@ export function CropperCancel({
 }
 
 // ---------------------------------------------------------------------------
-// CropperApply — button that exports the crop and fires a callback
+// CropperApply: button that exports the crop and fires a callback
 // ---------------------------------------------------------------------------
 
 /**

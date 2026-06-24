@@ -36,8 +36,8 @@ const buttonVariants = cva(
         // syntax). Without the `!`, the shorthand wins because it
         // sorts after the size utilities in the utilities layer; the
         // button renders 24×36 instead of 24×24. Custom overrides via
-        // `className="h-X! w-X!"` still work — same specificity, last
-        // one wins by source order.
+        // `className="h-X! w-X!"` still work (same specificity, last
+        // one wins by source order).
         icon: 'aspect-square h-9! w-9! px-0 py-0!',
         'icon-xs': "aspect-square h-6! w-6! rounded-button px-0 py-0! [&_svg:not([class*='size-'])]:size-3",
         'icon-sm': 'aspect-square h-8! w-8! px-0 py-0!',

@@ -1,6 +1,6 @@
 'use client';
 
-import { type PointerEvent as ReactPointerEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { type PointerEvent as ReactPointerEvent } from 'react';
 import * as React from 'react';
 
 import { cn } from '../../primitives/cn';
@@ -8,7 +8,7 @@ import { useCropper } from './internal/context';
 import { paint } from './internal/math';
 
 // ---------------------------------------------------------------------------
-// CropperCanvas — the interactive pan/zoom canvas
+// CropperCanvas: the interactive pan/zoom canvas
 // ---------------------------------------------------------------------------
 
 /**
@@ -18,21 +18,21 @@ import { paint } from './internal/math';
  */
 export function CropperCanvas({ className, ...props }: Omit<React.ComponentProps<'div'>, 'children'>) {
   const { img, transform, update, stageSize, canvasRef, minZoom, maxZoom } = useCropper();
-  const drag = useRef<{ x: number; y: number } | null>(null);
-  const stageRef = useRef<HTMLDivElement>(null);
+  const drag = React.useRef<{ x: number; y: number } | null>(null);
+  const stageRef = React.useRef<HTMLDivElement>(null);
 
   // Repaint whenever the loaded image or transform changes.
-  const redraw = useCallback(() => {
+  const redraw = React.useCallback(() => {
     const canvas = canvasRef.current;
     if (canvas === null || img === null) return;
     const ctx = canvas.getContext('2d');
     if (ctx !== null) paint(ctx, img, transform, stageSize, stageSize);
   }, [canvasRef, img, transform, stageSize]);
-  useEffect(redraw, [redraw]);
+  React.useEffect(redraw, [redraw]);
 
   // Scroll-to-zoom as a NON-passive native listener so we can preventDefault the
   // page scroll (React's onWheel is passive and cannot) and stop it bubbling.
-  useEffect(() => {
+  React.useEffect(() => {
     const el = stageRef.current;
     if (el === null) return;
     const onWheel = (event: WheelEvent) => {
@@ -87,7 +87,7 @@ export function CropperCanvas({ className, ...props }: Omit<React.ComponentProps
 }
 
 // ---------------------------------------------------------------------------
-// CropperOverlay — the crop boundary ring drawn over CropperCanvas
+// CropperOverlay: the crop boundary ring drawn over CropperCanvas
 // ---------------------------------------------------------------------------
 
 /**
@@ -136,7 +136,7 @@ export function CropperOverlay({
 }
 
 // ---------------------------------------------------------------------------
-// CropperFallback — composable empty-state slot shown when no image is loaded
+// CropperFallback: composable empty-state slot shown when no image is loaded
 // ---------------------------------------------------------------------------
 
 /**
@@ -184,7 +184,7 @@ export function CropperFallback({
 }
 
 // ---------------------------------------------------------------------------
-// CropperViewport — canvas + overlay stacked in a positioned wrapper
+// CropperViewport: canvas + overlay stacked in a positioned wrapper
 // ---------------------------------------------------------------------------
 
 /**
@@ -211,8 +211,8 @@ export function CropperViewport({
   ...props
 }: React.ComponentProps<'div'>) {
   const { loadFile, hasImage, stageSize } = useCropper();
-  const dragDepth = useRef(0);
-  const [isDragActive, setDragActive] = useState(false);
+  const dragDepth = React.useRef(0);
+  const [isDragActive, setDragActive] = React.useState(false);
 
   function onDragEnter(event: React.DragEvent<HTMLDivElement>) {
     event.preventDefault();

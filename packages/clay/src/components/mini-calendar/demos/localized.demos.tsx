@@ -8,7 +8,7 @@ import {
 } from '@brika/clay/components/mini-calendar';
 import { useState } from 'react';
 
-/** Weekday and day labels follow the `locale` prop via `Intl.DateTimeFormat` — here, French. */
+/** Weekday and day labels follow the `locale` prop via `Intl.DateTimeFormat`, shown here in French with `days={7}`. */
 export default function MiniCalendarLocalizedDemo() {
   const [date, setDate] = useState<Date>(() => new Date());
 

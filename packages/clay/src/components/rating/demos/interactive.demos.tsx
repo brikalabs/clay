@@ -4,9 +4,7 @@ import { useState } from 'react';
 import { Rating } from '@brika/clay/components/rating';
 
 /**
- * Interactive input: whole-star selection via hover + click. Supports both
- * uncontrolled (`defaultValue`) and controlled (`value` + `onValueChange`)
- * modes. Keyboard: Arrow keys move between stars and commit the value.
+ * Whole-star selection via hover and click, shown in uncontrolled, controlled, and disabled modes with Arrow-key keyboard support.
  */
 export default function RatingInteractiveDemo() {
   const [controlled, setControlled] = useState(3);

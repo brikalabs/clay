@@ -1,9 +1,7 @@
 import { Rating } from '@brika/clay/components/rating';
 
 /**
- * Custom filled-star colors via the `color` prop. The prop sets
- * `--rating-filled-color` inline; the token default (`--warning`) still
- * applies when `color` is omitted.
+ * Four ratings side by side each using a different `color` prop value, from the default `--warning` token to a custom hex.
  */
 export default function RatingColorsDemo() {
   return (

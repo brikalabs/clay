@@ -2,7 +2,7 @@
 
 import { Tree, TreeItem } from '@brika/clay/components/tree';
 
-/** Folders expand on click, one node selected at a time. Guide lines via `showLines`. */
+/** Folders expand on click with single-select, vertical guide lines connect nested items. */
 export default function TreeDefaultDemo() {
   return (
     <Tree

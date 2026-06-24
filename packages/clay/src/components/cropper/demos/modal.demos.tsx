@@ -36,12 +36,7 @@ import {
 } from 'lucide-react';
 
 /**
- * Avatar-upload flow: click the avatar to open the file browser, then crop in
- * a Dialog composed entirely from public Cropper parts. Toolbar icon buttons
- * show a visible border (outline variant). CropperCancel resets the transform
- * and closes the dialog; CropperApply exports the crop and closes.
- * CropperInput replaces the loaded image without leaving the dialog. The
- * CropperFallback inside the viewport is visible when no image is loaded yet.
+ * Avatar-upload flow: clicking the avatar opens the file browser, then the crop UI appears inside a Dialog composed from public Cropper parts with a full rotate/flip/zoom toolbar.
  */
 export default function CropperModalDemo() {
   const [file, setFile] = useState<File | null>(null);
@@ -93,7 +88,7 @@ export default function CropperModalDemo() {
               </CropperViewport>
             </div>
 
-            {/* Zoom row: minus icon — slider — plus icon */}
+            {/* Zoom row: minus icon, slider, plus icon */}
             <div className="flex items-center gap-3">
               <ZoomOut className="size-4 shrink-0 text-muted-foreground" />
               <CropperZoom className="flex-1" />

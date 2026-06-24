@@ -3,8 +3,7 @@ import { Image, ImageFallback } from '@brika/clay/components/image';
 import { SAMPLE_A } from './images';
 
 /**
- * Default image loaded from a real photo URL. The image fades in from the
- * skeleton once it is ready; if the load fails, the broken-image icon shows.
+ * A real photo loaded from a picsum URL, with a skeleton pulse while loading and an `ImageFallback` icon shown if the source fails.
  */
 export default function ImageDefaultDemo() {
   return (

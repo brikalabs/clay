@@ -1,8 +1,7 @@
 import { Rating } from '@brika/clay/components/rating';
 
 /**
- * Size variants: `sm`, `default`, and `lg`. All display the same value (3.75)
- * so the relative star sizes are easy to compare.
+ * All three size variants (`sm`, `default`, `lg`) shown at the same 3.75 value for easy comparison.
  */
 export default function RatingSizesDemo() {
   return (

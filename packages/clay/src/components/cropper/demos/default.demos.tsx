@@ -28,12 +28,7 @@ import {
 } from 'lucide-react';
 
 /**
- * Comprehensive showcase of all Cropper features in uncontrolled mode, framed
- * in a Card. Includes: CropperViewport with a composable CropperFallback
- * empty state (drag-drop), a zoom row (ZoomOut + CropperZoom + ZoomIn), the
- * full toolbar (CropperRotate left/right, CropperFlip h/v, CropperReset, and
- * a CropperInput Upload icon button), and CropperApply + CropperCancel.
- * Starts empty; pick or drop a file to begin cropping.
+ * Full-featured Cropper in uncontrolled mode: viewport with drag-drop fallback, zoom slider, rotate/flip/reset toolbar, and apply/cancel actions, all composed inside a Card.
  */
 export default function CropperDefaultDemo() {
   const [preview, setPreview] = useState<string | null>(null);
@@ -59,7 +54,7 @@ export default function CropperDefaultDemo() {
               </CropperFallback>
             </CropperViewport>
 
-            {/* Zoom row: minus icon — slider — plus icon */}
+            {/* Zoom row: minus icon, slider, plus icon */}
             <div className="flex w-full items-center gap-3">
               <ZoomOut className="size-4 shrink-0 text-muted-foreground" />
               <CropperZoom className="flex-1" />

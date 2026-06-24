@@ -16,7 +16,7 @@ export const meta: ComponentMeta = {
   badge: 'New',
   accessibility: [
     'The colored dot is `aria-hidden`; the `StatusLabel` text carries the meaning, so state is never conveyed by color alone.',
-    'Always provide a `StatusLabel` — color-blind and assistive-tech users rely on the text, not the dot.',
+    'Always provide a `StatusLabel`; color-blind and assistive-tech users rely on the text, not the dot.',
     'For a status that changes at runtime, wrap the pill in a container with `aria-live="polite"` so updates are announced.',
   ],
 };

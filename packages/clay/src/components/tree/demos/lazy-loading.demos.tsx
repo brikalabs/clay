@@ -42,10 +42,7 @@ async function fetchDir(path: string): Promise<FsNode[]> {
 
 /**
  * @title Lazy loading
- * Browse the real `brikalabs/clay` repository: each folder fetches its contents
- * from the GitHub Contents API the first time it's expanded. Mark a node `lazy`
- * so it shows a chevron before its children exist, pass `loading` while the
- * request is in flight, then feed the resolved entries back in as children.
+ * Browses the real `brikalabs/clay` GitHub repository, fetching each folder's contents from the GitHub Contents API the first time it expands, with a spinner shown while the request is in flight.
  */
 export default function TreeLazyLoadingDemo() {
   const [children, setChildren] = useState<Record<string, readonly FsNode[]>>({});

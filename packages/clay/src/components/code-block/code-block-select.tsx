@@ -14,7 +14,7 @@ interface CodeBlockSelectProps {
 }
 
 /**
- * A header dropdown for switching files — an alternative to `CodeBlockTabs`
+ * A header dropdown for switching files, an alternative to `CodeBlockTabs`
  * that scales better when there are many files. Bound to the parent
  * `CodeBlock`'s active value; pair each item with a `CodeBlockPanel`.
  */

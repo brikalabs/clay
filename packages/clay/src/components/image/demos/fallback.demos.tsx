@@ -2,9 +2,7 @@ import { ImageOff } from 'lucide-react';
 import { Image, ImageFallback } from '@brika/clay/components/image';
 
 /**
- * Fallback demo: the src is deliberately broken so the `ImageFallback` slot
- * (the broken-image icon) is shown. Use this pattern for graceful degradation
- * when an image URL is unknown or may fail.
+ * A deliberately broken src triggers the `ImageFallback` slot, showing the broken-image icon in place of the photo.
  */
 export default function ImageFallbackDemo() {
   return (

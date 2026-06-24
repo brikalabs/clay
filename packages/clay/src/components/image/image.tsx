@@ -102,7 +102,7 @@ function Image({
   }
 
   // Called on the current <img>'s transitionend. Once the opacity animation
-  // finishes we no longer need the previous layer — unmounting it here ensures
+  // finishes we no longer need the previous layer; unmounting it here ensures
   // the two layers overlapped for the full transition duration (true crossfade).
   function handleTransitionEnd(event: React.TransitionEvent<HTMLImageElement>) {
     if (event.propertyName !== 'opacity') return;

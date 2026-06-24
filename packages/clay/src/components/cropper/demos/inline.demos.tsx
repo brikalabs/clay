@@ -14,10 +14,7 @@ import {
 import { ImageUp } from 'lucide-react';
 
 /**
- * Inline cropper mounted directly on the page, framed in a Card. Viewport
- * with a composable CropperFallback empty state, zoom slider, and apply
- * button — no modal. Pick a new file with the button or drop one onto the
- * viewport. Starts empty.
+ * Cropper mounted inline in a Card (no modal): file picker button, drag-drop viewport with fallback, zoom slider, and apply button.
  */
 export default function CropperInlineDemo() {
   const [preview, setPreview] = useState<string | null>(null);

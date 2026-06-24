@@ -8,9 +8,7 @@ import { SAMPLE_A, SAMPLE_B } from './images';
 const IMAGES = [SAMPLE_A, SAMPLE_B];
 
 /**
- * Crossfade on src change: toggling between two real photos shows the smooth
- * A->B transition. The previous photo stays visible at full opacity underneath
- * until the new one finishes fading in, then the previous layer is removed.
+ * A button swaps between two real picsum photos, triggering the A-to-B crossfade where the previous photo stays visible at full opacity until the new one fades in completely.
  */
 export default function ImageTransitionDemo() {
   const [index, setIndex] = React.useState(0);

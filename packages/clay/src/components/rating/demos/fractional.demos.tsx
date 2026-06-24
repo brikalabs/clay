@@ -1,8 +1,7 @@
 import { Rating } from '@brika/clay/components/rating';
 
 /**
- * Fractional display: the fourth star is 75% filled; no rounding is applied.
- * Stars use `--rating-filled-color` / `--rating-empty-color` tokens.
+ * Three read-only ratings at different fractional values (3.75, 2.3, 0.5) shown across all three size variants, demonstrating sub-star fill with no rounding.
  */
 export default function RatingFractionalDemo() {
   return (

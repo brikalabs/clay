@@ -7,7 +7,7 @@ import { Slider } from '../slider/slider';
 import { useCropper, useCropperTransform } from './internal/context';
 
 // ---------------------------------------------------------------------------
-// CropperZoom — a Clay Slider pre-bound to the cropper's zoom context
+// CropperZoom: a Clay Slider pre-bound to the cropper's zoom context
 // ---------------------------------------------------------------------------
 
 // Slider props that CropperZoom exposes as optional (context provides defaults).
@@ -49,7 +49,7 @@ export function CropperZoom({
 }
 
 // ---------------------------------------------------------------------------
-// CropperRotate — toolbar buttons for 90-degree rotation steps
+// CropperRotate: toolbar buttons for 90-degree rotation steps
 // ---------------------------------------------------------------------------
 
 /**
@@ -87,7 +87,7 @@ export function CropperRotate({
 }
 
 // ---------------------------------------------------------------------------
-// CropperFlip — toggle button for horizontal / vertical flip
+// CropperFlip: toggle button for horizontal / vertical flip
 // ---------------------------------------------------------------------------
 
 /**
@@ -128,7 +128,7 @@ export function CropperFlip({
 }
 
 // ---------------------------------------------------------------------------
-// CropperReset — button that resets the transform to identity
+// CropperReset: button that resets the transform to identity
 // ---------------------------------------------------------------------------
 
 /**

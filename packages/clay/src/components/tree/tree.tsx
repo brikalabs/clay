@@ -80,7 +80,7 @@ interface TreeProps extends Omit<React.ComponentProps<'div'>, 'onSelect'> {
   readonly showLines?: boolean;
   /**
    * Fires once with a node's id the first time it expands (the open transition).
-   * Use it to lazy-load that node's children from an API — mark the node `lazy`
+   * Use it to lazy-load that node's children from an API: mark the node `lazy`
    * so it shows a chevron before its children exist, and toggle its `loading`
    * prop while the request is in flight.
    */
@@ -235,7 +235,7 @@ function handleArrowLeft(event: React.KeyboardEvent<HTMLDivElement>, opts: TreeK
   event.currentTarget.parentElement?.closest<HTMLElement>(TREEITEM_SELECTOR)?.focus();
 }
 
-// One small handler per key keeps each function — and the dispatcher — well
+// One small handler per key keeps each function (and the dispatcher) well
 // under Sonar's cognitive-complexity budget (no nested switch).
 const TREE_KEY_HANDLERS: Readonly<Record<string, TreeKeyHandler>> = {
   ArrowDown: (event) => focusRelative(event.currentTarget, 1),
@@ -303,7 +303,7 @@ function handleTreeItemClick(
  * Vertical guide lines drawn as absolutely-positioned hairlines at each
  * ancestor depth level. Because every row is full-width and stacked, lines
  * at the same x position across consecutive rows visually merge into a
- * single continuous vertical guide — no SVG or DOM spanning required.
+ * single continuous vertical guide (no SVG or DOM spanning required).
  */
 function GuideLines({ depth }: Readonly<{ depth: number }>) {
   return (
@@ -349,7 +349,7 @@ function TreeRow({
     <div
       data-slot="tree-item-row"
       className={cn(
-        // Full-width row, no rounding — selection highlight spans edge to edge.
+        // Full-width row, no rounding; selection highlight spans edge to edge.
         'tree relative flex select-none items-center py-[var(--tree-padding-y)] transition-colors group-focus-visible/treeitem:ring-themed',
         '[&_svg]:size-4 [&_svg]:shrink-0',
         disabled ? 'pointer-events-none opacity-50' : 'cursor-pointer',
@@ -425,8 +425,8 @@ function TreeItemGroup({
   if (!isBranch || !open) {
     return null;
   }
-  // A <fieldset> carries an implicit role="group" — exactly the ARIA tree
-  // pattern for a node's children — without a literal interactive role.
+  // A <fieldset> carries an implicit role="group", which is exactly the ARIA tree
+  // pattern for a node's children, without a literal interactive role.
   return (
     <fieldset className="m-0 min-w-0 space-y-0.5 border-0 p-0">
       {loading && !hasChildren ? (

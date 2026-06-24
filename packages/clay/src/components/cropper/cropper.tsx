@@ -46,7 +46,7 @@ export interface CropperProps {
   /**
    * Seed file for uncontrolled mode. Only read once on mount; ignored when
    * `image` is provided (controlled mode). Use this to preload a sample image
-   * in demos or to restore a previously saved file — subsequent picks and
+   * in demos or to restore a previously saved file; subsequent picks and
    * drag-drops still work without any additional wiring.
    */
   defaultImage?: File | null;

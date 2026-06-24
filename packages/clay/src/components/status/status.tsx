@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { cn } from '../../primitives/cn';
 
-/** Semantic color tone of the indicator dot — maps to Clay's feedback roles. */
+/** Semantic color tone of the indicator dot, mapped to Clay's feedback roles. */
 type StatusVariant = 'neutral' | 'success' | 'info' | 'warning' | 'destructive';
 
 interface StatusProps extends React.ComponentProps<'span'> {
