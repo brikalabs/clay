@@ -6,7 +6,7 @@ import { Cropper, CropperInput, CropperViewport, CropperZoom } from '@brika/clay
 import { makeSampleImageFile } from './sample-image';
 import { ApplyButton } from './shared';
 
-// Lazily create the sample once so each demo instance shares the same object.
+// Created once at module scope; null on SSR runtimes that lack the File global.
 const sampleFile = makeSampleImageFile();
 
 /** Inline cropper with all controls mounted directly on the page, pre-loaded with a synthetic gradient image. Pick a new file with the button or drop one onto the viewport — both replace the current image without any consumer state. */
@@ -24,7 +24,7 @@ export default function CropperInlineDemo() {
         <img src={preview} alt="Cropped result" className="size-20 rounded-full object-cover" />
       )}
 
-      <Cropper defaultImage={sampleFile}>
+      <Cropper defaultImage={sampleFile ?? undefined}>
         <div className="flex flex-col items-center gap-3">
           <CropperInput variant="outline" size="sm">
             Pick image

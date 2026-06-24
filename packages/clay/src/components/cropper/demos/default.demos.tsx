@@ -12,7 +12,7 @@ import {
 import { makeSampleImageFile } from './sample-image';
 import { ApplyButton } from './shared';
 
-// Lazily create the sample once so each demo instance shares the same object.
+// Created once at module scope; null on SSR runtimes that lack the File global.
 const sampleFile = makeSampleImageFile();
 
 /** Minimal usage: pre-loaded with a synthetic gradient image. Picking a new file or dropping one onto the viewport replaces the current image — no consumer state required. */
@@ -30,7 +30,7 @@ export default function CropperDefaultDemo() {
         <img src={preview} alt="Cropped result" className="size-20 rounded-full object-cover" />
       )}
 
-      <Cropper defaultImage={sampleFile}>
+      <Cropper defaultImage={sampleFile ?? undefined}>
         <CropperInput size="sm" variant="outline">
           Choose photo
         </CropperInput>
