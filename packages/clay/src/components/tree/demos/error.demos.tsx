@@ -1,6 +1,6 @@
 'use client';
 
-import { Component, type ReactNode, Suspense, use } from 'react';
+import { Suspense, use } from 'react';
 
 import { Tree, TreeError, TreeItem, TreeLoading } from '@brika/clay/components/tree';
 
@@ -23,37 +23,20 @@ const FS: Record<string, readonly FsNode[]> = {
   ],
 };
 
-// These folders reject when loaded (e.g. a permission error).
-const DENIED = new Set(['restricted']);
-
-const cache = new Map<string, Promise<readonly FsNode[]>>();
-function load(id: string): Promise<readonly FsNode[]> {
+// One cached promise per folder. `restricted` resolves to the 'error' sentinel (a real
+// loader would .catch() its fetch into this), so the component renders <TreeError/>
+// inline, no error boundary needed.
+const cache = new Map<string, Promise<readonly FsNode[] | 'error'>>();
+function load(id: string) {
   const cached = cache.get(id);
   if (cached) {
     return cached;
   }
-  const pending = new Promise<readonly FsNode[]>((resolve, reject) =>
-    setTimeout(
-      () => (DENIED.has(id) ? reject(new Error('Permission denied')) : resolve(FS[id] ?? [])),
-      600
-    )
+  const pending = new Promise<readonly FsNode[] | 'error'>((resolve) =>
+    setTimeout(() => resolve(id === 'restricted' ? 'error' : (FS[id] ?? [])), 600)
   );
   cache.set(id, pending);
   return pending;
-}
-
-// Minimal error boundary: renders `fallback` once a child throws (a rejected load).
-class LoadBoundary extends Component<
-  { readonly fallback: ReactNode; readonly children: ReactNode },
-  { failed: boolean }
-> {
-  override state = { failed: false };
-  static getDerivedStateFromError() {
-    return { failed: true };
-  }
-  override render() {
-    return this.state.failed ? this.props.fallback : this.props.children;
-  }
 }
 
 function renderNodes(list: readonly FsNode[]) {
@@ -62,24 +45,23 @@ function renderNodes(list: readonly FsNode[]) {
       <TreeItem key={node.id} nodeId={node.id} label={node.name} />
     ) : (
       <TreeItem key={node.id} nodeId={node.id} label={node.name}>
-        <LoadBoundary fallback={<TreeError />}>
-          <Suspense fallback={<TreeLoading />}>
-            <LazyChildren id={node.id} />
-          </Suspense>
-        </LoadBoundary>
+        <Suspense fallback={<TreeLoading />}>
+          <LazyChildren id={node.id} />
+        </Suspense>
       </TreeItem>
     )
   );
 }
 
-// Mounted only when its folder opens, so `use` suspends (or throws on a rejected load).
+// Suspends on first open; renders <TreeError/> when the load resolves to an error.
 function LazyChildren({ id }: { id: string }) {
-  return renderNodes(use(load(id)));
+  const result = use(load(id));
+  return result === 'error' ? <TreeError /> : renderNodes(result);
 }
 
 /**
  * @title Error handling
- * A lazy load that fails (here the `restricted` folder) is caught by an error boundary and shows <TreeError/> instead of children.
+ * A lazy load that fails (here the `restricted` folder) renders <TreeError/> instead of its children.
  */
 export default function TreeErrorDemo() {
   return (
