@@ -6,16 +6,19 @@ import { Card, CardContent } from '@brika/clay/components/card';
 import {
   Cropper,
   CropperApply,
+  CropperFallback,
   CropperInput,
   CropperViewport,
   CropperZoom,
 } from '@brika/clay/components/cropper';
-import { makeSampleImageFile } from './sample-image';
+import { ImageUp } from 'lucide-react';
 
-// Created once at module scope; null on SSR runtimes that lack the File global.
-const sampleFile = makeSampleImageFile();
-
-/** Inline cropper mounted directly on the page, framed in a Card. Viewport, zoom slider, and apply button — no modal. Pick a new file with the button or drop one onto the viewport. */
+/**
+ * Inline cropper mounted directly on the page, framed in a Card. Viewport
+ * with a composable CropperFallback empty state, zoom slider, and apply
+ * button — no modal. Pick a new file with the button or drop one onto the
+ * viewport. Starts empty.
+ */
 export default function CropperInlineDemo() {
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -32,11 +35,16 @@ export default function CropperInlineDemo() {
 
       <Card>
         <CardContent className="flex flex-col items-center gap-3 pt-4">
-          <Cropper defaultImage={sampleFile ?? undefined}>
+          <Cropper>
             <CropperInput variant="outline" size="sm">
               Pick image
             </CropperInput>
-            <CropperViewport className="mt-1" />
+            <CropperViewport className="mt-1">
+              <CropperFallback>
+                <ImageUp className="size-8 opacity-60" />
+                <span className="text-xs font-medium">Drop a photo or click upload</span>
+              </CropperFallback>
+            </CropperViewport>
             <CropperZoom className="w-full" />
             <CropperApply onCrop={onCrop} className="w-full">Apply</CropperApply>
           </Cropper>

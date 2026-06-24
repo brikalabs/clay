@@ -7,6 +7,7 @@ import {
   Cropper,
   CropperApply,
   CropperCancel,
+  CropperFallback,
   CropperFlip,
   CropperInput,
   CropperReset,
@@ -25,6 +26,7 @@ import {
 import {
   FlipHorizontal2,
   FlipVertical2,
+  ImageUp,
   RotateCcw,
   RotateCcwSquare,
   RotateCw,
@@ -36,9 +38,10 @@ import {
 /**
  * Avatar-upload flow: click the avatar to open the file browser, then crop in
  * a Dialog composed entirely from public Cropper parts. Toolbar icon buttons
- * now show a visible border (outline variant). CropperCancel resets the
- * transform and closes the dialog; CropperApply exports the crop and closes.
- * CropperInput replaces the loaded image without leaving the dialog.
+ * show a visible border (outline variant). CropperCancel resets the transform
+ * and closes the dialog; CropperApply exports the crop and closes.
+ * CropperInput replaces the loaded image without leaving the dialog. The
+ * CropperFallback inside the viewport is visible when no image is loaded yet.
  */
 export default function CropperModalDemo() {
   const [file, setFile] = useState<File | null>(null);
@@ -82,7 +85,12 @@ export default function CropperModalDemo() {
             </DialogHeader>
 
             <div className="flex justify-center">
-              <CropperViewport />
+              <CropperViewport>
+                <CropperFallback>
+                  <ImageUp className="size-8 opacity-60" />
+                  <span className="text-xs font-medium">Drop a photo or click upload</span>
+                </CropperFallback>
+              </CropperViewport>
             </div>
 
             {/* Zoom row: minus icon — slider — plus icon */}

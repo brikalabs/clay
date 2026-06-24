@@ -14,7 +14,6 @@ import * as React from 'react';
 import { Slot } from 'radix-ui';
 
 import { type VariantProps } from 'class-variance-authority';
-import { ImageIcon } from 'lucide-react';
 import { Button, buttonVariants } from '../button/button';
 import { Slider } from '../slider/slider';
 import { cn } from '../../primitives/cn';
@@ -470,6 +469,54 @@ function useCropperTransform(): {
 }
 
 // ---------------------------------------------------------------------------
+// CropperFallback — composable empty-state slot shown when no image is loaded
+// ---------------------------------------------------------------------------
+
+/**
+ * Composable empty-state part that renders its `children` only when the
+ * cropper has no image loaded (`hasImage === false`). When an image is loaded
+ * it renders nothing, so it self-hides without any consumer logic.
+ *
+ * Modelled on `AvatarFallback`. Place it inside a `<CropperViewport>` to
+ * provide a custom icon/text prompt shown on the blank stage:
+ *
+ * ```tsx
+ * <CropperViewport>
+ *   <CropperFallback>
+ *     <ImageUp className="size-8" />
+ *     <span>Drop a photo or click upload</span>
+ *   </CropperFallback>
+ * </CropperViewport>
+ * ```
+ *
+ * Layout: absolutely positioned, inset-0, flex-centered so it fills the
+ * viewport without shifting other children. `pointer-events-none` keeps the
+ * drag-drop target on the viewport itself active regardless of fallback content.
+ * The `--cropper-placeholder-color` token sets the default muted text/icon
+ * color; override via `className`.
+ */
+function CropperFallback({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<'div'>) {
+  const { hasImage } = useCropper();
+  if (hasImage) return null;
+  return (
+    <div
+      data-slot="cropper-fallback"
+      className={cn(
+        'pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2 text-(--cropper-placeholder-color)',
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // CropperViewport — canvas + overlay stacked in a positioned wrapper
 // ---------------------------------------------------------------------------
 
@@ -482,18 +529,21 @@ function useCropperTransform(): {
  * Use the lower-level `CropperCanvas` + `CropperOverlay` directly when you
  * need to place the overlay independently or apply a custom clip.
  *
- * Drag-and-drop is always active. Dropped files are forwarded to the context
- * `loadFile`, which fires `onImageChange` on the root `<Cropper>` and, in
- * uncontrolled mode, also updates internal state. In controlled mode wire
- * `onImageChange` on `<Cropper>` to handle the dropped file. Non-image files
- * are silently ignored. The drop-active visual is keyed off the
- * `--cropper-drop-active-ring` token.
+ * The overlay ring is rendered only when an image is loaded, so the empty
+ * stage shows only the background and any `<CropperFallback>` placed as a
+ * child. Drag-and-drop is active in both states. Dropped files are forwarded
+ * to the context `loadFile`, which fires `onImageChange` on the root
+ * `<Cropper>` and, in uncontrolled mode, also updates internal state. In
+ * controlled mode wire `onImageChange` on `<Cropper>` to handle the dropped
+ * file. Non-image files are silently ignored. The drop-active visual is keyed
+ * off the `--cropper-drop-active-ring` token.
  */
 function CropperViewport({
   className,
+  children,
   ...props
-}: Omit<React.ComponentProps<'div'>, 'children'>) {
-  const { loadFile, img, stageSize } = useCropper();
+}: React.ComponentProps<'div'>) {
+  const { loadFile, hasImage, stageSize } = useCropper();
   const dragDepth = useRef(0);
   const [isDragActive, setDragActive] = useState(false);
 
@@ -530,42 +580,6 @@ function CropperViewport({
     loadFile(file);
   }
 
-  const wrapperClass = cn(
-    // overflow-hidden clips the 9999px CropperOverlay box-shadow to the stage bounds.
-    'relative inline-flex overflow-hidden rounded-2xl transition-[outline]',
-    isDragActive && 'outline-2 outline-offset-2 outline-(--cropper-drop-active-ring)',
-    className,
-  );
-
-  // When no image is loaded, render an intentional empty/placeholder state
-  // instead of an empty canvas + circular overlay (which looks broken).
-  if (img === null) {
-    return (
-      <div
-        data-slot="cropper-viewport"
-        data-drag-active={isDragActive || undefined}
-        onDragEnter={onDragEnter}
-        onDragOver={onDragOver}
-        onDragLeave={onDragLeave}
-        onDrop={onDrop}
-        className={cn(
-          wrapperClass,
-          'items-center justify-center bg-(--cropper-stage-bg)',
-        )}
-        style={{ width: stageSize, height: stageSize }}
-      >
-        <div
-          data-slot="cropper-placeholder"
-          className="flex flex-col items-center gap-2 text-(--cropper-placeholder-color)"
-        >
-          <ImageIcon className="size-10 opacity-60" />
-          <span className="text-xs font-medium">Drop an image here</span>
-          <span className="text-xs opacity-60">or choose a file</span>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div
       data-slot="cropper-viewport"
@@ -574,10 +588,20 @@ function CropperViewport({
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
       onDrop={onDrop}
-      className={wrapperClass}
+      // overflow-hidden clips the 9999px CropperOverlay box-shadow to the stage bounds.
+      className={cn(
+        'relative inline-flex overflow-hidden rounded-2xl transition-[outline]',
+        isDragActive && 'outline-2 outline-offset-2 outline-(--cropper-drop-active-ring)',
+        className,
+      )}
+      style={{ width: stageSize, height: stageSize }}
     >
       <CropperCanvas {...props} />
-      <CropperOverlay className="absolute inset-0" />
+      {/* Overlay ring only when an image is loaded; empty stage shows no ring. */}
+      {hasImage && <CropperOverlay className="absolute inset-0" />}
+      {/* Consumer's CropperFallback (or any other children) rendered last so
+          they sit above the canvas in stacking order. */}
+      {children}
     </div>
   );
 }
@@ -962,6 +986,7 @@ export {
   CropperApply,
   CropperCancel,
   CropperCanvas,
+  CropperFallback,
   CropperInput,
   CropperOverlay,
   CropperViewport,

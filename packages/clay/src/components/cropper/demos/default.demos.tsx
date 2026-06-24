@@ -7,6 +7,7 @@ import {
   Cropper,
   CropperApply,
   CropperCancel,
+  CropperFallback,
   CropperFlip,
   CropperInput,
   CropperReset,
@@ -17,6 +18,7 @@ import {
 import {
   FlipHorizontal2,
   FlipVertical2,
+  ImageUp,
   RotateCcw,
   RotateCcwSquare,
   RotateCw,
@@ -24,19 +26,14 @@ import {
   ZoomIn,
   ZoomOut,
 } from 'lucide-react';
-import { makeSampleImageFile } from './sample-image';
-
-// Created once at module scope; null on SSR runtimes that lack the File global.
-const sampleFile = makeSampleImageFile();
 
 /**
  * Comprehensive showcase of all Cropper features in uncontrolled mode, framed
- * in a Card. Includes: CropperViewport (drag-drop), a zoom row (ZoomOut +
- * CropperZoom + ZoomIn), the full toolbar (CropperRotate left/right,
- * CropperFlip h/v, CropperReset, and a CropperInput Upload icon button), and
- * CropperApply + CropperCancel. Pre-loaded with a synthetic gradient image;
- * picking a new file or dropping one onto the viewport replaces the current
- * image without any consumer state.
+ * in a Card. Includes: CropperViewport with a composable CropperFallback
+ * empty state (drag-drop), a zoom row (ZoomOut + CropperZoom + ZoomIn), the
+ * full toolbar (CropperRotate left/right, CropperFlip h/v, CropperReset, and
+ * a CropperInput Upload icon button), and CropperApply + CropperCancel.
+ * Starts empty; pick or drop a file to begin cropping.
  */
 export default function CropperDefaultDemo() {
   const [preview, setPreview] = useState<string | null>(null);
@@ -54,8 +51,13 @@ export default function CropperDefaultDemo() {
 
       <Card>
         <CardContent className="flex flex-col items-center gap-3 pt-4">
-          <Cropper defaultImage={sampleFile ?? undefined}>
-            <CropperViewport />
+          <Cropper>
+            <CropperViewport>
+              <CropperFallback>
+                <ImageUp className="size-8 opacity-60" />
+                <span className="text-xs font-medium">Drop a photo or click upload</span>
+              </CropperFallback>
+            </CropperViewport>
 
             {/* Zoom row: minus icon — slider — plus icon */}
             <div className="flex w-full items-center gap-3">
