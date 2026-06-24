@@ -2,15 +2,14 @@
 
 import * as React from 'react';
 import { useState } from 'react';
-import { Button } from '@brika/clay/components/button';
 import {
   Cropper,
+  CropperApply,
   CropperInput,
   CropperViewport,
   CropperZoom,
 } from '@brika/clay/components/cropper';
 import { makeSampleImageFile } from './sample-image';
-import { ApplyButton } from './shared';
 
 // Created once at module scope; null on SSR runtimes that lack the File global.
 const sampleFile = makeSampleImageFile();
@@ -19,7 +18,7 @@ const sampleFile = makeSampleImageFile();
 export default function CropperDefaultDemo() {
   const [preview, setPreview] = useState<string | null>(null);
 
-  function onApply(blob: Blob) {
+  function onCrop(blob: Blob) {
     if (preview != null) URL.revokeObjectURL(preview);
     setPreview(URL.createObjectURL(blob));
   }
@@ -37,7 +36,9 @@ export default function CropperDefaultDemo() {
         <CropperViewport className="mt-3" />
         <CropperZoom className="mt-2 w-72" />
         <div className="mt-2 flex justify-center">
-          <ApplyButton onApply={onApply} />
+          <CropperApply size="sm" onCrop={onCrop}>
+            Apply
+          </CropperApply>
         </div>
       </Cropper>
     </div>

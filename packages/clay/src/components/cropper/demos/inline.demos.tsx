@@ -2,9 +2,14 @@
 
 import * as React from 'react';
 import { useState } from 'react';
-import { Cropper, CropperInput, CropperViewport, CropperZoom } from '@brika/clay/components/cropper';
+import {
+  Cropper,
+  CropperApply,
+  CropperInput,
+  CropperViewport,
+  CropperZoom,
+} from '@brika/clay/components/cropper';
 import { makeSampleImageFile } from './sample-image';
-import { ApplyButton } from './shared';
 
 // Created once at module scope; null on SSR runtimes that lack the File global.
 const sampleFile = makeSampleImageFile();
@@ -13,7 +18,7 @@ const sampleFile = makeSampleImageFile();
 export default function CropperInlineDemo() {
   const [preview, setPreview] = useState<string | null>(null);
 
-  function onApply(blob: Blob) {
+  function onCrop(blob: Blob) {
     if (preview != null) URL.revokeObjectURL(preview);
     setPreview(URL.createObjectURL(blob));
   }
@@ -31,7 +36,7 @@ export default function CropperInlineDemo() {
           </CropperInput>
           <CropperViewport />
           <CropperZoom className="w-72" />
-          <ApplyButton onApply={onApply} />
+          <CropperApply onCrop={onCrop}>Apply</CropperApply>
         </div>
       </Cropper>
     </div>
@@ -42,7 +47,7 @@ export default function CropperInlineDemo() {
 export function CropperDragDropDemo() {
   const [preview, setPreview] = useState<string | null>(null);
 
-  function onApply(blob: Blob) {
+  function onCrop(blob: Blob) {
     if (preview != null) URL.revokeObjectURL(preview);
     setPreview(URL.createObjectURL(blob));
   }
@@ -60,7 +65,7 @@ export function CropperDragDropDemo() {
           </CropperInput>
           <CropperViewport />
           <CropperZoom className="w-72" />
-          <ApplyButton onApply={onApply} />
+          <CropperApply onCrop={onCrop}>Apply</CropperApply>
         </div>
       </Cropper>
 

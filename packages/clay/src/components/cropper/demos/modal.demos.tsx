@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@brika/clay/components/avat
 import { Button } from '@brika/clay/components/button';
 import {
   Cropper,
+  CropperApply,
   CropperFlip,
   CropperReset,
   CropperRotate,
@@ -21,7 +22,6 @@ import {
   DialogTitle,
 } from '@brika/clay/components/dialog';
 import { FlipHorizontal2, FlipVertical2, RotateCcw, RotateCw, Undo2 } from 'lucide-react';
-import { ApplyButton, toolbarBtn } from './shared';
 
 /** Avatar-upload flow: click the avatar to open the file browser, then crop in a Dialog with zoom, rotate, flip, and reset controls. */
 export default function CropperModalDemo() {
@@ -34,7 +34,7 @@ export default function CropperModalDemo() {
     e.target.value = '';
   }
 
-  function handleApply(blob: Blob) {
+  function handleCrop(blob: Blob) {
     if (avatarSrc != null) URL.revokeObjectURL(avatarSrc);
     setAvatarSrc(URL.createObjectURL(blob));
     setFile(null);
@@ -75,19 +75,19 @@ export default function CropperModalDemo() {
             <CropperZoom className="mt-2" />
 
             <div className="flex items-center justify-center gap-1">
-              <CropperRotate direction="left" aria-label="Rotate left" className={toolbarBtn}>
+              <CropperRotate direction="left" aria-label="Rotate left">
                 <RotateCcw className="size-4" />
               </CropperRotate>
-              <CropperRotate direction="right" aria-label="Rotate right" className={toolbarBtn}>
+              <CropperRotate direction="right" aria-label="Rotate right">
                 <RotateCw className="size-4" />
               </CropperRotate>
-              <CropperFlip axis="h" aria-label="Flip horizontal" className={toolbarBtn}>
+              <CropperFlip axis="h" aria-label="Flip horizontal">
                 <FlipHorizontal2 className="size-4" />
               </CropperFlip>
-              <CropperFlip axis="v" aria-label="Flip vertical" className={toolbarBtn}>
+              <CropperFlip axis="v" aria-label="Flip vertical">
                 <FlipVertical2 className="size-4" />
               </CropperFlip>
-              <CropperReset aria-label="Reset" className={toolbarBtn}>
+              <CropperReset aria-label="Reset">
                 <Undo2 className="size-4" />
               </CropperReset>
             </div>
@@ -96,7 +96,9 @@ export default function CropperModalDemo() {
               <Button type="button" variant="outline" onClick={handleCancel} className="flex-1">
                 Cancel
               </Button>
-              <ApplyButton onApply={handleApply} size="default" className="flex-1" />
+              <CropperApply onCrop={handleCrop} className="flex-1">
+                Apply
+              </CropperApply>
             </DialogFooter>
           </DialogContent>
         </Dialog>

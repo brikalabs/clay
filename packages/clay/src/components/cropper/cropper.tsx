@@ -683,25 +683,26 @@ function CropperZoom({ className }: { className?: string }) {
 // ---------------------------------------------------------------------------
 
 /**
- * A pair of rotate-left / rotate-right icon buttons wired to
- * useCropperTransform. Pass `direction="left"` (default) or `"right"`.
- * Renders a plain `<button>` so the consumer controls styling; add a Clay
- * Button wrapper via `asChild` if preferred.
+ * A rotate-left / rotate-right icon button wired to the cropper transform.
+ * Pass `direction="left"` (default) or `"right"`. Renders as a Clay ghost
+ * icon button; pass `className` for additional layout overrides.
  */
 function CropperRotate({
   direction = 'left',
   children,
   className,
   ...props
-}: React.ComponentProps<'button'> & {
+}: React.ComponentProps<typeof Button> & {
   /** Which direction to rotate. Defaults to `'left'`. */
   direction?: 'left' | 'right';
 }) {
   const { rotateLeft, rotateRight } = useCropperTransform();
   const handleClick = direction === 'left' ? rotateLeft : rotateRight;
   return (
-    <button
+    <Button
       type="button"
+      variant="ghost"
+      size="icon-sm"
       data-slot="cropper-rotate"
       data-direction={direction}
       {...props}
@@ -709,7 +710,7 @@ function CropperRotate({
       className={className}
     >
       {children}
-    </button>
+    </Button>
   );
 }
 
@@ -718,16 +719,17 @@ function CropperRotate({
 // ---------------------------------------------------------------------------
 
 /**
- * A toggle button wired to the horizontal or vertical flip flag in context.
- * `data-active` is set when the flip is applied, so you can style the pressed
- * state via `data-[active=true]:...` Tailwind utilities.
+ * A flip toggle button wired to the horizontal or vertical flip flag in
+ * context. Renders as a Clay ghost icon button. `data-active` is set when
+ * the flip is applied, so you can style the pressed state via
+ * `data-[active=true]:...` Tailwind utilities.
  */
 function CropperFlip({
   axis = 'h',
   children,
   className,
   ...props
-}: React.ComponentProps<'button'> & {
+}: React.ComponentProps<typeof Button> & {
   /** Which axis to flip. Defaults to `'h'` (horizontal). */
   axis?: 'h' | 'v';
 }) {
@@ -735,8 +737,10 @@ function CropperFlip({
   const active = axis === 'h' ? flipHActive : flipVActive;
   const handleClick = axis === 'h' ? flipH : flipV;
   return (
-    <button
+    <Button
       type="button"
+      variant="ghost"
+      size="icon-sm"
       data-slot="cropper-flip"
       data-axis={axis}
       data-active={active || undefined}
@@ -745,7 +749,7 @@ function CropperFlip({
       className={className}
     >
       {children}
-    </button>
+    </Button>
   );
 }
 
@@ -755,25 +759,106 @@ function CropperFlip({
 
 /**
  * A button that calls `reset()` from CropperContext when clicked, returning
- * the image to its initial pan/zoom/rotation state.
+ * the image to its initial pan/zoom/rotation state. Renders as a Clay ghost
+ * icon button.
  */
-function CropperReset({ children, className, ...props }: React.ComponentProps<'button'>) {
+function CropperReset({
+  children,
+  className,
+  ...props
+}: React.ComponentProps<typeof Button>) {
   const { reset } = useCropper();
   return (
-    <button
+    <Button
       type="button"
+      variant="ghost"
+      size="icon-sm"
       data-slot="cropper-reset"
       {...props}
       onClick={reset}
       className={className}
     >
       {children}
-    </button>
+    </Button>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// CropperApply — button that exports the crop and fires a callback
+// ---------------------------------------------------------------------------
+
+/**
+ * A button that exports the current crop as a Blob and calls `onCrop` with it.
+ * Disabled when no image is loaded. Renders as a Clay Button; pass `variant`,
+ * `size`, and `children` to customise the appearance.
+ *
+ * Usage:
+ * ```tsx
+ * <CropperApply onCrop={(blob) => uploadBlob(blob)}>Save photo</CropperApply>
+ * ```
+ *
+ * Use `asChild` to supply your own trigger element:
+ * ```tsx
+ * <CropperApply asChild onCrop={handleCrop}>
+ *   <MyCustomButton />
+ * </CropperApply>
+ * ```
+ */
+function CropperApply({
+  onCrop,
+  asChild = false,
+  children,
+  className,
+  variant,
+  size,
+  disabled,
+  ...props
+}: React.ComponentProps<'button'> &
+  VariantProps<typeof buttonVariants> & {
+    /** Called with the cropped Blob after the user confirms. */
+    onCrop?: (blob: Blob) => void;
+    /**
+     * When true, merges the apply behaviour into the single child element
+     * (Slot pattern). The child receives `onClick` and `disabled` props.
+     */
+    asChild?: boolean;
+  }) {
+  const { getCroppedBlob, hasImage } = useCropper();
+
+  async function handleClick() {
+    const blob = await getCroppedBlob();
+    if (blob != null) onCrop?.(blob);
+  }
+
+  if (asChild) {
+    // Pass disabled and onClick through spread so Slot merges them onto the child.
+    const slotProps = { ...props, 'data-slot': 'cropper-apply', disabled: disabled ?? !hasImage, className, onClick: handleClick };
+    return (
+      <Slot.Root {...slotProps}>
+        {children}
+      </Slot.Root>
+    );
+  }
+
+  return (
+    <Button
+      type="button"
+      data-slot="cropper-apply"
+      variant={variant}
+      size={size}
+      disabled={disabled ?? !hasImage}
+      {...props}
+      className={className}
+      onClick={handleClick}
+    >
+      {children}
+    </Button>
   );
 }
 
 export {
   Cropper,
+  CropperApply,
   CropperCanvas,
   CropperInput,
   CropperOverlay,
