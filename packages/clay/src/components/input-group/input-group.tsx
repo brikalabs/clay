@@ -84,6 +84,7 @@ function InputGroupAddon({
   className,
   align = 'inline-start',
   htmlFor,
+  onMouseDown,
   ...props
 }: React.ComponentProps<'label'> &
   VariantProps<typeof inputGroupAddonVariants> & {
@@ -96,6 +97,23 @@ function InputGroupAddon({
       data-slot="input-group-addon"
       data-align={align}
       htmlFor={htmlFor ?? controlId}
+      onMouseDown={(event) => {
+        onMouseDown?.(event);
+        if (event.defaultPrevented) return;
+        // `htmlFor` focus breaks when a control forces its own id (e.g. cmdk's
+        // CommandInputControl ignores the id prop), so focus the sibling control
+        // directly. Interactive children keep their own behaviour.
+        if (event.target instanceof Element && event.target.closest('button, a, [role="button"]')) {
+          return;
+        }
+        const control = event.currentTarget.parentElement?.querySelector(
+          '[data-slot="input-group-control"]'
+        );
+        if (control instanceof HTMLElement) {
+          event.preventDefault();
+          control.focus();
+        }
+      }}
       className={cn(
         inputGroupAddonVariants({
           align,

@@ -60,6 +60,31 @@ function CommandInput({
   );
 }
 
+/**
+ * Bare command input control for the detached/navbar mode. Renders only the
+ * `cmdk` text input with no wrapper box, so you can embed it inside an
+ * `InputGroup` (or any container) and position the `CommandList` separately
+ * as an absolute dropdown. `data-slot="input-group-control"` ensures the
+ * parent `InputGroup` focus halo fires on keyboard focus.
+ */
+function CommandInputControl({
+  className,
+  ...props
+}: React.ComponentProps<typeof CommandPrimitive.Input>) {
+  return (
+    <CommandPrimitive.Input
+      data-slot="input-group-control"
+      className={cn(
+        'h-full min-w-0 flex-1 bg-transparent text-sm outline-none',
+        'placeholder:text-command-placeholder-color',
+        'disabled:cursor-not-allowed disabled:opacity-50',
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
 function CommandList({
   className,
   ...props
@@ -147,6 +172,7 @@ export {
   CommandEmpty,
   CommandGroup,
   CommandInput,
+  CommandInputControl,
   CommandItem,
   CommandList,
   CommandSeparator,
