@@ -350,7 +350,7 @@ function TreeRow({
       data-slot="tree-item-row"
       className={cn(
         // Full-width row, no rounding; selection highlight spans edge to edge.
-        'tree relative flex select-none items-center py-[var(--tree-padding-y)] transition-colors group-focus-visible/treeitem:ring-themed',
+        'tree relative flex select-none items-center py-[var(--tree-padding-y)] transition-colors',
         '[&_svg]:size-4 [&_svg]:shrink-0',
         disabled ? 'pointer-events-none opacity-50' : 'cursor-pointer',
         isSelected
@@ -422,6 +422,9 @@ function TreeItemGroup({
   hasChildren: boolean;
   children: React.ReactNode;
 }>) {
+  // Rendered inside the parent's <DepthContext value={depth + 1}>, so this is
+  // already the children's depth: indent the loading row to that same level.
+  const depth = React.use(DepthContext);
   if (!isBranch || !open) {
     return null;
   }
@@ -430,7 +433,12 @@ function TreeItemGroup({
   return (
     <fieldset className="m-0 min-w-0 space-y-0.5 border-0 p-0">
       {loading && !hasChildren ? (
-        <div className="tree flex select-none items-center text-tree-icon">
+        <div
+          className="tree flex select-none items-center py-[var(--tree-padding-y)] text-tree-icon"
+          style={{
+            paddingInlineStart: `calc(var(--tree-indent) * ${depth} + var(--tree-padding-x))`,
+          }}
+        >
           <Loader2 className="size-4 shrink-0 animate-spin" aria-hidden />
           <span className="truncate text-sm">Loading…</span>
         </div>
@@ -493,7 +501,14 @@ function TreeItem({
         handleTreeItemKeyDown(event, { nodeId, isBranch, open, setExpanded, activate })
       }
       onClick={(event) => handleTreeItemClick(event, activate)}
-      className={cn('group/treeitem block outline-none', className)}
+      className={cn(
+        'block outline-none',
+        // Keyboard focus: a subtle inset ring on THIS item's own row only. Scoped
+        // to the direct-child row so focusing a folder does not ring every nested
+        // descendant (a named group would, since they share the name).
+        '[&:focus-visible>[data-slot=tree-item-row]]:ring-2 [&:focus-visible>[data-slot=tree-item-row]]:ring-inset [&:focus-visible>[data-slot=tree-item-row]]:ring-ring',
+        className
+      )}
       {...props}
     >
       <TreeRow
