@@ -310,10 +310,7 @@ function TreeRow({
   icon: React.ReactNode;
   label: React.ReactNode;
 }>) {
-  let DefaultIcon = FileIcon;
-  if (isBranch) {
-    DefaultIcon = open ? FolderOpen : Folder;
-  }
+  const FolderIcon = open ? FolderOpen : Folder;
   return (
     <div
       data-slot="tree-item-row"
@@ -334,8 +331,12 @@ function TreeRow({
       ) : (
         <span className="size-4 shrink-0" aria-hidden />
       )}
-      {showIcons ? icon ?? <DefaultIcon className="shrink-0 text-tree-icon" aria-hidden /> : null}
-      <span className="truncate">{label}</span>
+      {showIcons
+        ? (icon ?? (isBranch
+            ? <FolderIcon className="shrink-0 text-tree-folder-icon" aria-hidden />
+            : <FileIcon className="shrink-0 text-tree-icon" aria-hidden />))
+        : null}
+      <span className={cn('truncate', isBranch && 'font-semibold')}>{label}</span>
     </div>
   );
 }
