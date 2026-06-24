@@ -1,33 +1,44 @@
-import { ImageOff } from 'lucide-react';
 import * as React from 'react';
 
 import { cn } from '../../primitives/cn';
 
 type ImageStatus = 'loading' | 'loaded' | 'error';
 
+const ImageContext = React.createContext<{ status: ImageStatus } | null>(null);
+
+function useImageContext() {
+  const ctx = React.useContext(ImageContext);
+  if (!ctx) throw new Error('ImageFallback must be used inside Image');
+  return ctx;
+}
+
 /**
- * Image with a muted skeleton while loading and a fallback when the source
- * fails or stalls. A load that neither succeeds nor errors within `timeoutMs`
- * counts as failed, so a hanging image host still shows the fallback.
+ * Image with a skeleton pulse while loading and a compound slot for fallback
+ * content when the source fails, times out, or is absent.
+ *
+ * A load that neither succeeds nor errors within `timeoutMs` is treated as
+ * failed, so a hanging image host still shows the fallback.
+ *
+ * Compose with `ImageFallback` to provide custom error content:
+ * ```tsx
+ * <Image src={url} alt="...">
+ *   <ImageFallback><ImageOff /></ImageFallback>
+ * </Image>
+ * ```
  */
 function Image({
   src,
   alt = '',
   className,
-  imgClassName,
-  fallback,
   loading = 'lazy',
   timeoutMs = 5000,
+  children,
   ...props
 }: React.ComponentProps<'div'> & {
   /** URL of the image to load. Changing `src` resets the loader. */
-  readonly src: string;
+  readonly src?: string;
   /** Alt text passed to the underlying `<img>`. Use `""` for decorative images. */
   readonly alt?: string;
-  /** className applied to the inner `<img>` element. */
-  readonly imgClassName?: string;
-  /** Content rendered when the image fails or times out. Defaults to an `ImageOff` icon. */
-  readonly fallback?: React.ReactNode;
   /** Native `loading` attribute. Defaults to `"lazy"`. */
   readonly loading?: 'lazy' | 'eager';
   /**
@@ -36,11 +47,15 @@ function Image({
    */
   readonly timeoutMs?: number;
 }) {
-  const [status, setStatus] = React.useState<ImageStatus>('loading');
+  const [status, setStatus] = React.useState<ImageStatus>(() => (src ? 'loading' : 'error'));
 
   // `src` is a dependency on purpose: switching the source resets the loader.
   // biome-ignore lint/correctness/useExhaustiveDependencies: reset on src change
   React.useEffect(() => {
+    if (!src) {
+      setStatus('error');
+      return;
+    }
     setStatus('loading');
     const timer = setTimeout(() => {
       setStatus((current) => (current === 'loading' ? 'error' : current));
@@ -49,47 +64,64 @@ function Image({
   }, [src, timeoutMs]);
 
   return (
-    <div
-      data-slot="image"
-      data-status={status}
-      className={cn('relative overflow-hidden bg-image-fallback-bg', className)}
-      {...props}
-    >
-      {status === 'loading' ? (
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 animate-pulse bg-image-skeleton-color"
-        />
-      ) : null}
+    <ImageContext.Provider value={{ status }}>
+      <div
+        data-slot="image"
+        data-status={status}
+        className={cn('relative overflow-hidden bg-image-fallback-bg', className)}
+        {...props}
+      >
+        {status === 'loading' ? (
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 animate-pulse bg-image-skeleton-color"
+          />
+        ) : null}
 
-      {status === 'error'
-        ? (fallback ?? (
-            <div
-              aria-hidden="true"
-              className="flex size-full items-center justify-center text-image-fallback-icon-color"
-            >
-              <ImageOff className="size-6" />
-            </div>
-          ))
-        : null}
+        {children}
 
-      {status === 'error' ? null : (
-        <img
-          src={src}
-          alt={alt}
-          loading={loading}
-          decoding="async"
-          onLoad={() => setStatus('loaded')}
-          onError={() => setStatus('error')}
-          className={cn(
-            'size-full object-cover transition-opacity duration-300',
-            status === 'loaded' ? 'opacity-100' : 'opacity-0',
-            imgClassName
-          )}
-        />
-      )}
-    </div>
+        {src && status !== 'error' ? (
+          <img
+            src={src}
+            alt={alt}
+            loading={loading}
+            decoding="async"
+            onLoad={() => setStatus('loaded')}
+            onError={() => setStatus('error')}
+            className={cn(
+              'absolute inset-0 size-full object-cover transition-opacity duration-300',
+              status === 'loaded' ? 'opacity-100' : 'opacity-0'
+            )}
+          />
+        ) : null}
+      </div>
+    </ImageContext.Provider>
   );
 }
 
-export { Image };
+/**
+ * Fallback slot rendered inside `Image` when the source fails, times out, or
+ * is absent. Children are passed through unchanged -- wrap an icon, text, or
+ * any React node.
+ *
+ * Hidden while the image is loading or has loaded successfully.
+ */
+function ImageFallback({ className, ...props }: React.ComponentProps<'div'>) {
+  const { status } = useImageContext();
+
+  if (status !== 'error') return null;
+
+  return (
+    <div
+      data-slot="image-fallback"
+      aria-hidden="true"
+      className={cn(
+        'flex size-full items-center justify-center text-image-fallback-icon-color',
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+export { Image, ImageFallback };

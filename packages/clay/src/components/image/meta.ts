@@ -13,10 +13,10 @@ export const meta: ComponentMeta = {
   group: 'Data',
   badge: 'New',
   description:
-    'Image with a skeleton pulse while loading and a fallback slot when the source fails or times out. A hanging image host still shows the fallback once `timeoutMs` elapses.',
+    'Compound image component with a skeleton pulse while loading and an `ImageFallback` slot rendered when the source fails, times out, or is absent. A hanging image host still shows the fallback once `timeoutMs` elapses.',
   accessibility: [
     'Always supply a meaningful `alt` text; use `alt=""` only for purely decorative images.',
     'The skeleton overlay is `aria-hidden` so loading state does not pollute the AT tree.',
-    'The default fallback icon is `aria-hidden`; provide a custom `fallback` with an accessible label when the image content is meaningful.',
+    'The `ImageFallback` slot is `aria-hidden` by default; add an accessible label when the fallback content conveys meaningful information.',
   ],
 };

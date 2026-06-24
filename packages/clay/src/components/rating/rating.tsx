@@ -7,9 +7,9 @@ import { cn } from '../../primitives/cn';
 const ratingVariants = cva('inline-flex items-center', {
   variants: {
     size: {
-      sm: 'gap-px [&>svg]:size-3',
-      default: 'gap-px [&>svg]:size-3.5',
-      lg: 'gap-0.5 [&>svg]:size-5',
+      sm: 'gap-px [&>svg]:size-[var(--rating-star-size-sm)]',
+      default: 'gap-px [&>svg]:size-[var(--rating-star-size)]',
+      lg: 'gap-0.5 [&>svg]:size-[var(--rating-star-size-lg)]',
     },
   },
   defaultVariants: {

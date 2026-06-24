@@ -17,5 +17,17 @@ registerComponent(meta, {
       description:
         'Stroke color for stars above the rounded value. A 30% mix of `--muted-foreground` against transparent gives a faint ghost that reads on both light and dark surfaces.',
     },
+    'star-size-sm': {
+      default: '0.75rem',
+      description: 'Star icon diameter at the `sm` size variant.',
+    },
+    'star-size': {
+      default: '0.875rem',
+      description: 'Star icon diameter at the `default` size variant.',
+    },
+    'star-size-lg': {
+      default: '1.25rem',
+      description: 'Star icon diameter at the `lg` size variant.',
+    },
   },
 });
