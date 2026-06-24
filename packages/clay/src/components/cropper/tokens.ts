@@ -27,5 +27,10 @@ registerComponent(meta, {
       description:
         'Outline ring color applied to CropperViewport while an image file is dragged over it. Uses the brand primary so it matches the theme accent.',
     },
+    'placeholder-color': {
+      default: 'var(--muted-foreground)',
+      description:
+        'Icon and text color for the empty-state placeholder shown inside CropperViewport when no image has been loaded yet.',
+    },
   },
 });

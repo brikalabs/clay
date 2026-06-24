@@ -1,15 +1,15 @@
 'use client';
 
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@brika/clay/components/button';
 import {
   Cropper,
-  CropperInput,
   CropperViewport,
   CropperZoom,
   useCropper,
 } from '@brika/clay/components/cropper';
+import { makeSampleImageFile } from './sample-image';
 
 // ---------------------------------------------------------------------------
 // Apply button — reads getCroppedBlob from context, no ref needed
@@ -29,16 +29,23 @@ function ApplyButton({ onApply }: { readonly onApply: (blob: Blob) => void }) {
 }
 
 // ---------------------------------------------------------------------------
-// Default demo — the minimal usage: CropperInput + viewport + zoom + apply
+// Default demo — controlled mode with a synthetic sample image pre-loaded
 // ---------------------------------------------------------------------------
 
 /**
- * Minimal composable usage: no external state, no ref.
- * CropperInput wires the file picker to the cropper automatically.
- * The Apply button reads getCroppedBlob from useCropper().
+ * Minimal usage: controlled `image` prop pre-loaded with a synthetic gradient
+ * so the docs preview shows the circular crop mask over a real image.
+ * The "Choose photo" button opens the OS file browser to replace it.
  */
 export default function CropperDefaultDemo() {
   const [preview, setPreview] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Pre-load a synthetic sample so the docs preview is not empty.
+  useEffect(() => {
+    setFile(makeSampleImageFile());
+  }, []);
 
   function onApply(blob: Blob) {
     if (preview != null) URL.revokeObjectURL(preview);
@@ -51,8 +58,27 @@ export default function CropperDefaultDemo() {
         <img src={preview} alt="Cropped result" className="size-20 rounded-full object-cover" />
       )}
 
-      <Cropper>
-        <CropperInput>Choose photo</CropperInput>
+      {/* Hidden file input — the Button below triggers it */}
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        className="sr-only"
+        onChange={(e) => {
+          setFile(e.target.files?.[0] ?? null);
+          e.target.value = '';
+        }}
+      />
+
+      <Cropper image={file}>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          onClick={() => inputRef.current?.click()}
+        >
+          Choose photo
+        </Button>
         <CropperViewport className="mt-3" />
         <CropperZoom className="mt-2 w-72" />
         <div className="mt-2 flex justify-center">

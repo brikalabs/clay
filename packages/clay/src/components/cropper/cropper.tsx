@@ -14,6 +14,7 @@ import * as React from 'react';
 import { Slot } from 'radix-ui';
 
 import { type VariantProps } from 'class-variance-authority';
+import { ImageIcon } from 'lucide-react';
 import { Button, buttonVariants } from '../button/button';
 import { Slider } from '../slider/slider';
 import { cn } from '../../primitives/cn';
@@ -453,7 +454,7 @@ function CropperViewport({
    */
   readonly onImageDrop?: (file: File) => void;
 }) {
-  const { loadFile } = useCropper();
+  const { loadFile, img, stageSize } = useCropper();
   const dragDepth = useRef(0);
   const [isDragActive, setDragActive] = useState(false);
 
@@ -494,6 +495,41 @@ function CropperViewport({
     }
   }
 
+  const wrapperClass = cn(
+    'relative inline-flex rounded-2xl transition-[outline]',
+    isDragActive && 'outline-2 outline-offset-2 outline-(--cropper-drop-active-ring)',
+    className,
+  );
+
+  // When no image is loaded, render an intentional empty/placeholder state
+  // instead of an empty canvas + circular overlay (which looks broken).
+  if (img === null) {
+    return (
+      <div
+        data-slot="cropper-viewport"
+        data-drag-active={isDragActive || undefined}
+        onDragEnter={onDragEnter}
+        onDragOver={onDragOver}
+        onDragLeave={onDragLeave}
+        onDrop={onDrop}
+        className={cn(
+          wrapperClass,
+          'items-center justify-center bg-(--cropper-stage-bg)',
+        )}
+        style={{ width: stageSize, height: stageSize }}
+      >
+        <div
+          data-slot="cropper-placeholder"
+          className="flex flex-col items-center gap-2 text-(--cropper-placeholder-color)"
+        >
+          <ImageIcon className="size-10 opacity-60" />
+          <span className="text-xs font-medium">Drop an image here</span>
+          <span className="text-xs opacity-60">or choose a file</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       data-slot="cropper-viewport"
@@ -502,11 +538,7 @@ function CropperViewport({
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
       onDrop={onDrop}
-      className={cn(
-        'relative inline-flex rounded-2xl transition-[outline]',
-        isDragActive && 'outline-2 outline-offset-2 outline-(--cropper-drop-active-ring)',
-        className,
-      )}
+      className={wrapperClass}
     >
       <CropperCanvas {...props} />
       <CropperOverlay className="absolute inset-0" />
