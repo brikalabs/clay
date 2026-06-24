@@ -396,13 +396,70 @@ function useCropperTransform(): {
  *
  * Use the lower-level `CropperCanvas` + `CropperOverlay` directly when you
  * need to place the overlay independently or apply a custom clip.
+ *
+ * Pass `onImageDrop` to accept drag-and-drop image files. When the user drops
+ * an image file onto the viewport the callback fires with the `File` so the
+ * consumer can set it as the controlled `image` prop on `<Cropper>`. Non-image
+ * files are silently ignored. The drop-active visual is keyed off the
+ * `--cropper-drop-active-ring` token.
  */
 function CropperViewport({
   className,
+  onImageDrop,
   ...props
-}: Omit<React.ComponentProps<'div'>, 'children'>) {
+}: Omit<React.ComponentProps<'div'>, 'children'> & {
+  /** Called with the dropped image File. Set it as the `image` prop on the parent `<Cropper>`. */
+  readonly onImageDrop?: (file: File) => void;
+}) {
+  const dragDepth = useRef(0);
+  const [isDragActive, setDragActive] = useState(false);
+
+  function onDragEnter(event: React.DragEvent<HTMLDivElement>) {
+    event.preventDefault();
+    if (!onImageDrop) return;
+    dragDepth.current += 1;
+    setDragActive(true);
+  }
+
+  function onDragOver(event: React.DragEvent<HTMLDivElement>) {
+    event.preventDefault();
+    if (onImageDrop && event.dataTransfer) {
+      event.dataTransfer.dropEffect = 'copy';
+    }
+  }
+
+  function onDragLeave(event: React.DragEvent<HTMLDivElement>) {
+    event.preventDefault();
+    dragDepth.current -= 1;
+    if (dragDepth.current <= 0) {
+      dragDepth.current = 0;
+      setDragActive(false);
+    }
+  }
+
+  function onDrop(event: React.DragEvent<HTMLDivElement>) {
+    event.preventDefault();
+    dragDepth.current = 0;
+    setDragActive(false);
+    if (!onImageDrop) return;
+    const file = [...event.dataTransfer.files].find((f) => f.type.startsWith('image/'));
+    if (file) onImageDrop(file);
+  }
+
   return (
-    <div data-slot="cropper-viewport" className={cn('relative inline-flex', className)}>
+    <div
+      data-slot="cropper-viewport"
+      data-drag-active={isDragActive || undefined}
+      onDragEnter={onDragEnter}
+      onDragOver={onDragOver}
+      onDragLeave={onDragLeave}
+      onDrop={onDrop}
+      className={cn(
+        'relative inline-flex rounded-2xl transition-[outline]',
+        isDragActive && 'outline-2 outline-offset-2 outline-(--cropper-drop-active-ring)',
+        className,
+      )}
+    >
       <CropperCanvas {...props} />
       <CropperOverlay className="absolute inset-0" />
     </div>

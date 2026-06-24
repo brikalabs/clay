@@ -22,5 +22,10 @@ registerComponent(meta, {
       description:
         'Border drawn on the inner edge of the crop mask to delineate the crop area. Defaults to 45% white.',
     },
+    'drop-active-ring': {
+      default: 'var(--primary)',
+      description:
+        'Outline ring color applied to CropperViewport while an image file is dragged over it. Uses the brand primary so it matches the theme accent.',
+    },
   },
 });
