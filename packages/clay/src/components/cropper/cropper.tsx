@@ -11,7 +11,10 @@ import {
   useState,
 } from 'react';
 import * as React from 'react';
+import { Slot } from 'radix-ui';
 
+import { type VariantProps } from 'class-variance-authority';
+import { Button, buttonVariants } from '../button/button';
 import { Slider } from '../slider/slider';
 import { cn } from '../../primitives/cn';
 
@@ -106,6 +109,12 @@ interface CropperContextValue {
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
   /** Export the current crop as a Blob. Returns null if no image is loaded. */
   getCroppedBlob: (outputSize?: number, quality?: number) => Promise<Blob | null>;
+  /**
+   * Load a file into the cropper. Used by CropperInput (and CropperViewport
+   * drag-drop) in uncontrolled mode. In controlled mode this is a no-op
+   * because the consumer owns the `image` prop.
+   */
+  loadFile: (file: File) => void;
 }
 
 const CropperContext = createContext<CropperContextValue | null>(null);
@@ -137,8 +146,14 @@ export interface CropperHandle {
 // ---------------------------------------------------------------------------
 
 export interface CropperProps {
-  /** The file to display in the cropper. Changing this resets the transform. */
-  image: File | null;
+  /**
+   * The file to display in the cropper (controlled mode). When omitted the
+   * cropper manages its own file state internally (uncontrolled mode) and
+   * `CropperInput` / drag-drop on `CropperViewport` load files without any
+   * consumer state. Pass `image` when you need to control the loaded file
+   * from outside (e.g. a Dialog that clears on cancel).
+   */
+  image?: File | null;
   /** Mask shape rendered by CropperOverlay: `'circle'` or `'rounded'`. Defaults to `'circle'`. */
   shape?: 'circle' | 'rounded';
   /** On-screen stage size in px. Defaults to 288. */
@@ -151,23 +166,36 @@ export interface CropperProps {
  * React context so child parts (CropperCanvas, CropperOverlay) and sibling
  * controls (Slider, Buttons) can read and drive the same state without prop
  * drilling. Mount your own Dialog, Slider, and action Buttons around this.
+ *
+ * Supports two modes:
+ * - **Uncontrolled** (default): omit `image`. `CropperInput` and drag-drop on
+ *   `CropperViewport` manage the file state internally. Zero consumer state needed.
+ * - **Controlled**: pass `image` to own the loaded file from outside (e.g. a
+ *   Dialog that resets on cancel).
  */
 const Cropper = React.forwardRef<CropperHandle, CropperProps>(function Cropper(
   { image, shape = 'circle', stageSize = DEFAULT_STAGE, children },
   ref,
 ) {
+  // Uncontrolled internal file state. Only used when `image` prop is omitted.
+  const [internalFile, setInternalFile] = useState<File | null>(null);
+  // The effective file is the controlled `image` prop when provided, otherwise
+  // the internally managed file.
+  const isControlled = image !== undefined;
+  const effectiveFile = isControlled ? image : internalFile;
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [img, setImg] = useState<HTMLImageElement | null>(null);
   const [transform, setTransform] = useState<Transform>(IDENTITY);
 
-  // Load the picked file into an <img> and reset the transform.
+  // Load the effective file into an <img> and reset the transform.
   useEffect(() => {
-    if (image === null) {
+    if (effectiveFile == null) {
       setImg(null);
       setTransform(IDENTITY);
       return;
     }
-    const url = URL.createObjectURL(image);
+    const url = URL.createObjectURL(effectiveFile);
     const el = new Image();
     el.onload = () => {
       setImg(el);
@@ -175,7 +203,7 @@ const Cropper = React.forwardRef<CropperHandle, CropperProps>(function Cropper(
     };
     el.src = url;
     return () => URL.revokeObjectURL(url);
-  }, [image]);
+  }, [effectiveFile]);
 
   const update = useCallback(
     (patch: Partial<Transform> | ((prev: Transform) => Partial<Transform>)) => {
@@ -216,6 +244,16 @@ const Cropper = React.forwardRef<CropperHandle, CropperProps>(function Cropper(
     [getCroppedBlob, reset, transform.zoom, setZoom],
   );
 
+  // In uncontrolled mode, loadFile updates internal state. In controlled mode
+  // the consumer owns the image prop, so this is a no-op (they wire their own
+  // file handler, e.g. via CropperViewport's onImageDrop).
+  const loadFile = useCallback(
+    (file: File) => {
+      if (!isControlled) setInternalFile(file);
+    },
+    [isControlled],
+  );
+
   const contextValue: CropperContextValue = {
     zoom: transform.zoom,
     setZoom,
@@ -227,6 +265,7 @@ const Cropper = React.forwardRef<CropperHandle, CropperProps>(function Cropper(
     shape,
     canvasRef,
     getCroppedBlob,
+    loadFile,
   };
 
   return <CropperContext value={contextValue}>{children}</CropperContext>;
@@ -397,10 +436,10 @@ function useCropperTransform(): {
  * Use the lower-level `CropperCanvas` + `CropperOverlay` directly when you
  * need to place the overlay independently or apply a custom clip.
  *
- * Pass `onImageDrop` to accept drag-and-drop image files. When the user drops
- * an image file onto the viewport the callback fires with the `File` so the
- * consumer can set it as the controlled `image` prop on `<Cropper>`. Non-image
- * files are silently ignored. The drop-active visual is keyed off the
+ * Drag-and-drop is always active. In uncontrolled mode (no `image` prop on the
+ * parent `<Cropper>`) dropped files are loaded automatically. In controlled mode
+ * pass `onImageDrop` to handle the dropped `File` yourself. Non-image files are
+ * silently ignored. The drop-active visual is keyed off the
  * `--cropper-drop-active-ring` token.
  */
 function CropperViewport({
@@ -408,22 +447,25 @@ function CropperViewport({
   onImageDrop,
   ...props
 }: Omit<React.ComponentProps<'div'>, 'children'> & {
-  /** Called with the dropped image File. Set it as the `image` prop on the parent `<Cropper>`. */
+  /**
+   * Called with the dropped image File in controlled mode. In uncontrolled
+   * mode you can omit this; the file is loaded into the cropper automatically.
+   */
   readonly onImageDrop?: (file: File) => void;
 }) {
+  const { loadFile } = useCropper();
   const dragDepth = useRef(0);
   const [isDragActive, setDragActive] = useState(false);
 
   function onDragEnter(event: React.DragEvent<HTMLDivElement>) {
     event.preventDefault();
-    if (!onImageDrop) return;
     dragDepth.current += 1;
     setDragActive(true);
   }
 
   function onDragOver(event: React.DragEvent<HTMLDivElement>) {
     event.preventDefault();
-    if (onImageDrop && event.dataTransfer) {
+    if (event.dataTransfer) {
       event.dataTransfer.dropEffect = 'copy';
     }
   }
@@ -441,9 +483,15 @@ function CropperViewport({
     event.preventDefault();
     dragDepth.current = 0;
     setDragActive(false);
-    if (!onImageDrop) return;
     const file = [...event.dataTransfer.files].find((f) => f.type.startsWith('image/'));
-    if (file) onImageDrop(file);
+    if (!file) return;
+    // Consumer callback takes priority (controlled mode); fall back to context
+    // loadFile (uncontrolled mode — no-op when controlled).
+    if (onImageDrop) {
+      onImageDrop(file);
+    } else {
+      loadFile(file);
+    }
   }
 
   return (
@@ -463,6 +511,100 @@ function CropperViewport({
       <CropperCanvas {...props} />
       <CropperOverlay className="absolute inset-0" />
     </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// CropperInput — file picker wired to context
+// ---------------------------------------------------------------------------
+
+/**
+ * A file-picker trigger wired to the nearest CropperContext. Clicking it opens
+ * the OS file browser (filtered to images). When the user picks a file it is
+ * loaded into the cropper automatically — no consumer state required.
+ *
+ * In uncontrolled mode (default) the file is stored inside `<Cropper>`.
+ * In controlled mode (when `image` is passed to `<Cropper>`) the picked file
+ * is still forwarded to the internal `loadFile` callback, which is a no-op for
+ * the transform; consumers in controlled mode should also wire their own
+ * `onChange` on the underlying `<input>` via the `asChild` pattern.
+ *
+ * Usage — default (renders a Clay Button):
+ * ```tsx
+ * <CropperInput>Choose photo</CropperInput>
+ * ```
+ *
+ * Usage — custom trigger via `asChild`:
+ * ```tsx
+ * <CropperInput asChild>
+ *   <Avatar size="lg"><AvatarFallback>AB</AvatarFallback></Avatar>
+ * </CropperInput>
+ * ```
+ */
+function CropperInput({
+  asChild = false,
+  children,
+  className,
+  variant,
+  size,
+  ...props
+}: React.ComponentProps<'button'> &
+  VariantProps<typeof buttonVariants> & {
+    /**
+     * When true, merges the file-picker behaviour into the single child element
+     * (Slot pattern). Useful when you want an Avatar or any other element to act
+     * as the pick trigger.
+     */
+    asChild?: boolean;
+  }) {
+  const { loadFile } = useCropper();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) loadFile(file);
+    // Reset so the same file can be re-picked.
+    e.target.value = '';
+  }
+
+  function openPicker() {
+    inputRef.current?.click();
+  }
+
+  return (
+    <>
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        className="sr-only"
+        onChange={handleChange}
+        tabIndex={-1}
+        aria-hidden
+      />
+      {asChild ? (
+        <Slot.Root
+          data-slot="cropper-input"
+          {...props}
+          className={className}
+          onClick={openPicker}
+        >
+          {children}
+        </Slot.Root>
+      ) : (
+        <Button
+          type="button"
+          data-slot="cropper-input"
+          variant={variant}
+          size={size}
+          {...props}
+          className={className}
+          onClick={openPicker}
+        >
+          {children}
+        </Button>
+      )}
+    </>
   );
 }
 
@@ -589,6 +731,7 @@ function CropperReset({ children, className, ...props }: React.ComponentProps<'b
 export {
   Cropper,
   CropperCanvas,
+  CropperInput,
   CropperOverlay,
   CropperViewport,
   CropperZoom,
