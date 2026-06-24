@@ -12,6 +12,7 @@ export const meta: ComponentMeta = {
   displayName: 'Rating',
   group: 'Data',
   description: 'Five-star rating display. Renders filled and empty stars proportional to the numeric value.',
+  badge: 'New',
   accessibility: [
     'The star row is `aria-hidden="true"` by default; wrap it with a visually-hidden `<span>` carrying the numeric value for screen readers.',
     'Pass `aria-label` on the container when used standalone to convey the rating to assistive technology.',

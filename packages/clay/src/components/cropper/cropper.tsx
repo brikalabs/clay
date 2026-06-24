@@ -12,6 +12,7 @@ import {
 } from 'react';
 import * as React from 'react';
 
+import { Slider } from '../slider/slider';
 import { cn } from '../../primitives/cn';
 
 // ---------------------------------------------------------------------------
@@ -383,10 +384,160 @@ function useCropperTransform(): {
   };
 }
 
+// ---------------------------------------------------------------------------
+// CropperViewport — canvas + overlay stacked in a positioned wrapper
+// ---------------------------------------------------------------------------
+
+/**
+ * Convenience part that renders CropperCanvas and CropperOverlay stacked in a
+ * relative wrapper. Drop this in instead of manually wrapping the two parts
+ * in a positioned div. Accepts the same props as CropperCanvas; the overlay
+ * shape is read from context.
+ *
+ * Use the lower-level `CropperCanvas` + `CropperOverlay` directly when you
+ * need to place the overlay independently or apply a custom clip.
+ */
+function CropperViewport({
+  className,
+  ...props
+}: Omit<React.ComponentProps<'div'>, 'children'>) {
+  return (
+    <div data-slot="cropper-viewport" className={cn('relative inline-flex', className)}>
+      <CropperCanvas {...props} />
+      <CropperOverlay className="absolute inset-0" />
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// CropperZoom — a Clay Slider pre-bound to the cropper's zoom context
+// ---------------------------------------------------------------------------
+
+/**
+ * A Clay Slider pre-wired to the zoom state from the nearest CropperContext.
+ * Drop it anywhere inside a `<Cropper>` to get zoom control without manually
+ * calling useCropperZoom and threading props through a Slider.
+ *
+ * Accepts `className` for layout; other Slider props are fixed to the crop
+ * range (min=1, max=3, step=0.01).
+ */
+function CropperZoom({ className }: { className?: string }) {
+  const { zoom, setZoom } = useCropper();
+  return (
+    <Slider
+      min={1}
+      max={3}
+      step={0.01}
+      value={zoom}
+      onChange={setZoom}
+      className={className}
+    />
+  );
+}
+
+// ---------------------------------------------------------------------------
+// CropperRotate — toolbar buttons for 90-degree rotation steps
+// ---------------------------------------------------------------------------
+
+/**
+ * A pair of rotate-left / rotate-right icon buttons wired to
+ * useCropperTransform. Pass `direction="left"` (default) or `"right"`.
+ * Renders a plain `<button>` so the consumer controls styling; add a Clay
+ * Button wrapper via `asChild` if preferred.
+ */
+function CropperRotate({
+  direction = 'left',
+  children,
+  className,
+  ...props
+}: React.ComponentProps<'button'> & {
+  /** Which direction to rotate. Defaults to `'left'`. */
+  direction?: 'left' | 'right';
+}) {
+  const { rotateLeft, rotateRight } = useCropperTransform();
+  const handleClick = direction === 'left' ? rotateLeft : rotateRight;
+  return (
+    <button
+      type="button"
+      data-slot="cropper-rotate"
+      data-direction={direction}
+      {...props}
+      onClick={handleClick}
+      className={className}
+    >
+      {children}
+    </button>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// CropperFlip — toggle button for horizontal / vertical flip
+// ---------------------------------------------------------------------------
+
+/**
+ * A toggle button wired to the horizontal or vertical flip flag in context.
+ * `data-active` is set when the flip is applied, so you can style the pressed
+ * state via `data-[active=true]:...` Tailwind utilities.
+ */
+function CropperFlip({
+  axis = 'h',
+  children,
+  className,
+  ...props
+}: React.ComponentProps<'button'> & {
+  /** Which axis to flip. Defaults to `'h'` (horizontal). */
+  axis?: 'h' | 'v';
+}) {
+  const { flipH, flipV, flipHActive, flipVActive } = useCropperTransform();
+  const active = axis === 'h' ? flipHActive : flipVActive;
+  const handleClick = axis === 'h' ? flipH : flipV;
+  return (
+    <button
+      type="button"
+      data-slot="cropper-flip"
+      data-axis={axis}
+      data-active={active || undefined}
+      {...props}
+      onClick={handleClick}
+      className={className}
+    >
+      {children}
+    </button>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// CropperReset — button that resets the transform to identity
+// ---------------------------------------------------------------------------
+
+/**
+ * A button that calls `reset()` from CropperContext when clicked, returning
+ * the image to its initial pan/zoom/rotation state.
+ */
+function CropperReset({ children, className, ...props }: React.ComponentProps<'button'>) {
+  const { reset } = useCropper();
+  return (
+    <button
+      type="button"
+      data-slot="cropper-reset"
+      {...props}
+      onClick={reset}
+      className={className}
+    >
+      {children}
+    </button>
+  );
+}
+
 export {
   Cropper,
   CropperCanvas,
   CropperOverlay,
+  CropperViewport,
+  CropperZoom,
+  CropperRotate,
+  CropperFlip,
+  CropperReset,
   useCropper,
   useCropperZoom,
   useCropperTransform,

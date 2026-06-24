@@ -11,6 +11,7 @@ export const meta: ComponentMeta = {
   name: 'cropper',
   displayName: 'Cropper',
   group: 'Overlays',
+  badge: 'New',
   description:
     'A composable image-crop primitive. The Cropper root manages pan/zoom/rotation state in context; CropperCanvas renders the interactive canvas; CropperOverlay draws the crop mask. The consumer wires their own Dialog, Slider, and Buttons around it.',
   accessibility: [

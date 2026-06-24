@@ -11,6 +11,7 @@ export const meta: ComponentMeta = {
   name: 'image',
   displayName: 'Image',
   group: 'Data',
+  badge: 'New',
   description:
     'Image with a skeleton pulse while loading and a fallback slot when the source fails or times out. A hanging image host still shows the fallback once `timeoutMs` elapses.',
   accessibility: [
