@@ -20,6 +20,7 @@
 // biome-ignore assist/source/organizeImports: export order drives builtInThemes (in ../registry.ts) via Object.values, narrative order matters more than alphabetical
 export { default as clay } from './clay.json' with { type: 'json' };
 export { default as brika } from './brika.json' with { type: 'json' };
+export { default as brikaStore } from './brika-store.json' with { type: 'json' };
 export { default as ocean } from './ocean.json' with { type: 'json' };
 export { default as forest } from './forest.json' with { type: 'json' };
 export { default as sunset } from './sunset.json' with { type: 'json' };
