@@ -20,8 +20,11 @@ function useImageContext() {
  * failed, so a hanging image host still shows the fallback.
  *
  * On `src` change a crossfade keeps the previously loaded image visible until
- * the new source finishes loading, then fades the new one in over it.
- * Duration is controlled by the `--image-transition-duration` token (default 300ms).
+ * the new source finishes fading in over it (true A->B crossfade). The
+ * previous layer is only unmounted once the opacity transition on the new
+ * image completes (`onTransitionEnd`), so the two layers overlap for the full
+ * duration. Duration is controlled by the `--image-transition-duration` token
+ * (default 300ms).
  *
  * Compose with `ImageFallback` to provide custom error content:
  * ```tsx
@@ -53,14 +56,17 @@ function Image({
 }) {
   const [status, setStatus] = React.useState<ImageStatus>(() => (src ? 'loading' : 'error'));
 
-  // The previously successfully loaded src: stays visible during the next load
-  // so there is no flash of skeleton between two images.
+  // The previously successfully loaded src. Stays rendered as a bottom layer
+  // for the full duration of the crossfade. Promoted to undefined only AFTER
+  // the new image's opacity transition ends (not on load), so both layers
+  // coexist during the fade: true A -> B crossfade.
   const [prevSrc, setPrevSrc] = React.useState<string | undefined>(undefined);
 
-  // The src whose load has finished, and the live timeout. Together they make the
-  // loader race-free: a load event that beats the effect (data-URIs decode
-  // instantly), a re-run, or StrictMode can no longer reset a completed load back
-  // to 'loading', and the timeout can never error an image that already loaded.
+  // The src whose load has finished, and the live timeout. Together they make
+  // the loader race-free: a load event that beats the effect (data-URIs decode
+  // instantly), a re-run, or StrictMode can no longer reset a completed load
+  // back to 'loading', and the timeout can never error an image that already
+  // loaded.
   const loadedSrc = React.useRef<string | undefined>(undefined);
   const timer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
@@ -85,13 +91,25 @@ function Image({
     loadedSrc.current = src;
     clearTimeout(timer.current); // a completed load must never time out into the fallback
     setStatus('loaded');
-    // Promote the current src to the retained layer once it is ready.
-    setPrevSrc(src);
+    // Do NOT promote prevSrc here: the new image is still at opacity-0 at this
+    // instant. We keep the previous layer visible underneath until the fade-in
+    // transition completes (see handleTransitionEnd).
   }
 
   function handleError() {
     clearTimeout(timer.current);
     setStatus('error');
+  }
+
+  // Called on the current <img>'s transitionend. Once the opacity animation
+  // finishes we no longer need the previous layer — unmounting it here ensures
+  // the two layers overlapped for the full transition duration (true crossfade).
+  function handleTransitionEnd(event: React.TransitionEvent<HTMLImageElement>) {
+    if (event.propertyName !== 'opacity') return;
+    // Only promote when the current src finished fading in successfully.
+    if (status === 'loaded' && src) {
+      setPrevSrc(src);
+    }
   }
 
   const transitionStyle: React.CSSProperties = {
@@ -116,8 +134,10 @@ function Image({
 
         {children}
 
-        {/* Retained previous image: visible during the crossfade of the next src */}
-        {prevSrc && status === 'loading' ? (
+        {/* Previous image bottom layer: stays at full opacity beneath the new
+            image for the entire crossfade duration. Unmounted only after the
+            new image's opacity transition ends (handleTransitionEnd). */}
+        {prevSrc && prevSrc !== src ? (
           <img
             src={prevSrc}
             alt=""
@@ -126,7 +146,7 @@ function Image({
           />
         ) : null}
 
-        {/* Current image: fades in once loaded */}
+        {/* Current image: fades in once loaded, over the previous layer */}
         {src && status !== 'error' ? (
           <img
             src={src}
@@ -135,6 +155,7 @@ function Image({
             decoding="async"
             onLoad={handleLoad}
             onError={handleError}
+            onTransitionEnd={handleTransitionEnd}
             className={cn(
               'absolute inset-0 size-full object-cover transition-opacity',
               status === 'loaded' ? 'opacity-100' : 'opacity-0',

@@ -3,14 +3,14 @@
 import * as React from 'react';
 import { ImageOff } from 'lucide-react';
 import { Image, ImageFallback } from '@brika/clay/components/image';
-import { LANDSCAPE_A, LANDSCAPE_B } from './offline-images';
+import { SAMPLE_A, SAMPLE_B } from './images';
 
-const IMAGES = [LANDSCAPE_A, LANDSCAPE_B];
+const IMAGES = [SAMPLE_A, SAMPLE_B];
 
 /**
- * Crossfade on src change: toggling between two inline SVG images shows the
- * smooth transition. The previous image stays visible until the next one has
- * finished loading, then the new image fades in over it with no skeleton flash.
+ * Crossfade on src change: toggling between two real photos shows the smooth
+ * A->B transition. The previous photo stays visible at full opacity underneath
+ * until the new one finishes fading in, then the previous layer is removed.
  */
 export default function ImageTransitionDemo() {
   const [index, setIndex] = React.useState(0);
@@ -18,7 +18,7 @@ export default function ImageTransitionDemo() {
   return (
     <div className="flex flex-col items-start gap-3">
       <div className="h-40 w-64 overflow-hidden rounded-lg">
-        <Image src={IMAGES[index]} alt="Crossfading landscape" className="size-full">
+        <Image src={IMAGES[index]} alt="Crossfading photo" className="size-full">
           <ImageFallback>
             <ImageOff className="size-6" />
           </ImageFallback>
