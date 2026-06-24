@@ -214,6 +214,7 @@ export {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
+  InputGroupControlIdContext,
   InputGroupInput,
   InputGroupText,
   InputGroupTextarea,
