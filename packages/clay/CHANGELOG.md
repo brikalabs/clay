@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/brikalabs/clay/compare/clay-v0.3.0...clay-v0.4.0) (2026-06-24)
+
+
+### Features
+
+* **clay:** CommandInputControl for the detached command mode ([#41](https://github.com/brikalabs/clay/issues/41)) ([cdb8cda](https://github.com/brikalabs/clay/commit/cdb8cda441b4b47196e0fcd05ec4aca6fa5cf43b))
+
 ## [0.3.0](https://github.com/brikalabs/clay/compare/clay-v0.2.0...clay-v0.3.0) (2026-06-24)
 
 
