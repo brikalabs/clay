@@ -157,6 +157,13 @@ export interface CropperProps {
    * from outside (e.g. a Dialog that clears on cancel).
    */
   image?: File | null;
+  /**
+   * Seed file for uncontrolled mode. Only read once on mount; ignored when
+   * `image` is provided (controlled mode). Use this to preload a sample image
+   * in demos or to restore a previously saved file — subsequent picks and
+   * drag-drops still work without any additional wiring.
+   */
+  defaultImage?: File | null;
   /** Mask shape rendered by CropperOverlay: `'circle'` or `'rounded'`. Defaults to `'circle'`. */
   shape?: 'circle' | 'rounded';
   /** On-screen stage size in px. Defaults to 288. */
@@ -177,11 +184,13 @@ export interface CropperProps {
  *   Dialog that resets on cancel).
  */
 const Cropper = React.forwardRef<CropperHandle, CropperProps>(function Cropper(
-  { image, shape = 'circle', stageSize = DEFAULT_STAGE, children },
+  { image, defaultImage, shape = 'circle', stageSize = DEFAULT_STAGE, children },
   ref,
 ) {
   // Uncontrolled internal file state. Only used when `image` prop is omitted.
-  const [internalFile, setInternalFile] = useState<File | null>(null);
+  // Seed from `defaultImage` once so demos can preload a sample without
+  // switching to controlled mode (picks and drops still work unmodified).
+  const [internalFile, setInternalFile] = useState<File | null>(() => defaultImage ?? null);
   // The effective file is the controlled `image` prop when provided, otherwise
   // the internally managed file.
   const isControlled = image !== undefined;

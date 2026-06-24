@@ -13,9 +13,9 @@ registerComponent(meta, {
         'Background fill of the crop canvas stage, visible as letterboxing when the image does not cover the full square.',
     },
     'overlay-color': {
-      default: 'oklch(0.08 0.01 60 / 0.42)',
+      default: 'color-mix(in oklch, var(--background) 55%, transparent)',
       description:
-        'Color of the vignette mask painted outside the crop circle/rounded-rect. Defaults to a near-black at 42% opacity so the crop boundary reads on any image.',
+        'Color of the vignette mask painted outside the crop circle/rounded-rect. Defaults to a soft wash of the theme background at 55% so the outside region is gently de-emphasised without a heavy black overlay. In light themes this is a pale wash; in dark themes a dark wash. Override with any color-mix or solid value to taste.',
     },
     'overlay-border': {
       default: 'oklch(1 0 0 / 0.45)',

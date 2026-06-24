@@ -1,22 +1,17 @@
 'use client';
 
 import * as React from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { Cropper, CropperInput, CropperViewport, CropperZoom } from '@brika/clay/components/cropper';
-import { Button } from '@brika/clay/components/button';
 import { makeSampleImageFile } from './sample-image';
 import { ApplyButton } from './shared';
 
-/** Inline cropper with all controls mounted directly on the page, pre-loaded with a synthetic gradient image. */
+// Lazily create the sample once so each demo instance shares the same object.
+const sampleFile = makeSampleImageFile();
+
+/** Inline cropper with all controls mounted directly on the page, pre-loaded with a synthetic gradient image. Pick a new file with the button or drop one onto the viewport — both replace the current image without any consumer state. */
 export default function CropperInlineDemo() {
   const [preview, setPreview] = useState<string | null>(null);
-  const [file, setFile] = useState<File | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  // Pre-load a synthetic sample so the docs preview is not empty.
-  useEffect(() => {
-    setFile(makeSampleImageFile());
-  }, []);
 
   function onApply(blob: Blob) {
     if (preview != null) URL.revokeObjectURL(preview);
@@ -29,27 +24,11 @@ export default function CropperInlineDemo() {
         <img src={preview} alt="Cropped result" className="size-20 rounded-full object-cover" />
       )}
 
-      <input
-        ref={inputRef}
-        type="file"
-        accept="image/*"
-        className="sr-only"
-        onChange={(e) => {
-          setFile(e.target.files?.[0] ?? null);
-          e.target.value = '';
-        }}
-      />
-
-      <Cropper image={file}>
+      <Cropper defaultImage={sampleFile}>
         <div className="flex flex-col items-center gap-3">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => inputRef.current?.click()}
-          >
+          <CropperInput variant="outline" size="sm">
             Pick image
-          </Button>
+          </CropperInput>
           <CropperViewport />
           <CropperZoom className="w-72" />
           <ApplyButton onApply={onApply} />
