@@ -104,6 +104,8 @@ interface CropperContextValue {
   stageSize: number;
   /** The loaded HTMLImageElement (null until the file is decoded). */
   img: HTMLImageElement | null;
+  /** True when an image is fully loaded and ready to crop. */
+  hasImage: boolean;
   /** Crop shape, forwarded to CropperOverlay. */
   shape: 'circle' | 'rounded';
   /** Ref to the canvas element, used by getCroppedBlob. */
@@ -263,6 +265,7 @@ const Cropper = React.forwardRef<CropperHandle, CropperProps>(function Cropper(
     reset,
     stageSize,
     img,
+    hasImage: img !== null,
     shape,
     canvasRef,
     getCroppedBlob,

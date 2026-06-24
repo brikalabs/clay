@@ -2,43 +2,12 @@
 
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
+import { Cropper, CropperInput, CropperViewport, CropperZoom } from '@brika/clay/components/cropper';
 import { Button } from '@brika/clay/components/button';
-import {
-  Cropper,
-  CropperInput,
-  CropperViewport,
-  CropperZoom,
-  useCropper,
-} from '@brika/clay/components/cropper';
 import { makeSampleImageFile } from './sample-image';
+import { ApplyButton } from './shared';
 
-// ---------------------------------------------------------------------------
-// Apply button — reads getCroppedBlob from context, no ref needed
-// ---------------------------------------------------------------------------
-
-function ApplyButton({ onApply }: { readonly onApply: (blob: Blob) => void }) {
-  const { getCroppedBlob, img } = useCropper();
-  async function apply() {
-    const blob = await getCroppedBlob();
-    if (blob != null) onApply(blob);
-  }
-  return (
-    <Button type="button" size="sm" disabled={img == null} onClick={apply}>
-      Apply
-    </Button>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Inline demo — controlled, pre-loaded with a synthetic sample image
-// ---------------------------------------------------------------------------
-
-/**
- * Inline cropper: all parts mounted directly on the page without a Dialog.
- * Starts with a synthetic gradient image so the docs preview shows the
- * circular crop mask over a real image. Uses controlled mode so the initial
- * sample can be injected via the `image` prop.
- */
+/** Inline cropper with all controls mounted directly on the page, pre-loaded with a synthetic gradient image. */
 export default function CropperInlineDemo() {
   const [preview, setPreview] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -90,17 +59,7 @@ export default function CropperInlineDemo() {
   );
 }
 
-// ---------------------------------------------------------------------------
-// Drag-and-drop demo — drop an image onto CropperViewport to load it
-// ---------------------------------------------------------------------------
-
-/**
- * Drag-and-drop: drop an image file directly onto the viewport to load it.
- * In uncontrolled mode no onImageDrop prop is needed — the file is picked up
- * automatically. A primary-coloured ring (--cropper-drop-active-ring) highlights
- * the viewport while a file is held over it. The empty-state placeholder
- * instructs the user to drop or use CropperInput.
- */
+/** Drag-and-drop: drop an image file directly onto the viewport to load it in uncontrolled mode. */
 export function CropperDragDropDemo() {
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -117,7 +76,6 @@ export function CropperDragDropDemo() {
 
       <Cropper>
         <div className="flex flex-col items-center gap-3">
-          {/* No onImageDrop needed — uncontrolled mode handles the drop */}
           <CropperInput variant="outline" size="sm">
             Pick image
           </CropperInput>
