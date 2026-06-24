@@ -1,6 +1,6 @@
 'use client';
 
-import { Tree, TreeItem } from '@brika/clay/components/tree';
+import { Tree, TreeItem, TreeLoading } from '@brika/clay/components/tree';
 import { useState } from 'react';
 
 interface FsNode {
@@ -54,17 +54,20 @@ export default function TreeLazyLoadingDemo() {
     setInflight((s) => { const n = new Set(s); n.delete(id); return n; });
   };
 
-  // Recursively render a list of fs nodes; folders show their loaded children.
+  // Recursively render fs nodes; an in-flight folder shows <TreeLoading/>, a loaded
+  // one shows its children. Compose whatever you want inside TreeLoading.
   const render = (nodes: readonly FsNode[]) =>
-    nodes.map((node) =>
-      node.type === 'file' ? (
-        <TreeItem key={node.id} nodeId={node.id} label={node.name} />
-      ) : (
-        <TreeItem key={node.id} nodeId={node.id} label={node.name} lazy loading={inflight.has(node.id)}>
-          {render(loaded[node.id] ?? [])}
+    nodes.map((node) => {
+      if (node.type === 'file') {
+        return <TreeItem key={node.id} nodeId={node.id} label={node.name} />;
+      }
+      const busy = inflight.has(node.id);
+      return (
+        <TreeItem key={node.id} nodeId={node.id} label={node.name} lazy loading={busy}>
+          {busy ? <TreeLoading /> : render(loaded[node.id] ?? [])}
         </TreeItem>
-      )
-    );
+      );
+    });
 
   return (
     <Tree className="w-full max-w-xs" showLines onExpand={onExpand}>
