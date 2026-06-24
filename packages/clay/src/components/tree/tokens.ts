@@ -44,5 +44,10 @@ registerComponent(meta, {
       default: 'var(--accent-foreground)',
       description: 'Row text color when the node is selected.',
     },
+    'selected-accent': {
+      default: 'var(--primary)',
+      description:
+        'Color of the vertical accent bar on the leading edge of a selected row. Defaults to the brand primary so it picks up theme coral, navy, etc. automatically.',
+    },
   },
 });

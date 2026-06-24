@@ -322,8 +322,8 @@ function TreeRow({
         "[&_svg]:size-4 [&_svg]:shrink-0",
         disabled ? 'pointer-events-none opacity-50' : 'cursor-pointer',
         isSelected
-          ? 'bg-tree-selected text-tree-selected-label'
-          : 'text-tree-label hover:bg-tree-item-hover'
+          ? 'border-s-2 border-tree-selected-accent bg-tree-selected text-tree-selected-label'
+          : 'border-s-2 border-transparent text-tree-label hover:bg-tree-item-hover'
       )}
     >
       {isBranch ? (
