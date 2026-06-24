@@ -38,6 +38,7 @@ export * from './components/field';
 export * from './components/file-upload';
 export * from './components/hover-card';
 export * from './components/icon';
+export * from './components/cropper';
 export * from './components/image';
 export * from './components/input';
 export * from './components/input-group';

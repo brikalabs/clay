@@ -33,6 +33,7 @@ import './date-picker/tokens';
 import './dialog/tokens';
 import './drawer/tokens';
 import './color-picker/tokens';
+import './cropper/tokens';
 import './dropdown-menu/tokens';
 import './dropzone/tokens';
 import './empty-state/tokens';
